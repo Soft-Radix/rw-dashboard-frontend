@@ -23,9 +23,6 @@ function SignInPage() {
             <Typography className="text-[18px] text-[#757982] mt-8">
               To proceed, kindly provide the required details below.
             </Typography>
-            {/* <Link className="ml-4" to="/sign-up">
-              Sign up
-            </Link> */}
           </div>
 
           <JwtLoginTab />

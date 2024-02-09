@@ -119,7 +119,7 @@ function jwtSignInTab() {
       />
       <Link
         className="text-[16px] font-medium !no-underline w-fit"
-        to="/pages/auth/forgot-password"
+        to="/forgot-password"
       >
         Forgot Password
       </Link>

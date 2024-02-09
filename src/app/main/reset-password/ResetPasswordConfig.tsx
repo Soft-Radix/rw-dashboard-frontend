@@ -1,8 +1,8 @@
 import { FuseRouteConfigType } from "@fuse/utils/FuseUtils";
-import SignUpPage from "./SignUpPage";
+import ResetPassword from "./ResetPassword";
 import authRoles from "../../auth/authRoles";
 
-const SignUpConfig: FuseRouteConfigType = {
+const ResetPasswordConfig: FuseRouteConfigType = {
   settings: {
     layout: {
       config: {
@@ -27,10 +27,10 @@ const SignUpConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "sign-up",
-      element: <SignUpPage />,
+      path: "reset-password",
+      element: <ResetPassword />,
     },
   ],
 };
 
-export default SignUpConfig;
+export default ResetPasswordConfig;
