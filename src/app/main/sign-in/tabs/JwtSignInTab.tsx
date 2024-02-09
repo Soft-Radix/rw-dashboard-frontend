@@ -103,72 +103,70 @@ function jwtSignInTab() {
   }
 
   return (
-    <div className="w-full mt-32 max-w-[417px]">
-      <div className="flex gap-16 flex-col">
-        <InputField
-          formik={formik}
-          name="email"
-          label="Email Address"
-          placeholder="Enter Email Address"
-        />
-        <InputField
-          formik={formik}
-          name="password"
-          label="Password"
-          type="password"
-          placeholder="Enter Password"
-        />
-        <Link
-          className="text-[16px] font-medium !no-underline w-fit"
-          to="/pages/auth/forgot-password"
-        >
-          Forgot Password
-        </Link>
+    <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
+      <InputField
+        formik={formik}
+        name="email"
+        label="Email Address"
+        placeholder="Enter Email Address"
+      />
+      <InputField
+        formik={formik}
+        name="password"
+        label="Password"
+        type="password"
+        placeholder="Enter Password"
+      />
+      <Link
+        className="text-[16px] font-medium !no-underline w-fit"
+        to="/pages/auth/forgot-password"
+      >
+        Forgot Password
+      </Link>
+      <Button
+        variant="contained"
+        color="secondary"
+        className="mt-28 w-full h-[50px] text-[18px] font-bold"
+        aria-label="Log In"
+        size="large"
+        onClick={() => formik.handleSubmit()}
+      >
+        Log In
+      </Button>
+      <div className="mt-28 flex items-center cursor-pointer justify-center">
+        <Typography color="text.secondary">New User?</Typography>
+        <Typography color="secondary.main">
+          <Link className="ml-2 !no-underline font-bold " to="/sign-up">
+            Create Account
+          </Link>
+        </Typography>
+      </div>
+      <div className="mt-6 flex items-center">
+        <div className="mt-px flex-auto border-t" />
+        <Typography className="mx-8" color="text.secondary">
+          Or continue with
+        </Typography>
+        <div className="mt-px flex-auto border-t" />
+      </div>
+      <div className="mt-20 flex justify-center">
         <Button
           variant="contained"
-          color="secondary"
-          className="mt-28 w-full h-[50px] text-[18px] font-bold"
+          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
-          size="large"
-          onClick={() => formik.handleSubmit()}
         >
-          Log In
+          <img src="assets/icons/google.svg" alt="" className="mr-14" />
+          Log In with Google
         </Button>
-        <div className="mt-28 flex items-center cursor-pointer justify-center">
-          <Typography color="text.secondary">New User?</Typography>
-          <Typography color="secondary.main">
-            <Link className="ml-2 !no-underline font-bold " to="/sign-up">
-              Create Account
-            </Link>
-          </Typography>
-        </div>
-        <div className="mt-6 flex items-center">
-          <div className="mt-px flex-auto border-t" />
-          <Typography className="mx-8" color="text.secondary">
-            Or continue with
-          </Typography>
-          <div className="mt-px flex-auto border-t" />
-        </div>
-        <div className="mt-20 flex justify-center">
-          <Button
-            variant="contained"
-            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-            aria-label="Log In"
-          >
-            <img src="assets/icons/google.svg" alt="" className="mr-14" />
-            Log In with Google
-          </Button>
-        </div>
-        <div className="mt-8 flex justify-center">
-          <Button
-            variant="contained"
-            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-            aria-label="Log In"
-          >
-            <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
-            Log In with Facebook
-          </Button>
-        </div>
+      </div>
+      <div className="mt-8 flex justify-center">
+        <Button
+          variant="contained"
+          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+          aria-label="Log In"
+        >
+          <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+          Log In with Facebook
+        </Button>
       </div>
     </div>
   );
