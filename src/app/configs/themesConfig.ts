@@ -7,7 +7,7 @@ import { FuseThemesType } from "@fuse/core/FuseSettings/FuseSettings";
  */
 export const lightPaletteText = {
   primary: "rgb(17, 24, 39)",
-  secondary: "rgb(107, 114, 128)",
+  secondary: "rgb(157, 160, 166)",
   disabled: "rgb(149, 156, 169)",
 };
 

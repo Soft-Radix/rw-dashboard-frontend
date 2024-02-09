@@ -1,91 +1,36 @@
-import Typography from "@mui/material/Typography";
-import { Link } from "react-router-dom";
-import AvatarGroup from "@mui/material/AvatarGroup";
 import Avatar from "@mui/material/Avatar";
+import AvatarGroup from "@mui/material/AvatarGroup";
 import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import { useState } from "react";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import CardContent from "@mui/material/CardContent";
-import _ from "@lodash";
-import Alert from "@mui/material/Alert";
-import Button from "@mui/material/Button";
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import Paper from "@mui/material/Paper";
+import Typography from "@mui/material/Typography";
 import JwtLoginTab from "./tabs/JwtSignInTab";
-import FirebaseSignInTab from "./tabs/FirebaseSignInTab";
-
-const tabs = [
-  {
-    id: "jwt",
-    title: "JWT",
-    logo: "assets/images/logo/jwt.svg",
-    logoClass: "h-40 p-4 bg-black rounded-12",
-  },
-  {
-    id: "firebase",
-    title: "Firebase",
-    logo: "assets/images/logo/firebase.svg",
-    logoClass: "h-40",
-  },
-];
 
 /**
  * The sign in page.
  */
 function SignInPage() {
-  const [selectedTabId, setSelectedTabId] = useState(tabs[0].id);
-
-  function handleSelectTab(id: string) {
-    setSelectedTabId(id);
-  }
-
   return (
     <div className="flex min-w-0 flex-1 flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start">
-      <Paper className="h-full w-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none">
-        <CardContent className="mx-auto w-full max-w-420 sm:mx-0 sm:w-420">
-          <img className="w-48" src="assets/images/logo/logo.svg" alt="logo" />
+      <Paper className="h-full w-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none flex justify-center">
+        <CardContent className="mx-auto max-w-420 sm:mx-0 sm:w-420">
+          <div className="flex items-center">
+            <img src="assets/icons/remote-icon.svg" alt="" />
+          </div>
 
-          <Typography className="mt-32 text-4xl font-extrabold leading-tight tracking-tight">
+          <Typography className="mt-32 text-[48px] font-bold leading-tight tracking-tight">
             Log In
           </Typography>
           <div className="mt-2 flex items-baseline font-medium">
-            <Typography>
+            <Typography className="text-[18px] text-[#757982] mt-8">
               To proceed, kindly provide the required details below.
             </Typography>
-            <Link className="ml-4" to="/sign-up">
+            {/* <Link className="ml-4" to="/sign-up">
               Sign up
-            </Link>
+            </Link> */}
           </div>
 
-          {selectedTabId === "jwt" && <JwtLoginTab />}
-          {selectedTabId === "firebase" && <FirebaseSignInTab />}
-
-          <div className="mt-32 flex items-center">
-            <div className="mt-px flex-auto border-t" />
-            <Typography className="mx-8" color="text.secondary">
-              Or continue with
-            </Typography>
-            <div className="mt-px flex-auto border-t" />
-          </div>
-
-          <div className="mt-32 flex items-center space-x-16">
-            <Button variant="outlined" className="flex-auto">
-              <FuseSvgIcon size={20} color="action">
-                feather:facebook
-              </FuseSvgIcon>
-            </Button>
-            <Button variant="outlined" className="flex-auto">
-              <FuseSvgIcon size={20} color="action">
-                feather:twitter
-              </FuseSvgIcon>
-            </Button>
-            <Button variant="outlined" className="flex-auto">
-              <FuseSvgIcon size={20} color="action">
-                feather:github
-              </FuseSvgIcon>
-            </Button>
-          </div>
+          <JwtLoginTab />
         </CardContent>
       </Paper>
 

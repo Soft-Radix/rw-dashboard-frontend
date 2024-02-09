@@ -1,16 +1,14 @@
-import TextField from "@mui/material/TextField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import _ from "@lodash";
 import { AxiosError } from "axios";
-import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
+import InputField from "src/app/components/InputField";
 import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 /**
  * Form Validation Schema
@@ -40,6 +38,18 @@ const defaultValues = {
 
 function jwtSignInTab() {
   const { jwtService } = useAuth();
+
+  //* initialise useformik hook
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    // validationSchema: validationSchemaProperty,
+    onSubmit: (values) => {
+      onSubmit(values);
+    },
+  });
 
   const { control, formState, handleSubmit, setValue, setError } =
     useForm<FormType>({
@@ -93,84 +103,73 @@ function jwtSignInTab() {
   }
 
   return (
-    <div className="w-full">
-      <form
-        name="loginForm"
-        noValidate
-        className="mt-32 flex w-full flex-col justify-center"
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Controller
+    <div className="w-full mt-32 max-w-[417px]">
+      <div className="flex gap-16 flex-col">
+        <InputField
+          formik={formik}
           name="email"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              className="mb-24"
-              label="Email"
-              autoFocus
-              type="email"
-              error={!!errors.email}
-              helperText={errors?.email?.message}
-              variant="outlined"
-              required
-              fullWidth
-            />
-          )}
+          label="Email Address"
+          placeholder="Enter Email Address"
         />
-
-        <Controller
+        <InputField
+          formik={formik}
           name="password"
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              className="mb-24"
-              label="Password"
-              type="password"
-              error={!!errors.password}
-              helperText={errors?.password?.message}
-              variant="outlined"
-              required
-              fullWidth
-            />
-          )}
+          label="Password"
+          type="password"
+          placeholder="Enter Password"
         />
-
-        <div className="flex flex-col items-center justify-center sm:flex-row sm:justify-between">
-          <Controller
-            name="remember"
-            control={control}
-            render={({ field }) => (
-              <FormControl>
-                <FormControlLabel
-                  label="Remember me"
-                  control={<Checkbox size="small" {...field} />}
-                />
-              </FormControl>
-            )}
-          />
-
-          <Link
-            className="text-md font-medium"
-            to="/pages/auth/forgot-password"
-          >
-            Forgot password?
-          </Link>
-        </div>
-
+        <Link
+          className="text-[16px] font-medium !no-underline w-fit"
+          to="/pages/auth/forgot-password"
+        >
+          Forgot Password
+        </Link>
         <Button
           variant="contained"
           color="secondary"
-          className=" mt-16 w-full"
-          aria-label="Sign in"
-          disabled={_.isEmpty(dirtyFields) || !isValid}
-          type="submit"
+          className="mt-28 w-full h-[50px] text-[18px] font-bold"
+          aria-label="Log In"
           size="large"
+          onClick={() => formik.handleSubmit()}
         >
-          Sign in
+          Log In
         </Button>
-      </form>
+        <div className="mt-28 flex items-center cursor-pointer justify-center">
+          <Typography color="text.secondary">New User?</Typography>
+          <Typography color="secondary.main">
+            <Link className="ml-2 !no-underline font-bold " to="/sign-up">
+              Create Account
+            </Link>
+          </Typography>
+        </div>
+        <div className="mt-6 flex items-center">
+          <div className="mt-px flex-auto border-t" />
+          <Typography className="mx-8" color="text.secondary">
+            Or continue with
+          </Typography>
+          <div className="mt-px flex-auto border-t" />
+        </div>
+        <div className="mt-20 flex justify-center">
+          <Button
+            variant="contained"
+            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+            aria-label="Log In"
+          >
+            <img src="assets/icons/google.svg" alt="" className="mr-14" />
+            Log In with Google
+          </Button>
+        </div>
+        <div className="mt-8 flex justify-center">
+          <Button
+            variant="contained"
+            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+            aria-label="Log In"
+          >
+            <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+            Log In with Facebook
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
