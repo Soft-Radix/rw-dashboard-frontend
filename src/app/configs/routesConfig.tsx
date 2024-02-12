@@ -11,6 +11,7 @@ import Error404Page from "../main/404/Error404Page";
 import ExampleConfig from "../main/example/ExampleConfig";
 import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
+import AddProjectConfig from "../main/add-project/AddProjectConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   ExampleConfig,
@@ -20,6 +21,7 @@ const routeConfigs: FuseRouteConfigsType = [
   ForgotPasswordConfig,
   ResetPasswordConfig,
   OtpVerificationConfig,
+  AddProjectConfig,
 ];
 
 /**
