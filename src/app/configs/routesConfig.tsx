@@ -10,6 +10,7 @@ import SignOutConfig from "../main/sign-out/SignOutConfig";
 import Error404Page from "../main/404/Error404Page";
 import ExampleConfig from "../main/example/ExampleConfig";
 import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
+import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   ExampleConfig,
@@ -18,6 +19,7 @@ const routeConfigs: FuseRouteConfigsType = [
   SignUpConfig,
   ForgotPasswordConfig,
   ResetPasswordConfig,
+  OtpVerificationConfig,
 ];
 
 /**
