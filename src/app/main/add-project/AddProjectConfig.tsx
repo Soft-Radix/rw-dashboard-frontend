@@ -1,8 +1,8 @@
 import { FuseRouteConfigType } from "@fuse/utils/FuseUtils";
-import SignUpPage from "./SignUpPage";
 import authRoles from "../../auth/authRoles";
+import AddProject from "./AddProject";
 
-const SignUpConfig: FuseRouteConfigType = {
+const AddProjectConfig: FuseRouteConfigType = {
   settings: {
     layout: {
       config: {
@@ -27,10 +27,10 @@ const SignUpConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "sign-up",
-      element: <SignUpPage />,
+      path: "add-project",
+      element: <AddProject />,
     },
   ],
 };
 
-export default SignUpConfig;
+export default AddProjectConfig;

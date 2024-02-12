@@ -1,8 +1,8 @@
 import { FuseRouteConfigType } from "@fuse/utils/FuseUtils";
-import SignUpPage from "./SignUpPage";
 import authRoles from "../../auth/authRoles";
+import OtpVerification from "./OtpVerification";
 
-const SignUpConfig: FuseRouteConfigType = {
+const OtpVerificationConfig: FuseRouteConfigType = {
   settings: {
     layout: {
       config: {
@@ -27,10 +27,10 @@ const SignUpConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "sign-up",
-      element: <SignUpPage />,
+      path: "otp-verification",
+      element: <OtpVerification />,
     },
   ],
 };
 
-export default SignUpConfig;
+export default OtpVerificationConfig;
