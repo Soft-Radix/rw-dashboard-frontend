@@ -107,6 +107,16 @@ a[role="button"] {
   z-index: 9999;
 }
 
+/* button styling */
+.MuiButton-outlinedInfo {
+  color: #fff;
+  border-color: #fff;
+  &:hover {
+    border-color: #fff;
+    background-color: transparent;
+  }
+}
+
 /* Medium Devices, Desktops Only */
 @media only screen and (min-width: 992px) {
   ::-webkit-scrollbar {
@@ -151,8 +161,8 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-  transitiondelay: 9999s;
-  transitionproperty: background-color, color;
+  transition-delay: 9999s;
+  transition-property: background-color, color;
 }
 
 :focus {
