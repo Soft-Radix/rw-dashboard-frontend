@@ -8,13 +8,15 @@ import SignUpConfig from "../main/sign-up/SignUpConfig";
 import ForgotPasswordConfig from "../main/forgot-password/ForgotPasswordConfig";
 import SignOutConfig from "../main/sign-out/SignOutConfig";
 import Error404Page from "../main/404/Error404Page";
-import ExampleConfig from "../main/example/ExampleConfig";
+// import ExampleConfig from "../main/example/ExampleConfig";
 import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
+import DashboardConfig from "../pages/dashboard/DashboardConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
-  ExampleConfig,
+  // ExampleConfig,
+  DashboardConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,
@@ -34,7 +36,7 @@ const routes: FuseRoutesType = [
   ),
   {
     path: "/",
-    element: <Navigate to="/example" />,
+    element: <Navigate to="/dashboard" />,
     auth: settingsConfig.defaultAuth,
   },
   {

@@ -1,4 +1,4 @@
-import { amber } from "@mui/material/colors";
+import _ from "@lodash";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Input from "@mui/material/Input";
@@ -9,11 +9,16 @@ import MenuItem from "@mui/material/MenuItem";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import clsx from "clsx";
+import {
+  CalenderIcon,
+  ContactsIcon,
+  MailIcon,
+  StarIcon,
+} from "public/assets/icons/topBarIcons";
 import { memo, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import _ from "@lodash";
-import FuseSvgIcon from "../FuseSvgIcon";
 import { FuseFlatNavItemType } from "../FuseNavigation/types/FuseNavItemType";
+import FuseSvgIcon from "../FuseSvgIcon";
 
 type FuseShortcutsProps = {
   className?: string;
@@ -42,6 +47,10 @@ function FuseShortcuts(props: FuseShortcutsProps) {
   const [searchText, setSearchText] = useState("");
   const [searchResults, setSearchResults] = useState<FuseFlatNavItemType[]>([]);
   const [shortcutItems, setShortcutItems] = useState<FuseFlatNavItemType[]>([]);
+
+  useEffect(() => {
+    console.log("shortcutItems ==> ", shortcutItems);
+  }, [shortcutItems]);
 
   useEffect(() => {
     const _shortcutItems = shortcuts
@@ -120,7 +129,42 @@ function FuseShortcuts(props: FuseShortcutsProps) {
                   </Link>
                 )
             )}
-
+            <Tooltip
+              title="Calendar"
+              placement={variant === "horizontal" ? "bottom" : "left"}
+            >
+              <IconButton
+                className="h-40 w-40 p-0"
+                aria-haspopup="true"
+                size="large"
+              >
+                <CalenderIcon />
+              </IconButton>
+            </Tooltip>{" "}
+            <Tooltip
+              title="Mail"
+              placement={variant === "horizontal" ? "bottom" : "left"}
+            >
+              <IconButton
+                className="h-40 w-40 p-0"
+                aria-haspopup="true"
+                size="large"
+              >
+                <MailIcon />
+              </IconButton>
+            </Tooltip>{" "}
+            <Tooltip
+              title="Contacts"
+              placement={variant === "horizontal" ? "bottom" : "left"}
+            >
+              <IconButton
+                className="h-40 w-40 p-0"
+                aria-haspopup="true"
+                size="large"
+              >
+                <ContactsIcon />
+              </IconButton>
+            </Tooltip>{" "}
             <Tooltip
               title="Click to add/remove shortcut"
               placement={variant === "horizontal" ? "bottom" : "left"}
@@ -131,9 +175,7 @@ function FuseShortcuts(props: FuseShortcutsProps) {
                 onClick={addMenuClick}
                 size="large"
               >
-                <FuseSvgIcon sx={{ color: amber[600] }}>
-                  heroicons-solid:star
-                </FuseSvgIcon>
+                <StarIcon />
               </IconButton>
             </Tooltip>
           </div>
