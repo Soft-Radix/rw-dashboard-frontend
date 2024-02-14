@@ -69,13 +69,22 @@ export const PlusIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <g clip-path="url(#clip0_17_593)">
       <path
         d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11ZM12 22C6.477 22 2 17.523 2 12C2 6.477 6.477 2 12 2C17.523 2 22 6.477 22 12C22 17.523 17.523 22 12 22ZM12 20C14.1217 20 16.1566 19.1571 17.6569 17.6569C19.1571 16.1566 20 14.1217 20 12C20 9.87827 19.1571 7.84344 17.6569 6.34315C16.1566 4.84285 14.1217 4 12 4C9.87827 4 7.84344 4.84285 6.34315 6.34315C4.84285 7.84344 4 9.87827 4 12C4 14.1217 4.84285 16.1566 6.34315 17.6569C7.84344 19.1571 9.87827 20 12 20Z"
-        fill="white"
+        fill={props.color}
       />
     </g>
     <defs>
       <clipPath id="clip0_17_593">
-        <rect width="24" height="24" fill="white" />
+        <rect width="24" height="24" fill={props.color} />
       </clipPath>
     </defs>
+  </svg>
+);
+
+export const CalendarIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
+    <path
+      d="M17 3H21C21.2652 3 21.5196 3.10536 21.7071 3.29289C21.8946 3.48043 22 3.73478 22 4V20C22 20.2652 21.8946 20.5196 21.7071 20.7071C21.5196 20.8946 21.2652 21 21 21H3C2.73478 21 2.48043 20.8946 2.29289 20.7071C2.10536 20.5196 2 20.2652 2 20V4C2 3.73478 2.10536 3.48043 2.29289 3.29289C2.48043 3.10536 2.73478 3 3 3H7V1H9V3H15V1H17V3ZM15 5H9V7H7V5H4V9H20V5H17V7H15V5ZM20 11H4V19H20V11Z"
+      fill={props.color}
+    />
   </svg>
 );

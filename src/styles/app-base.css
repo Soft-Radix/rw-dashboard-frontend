@@ -196,5 +196,11 @@ input:-webkit-autofill:active {
       transform: translate(-50%, -50%);
       cursor: pointer;
     }
+    &.column_input {
+      .MuiOutlinedInput-input {
+        padding-top: 12px;
+        padding-bottom: 12px;
+      }
+    }
   }
 }

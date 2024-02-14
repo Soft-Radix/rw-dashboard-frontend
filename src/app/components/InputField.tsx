@@ -7,6 +7,7 @@ interface CustomButtonProps {
   label?: string;
   formik?: FormikProps<unknown>;
   type?: string;
+  inputClass?: string;
   // props: TextFieldProps;
 }
 
@@ -15,6 +16,7 @@ function InputField({
   formik,
   label,
   type = "text",
+  inputClass,
   ...rest
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
@@ -28,7 +30,7 @@ function InputField({
           {label}
         </FormLabel>
       )}
-      <div className="input_wrap">
+      <div className={`input_wrap ${inputClass}`}>
         <TextField
           type={isType}
           onChange={formik.handleChange}
