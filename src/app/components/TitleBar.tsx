@@ -9,7 +9,9 @@ type TitleBarProps = {
 export default function TitleBar({ title, children }: TitleBarProps) {
   return (
     <div>
-      <Typography className="text-[30px] font-semibold">{title}</Typography>
+      <Typography className="text-[30px] font-semibold py-[20px]">
+        {title}
+      </Typography>
     </div>
   );
 }

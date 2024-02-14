@@ -115,5 +115,6 @@ module.exports = {
     "no-restricted-exports": ["off", { restrictedNamedExports: ["default"] }],
     "import/no-import-module-exports": "off",
     "import/no-extraneous-dependencies": "off",
+    "no-nested-ternary": "off",
   },
 };

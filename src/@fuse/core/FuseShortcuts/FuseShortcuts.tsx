@@ -49,10 +49,6 @@ function FuseShortcuts(props: FuseShortcutsProps) {
   const [shortcutItems, setShortcutItems] = useState<FuseFlatNavItemType[]>([]);
 
   useEffect(() => {
-    console.log("shortcutItems ==> ", shortcutItems);
-  }, [shortcutItems]);
-
-  useEffect(() => {
     const _shortcutItems = shortcuts
       ? shortcuts.map((id) => _.find(navigation, { id }))
       : ([] as FuseFlatNavItemType[]);

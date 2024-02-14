@@ -3,7 +3,7 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import { selectUser } from "src/app/auth/user/store/userSlice";
-import { EmailIcon } from "public/assets/icons/emailIcons";
+import { EmailIcon } from "public/assets/icons/common";
 import { Button } from "@mui/material";
 
 const Root = styled("div")(({ theme }) => ({
