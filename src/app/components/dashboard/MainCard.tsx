@@ -177,7 +177,6 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
           name="column_name"
           label="Column Name"
           placeholder="Enter Column Name"
-          inputClass="column_input"
         />
       </CommonModal>
       <ActionModal

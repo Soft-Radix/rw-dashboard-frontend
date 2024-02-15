@@ -196,17 +196,17 @@ input:-webkit-autofill:active {
       transform: translate(-50%, -50%);
       cursor: pointer;
     }
-    &.column_input {
-      .MuiOutlinedInput-input {
-        padding-top: 12px;
-        padding-bottom: 12px;
+    .MuiOutlinedInput-input {
+      padding-top: 10px;
+      padding-bottom: 12px;
+      &:focus {
+        + .MuiOutlinedInput-notchedOutline {
+          border: 1px solid #4f46e5;
+        }
       }
-      .MuiInputBase-root {
-        border-radius: 7px;
-      }
-      .MuiOutlinedInput-notchedOutline {
-        border: 1px solid #c9c9c9;
-      }
+    }
+    .MuiInputBase-root {
+      border-radius: 7px;
     }
   }
 }

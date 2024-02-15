@@ -50,7 +50,6 @@ export default function Dashboard() {
                 name="column_name"
                 label="Column Name"
                 placeholder="Enter Column Name"
-                inputClass="column_input"
               />
               <div className="mt-20">
                 <Button
