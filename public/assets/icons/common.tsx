@@ -20,3 +20,27 @@ export const CrossIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+
+export const CircularDeleteIcon: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg width="72" height="72" viewBox="0 0 72 72" fill="none" {...props}>
+    <circle cx="36" cy="36" r="35.5" stroke="#F44336" />
+    <g clip-path="url(#clip0_125_5066)">
+      <path
+        d="M28.5 24V21H43.5V24H51V27H48V49.5C48 49.8978 47.842 50.2794 47.5607 50.5607C47.2794 50.842 46.8978 51 46.5 51H25.5C25.1022 51 24.7206 50.842 24.4393 50.5607C24.158 50.2794 24 49.8978 24 49.5V27H21V24H28.5ZM27 27V48H45V27H27ZM31.5 31.5H34.5V43.5H31.5V31.5ZM37.5 31.5H40.5V43.5H37.5V31.5Z"
+        fill="#F44336"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_125_5066">
+        <rect
+          width="36"
+          height="36"
+          fill="white"
+          transform="translate(18 18)"
+        />
+      </clipPath>
+    </defs>
+  </svg>
+);

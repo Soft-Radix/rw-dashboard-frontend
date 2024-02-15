@@ -9,6 +9,7 @@ import { MouseEvent, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import ItemCard from "./ItemCard";
+import ActionModal from "../ActionModal";
 
 type MainCardType = {
   title: string;
@@ -16,8 +17,11 @@ type MainCardType = {
 };
 
 export default function MainCard({ title, isEmpty }: MainCardType) {
-  const [openModal, setOpenModal] = useState(false);
-  const toggleModal = () => setOpenModal(!openModal);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const toggleEditModal = () => setOpenEditModal(!openEditModal);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
 
   /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -73,12 +77,19 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
               <MenuItem
                 onClick={() => {
                   handleClose();
-                  toggleModal();
+                  toggleEditModal();
                 }}
               >
                 Edit Title
               </MenuItem>
-              <MenuItem onClick={handleClose}>Delete Column</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  toggleDeleteModal();
+                }}
+              >
+                Delete Column
+              </MenuItem>
             </Menu>
           </div>
         </div>
@@ -158,8 +169,8 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
       </div>
       <CommonModal
         modalTitle={title}
-        open={openModal}
-        handleToggle={toggleModal}
+        open={openEditModal}
+        handleToggle={toggleEditModal}
       >
         <InputField
           formik={formik}
@@ -169,6 +180,13 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
           inputClass="column_input"
         />
       </CommonModal>
+      <ActionModal
+        modalTitle="Delete Column"
+        modalSubTitle="Are you sure you want to delete this column ?"
+        open={openDeleteModal}
+        handleToggle={toggleDeleteModal}
+        type="delete"
+      />
     </div>
   );
 }
