@@ -181,6 +181,7 @@ module.exports = {
       transparent: "transparent",
       black: "#22292F",
       white: "#fff",
+      priorityMedium: "#FF5F15",
       grey: {
         50: "#FAFAFA",
         100: "#F5F5F5",
