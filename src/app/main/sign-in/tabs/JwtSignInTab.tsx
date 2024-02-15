@@ -133,22 +133,15 @@ function jwtSignInTab() {
       >
         Log In
       </Button>
-      <div className="mt-28 flex items-center cursor-pointer justify-center">
-        <Typography color="text.secondary">New User?</Typography>
-        <Typography color="secondary.main">
-          <Link className="ml-2 !no-underline font-bold " to="/sign-up">
-            Create Account
-          </Link>
-        </Typography>
-      </div>
-      <div className="mt-6 flex items-center">
+
+      <div className="mt-12 flex items-center">
         <div className="mt-px flex-auto border-t" />
         <Typography className="mx-8" color="text.secondary">
           Or continue with
         </Typography>
         <div className="mt-px flex-auto border-t" />
       </div>
-      <div className="mt-20 flex justify-center">
+      <div className="mt-16 flex justify-center">
         <Button
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
@@ -167,6 +160,14 @@ function jwtSignInTab() {
           <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
           Log In with Facebook
         </Button>
+      </div>
+      <div className="mt-20 flex items-center cursor-pointer justify-center">
+        <Typography color="text.secondary">New User?</Typography>
+        <Typography color="secondary.main">
+          <Link className="ml-2 !no-underline font-bold " to="/sign-up">
+            Create Account
+          </Link>
+        </Typography>
       </div>
     </div>
   );

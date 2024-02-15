@@ -2,8 +2,7 @@ import { Button, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import React, { useState } from "react";
-import CommonModal from "src/app/components/CommonModal";
+import { useState } from "react";
 import InputField from "src/app/components/InputField";
 import TitleBar from "src/app/components/TitleBar";
 import MainCard from "src/app/components/dashboard/MainCard";
@@ -11,8 +10,6 @@ import MainCard from "src/app/components/dashboard/MainCard";
 export default function Dashboard() {
   const theme: Theme = useTheme();
   const [addCard, setAddCard] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const toggleModal = () => setOpenModal(!openModal);
 
   //* initialise useformik hook
   const formik = useFormik({
@@ -53,7 +50,6 @@ export default function Dashboard() {
                 name="column_name"
                 label="Column Name"
                 placeholder="Enter Column Name"
-                inputClass="column_input"
               />
               <div className="mt-20">
                 <Button
@@ -78,7 +74,6 @@ export default function Dashboard() {
           )}
         </div>
       </div>
-      <CommonModal open={openModal} handleToggle={toggleModal} />
     </div>
   );
 }

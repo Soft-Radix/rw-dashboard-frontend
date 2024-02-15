@@ -1,11 +1,15 @@
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
-import React, { MouseEvent, useState } from "react";
+import { useFormik } from "formik";
 import {
   DragIcon,
   PlusIcon,
   ThreeDotsIcon,
 } from "public/assets/icons/dashboardIcons";
+import { MouseEvent, useState } from "react";
+import CommonModal from "../CommonModal";
+import InputField from "../InputField";
 import ItemCard from "./ItemCard";
+import ActionModal from "../ActionModal";
 
 type MainCardType = {
   title: string;
@@ -13,6 +17,13 @@ type MainCardType = {
 };
 
 export default function MainCard({ title, isEmpty }: MainCardType) {
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const toggleEditModal = () => setOpenEditModal(!openEditModal);
+
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
+
+  /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -21,6 +32,15 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //* initialise useformik hook
+  const formik = useFormik({
+    initialValues: {
+      column_name: "",
+    },
+    // validationSchema: validationSchemaProperty,
+    onSubmit: (values) => {},
+  });
 
   return (
     <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md">
@@ -54,8 +74,22 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={handleClose}>Edit Title</MenuItem>
-              <MenuItem onClick={handleClose}>Delete Column</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  toggleEditModal();
+                }}
+              >
+                Edit Title
+              </MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  toggleDeleteModal();
+                }}
+              >
+                Delete Column
+              </MenuItem>
             </Menu>
           </div>
         </div>
@@ -133,6 +167,25 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
           </Button>
         )}
       </div>
+      <CommonModal
+        modalTitle={title}
+        open={openEditModal}
+        handleToggle={toggleEditModal}
+      >
+        <InputField
+          formik={formik}
+          name="column_name"
+          label="Column Name"
+          placeholder="Enter Column Name"
+        />
+      </CommonModal>
+      <ActionModal
+        modalTitle="Delete Column"
+        modalSubTitle="Are you sure you want to delete this column ?"
+        open={openDeleteModal}
+        handleToggle={toggleDeleteModal}
+        type="delete"
+      />
     </div>
   );
 }
