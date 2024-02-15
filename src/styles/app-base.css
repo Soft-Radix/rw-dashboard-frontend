@@ -201,6 +201,19 @@ input:-webkit-autofill:active {
         padding-top: 12px;
         padding-bottom: 12px;
       }
+      .MuiInputBase-root {
+        border-radius: 7px;
+      }
+      .MuiOutlinedInput-notchedOutline {
+        border: 1px solid #c9c9c9;
+      }
     }
+  }
+}
+
+/* Common Modal Style */
+.commonModal {
+  .MuiPaper-root {
+    border-radius: 10px;
   }
 }

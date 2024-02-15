@@ -1,10 +1,13 @@
 import { Button, Menu, MenuItem, Typography } from "@mui/material";
-import React, { MouseEvent, useState } from "react";
+import { useFormik } from "formik";
 import {
   DragIcon,
   PlusIcon,
   ThreeDotsIcon,
 } from "public/assets/icons/dashboardIcons";
+import { MouseEvent, useState } from "react";
+import CommonModal from "../CommonModal";
+import InputField from "../InputField";
 import ItemCard from "./ItemCard";
 
 type MainCardType = {
@@ -13,6 +16,10 @@ type MainCardType = {
 };
 
 export default function MainCard({ title, isEmpty }: MainCardType) {
+  const [openModal, setOpenModal] = useState(false);
+  const toggleModal = () => setOpenModal(!openModal);
+
+  /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -21,6 +28,15 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  //* initialise useformik hook
+  const formik = useFormik({
+    initialValues: {
+      column_name: "",
+    },
+    // validationSchema: validationSchemaProperty,
+    onSubmit: (values) => {},
+  });
 
   return (
     <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md">
@@ -54,7 +70,14 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={handleClose}>Edit Title</MenuItem>
+              <MenuItem
+                onClick={() => {
+                  handleClose();
+                  toggleModal();
+                }}
+              >
+                Edit Title
+              </MenuItem>
               <MenuItem onClick={handleClose}>Delete Column</MenuItem>
             </Menu>
           </div>
@@ -133,6 +156,19 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
           </Button>
         )}
       </div>
+      <CommonModal
+        modalTitle={title}
+        open={openModal}
+        handleToggle={toggleModal}
+      >
+        <InputField
+          formik={formik}
+          name="column_name"
+          label="Column Name"
+          placeholder="Enter Column Name"
+          inputClass="column_input"
+        />
+      </CommonModal>
     </div>
   );
 }
