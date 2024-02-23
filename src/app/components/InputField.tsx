@@ -3,7 +3,7 @@ import { FormikProps } from "formik";
 import { useState } from "react";
 
 interface CustomButtonProps {
-  className?: string;
+  // className?: string;
   label?: string;
   formik?: FormikProps<unknown>;
   type?: string;
@@ -12,7 +12,7 @@ interface CustomButtonProps {
 }
 
 function InputField({
-  className,
+  // className,
   formik,
   label,
   type = "text",
@@ -24,7 +24,7 @@ function InputField({
     setIsType(isType === "text" ? "password" : "text");
   };
   return (
-    <div className={`${className} common-inputField w-full`}>
+    <div className={`${rest.className} common-inputField w-full`}>
       {label && (
         <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
           {label}
