@@ -8,10 +8,9 @@ type TitleBarProps = {
 
 export default function TitleBar({ title, children }: TitleBarProps) {
   return (
-    <div>
-      <Typography className="text-[30px] font-semibold px-[28px] py-[20px]">
-        {title}
-      </Typography>
+    <div className="flex justify-between px-[28px] py-[20px]">
+      <Typography className="text-[30px] font-semibold">{title}</Typography>
+      {children}
     </div>
   );
 }
