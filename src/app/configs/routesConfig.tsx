@@ -13,10 +13,12 @@ import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import DashboardConfig from "../pages/dashboard/DashboardConfig";
+import TasksConfig from "../pages/tasks/TasksConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
   DashboardConfig,
+  TasksConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,

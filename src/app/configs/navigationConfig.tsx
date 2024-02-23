@@ -26,7 +26,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "TASK",
     type: "item",
     icon: "heroicons-outline:clipboard-check",
-    url: "task",
+    url: "tasks",
   },
   {
     id: "chatBoard",
