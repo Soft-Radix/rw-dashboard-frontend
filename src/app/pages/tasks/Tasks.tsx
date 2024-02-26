@@ -3,6 +3,7 @@ import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
+import AddTaskModal from "src/app/components/tasks/AddTask";
 import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 
@@ -40,10 +41,10 @@ function a11yProps(index: number) {
 export default function Tasks() {
   const theme: Theme = useTheme();
 
-  const [value, setValue] = useState(0);
-
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
+    setSelectedTab(newValue);
   };
 
   return (
@@ -56,6 +57,7 @@ export default function Tasks() {
           className="h-[40px] text-[16px] flex gap-8"
           aria-label="Log In"
           size="large"
+          onClick={() => setIsOpenAddModal(true)}
         >
           <PlusIcon color={theme.palette.secondary.main} />
           Add Task
@@ -66,7 +68,7 @@ export default function Tasks() {
         <div className="grow">
           <div className="shadow-md bg-white rounded-lg">
             <Tabs
-              value={value}
+              value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
               className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
@@ -87,16 +89,16 @@ export default function Tasks() {
               <Tab label="In Review" {...a11yProps(2)} />
               <Tab label="Completed" {...a11yProps(3)} />
             </Tabs>
-            <CustomTabPanel value={value} index={0}>
+            <CustomTabPanel value={selectedTab} index={0}>
               <ThemePageTable />
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={1}>
+            <CustomTabPanel value={selectedTab} index={1}>
               <ThemePageTable />
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={2}>
+            <CustomTabPanel value={selectedTab} index={2}>
               <ThemePageTable />
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
+            <CustomTabPanel value={selectedTab} index={3}>
               <ThemePageTable />
             </CustomTabPanel>
           </div>
@@ -105,6 +107,7 @@ export default function Tasks() {
           <RecentData />
         </div>
       </div>
+      <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </div>
   );
 }

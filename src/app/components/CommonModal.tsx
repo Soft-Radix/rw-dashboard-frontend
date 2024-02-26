@@ -6,6 +6,11 @@ import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: "10px",
+    margin: 0,
+    width: "100%",
+  },
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
@@ -19,6 +24,7 @@ type ModalType = {
   handleToggle: () => void;
   modalTitle: string;
   children: ReactNode;
+  maxWidth?: string;
 };
 
 export default function CommonModal({
@@ -26,12 +32,17 @@ export default function CommonModal({
   open,
   handleToggle,
   children,
+  maxWidth = "387",
 }: ModalType) {
   return (
     <BootstrapDialog
       aria-labelledby="customized-dialog-title"
       open={open}
-      className="commonModal"
+      sx={{
+        ".MuiPaper-root": {
+          maxWidth: `${maxWidth}px`,
+        },
+      }}
     >
       <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
         <Typography className="text-[16px] font-medium" color="#fff">

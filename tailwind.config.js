@@ -182,6 +182,13 @@ module.exports = {
       black: "#22292F",
       white: "#fff",
       priorityMedium: "#FF5F15",
+      secondary: "#4F46E5",
+      secondary_bg: "#EDEDFC",
+      title: "#111827",
+      title_light: "#393F4C",
+      para: "#737791",
+      para_light: "#757982",
+      bgGrey: "#F6F6F6",
       grey: {
         50: "#FAFAFA",
         100: "#F5F5F5",
