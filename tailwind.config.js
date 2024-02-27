@@ -189,6 +189,7 @@ module.exports = {
       para: "#737791",
       para_light: "#757982",
       bgGrey: "#F6F6F6",
+      borderColor: "#E7E8E9",
       grey: {
         50: "#FAFAFA",
         100: "#F5F5F5",

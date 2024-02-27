@@ -67,7 +67,7 @@ export default function CommonModal({
         <Button
           variant="outlined"
           color="secondary"
-          className="w-[156px] h-[48px] text-[18px] ml-10"
+          className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
         >
           Cancel

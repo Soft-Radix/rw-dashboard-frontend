@@ -14,11 +14,13 @@ import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfi
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import DashboardConfig from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
+import UsersConfig from "../pages/users/usersConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
   DashboardConfig,
   TasksConfig,
+  UsersConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,

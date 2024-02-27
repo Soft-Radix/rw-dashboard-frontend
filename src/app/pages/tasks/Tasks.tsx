@@ -55,7 +55,7 @@ export default function Tasks() {
           variant="outlined"
           color="secondary"
           className="h-[40px] text-[16px] flex gap-8"
-          aria-label="Log In"
+          aria-label="Add Tasks"
           size="large"
           onClick={() => setIsOpenAddModal(true)}
         >
@@ -64,8 +64,8 @@ export default function Tasks() {
         </Button>
       </TitleBar>
 
-      <div className="px-28 flex gap-20">
-        <div className="grow">
+      <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap">
+        <div className="basis-full lg:basis-auto lg:grow">
           <div className="shadow-md bg-white rounded-lg">
             <Tabs
               value={selectedTab}
@@ -103,7 +103,7 @@ export default function Tasks() {
             </CustomTabPanel>
           </div>
         </div>
-        <div className="basis-[322px] shrink-">
+        <div className="basis-full lg:basis-[322px]">
           <RecentData />
         </div>
       </div>

@@ -1,5 +1,10 @@
 @layer utilities {
   .common_table {
+    thead {
+      th {
+        white-space: nowrap;
+      }
+    }
     .th {
       @apply text-sm text-grey-500;
     }

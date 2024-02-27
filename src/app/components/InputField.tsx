@@ -33,16 +33,17 @@ function InputField({
       <div className={`input_wrap ${inputClass}`}>
         <TextField
           type={isType}
-          onChange={formik.handleChange}
+          onChange={formik?.handleChange}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          value={formik.values[rest?.name ?? ""]}
+          value={formik?.values[rest?.name ?? ""]}
           error={
             !!(
-              formik.errors[rest?.name ?? ""] &&
-              formik.touched[rest?.name ?? ""]
+              formik?.errors[rest?.name ?? ""] &&
+              formik?.touched[rest?.name ?? ""]
             )
           }
           {...rest}
+          className=""
         />
         {type === "password" && (
           <span
