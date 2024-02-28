@@ -15,12 +15,14 @@ import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import DashboardConfig from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
+import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
   DashboardConfig,
   TasksConfig,
   UsersConfig,
+  PasswordManagerConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,

@@ -1,13 +1,17 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
+  Box,
+  Chip,
   FormLabel,
-  MenuItem,
   Select,
   SelectChangeEvent,
   SelectProps,
   styled,
 } from "@mui/material";
 import { FormikProps } from "formik";
+import { CrossIcon } from "public/assets/icons/common";
 
 interface IProps {
   // className?: string;
@@ -34,7 +38,10 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     },
   },
   "& .MuiSelect-select": {
-    padding: "16.5px 14px",
+    padding: "0 14px",
+    minHeight: "48px",
+    display: "flex",
+    alignItems: "center",
   },
 }));
 
@@ -46,6 +53,21 @@ function SelectField({
   ...rest
 }: IProps & SelectProps) {
   const formikValue = formik?.values[name];
+
+  const handleFormikChange = (event: SelectChangeEvent) => {
+    const {
+      target: { value },
+    } = event;
+
+    if (rest.multiple) {
+      formik?.setFieldValue(
+        name,
+        typeof value === "string" ? value.split(",") : value
+      );
+    } else {
+      formik?.setFieldValue(name, value);
+    }
+  };
 
   return (
     <div className={`${rest.className} w-full relative`}>
@@ -59,15 +81,22 @@ function SelectField({
         labelId="demo-simple-select-label"
         id="demo-simple-select"
         value={formikValue}
-        onChange={(event: SelectChangeEvent) =>
-          formik?.setFieldValue(name, event.target.value)
-        }
+        onChange={handleFormikChange}
+        MenuProps={{
+          sx: {
+            "& .MuiList-root": {
+              paddingBottom: "2rem",
+            },
+          },
+        }}
         {...rest}
       >
         {rest.children}
       </StyledSelect>
-      {rest.placeholder && !formikValue ? (
-        <span className="absolute text-para_light text-lg left-16 bottom-[1.7rem]">
+      {rest.placeholder &&
+      (!formikValue ||
+        (typeof formikValue === "object" && !formikValue?.length)) ? (
+        <span className="absolute text-para_light text-lg left-16 bottom-[1.4rem]">
           {rest.placeholder}
         </span>
       ) : null}

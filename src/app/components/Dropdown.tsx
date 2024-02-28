@@ -35,16 +35,12 @@ function DropdownMenu({
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "center",
-        }}
-        transformOrigin={{
-          vertical: "top",
-          horizontal: "center",
+          horizontal: "left",
         }}
         {...popoverProps}
         classes={{
-          paper: `pb-20 pt-10 text-title_light shadow-md ${popoverProps?.classes.paper}`,
-          root: popoverProps?.classes.root,
+          paper: `pb-20 pt-10 text-title_light shadow-[0_0_54px_0_rgba(214,215,227,0.6)] ${popoverProps?.classes?.paper}`,
+          root: popoverProps?.classes?.root,
         }}
       >
         {children}

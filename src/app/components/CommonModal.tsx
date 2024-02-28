@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
 
-const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: "10px",
     margin: 0,
@@ -35,7 +35,7 @@ export default function CommonModal({
   maxWidth = "387",
 }: ModalType) {
   return (
-    <BootstrapDialog
+    <StylesDialog
       aria-labelledby="customized-dialog-title"
       open={open}
       sx={{
@@ -73,6 +73,6 @@ export default function CommonModal({
           Cancel
         </Button>
       </div>
-    </BootstrapDialog>
+    </StylesDialog>
   );
 }

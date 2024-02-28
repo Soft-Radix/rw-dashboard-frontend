@@ -6,6 +6,7 @@ import {
   EditIcon,
 } from "public/assets/icons/common";
 import CommonTable from "../commonTable";
+import ImagesOverlap from "../ImagesOverlap";
 
 const rows = [
   {
@@ -92,28 +93,7 @@ function ThemePageTable() {
               </span>
             </TableCell>
             <TableCell align="center">
-              <div className="flex justify-center">
-                {row.assignedImg.map((item, index) =>
-                  index < 3 ? (
-                    <img
-                      className="h-[34px] w-[34px] rounded-full border-2 border-white ml-[-14px] z-0"
-                      key={item}
-                      src={`/assets/images/avatars/${item}`}
-                      alt={item}
-                      loading="lazy"
-                    />
-                  ) : index > 3 ? (
-                    <span
-                      style={{
-                        backgroundColor: theme.palette.secondary.main,
-                      }}
-                      className="h-[34px] w-[34px] flex items-center justify-center text-sm text-white bg-secondary rounded-full border-2 border-white ml-[-10px] z-0"
-                    >
-                      +{row.assignedImg.length - 3}
-                    </span>
-                  ) : null
-                )}
-              </div>
+              <ImagesOverlap images={row.assignedImg} />
             </TableCell>
             <TableCell align="center">Feb 12,2024</TableCell>
             <TableCell align="center">
