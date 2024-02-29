@@ -1,27 +1,32 @@
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import {
   Box,
   Checkbox,
   Chip,
-  Grid,
+  ListItem,
   MenuItem,
-  styled,
   useTheme,
 } from "@mui/material";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction } from "react";
+import { CrossIcon } from "public/assets/icons/common";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import SelectField from "../selectField";
-import { CrossIcon } from "public/assets/icons/common";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
+interface IPropsAssignedTo {
+  name: string;
+  image: string;
+}
+
 function AddPassword({ isOpen, setIsOpen }: IProps) {
   const theme = useTheme();
+
+  const [allSelected, setAllSelected] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -29,26 +34,40 @@ function AddPassword({ isOpen, setIsOpen }: IProps) {
       email: "",
       password: "",
       assigned_to: [],
+      created_on: "",
     },
     onSubmit: (values) => {},
   });
 
-  const roleItems = [
-    { value: "Developer", label: "Developer" },
-    { value: "Tester", label: "Tester" },
-    { value: "Designer", label: "Designer" },
-  ];
-
   const AssignedName = [
     {
       name: "Michelle",
-      image: "male-01-jpg",
+      image: "male-01.jpg",
     },
     {
       name: "Natalie",
-      image: "female-02-jpg",
+      image: "female-02.jpg",
     },
   ];
+
+  const handleAssignedToAll = () => {
+    if (allSelected) {
+      formik.setFieldValue("assigned_to", []);
+    } else {
+      formik.setFieldValue(
+        "assigned_to",
+        AssignedName.map((value) => value.name)
+      );
+    }
+  };
+
+  useEffect(() => {
+    setAllSelected(
+      AssignedName.every((value: IPropsAssignedTo) =>
+        formik.values.assigned_to.includes(value.name)
+      )
+    );
+  }, [formik.values.assigned_to]);
 
   return (
     <CommonModal
@@ -85,50 +104,74 @@ function AddPassword({ isOpen, setIsOpen }: IProps) {
           multiple
           renderValue={(selected: string[]) => {
             return (
-              <Box className="flex gap-16">
-                {selected.map((value, i) => (
-                  <div className="relative">
-                    <Chip
-                      key={i}
-                      label={value}
-                      className="bg-white px-4"
-                      onMouseDown={(e) => e.stopPropagation()}
-                    />
-                    <span
-                      onMouseDown={(e) => {
-                        e.stopPropagation();
-                        formik.setFieldValue(
-                          "assigned_to",
-                          typeof formik.values.assigned_to === "object"
-                            ? formik.values.assigned_to?.filter(
-                                (obj) => obj !== value
-                              )
-                            : formik.values.assigned_to
-                        );
-                      }}
-                      className="absolute z-[1] rounded-full top-[50%] translate-y-[-50%] right-[-8px] h-16 aspect-square border border-borderColor bg-white flex items-center justify-center"
-                    >
-                      <CrossIcon className="text-para" height={8} width={8} />
-                    </span>
-                  </div>
-                ))}
+              <Box className="flex flex-wrap gap-16">
+                {selected.map((value, i) =>
+                  value ? (
+                    <div className="relative flex items-center bg-white px-6 py-5 pe-16 rounded-full gap-8">
+                      <img
+                        className="w-[28px] aspect-square rounded-full object-cover"
+                        src={`/assets/images/avatars/${AssignedName.find((item) => item.name === value).image}`}
+                        alt=""
+                      />
+                      <span className=" ">{value}</span>
+                      <span
+                        onMouseDown={(e) => {
+                          e.stopPropagation();
+                          formik.setFieldValue(
+                            "assigned_to",
+                            typeof formik.values.assigned_to === "object"
+                              ? formik.values.assigned_to?.filter(
+                                  (obj) => obj !== value
+                                )
+                              : formik.values.assigned_to
+                          );
+                        }}
+                        className="absolute z-[1] rounded-full top-[50%] translate-y-[-50%] right-[-8px] h-16 aspect-square border border-borderColor bg-white flex items-center justify-center"
+                      >
+                        <CrossIcon className="text-para" height={8} width={8} />
+                      </span>
+                    </div>
+                  ) : null
+                )}
               </Box>
             );
           }}
         >
-          {AssignedName.map((item) => (
-            <MenuItem
-              key={item.name}
-              value={item.name}
-              // style={getStyles(name, personName, theme)}
+          <MenuItem className="p-0">
+            <ListItem
+              onClick={(event) => {
+                event.stopPropagation();
+                handleAssignedToAll();
+              }}
+              className="py-6 px-16"
             >
+              <Checkbox className="p-0 me-16" checked={allSelected} />
+              ALL
+            </ListItem>
+          </MenuItem>
+          {AssignedName.map((item) => (
+            <MenuItem key={item.name} value={item.name}>
               <Checkbox
                 checked={formik.values.assigned_to.includes(item.name)}
+                sx={{
+                  padding: 0,
+                }}
+              />
+              <img
+                className="w-[3.4rem] aspect-square me-14 ms-16 rounded-full"
+                src={`/assets/images/avatars/${item.image}`}
+                alt=""
               />
               {item.name}
             </MenuItem>
           ))}
         </SelectField>
+        <InputField
+          formik={formik}
+          name="created_on"
+          label="Created On"
+          placeholder="Select Date"
+        />
       </div>
     </CommonModal>
   );

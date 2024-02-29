@@ -11,7 +11,6 @@ import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddPassword from "src/app/components/passwordManager/AddPassword";
-import AddUserModal from "src/app/components/users/AddUser";
 
 const rows = [
   {

@@ -176,6 +176,13 @@ export default function Users() {
                       name="role"
                       formik={formik}
                       placeholder="Select Role"
+                      sx={{
+                        "&.MuiInputBase-root": {
+                          "& .MuiSelect-select": {
+                            minHeight: "40px",
+                          },
+                        },
+                      }}
                     >
                       <MenuItem value="Designer">Designer</MenuItem>
                       <MenuItem value="Tester">Tester</MenuItem>
@@ -186,6 +193,13 @@ export default function Users() {
                       name="verification"
                       formik={formik}
                       placeholder="Select Option"
+                      sx={{
+                        "&.MuiInputBase-root": {
+                          "& .MuiSelect-select": {
+                            minHeight: "40px",
+                          },
+                        },
+                      }}
                     >
                       <MenuItem value="Enabled">Enabled</MenuItem>
                       <MenuItem value="Disabled">Disabled</MenuItem>

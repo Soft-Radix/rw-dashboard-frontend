@@ -16,6 +16,8 @@ import DashboardConfig from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
 import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
+import SharedFilesConfig from "../pages/shared-files/sharedFilesConfig";
+import BillingConfig from "../pages/billing/billingConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
@@ -23,6 +25,8 @@ const routeConfigs: FuseRouteConfigsType = [
   TasksConfig,
   UsersConfig,
   PasswordManagerConfig,
+  BillingConfig,
+  SharedFilesConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,
