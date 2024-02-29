@@ -5,6 +5,11 @@ import { styled } from "@mui/material/styles";
 import { CircularDeleteIcon } from "public/assets/icons/common";
 
 const BootstrapDialog = styled(Dialog)(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: "10px",
+    margin: 0,
+    width: "100%",
+  },
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),
   },
@@ -19,6 +24,7 @@ type ModalType = {
   modalTitle: string;
   modalSubTitle: string;
   type: string;
+  maxWidth?: string;
 };
 
 export default function ActionModal({
@@ -27,12 +33,17 @@ export default function ActionModal({
   handleToggle,
   modalSubTitle,
   type,
+  maxWidth = "387",
 }: ModalType) {
   return (
     <BootstrapDialog
       aria-labelledby="customized-dialog-title"
       open={open}
-      className="commonModal"
+      sx={{
+        ".MuiPaper-root": {
+          maxWidth: `${maxWidth}px`,
+        },
+      }}
     >
       <div className="p-28 flex flex-col items-center">
         {type === "delete" ? <CircularDeleteIcon /> : null}

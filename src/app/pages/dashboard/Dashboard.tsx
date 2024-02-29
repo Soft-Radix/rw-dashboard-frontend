@@ -21,7 +21,9 @@ export default function Dashboard() {
   });
   return (
     <div>
-      <TitleBar title="Welcome On Dashboard!" />
+      <Typography className="text-[30px] font-semibold px-28 py-[20px]">
+        Welcome On Dashboard!
+      </Typography>
       <div className="flex gap-20 overflow-x-auto px-28 pb-28 items-start">
         <MainCard title="To Do" />
         <MainCard title="In Progress" />
