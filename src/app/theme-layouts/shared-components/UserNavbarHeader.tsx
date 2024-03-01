@@ -56,7 +56,7 @@ function UserNavbarHeader() {
           Account Manager
         </Typography>
         <Typography className="email whitespace-nowrap text-13 font-medium flex text-[#E7E8E9] items-center gap-5">
-          <EmailIcon />
+          <EmailIcon className="text-white" />
           {user.data.email}
         </Typography>
         <Button

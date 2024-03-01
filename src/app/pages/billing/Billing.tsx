@@ -1,15 +1,11 @@
 import { Button, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
+import BillingAddresses from "src/app/components/billings/billingAddress";
+import BillingHistory from "src/app/components/billings/billingHistory";
 import PaymentMethods from "src/app/components/billings/paymentMethods";
-import AddPassword from "src/app/components/passwordManager/AddPassword";
 
 export default function Billing() {
-  const theme: Theme = useTheme();
-
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-
   return (
     <div>
       <TitleBar title="Billing" />
@@ -31,7 +27,6 @@ export default function Billing() {
                 className="h-[40px] text-[16px] flex gap-8 whitespace-nowrap"
                 aria-label="Add User"
                 size="large"
-                onClick={() => setIsOpenAddModal(true)}
               >
                 Cancel Subscription
               </Button>
@@ -41,7 +36,6 @@ export default function Billing() {
                 className="h-[40px] text-[16px] flex gap-8 whitespace-nowrap"
                 aria-label="Add User"
                 size="large"
-                onClick={() => setIsOpenAddModal(true)}
               >
                 Upgrade Plan
               </Button>
@@ -93,11 +87,16 @@ export default function Billing() {
           </div>
         </div>
         {/* ----------------------------- Payment Methods ------------------------ */}
-        <div className="py-24">
+        <div className="my-24">
           <PaymentMethods />
         </div>
+        <div className="my-24">
+          <BillingAddresses />
+        </div>
+        <div className="my-24">
+          <BillingHistory />
+        </div>
       </div>
-      <AddPassword isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </div>
   );
 }
