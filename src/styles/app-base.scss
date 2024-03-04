@@ -179,10 +179,19 @@ input:-webkit-autofill:active {
   .MuiFormControl-root {
     width: 100%;
   }
-  .MuiInputBase-input {
+  input,
+  textarea {
     background-color: #f6f6f6;
     border-radius: 7px;
     font-size: 16px;
+  }
+  input {
+    min-height: 48px;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  textarea {
+    padding: 16px 14px;
   }
   .MuiOutlinedInput-notchedOutline {
     border: none;
@@ -195,6 +204,19 @@ input:-webkit-autofill:active {
       right: 0;
       transform: translate(-50%, -50%);
       cursor: pointer;
+    }
+    .MuiInputBase-input {
+      /* padding-top: 10px;
+      padding-bottom: 12px; */
+    }
+    .MuiInputBase-root {
+      border-radius: 7px;
+      padding: 0;
+      &.Mui-focused {
+        .MuiOutlinedInput-notchedOutline {
+          border: 1px solid #4f46e5;
+        }
+      }
     }
   }
 }

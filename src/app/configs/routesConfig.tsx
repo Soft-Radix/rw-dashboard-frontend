@@ -13,10 +13,24 @@ import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import DashboardConfig from "../pages/dashboard/DashboardConfig";
+import TasksConfig from "../pages/tasks/TasksConfig";
+import UsersConfig from "../pages/users/usersConfig";
+import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
+import SharedFilesConfig from "../pages/shared-files/sharedFilesConfig";
+import BillingConfig from "../pages/billing/billingConfig";
+import ProfileConfig from "../pages/profile/profileConfig";
+import SupportConfig from "../pages/support/supportConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
   DashboardConfig,
+  TasksConfig,
+  UsersConfig,
+  PasswordManagerConfig,
+  BillingConfig,
+  SharedFilesConfig,
+  ProfileConfig,
+  SupportConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,

@@ -11,7 +11,7 @@ i18next.addResourceBundle("ar", "dashboardPage", ar);
 const Dashboard = lazy(() => import("./Dashboard"));
 
 /**
- * The Example page config.
+ * The Dashboard page config.
  */
 const DashboardConfig = {
   settings: {

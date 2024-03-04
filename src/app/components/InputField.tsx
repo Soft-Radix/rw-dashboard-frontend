@@ -3,18 +3,22 @@ import { FormikProps } from "formik";
 import { useState } from "react";
 
 interface CustomButtonProps {
-  className?: string;
+  // className?: string;
+  name: string;
   label?: string;
   formik?: FormikProps<unknown>;
   type?: string;
+  inputClass?: string;
   // props: TextFieldProps;
 }
 
 function InputField({
-  className,
+  // className,
+  name,
   formik,
   label,
   type = "text",
+  inputClass,
   ...rest
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
@@ -22,25 +26,21 @@ function InputField({
     setIsType(isType === "text" ? "password" : "text");
   };
   return (
-    <div className={`${className} common-inputField w-full`}>
+    <div className={`${rest.className} common-inputField w-full`}>
       {label && (
         <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
           {label}
         </FormLabel>
       )}
-      <div className="input_wrap">
+      <div className={`input_wrap ${inputClass}`}>
         <TextField
           type={isType}
-          onChange={formik.handleChange}
+          onChange={(e) => formik.setFieldValue(name, e.target.value)}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          value={formik.values[rest?.name ?? ""]}
-          error={
-            !!(
-              formik.errors[rest?.name ?? ""] &&
-              formik.touched[rest?.name ?? ""]
-            )
-          }
+          value={formik?.values[name ?? ""]}
+          error={!!(formik?.errors[name ?? ""] && formik?.touched[name ?? ""])}
           {...rest}
+          className=""
         />
         {type === "password" && (
           <span
@@ -60,7 +60,7 @@ function InputField({
         )}
       </div>
       <span className="">
-        {formik?.errors[rest?.name ?? ""] && formik?.touched[rest?.name ?? ""]}
+        {formik?.errors[name ?? ""] && formik?.touched[name ?? ""]}
       </span>
     </div>
   );
