@@ -106,6 +106,12 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 }
               />
             }
+            popoverProps={{
+              open: !!dateTimeMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
           >
             {dateTimeMenuData.map((item) => (
               <StyledMenuItem onClick={() => setDateTimeMenu(null)}>
@@ -136,6 +142,12 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 icon={<PriorityIcon />}
               />
             }
+            popoverProps={{
+              open: !!priorityMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
           >
             {priorityMenuData.map((item) => (
               <StyledMenuItem onClick={() => setPriorityMenu(null)}>
@@ -156,6 +168,12 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 }
               />
             }
+            popoverProps={{
+              open: !!labelsMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
           >
             {labelsMenuData.map((item) => (
               <StyledMenuItem onClick={() => setPriorityMenu(null)}>
@@ -189,6 +207,12 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 icon={<StatusIcon />}
               />
             }
+            popoverProps={{
+              open: !!statusMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
           >
             {statusMenuData.map((item) => (
               <StyledMenuItem onClick={() => setStatusMenu(null)}>

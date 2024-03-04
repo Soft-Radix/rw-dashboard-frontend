@@ -1,3 +1,4 @@
+import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -5,14 +6,13 @@ import ListItemText from "@mui/material/ListItemText";
 import MenuItem from "@mui/material/MenuItem";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
+import { darken } from "@mui/material/styles";
+import { DownArrow } from "public/assets/icons/topBarIcons";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { selectUser } from "src/app/auth/user/store/userSlice";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
-import { darken } from "@mui/material/styles";
-import { DownArrow } from "public/assets/icons/topBarIcons";
+import { selectUser } from "src/app/auth/user/store/userSlice";
 
 /**
  * The user menu.
@@ -112,16 +112,24 @@ function UserMenu() {
             </MenuItem>
           </>
         ) : (
-          <MenuItem
-            onClick={() => {
-              signOut();
-            }}
-          >
-            <ListItemIcon className="min-w-40">
-              <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
-            </ListItemIcon>
-            <ListItemText primary="Sign out" />
-          </MenuItem>
+          <>
+            <MenuItem component={Link} to="/profile" onClick={userMenuClose}>
+              <ListItemIcon className="min-w-40">
+                <FuseSvgIcon>heroicons-outline:user</FuseSvgIcon>
+              </ListItemIcon>
+              <ListItemText primary="My profile" />
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                signOut();
+              }}
+            >
+              <ListItemIcon className="min-w-40">
+                <FuseSvgIcon>heroicons-outline:logout</FuseSvgIcon>
+              </ListItemIcon>
+              <ListItemText primary="Sign out" />
+            </MenuItem>
+          </>
         )}
       </Popover>
     </>

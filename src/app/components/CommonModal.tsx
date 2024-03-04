@@ -1,3 +1,4 @@
+import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
@@ -48,11 +49,13 @@ export default function CommonModal({
         <Typography className="text-[16px] font-medium" color="#fff">
           {modalTitle}
         </Typography>
-        <CrossIcon
-          className="cursor-pointer"
-          color="#fff"
-          onClick={handleToggle}
-        />
+        <IconButton>
+          <CrossIcon
+            className="cursor-pointer"
+            color="#fff"
+            onClick={handleToggle}
+          />
+        </IconButton>
       </div>
       <div className="p-20">{children}</div>
 
