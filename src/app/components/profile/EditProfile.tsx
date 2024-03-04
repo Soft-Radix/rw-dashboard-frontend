@@ -65,7 +65,7 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
     <CommonModal
       open={isOpen}
       handleToggle={() => setIsOpen((prev) => !prev)}
-      modalTitle="Add Profile"
+      modalTitle="Edit Profile"
       maxWidth="733"
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">

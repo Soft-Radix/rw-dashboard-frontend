@@ -1,15 +1,84 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { Button, Grid, Theme, Typography } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { Button, Grid, Switch, Typography, useTheme } from "@mui/material";
+import { styled } from "@mui/styles";
 import { ArrowRightCircleIcon, EmailIcon } from "public/assets/icons/common";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
+import { Link } from "react-router-dom";
 import TitleBar from "src/app/components/TitleBar";
 import EditProfile from "src/app/components/profile/EditProfile";
+import TwoFactorAuth from "src/app/components/profile/TwoFactorAuth";
 
+const Android12Switch = styled(Switch)(() => ({
+  padding: 0,
+  height: 34,
+  width: 80,
+  borderRadius: 100,
+  "& .MuiSwitch-track": {
+    borderRadius: 22 / 2,
+    backgroundColor: "#f6f6f6",
+    opacity: 1,
+    "&::before, &::after": {
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+    },
+    "&::before": {
+      content: '"ON"',
+      left: 10,
+      color: "#fff",
+      display: "none",
+    },
+    "&::after": {
+      content: '"OFF"',
+      right: 10,
+      color: "#757982",
+    },
+  },
+  "& .MuiButtonBase-root": {
+    padding: 0,
+    "& .MuiSwitch-input": {
+      left: 0,
+    },
+    "&.Mui-checked": {
+      "& .MuiSwitch-input": {
+        left: "-55px",
+      },
+      transform: "translateX(44px)",
+      "&+.MuiSwitch-track": {
+        backgroundColor: "#4f46e5",
+        opacity: 1,
+        "&::before": {
+          display: "inline",
+        },
+        "&::after": {
+          display: "none",
+        },
+      },
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    filter: "drop-shadow(0px 0px 6px rgba(0,0,0,0.1))",
+    display: "block",
+    boxShadow: "none",
+    width: "28px",
+    height: "auto",
+    aspectRatio: 1,
+    margin: 3,
+    backgroundColor: "white",
+  },
+}));
 export default function Profile() {
-  const theme: Theme = useTheme();
-
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenAuthModal, setIsOpenAuthModal] = useState(false);
+  const [isAuthenticated, setIsAuthenticate] = useState(false);
+
+  const handleAuthSwitch = (e: ChangeEvent<HTMLInputElement>) => {
+    const { checked } = e.target;
+    setIsAuthenticate(checked);
+    if (checked) {
+      setIsOpenAuthModal(true);
+    }
+  };
 
   return (
     <div>
@@ -70,22 +139,24 @@ export default function Profile() {
         </div>
         <Grid container spacing="26px" className="py-[2.4rem]">
           <Grid item lg={6} className="basis-full">
-            <div className="shadow-md bg-white rounded-lg p-24 flex items-center justify-between gap-10">
-              <div>
-                <Typography
-                  component="h4"
-                  className="text-2xl text-title font-600 mb-8"
-                >
-                  Change Password
-                </Typography>
-                <p className="text-para_light">
-                  Here you can change your password.
-                </p>
+            <Link to="/change-password" className="contents">
+              <div className="shadow-md bg-white rounded-lg p-24 flex items-center justify-between gap-10">
+                <div>
+                  <Typography
+                    component="h4"
+                    className="text-2xl text-title font-600 mb-8"
+                  >
+                    Change Password
+                  </Typography>
+                  <p className="text-para_light">
+                    Here you can change your password.
+                  </p>
+                </div>
+                <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
+                  <ArrowRightCircleIcon />
+                </div>
               </div>
-              <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
-                <ArrowRightCircleIcon />
-              </div>
-            </div>
+            </Link>
           </Grid>
           <Grid item lg={6} className="basis-full">
             <div className="shadow-md bg-white rounded-lg p-24 flex items-center justify-between gap-10">
@@ -106,7 +177,7 @@ export default function Profile() {
             </div>
           </Grid>
         </Grid>
-        <div className="shadow-md bg-white rounded-lg p-24">
+        <div className="shadow-md bg-white rounded-lg p-24 flex items-center justify-between gap-10">
           <div>
             <Typography
               component="h4"
@@ -119,9 +190,14 @@ export default function Profile() {
               for Two-Factor Authentication.
             </p>
           </div>
+          <Android12Switch
+            checked={isAuthenticated}
+            onChange={handleAuthSwitch}
+          />
         </div>
       </div>
       <EditProfile isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <TwoFactorAuth isOpen={isOpenAuthModal} setIsOpen={setIsOpenAuthModal} />
     </div>
   );
 }
