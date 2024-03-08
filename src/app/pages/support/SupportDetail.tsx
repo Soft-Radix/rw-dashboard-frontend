@@ -1,6 +1,16 @@
-import { Button, Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  Container,
+  Grid,
+  TableCell,
+  TableRow,
+  Theme,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
+import { Box } from "@mui/system";
 import { useFormik } from "formik";
+
 import {
   ArrowRightCircleIcon,
   DeleteIcon,
@@ -16,6 +26,9 @@ import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 
 import AddUserModal from "src/app/components/users/AddUser";
+import styled from "styled-components";
+import Paper from "@mui/material/Paper";
+import CustomButton from "src/app/components/custom_button";
 
 const rows = [
   {
@@ -101,7 +114,7 @@ export default function Support() {
   return (
     <>
       <div>
-        <TitleBar title="Support">
+        <TitleBar title="Support Detail">
           <Button
             variant="outlined"
             color="secondary"
@@ -114,76 +127,71 @@ export default function Support() {
             New Ticket
           </Button>
         </TitleBar>
-        <div className="px-28 mb-[3rem]">
-          <div className="shadow-sm bg-white rounded-lg">
-            <div className="h-24" />
+        <div
+          className=" flex items-center justify-between pl-[4rem]  pr-[3rem]
+         mt-20 gap-[30px]"
+        >
+          <div className=" w-[50%] ml-10 flex flex-col gap-[10px]">
+            <div className="flex gap-[8px] h-20 items-end">
+              <span className="text-xl text-[#111827] font-bold">
+                1542145611525
+              </span>
+              <span className="text-[12px] text-[#757982] ">Ticket ID</span>
+            </div>
+            <div>
+              <span className="text-[14px] text-[#757982] ">Due Date</span>
+              <span className="text-[#111827]"> : Feb 12,2024 , 11: 30 AM</span>
+            </div>
+            <div className="flex">
+              <span className="text-[14px] text-[#757982] "> Subject </span>
+              <span> : Web page design</span>
+            </div>
 
-            <CommonTable
-              headings={[
-                "Ticket #",
-                "Subject",
-                "Status",
-                "Department",
-                "Date",
-                "Actions",
-              ]}
-            >
-              <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
-                  >
-                    <TableCell scope="row">{row.ticket}</TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.subject}
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                      >
-                        {row.status}
-                      </span>
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.department}
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.date}
-                    </TableCell>
-                    <TableCell align="left" className="w-[1%]">
-                      <div className="flex gap-20 pe-20">
-                        <span className="p-2 cursor-pointer">
-                          <DeleteIcon />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <EditIcon />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <Link to="/supportdetail">
-                            <ArrowRightCircleIcon />
-                          </Link>
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
-            </CommonTable>
-            <div className="flex justify-end py-14 px-[3rem]">
-              <CommonPagination count={10} />
+            <div className="  flex items-center justify-start gap-[31px] my-20 ">
+              <div className="flex  flex-col gap-7 ">
+                <div className="text-[14px] text-[#757982] ">Status</div>
+                <Button
+                  variant="outlined"
+                  className="h-20
+                   rounded-3xl min-h-24  text-[#FF5F15] bg-[#ffe2d5]
+                    border-none mt-10"
+                >
+                  In Progress
+                </Button>
+              </div>
+              <div className="flex flex-col gap-20 pl-10 items-start">
+                <span className="text-[14px] text-[#757982]"> Department</span>
+                <span className="text-[#111827] font-400 mb-5">
+                  Account Manager
+                </span>
+              </div>
+            </div>
+            <div>
+              <div className="text-[#111827] font-500 ">Attachment</div>
+              <div className="flex py-5 gap-10">
+                <div>
+                  <img src="../assets/images/pages/supportDetail/blackAttachment.png" />
+                </div>
+                <div>
+                  <img src="../assets/images/pages/supportDetail/whiteAttachment.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className=" w-[846px] h-[322px] flex items-start justify-end ">
+            <div className=" w-1/2 h-[5rem] bg-[#2c334c] rounded-t-xl">
+              <div className="flex item-center">
+                <span></span>
+                <span className="text-[#FFFFFF]">Client Name</span>
+              </div>
             </div>
           </div>
         </div>
-        <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+        <div className="px-28 mb-[3rem]">
+          <div className="shadow-sm bg-white rounded-lg"></div>
+          <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+        </div>
       </div>
     </>
   );

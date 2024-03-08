@@ -9,6 +9,7 @@ i18next.addResourceBundle("tr", "tasksPage", tr);
 i18next.addResourceBundle("ar", "tasksPage", ar);
 
 const Support = lazy(() => import("./Support"));
+const SupportDetail = lazy(() => import("./SupportDetail"));
 
 /**
  * The Tasks page config.
@@ -21,6 +22,10 @@ const SupportConfig = {
     {
       path: "support",
       element: <Support />,
+    },
+    {
+      path: "supportDetail",
+      element: <SupportDetail />,
     },
   ],
 };

@@ -38,6 +38,7 @@ const routeConfigs: FuseRouteConfigsType = [
   ResetPasswordConfig,
   OtpVerificationConfig,
   AddProjectConfig,
+ 
 ];
 
 /**
