@@ -28,6 +28,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import TitleBar from "src/app/components/TitleBar";
+import InputField from "src/app/components/InputField";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
@@ -128,7 +129,7 @@ export default function Support() {
 
   return (
     <>
-      <div className="">
+      <div className="px-32">
         <TitleBar title="Support Detail">
           <Button
             variant="outlined"
@@ -142,28 +143,30 @@ export default function Support() {
             New Ticket
           </Button>
         </TitleBar>
-        <Grid container spacing={3} className="px-32 rounded-xl sm:px-10 ">
-          <Grid item xs={12} sm={8} md={9}>
-            <div className="ml-10 flex flex-col gap-10 py-20 bg-[#FFFFFF] h-[846px] pl-32 sm:pl-10">
-              <div className="flex gap-8  items-end">
+      </div>
+      <div className="px-40">
+        <Grid container spacing={3} className="sm:px-10  xs:px-10 ">
+          <Grid item xs={12} sm={8} md={9} className="">
+            <div className=" flex flex-col gap-10 py-32 bg-[#FFFFFF] md:h-screen px-32 rounded-12 xs:px-10 xs:h-auto sm:h-auto">
+              <div className="flex gap-8  items-end px-20 ">
                 <span className="text-xl text-[#111827] font-bold">
                   1542145611525
                 </span>
                 <span className="text-[12px] text-[#757982]">Ticket ID</span>
               </div>
-              <div>
+              <div className="px-20">
                 <span className="text-[14px] text-[#757982]">Due Date</span>
                 <span className="text-[#111827]">
                   {" "}
                   : Feb 12, 2024, 11:30 AM
                 </span>
               </div>
-              <div className="flex">
+              <div className="flex px-20">
                 <span className="text-[14px] text-[#757982]"> Subject </span>
                 <span> : Web page design</span>
               </div>
-              <div className="flex items-center justify-start gap-31 my-20">
-                <div className="flex flex-col gap-7">
+              <div className="flex items-center justify-start gap-31 my-20 py-20 border-t border-b border-solid border-[#EDF2F6]  mx-20 w-full">
+                <div className="flex flex-col gap-7 border-r border-solid border-[#EDF2F6] pr-10 pl-5 ">
                   <div className="text-[14px] text-[#757982]">Status</div>
                   <Button
                     variant="outlined"
@@ -172,7 +175,7 @@ export default function Support() {
                     In Progress
                   </Button>
                 </div>
-                <div className="flex flex-col gap-20 pl-10 items-start">
+                <div className="flex flex-col gap-20 items-start  px-20">
                   <span className="text-[14px] text-[#757982]">
                     {" "}
                     Department
@@ -182,9 +185,9 @@ export default function Support() {
                   </span>
                 </div>
               </div>
-              <div>
-                <div className="text-[#111827] font-500">Attachment</div>
-                <div className="flex py-5 gap-10">
+              <div className="flex flex-col gap-9 px-20">
+                <div className="text-[#111827] font-500 ">Attachment</div>
+                <div className="flex py-5 gap-10 ">
                   <div>
                     <img
                       src="../assets/images/pages/supportDetail/blackAttachment.png"
@@ -225,7 +228,7 @@ export default function Support() {
           </Grid>
 
           <Grid item xs={12} sm={4} md={3}>
-            <div className="flex items-end justify-between flex-col py-20 px-10 bg-[#FFFFFF] h-[846px] ">
+            <div className="flex items-end justify-between flex-col py-20 px-10 bg-[#FFFFFF] md:h-screen rounded-12 xs:auto sm:auto xs:gap-[30px] ">
               <div className="w-full h-[6rem] bg-[#2c334c] rounded-t-xl flex">
                 <div className="flex justify-start items-center gap-10 px-10">
                   <span className="flex items-center justify-center py-5">
@@ -248,11 +251,11 @@ export default function Support() {
             </div>
           </Grid>
         </Grid>
+      </div>
 
-        <div className="px-28 mb-[3rem]">
-          <div className="shadow-sm bg-white rounded-lg"></div>
-          <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
-        </div>
+      <div className="px-28 mb-[3rem]">
+        <div className="shadow-sm bg-white rounded-lg"></div>
+        <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
       </div>
     </>
   );
