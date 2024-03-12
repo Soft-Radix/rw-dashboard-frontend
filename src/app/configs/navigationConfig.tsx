@@ -20,6 +20,14 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:template",
     url: "dashboard",
   },
+  {
+    id: "projects",
+    title: "Projects",
+    translate: "Projects",
+    type: "item",
+    icon: "heroicons-outline:list",
+    url: "projects",
+  },
 
   {
     id: "task",
