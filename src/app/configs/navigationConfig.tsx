@@ -20,6 +20,7 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:template",
     url: "dashboard",
   },
+
   {
     id: "task",
     title: "Task",
@@ -28,6 +29,7 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:clipboard-check",
     url: "tasks",
   },
+
   {
     id: "chatBoard",
     title: "Chat Board",
@@ -60,6 +62,7 @@ const navigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:user-group",
     url: "my-agents",
   },
+
   {
     id: "users",
     title: "Users",

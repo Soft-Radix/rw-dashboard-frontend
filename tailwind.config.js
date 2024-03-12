@@ -1212,6 +1212,7 @@ module.exports = {
       150: "1.5",
     },
     screens: {
+      xs: "300px",
       sm: "600px",
       md: "960px",
       lg: "1280px",
