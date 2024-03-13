@@ -2,6 +2,7 @@
 import {
   Button,
   Checkbox,
+  Grid,
   TableCell,
   TableRow,
   Theme,
@@ -26,29 +27,85 @@ import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 
 const rows = [
   {
-    user: ["img", "text"],
+    user: [
+      {
+        image: "../assets/images/pages/dashBoared/recentTableImg.png",
+        text: "Penelope",
+      },
+    ],
     taskCompleted: "Logo Design",
     punch: "In",
+    updates: [
+      {
+        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        text: "Recent Task Updates",
+      },
+    ],
   },
   {
-    user: ["img", "text"],
+    user: [
+      {
+        image: "../assets/images/pages/dashBoared/recentTableImg.png",
+        text: "Penelope",
+      },
+    ],
     taskCompleted: "Logo Design",
-    punch: "In",
+    punch: "Out",
+    updates: [
+      {
+        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        text: "Recent Task Updates",
+      },
+    ],
   },
   {
-    user: ["img", "text"],
+    user: [
+      {
+        image: "../assets/images/pages/dashBoared/recentTableImg.png",
+        text: "Penelope",
+      },
+    ],
     taskCompleted: "Logo Design",
     punch: "In",
+    updates: [
+      {
+        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        text: "Recent Task Updates",
+      },
+    ],
   },
   {
-    user: ["img", "text"],
+    user: [
+      {
+        image: "../assets/images/pages/dashBoared/recentTableImg.png",
+        text: "Penelope",
+      },
+    ],
     taskCompleted: "Logo Design",
-    punch: "In",
+    punch: "Out",
+    updates: [
+      {
+        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        text: "Recent Task Updates",
+      },
+    ],
   },
   {
-    user: ["img", "text"],
+    user: [
+      {
+        image: "../assets/images/pages/dashBoared/recentTableImg.png",
+        text: "Penelope",
+      },
+    ],
     taskCompleted: "Logo Design",
-    punch: "In",
+    punch: "Out",
+
+    updates: [
+      {
+        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        text: "Recent Task Updates",
+      },
+    ],
   },
 ];
 
@@ -62,14 +119,12 @@ export default function DashboardRecentActivity() {
   };
 
   return (
-    <div className="flex px-28 gap-[20px] mb-[3rem] h-[417px]  ">
-      <div className=" mb-[3rem] flex-1 ">
-        <div className="shadow-sm bg-white rounded-lg">
-          <Typography className="text-[16px] font-600 pt-28 px-20">
+    <Grid container spacing={3} className="px-28 mb-[3rem]">
+      <Grid item xs={12} lg={6}>
+        <div className="shadow-sm bg-white rounded-lg ">
+          <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
-          <div className="h-24" />
-
           <CommonTable headings={["User", "Task Completed", "Punch In/Out"]}>
             <>
               {rows.map((row, index) => (
@@ -81,45 +136,54 @@ export default function DashboardRecentActivity() {
                       paddingTop: "12px",
                       paddingBottom: "12px",
                       color: theme.palette.primary.main,
+                      textAlign: "center",
                     },
                   }}
                 >
-                  <TableCell scope="row">{row.user}</TableCell>
+                  <TableCell scope="row" className="flex items-center gap-8 ">
+                    <img src={row.user[0].image} />
+                    <span>{row.user[0].text}</span>
+                  </TableCell>
+
                   <TableCell scope="row">{row.taskCompleted}</TableCell>
                   <TableCell scope="row">{row.punch}</TableCell>
-
-                  {/* <TableCell align="center" className="whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                        ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                    >
-                      {row.status}
+                  <TableCell
+                    scope="row"
+                    className="flex items-center gap-10 justify-center"
+                  >
+                    <img src={row.updates[0].arrow} />
+                    <span className="text-[#4F46E5] text-sm">
+                      {row.updates[0].text}
                     </span>
-                  </TableCell> */}
+                  </TableCell>
                 </TableRow>
               ))}
             </>
           </CommonTable>
         </div>
-      </div>
-      <div className="flex-1 shadow-sm bg-white rounded-lg ">
-        <div className="flex items-center justify-between px-24 py-28 border-b border-solid border-[#EDF2F6]">
-          <Typography className="text-[16px] font-600">Logged Hours</Typography>
-
-          <div className="flex mr-20 items-center justify-center gap-32">
-            <Typography className="text-[16px] font-500">
-              Total Logged Hours
+      </Grid>
+      <Grid item xs={12} lg={6}>
+        <div className="shadow-sm bg-white rounded-lg">
+          <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
+            <Typography className="text-[16px] font-600">
+              Logged Hours
             </Typography>
-            <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
-              {" "}
-              34
-            </span>
+
+            <div className="flex mr-20 items-center justify-center gap-32">
+              <Typography className="text-[16px] font-500">
+                Total Logged Hours
+              </Typography>
+              <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
+                {" "}
+                34
+              </span>
+            </div>
+          </div>
+          <div className="pb-10">
+            <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" />
           </div>
         </div>
-        <div>
-          <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" />
-        </div>
-      </div>
-    </div>
+      </Grid>
+    </Grid>
   );
 }

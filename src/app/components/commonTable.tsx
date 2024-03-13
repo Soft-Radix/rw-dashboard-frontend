@@ -18,7 +18,7 @@ function CommonTable({ children, headings, headingRowProps }: IProps) {
   return (
     <TableContainer>
       <Table size="small" aria-label="simple table" className="common_table">
-        <TableHead className="bg-[#F7F9FB] text-sm">
+        <TableHead className="bg-[#F7F9FB] text-sm border-b-2  border-solid border-[#EDF2F6]">
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
               <TableCell

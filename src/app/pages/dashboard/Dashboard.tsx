@@ -13,7 +13,11 @@ import {
   DeleteIcon,
   EditIcon,
 } from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import {
+  DownArrowIcon,
+  PlusIcon,
+  UpArrowIcon,
+} from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
@@ -24,6 +28,10 @@ import AddTaskModal from "src/app/components/tasks/AddTask";
 import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import DashboardRecentActivity from "./DashboardRecentActivity";
+import DashboaredAgenda from "./DashboaredAgenda";
+import DropdownMenu from "src/app/components/Dropdown";
+import MenuItem from "@mui/material/MenuItem";
+import Menu from "material-ui/Menu";
 
 const rows = [
   {
@@ -88,27 +96,104 @@ export default function Dashboard() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
+
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuItemClick = (value: string) => {
+    setSelectedValue(value);
+    setAnchorEl(null);
+  };
+  const handleProjectList = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl1(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+    setAnchorEl1(null);
+  };
+  console.log(anchorEl1, "anchor");
 
   return (
     <div>
-      <div className="px-32 py-10">
-        <TitleBar title="Welcome On Dashboard !">
+      <div className="px-32 py-10 flex items-center justify-between relative">
+        <TitleBar title="Welcome On Dashboard !"></TitleBar>
+        <DropdownMenu
+          button={
+            <div
+              className="flex items-center relative"
+              onClick={handleButtonClick}
+            >
+              <Button
+                variant="outlined"
+                color="secondary"
+                className="h-[40px] text-[16px] flex gap-8 mb-[1rem]"
+                aria-label="Add Tasks"
+                size="large"
+              >
+                Manage Sections
+                <DownArrowIcon className="cursor-pointer" />
+              </Button>
+            </div>
+          }
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+        >
+          <div className="w-[375px] ">
+            <MenuItem>
+              <Checkbox />
+              Agents logged-in
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Recent activity
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Logged hours
+            </MenuItem>
+            {/* Nested Dropdown Menu */}
+            <div
+              className="flex items-center relative"
+              onClick={handleProjectList}
+            >
+              <Button
+                variant="text"
+                className="h-[40px] text-[16px] flex gap-8 mb-[1rem]"
+                aria-label="Add Tasks"
+                size="large"
+              >
+                <DownArrowIcon className="cursor-pointer fill-none" />
+                Project Summary
+              </Button>
+            </div>
+          </div>
+        </DropdownMenu>
+
+        {/* Nested DropdownMenu component placed outside the main DropdownMenu */}
+        <DropdownMenu
+          button={null} // No button needed as it's nested
+          anchorEl={anchorEl1}
+          handleClose={handleClose}
+        >
           {" "}
-          <Button
-            variant="outlined"
-            color="secondary"
-            className="h-[40px] text-[16px] flex gap-8"
-            aria-label="Add Tasks"
-            size="large"
-            onClick={() => setIsOpenAddModal(true)}
-          >
-            <PlusIcon color={theme.palette.secondary.main} />
-            Add Task
-          </Button>
-        </TitleBar>
+          <div className="w-[375px] px-20 ">
+            <MenuItem>
+              <Checkbox />
+              Project 1
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Project 2
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Project 3
+            </MenuItem>
+          </div>
+        </DropdownMenu>
       </div>
 
       <div className="px-28 mb-[3rem]">
@@ -128,7 +213,6 @@ export default function Dashboard() {
               </span>
             </div>
           </div>
-          <div className="h-24" />
 
           <CommonTable
             headings={[
@@ -189,6 +273,7 @@ export default function Dashboard() {
         </div>
       </div>
       <DashboardRecentActivity />
+      <DashboaredAgenda />
     </div>
   );
 }
