@@ -122,7 +122,7 @@ const DashboaredAgenda = () => {
   };
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
-      <Grid item xs={12} lg={6}>
+      <Grid item xs={12} lg={6} className="shadow-sm">
         <div className="shadow-sm bg-white rounded-lg ">
           <div className="flex items-center justify-between pr-20 ">
             <div>
@@ -189,7 +189,7 @@ const DashboaredAgenda = () => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md bg-white flex items-center justify-between px-20 ">
+            <div className="shadow-md bg-white flex items-center justify-between px-20 rounded-lg ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
@@ -218,8 +218,10 @@ const DashboaredAgenda = () => {
                       className="flex items-center"
                       onClick={handleButtonClick}
                     >
-                      <Button>{selectedValue || "Project 1"}</Button>
-                      <UpArrowIcon className="cursor-pointer" />
+                      <Button>
+                        {selectedValue || "Project 1"}
+                        <DownArrowIcon className="cursor-pointer" />
+                      </Button>
                     </div>
                   }
                   anchorEl={anchorEl}

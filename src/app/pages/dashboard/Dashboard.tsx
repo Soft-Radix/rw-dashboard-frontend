@@ -196,8 +196,8 @@ export default function Dashboard() {
         </DropdownMenu>
       </div>
 
-      <div className="px-28 mb-[3rem]">
-        <div className="shadow-sm bg-white rounded-lg">
+      <div className="px-28 mb-[3rem] ">
+        <div className=" bg-white rounded-lg">
           <div className="flex items-center justify-between px-24 py-28">
             <Typography className="text-[16px] font-600">
               Agents Listing

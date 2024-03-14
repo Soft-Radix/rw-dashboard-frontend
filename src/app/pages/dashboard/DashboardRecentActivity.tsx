@@ -24,6 +24,8 @@ import CommonPagination from "src/app/components/pagination";
 import AddTaskModal from "src/app/components/tasks/AddTask";
 import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
+import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
+import { use } from "i18next";
 
 const rows = [
   {
@@ -37,7 +39,7 @@ const rows = [
     punch: "In",
     updates: [
       {
-        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
         text: "Recent Task Updates",
       },
     ],
@@ -53,7 +55,7 @@ const rows = [
     punch: "Out",
     updates: [
       {
-        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
         text: "Recent Task Updates",
       },
     ],
@@ -69,7 +71,7 @@ const rows = [
     punch: "In",
     updates: [
       {
-        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
         text: "Recent Task Updates",
       },
     ],
@@ -85,7 +87,7 @@ const rows = [
     punch: "Out",
     updates: [
       {
-        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
         text: "Recent Task Updates",
       },
     ],
@@ -102,7 +104,7 @@ const rows = [
 
     updates: [
       {
-        arrow: "../assets/images/pages/dashBoared/arrowDownDashbored.svg",
+        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
         text: "Recent Task Updates",
       },
     ],
@@ -113,15 +115,25 @@ export default function DashboardRecentActivity() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [showUpdateTable, setShowUpdateTable] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [updateTableIndex, setUpdateTableIndex] = useState<number>();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-
+  const openRecentUpdateTable = (i: number) => {
+    setUpdateTableIndex(i === updateTableIndex ? null : i);
+    console.log(updateTableIndex, "tableIndex");
+    setShowUpdateTable(!showUpdateTable);
+    console.log(i, "tableIndex");
+  };
+  const hideRecenctTableUpdate = () => {
+    setShowUpdateTable(false);
+  };
   return (
-    <Grid container spacing={3} className="px-28 mb-[3rem]">
+    <Grid container spacing={3} className="px-28 mb-[3rem] ">
       <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg ">
+        <div className="shadow-sm bg-white rounded-lg  relative ">
           <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
@@ -130,6 +142,7 @@ export default function DashboardRecentActivity() {
               {rows.map((row, index) => (
                 <TableRow
                   key={index}
+                  // style={{ position: "relative" }}
                   sx={{
                     "& td": {
                       borderBottom: "1px solid #EDF2F6",
@@ -140,7 +153,10 @@ export default function DashboardRecentActivity() {
                     },
                   }}
                 >
-                  <TableCell scope="row" className="flex items-center gap-8 ">
+                  <TableCell
+                    align="center"
+                    className="flex items-center gap-8 xs:flex-col "
+                  >
                     <img src={row.user[0].image} />
                     <span>{row.user[0].text}</span>
                   </TableCell>
@@ -149,12 +165,20 @@ export default function DashboardRecentActivity() {
                   <TableCell scope="row">{row.punch}</TableCell>
                   <TableCell
                     scope="row"
-                    className="flex items-center gap-10 justify-center"
+                    className="flex items-center gap-10 justify-center "
                   >
                     <img src={row.updates[0].arrow} />
-                    <span className="text-[#4F46E5] text-sm">
+                    <span
+                      className="text-[#4F46E5] text-sm"
+                      onClick={() => openRecentUpdateTable(index)}
+                    >
                       {row.updates[0].text}
                     </span>
+                    {showUpdateTable && updateTableIndex === index && (
+                      <RecentTaskUpdateTable
+                        hideTable={hideRecenctTableUpdate}
+                      />
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
