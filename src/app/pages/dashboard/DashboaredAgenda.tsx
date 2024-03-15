@@ -122,7 +122,7 @@ const DashboaredAgenda = () => {
   };
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
-      <Grid item xs={12} lg={6} className="shadow-sm">
+      <Grid item xs={12} lg={6}>
         <div className="shadow-sm bg-white rounded-lg ">
           <div className="flex items-center justify-between pr-20 ">
             <div>
@@ -189,12 +189,12 @@ const DashboaredAgenda = () => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md bg-white flex items-center justify-between px-20 rounded-lg ">
+            <div className="shadow-md bg-white flex items-center justify-between px-20 mt-3 ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
                 aria-label="basic tabs example"
-                className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
+                className="min-h-0 pb-14 pt-20 px-20 gap-[50px] mt-10"
                 sx={{
                   "& .MuiTabs-flexContainer": {
                     gap: "50px",

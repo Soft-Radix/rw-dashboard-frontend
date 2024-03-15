@@ -122,7 +122,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <div className="px-32 py-10 flex items-center justify-between relative">
+      <div className="px-32 py-10 flex items-center justify-between relative ">
         <TitleBar title="Welcome On Dashboard !"></TitleBar>
         <DropdownMenu
           button={
@@ -134,7 +134,7 @@ export default function Dashboard() {
                 variant="outlined"
                 color="secondary"
                 className="h-[40px] text-[16px] flex gap-8 mb-[1rem]"
-                aria-label="Add Tasks"
+                aria-label="Manage Sections"
                 size="large"
               >
                 Manage Sections

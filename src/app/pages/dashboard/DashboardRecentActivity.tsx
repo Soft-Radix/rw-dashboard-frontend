@@ -26,6 +26,7 @@ import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
 import { use } from "i18next";
+import ActivityChart from "./ActivityChart";
 
 const rows = [
   {
@@ -133,7 +134,7 @@ export default function DashboardRecentActivity() {
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem] ">
       <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg  relative ">
+        <div className="shadow-sm bg-white rounded-lg relative ">
           <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
@@ -154,8 +155,8 @@ export default function DashboardRecentActivity() {
                   }}
                 >
                   <TableCell
-                    align="center"
-                    className="flex items-center gap-8 xs:flex-col "
+                    scope="row"
+                    className="flex items-center gap-8 flex-col sm:flex-row  "
                   >
                     <img src={row.user[0].image} />
                     <span>{row.user[0].text}</span>
@@ -204,7 +205,8 @@ export default function DashboardRecentActivity() {
             </div>
           </div>
           <div className="pb-10">
-            <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" />
+            {/* <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" /> */}
+            <ActivityChart />
           </div>
         </div>
       </Grid>

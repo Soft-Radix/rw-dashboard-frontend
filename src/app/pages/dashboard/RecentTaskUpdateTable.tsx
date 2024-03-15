@@ -34,7 +34,7 @@ function RecentTaskUpdateTable(props: RecentTaskUpdateTableProps) {
   const theme: Theme = useTheme();
   return (
     <div
-      className="absolute  bg-white left-[4rem] top-[7rem]  rounded-md test  min-w-[750px] max-w-full overflow-x-auto"
+      className="absolute bg-white left-[4rem] top-[7rem] rounded-md test  max-w-full overflow-x-auto sm:w-full"
       onClick={hideTable}
     >
       <CommonTable
