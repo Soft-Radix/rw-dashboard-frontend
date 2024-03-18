@@ -189,15 +189,15 @@ const DashboaredAgenda = () => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md bg-white flex items-center justify-between px-20 mt-3 ">
+            <div className="shadow-md flex items-center justify-between px-20 border-0 border-none flex-col sm:flex-row">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
                 aria-label="basic tabs example"
-                className="min-h-0 pb-14 pt-20 px-20 gap-[50px] mt-10"
+                className="min-h-0 pb-14 pt-20 px-10 sm:px-20 gap-[50px] border-none bg-none sm:overflow-x-auto overflow-x-visible"
                 sx={{
                   "& .MuiTabs-flexContainer": {
-                    gap: "50px",
+                    gap: "50px ",
                   },
                   "& .MuiTab-root.Mui-selected": {
                     color: theme.palette.secondary.main,

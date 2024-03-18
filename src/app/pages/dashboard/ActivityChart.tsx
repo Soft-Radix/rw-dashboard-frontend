@@ -46,7 +46,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 };
 const ActivityChart = () => {
   return (
-    <div className="pt-20 px-20">
+    <div className="pt-20 px-10 sm:px-20">
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
           data={data}

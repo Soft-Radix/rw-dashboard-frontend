@@ -90,10 +90,18 @@ const rows = [
     status: "Completed",
   },
 ];
-
+interface CheckboxState {
+  agents: boolean;
+  activity: boolean;
+  logged: boolean;
+}
 export default function Dashboard() {
   const theme: Theme = useTheme();
-
+  const [isChecked, setIsChecked] = useState<CheckboxState>({
+    agents: false,
+    activity: false,
+    logged: false,
+  });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
@@ -119,11 +127,18 @@ export default function Dashboard() {
     setAnchorEl1(null);
   };
   console.log(anchorEl1, "anchor");
-
+  const checkHandler = (key: string) => {
+    setIsChecked((prevState) => ({
+      ...prevState,
+      [key]: !prevState[key],
+    }));
+  };
   return (
     <div>
-      <div className="px-32 py-10 flex items-center justify-between relative ">
-        <TitleBar title="Welcome On Dashboard !"></TitleBar>
+      <div className="px-10 py-10 flex items-center justify-between relative sm:px-28 ">
+        <Typography className="text-[20px] py-28 font-bold sm:text-[30px]  ">
+          Welcome On Dashboard !
+        </Typography>
         <DropdownMenu
           button={
             <div
@@ -133,12 +148,12 @@ export default function Dashboard() {
               <Button
                 variant="outlined"
                 color="secondary"
-                className="h-[40px] text-[16px] flex gap-8 mb-[1rem]"
+                className="h-[40px] sm:text-[16px] flex gap-8 mb-[1rem] text-[12px] "
                 aria-label="Manage Sections"
                 size="large"
+                endIcon={<DownArrowIcon className="cursor-pointer" />}
               >
                 Manage Sections
-                <DownArrowIcon className="cursor-pointer" />
               </Button>
             </div>
           }
@@ -147,14 +162,28 @@ export default function Dashboard() {
         >
           <div className="w-[375px] ">
             <MenuItem>
-              <Checkbox />
+              <Checkbox
+                onChange={() => checkHandler("agents")}
+                checked={isChecked.agents}
+                id="agents"
+              />
               Agents logged-in
             </MenuItem>
             <MenuItem>
-              <Checkbox /> Recent activity
+              <Checkbox
+                onChange={() => checkHandler("activity")}
+                checked={isChecked.activity}
+                id="activity"
+              />{" "}
+              Recent activity
             </MenuItem>
             <MenuItem>
-              <Checkbox /> Logged hours
+              <Checkbox
+                onChange={() => checkHandler("logged")}
+                checked={isChecked.logged}
+                id="logged"
+              />{" "}
+              Logged hours
             </MenuItem>
             {/* Nested Dropdown Menu */}
             <div
@@ -170,110 +199,111 @@ export default function Dashboard() {
                 <DownArrowIcon className="cursor-pointer fill-none" />
                 Project Summary
               </Button>
-            </div>
-          </div>
-        </DropdownMenu>
 
-        {/* Nested DropdownMenu component placed outside the main DropdownMenu */}
-        <DropdownMenu
-          button={null} // No button needed as it's nested
-          anchorEl={anchorEl1}
-          handleClose={handleClose}
-        >
-          {" "}
-          <div className="w-[375px] px-20 ">
-            <MenuItem>
-              <Checkbox />
-              Project 1
-            </MenuItem>
-            <MenuItem>
-              <Checkbox /> Project 2
-            </MenuItem>
-            <MenuItem>
-              <Checkbox /> Project 3
-            </MenuItem>
+              {/* Nested DropdownMenu component placed outside the main DropdownMenu */}
+              <DropdownMenu
+                button={null} // No button needed as it's nested
+                anchorEl={anchorEl1}
+                handleClose={handleClose}
+              >
+                <div className="w-[375px] px-20 rounded-none shadow-none">
+                  <MenuItem>
+                    <Checkbox />
+                    Project 1
+                  </MenuItem>
+                  <MenuItem>
+                    <Checkbox /> Project 2
+                  </MenuItem>
+                  <MenuItem>
+                    <Checkbox /> Project 3
+                  </MenuItem>
+                </div>
+              </DropdownMenu>
+            </div>
           </div>
         </DropdownMenu>
       </div>
 
-      <div className="px-28 mb-[3rem] ">
-        <div className=" bg-white rounded-lg">
-          <div className="flex items-center justify-between px-24 py-28">
-            <Typography className="text-[16px] font-600">
-              Agents Listing
-            </Typography>
-
-            <div className="flex mr-20 items-center justify-center gap-32">
-              <Typography className="text-[16px] font-500">
-                No. of Agents Logged in
+      {isChecked.agents && (
+        <div className="px-28 mb-[3rem] ">
+          <div className=" bg-white rounded-lg">
+            <div className="flex items-center justify-between px-24 py-28">
+              <Typography className="text-[16px] font-600">
+                Agents Listing
               </Typography>
-              <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
-                {" "}
-                34
-              </span>
-            </div>
-          </div>
 
-          <CommonTable
-            headings={[
-              "ID",
-              "First Name",
-              "Last Name",
-              "start Date",
-              "Last Login",
-              "Assigned Client",
-              "Status",
-              ,
-            ]}
-          >
-            <>
-              {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "& td": {
-                      borderBottom: "1px solid #EDF2F6",
-                      paddingTop: "12px",
-                      paddingBottom: "12px",
-                      color: theme.palette.primary.main,
-                    },
-                  }}
-                >
-                  <TableCell scope="row">{row.id}</TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    {row.fname}
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    {row.lname}
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    {row.startdate}
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    {row.lastlogin}
-                  </TableCell>
-                  <TableCell align="center">
-                    <ImagesOverlap images={row.assignedImg} />
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+              <div className="flex mr-20 items-center justify-center gap-32">
+                <Typography className="text-[16px] font-500">
+                  No. of Agents Logged in
+                </Typography>
+                <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
+                  {" "}
+                  34
+                </span>
+              </div>
+            </div>
+
+            <CommonTable
+              headings={[
+                "ID",
+                "First Name",
+                "Last Name",
+                "start Date",
+                "Last Login",
+                "Assigned Client",
+                "Status",
+                ,
+              ]}
+            >
+              <>
+                {rows.map((row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "& td": {
+                        borderBottom: "1px solid #EDF2F6",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    <TableCell scope="row">{row.id}</TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.fname}
+                    </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.lname}
+                    </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.startdate}
+                    </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.lastlogin}
+                    </TableCell>
+                    <TableCell align="center">
+                      <ImagesOverlap images={row.assignedImg} />
+                    </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      <span
+                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                    >
-                      {row.status}
-                    </span>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          </CommonTable>
-          <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+                      >
+                        {row.status}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </>
+            </CommonTable>
+            <div className="flex justify-end py-14 px-[3rem]">
+              <CommonPagination count={10} />
+            </div>
           </div>
         </div>
-      </div>
-      <DashboardRecentActivity />
-      <DashboaredAgenda />
+      )}
+      {isChecked.activity && <DashboardRecentActivity />}
+      {isChecked.logged && <DashboaredAgenda />}
     </div>
   );
 }
