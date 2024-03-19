@@ -7,31 +7,21 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 import { useTheme } from "@mui/styles";
 import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import {
+  DownArrowBlank,
   DownArrowIcon,
-  PlusIcon,
+  UpArrowBlank,
   UpArrowIcon,
 } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import DropdownMenu from "src/app/components/Dropdown";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
-import AddTaskModal from "src/app/components/tasks/AddTask";
-import RecentData from "src/app/components/tasks/RecentData";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import DashboardRecentActivity from "./DashboardRecentActivity";
 import DashboaredAgenda from "./DashboaredAgenda";
-import DropdownMenu from "src/app/components/Dropdown";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "material-ui/Menu";
 
 const rows = [
   {
@@ -112,6 +102,7 @@ export default function Dashboard() {
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   const handleMenuItemClick = (value: string) => {
@@ -119,6 +110,7 @@ export default function Dashboard() {
     setAnchorEl(null);
   };
   const handleProjectList = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
     setAnchorEl1(event.currentTarget);
   };
 
@@ -135,8 +127,8 @@ export default function Dashboard() {
   };
   return (
     <div>
-      <div className="px-10 py-10 flex items-center justify-between relative sm:px-28 ">
-        <Typography className="text-[20px] py-28 font-bold sm:text-[30px]  ">
+      <div className="px-28 py-10 flex items-center justify-between relative  ">
+        <Typography className="text-[18px] py-28 font-bold sm:text-[30px]  ">
           Welcome On Dashboard !
         </Typography>
         <DropdownMenu
@@ -148,7 +140,7 @@ export default function Dashboard() {
               <Button
                 variant="outlined"
                 color="secondary"
-                className="h-[40px] sm:text-[16px] flex gap-8 mb-[1rem] text-[12px] "
+                className="h-[40px] sm:text-[16px] flex gap-8 mb-[1rem] leading-none "
                 aria-label="Manage Sections"
                 size="large"
                 endIcon={<DownArrowIcon className="cursor-pointer" />}
@@ -162,32 +154,56 @@ export default function Dashboard() {
         >
           <div className="w-[375px] ">
             <MenuItem>
-              <Checkbox
-                onChange={() => checkHandler("agents")}
-                checked={isChecked.agents}
-                id="agents"
-              />
-              Agents logged-in
+              <label
+                htmlFor="agents"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Checkbox
+                  onChange={() => checkHandler("agents")}
+                  checked={isChecked.agents}
+                  id="agents"
+                />
+                Agents logged-in
+              </label>
             </MenuItem>
             <MenuItem>
-              <Checkbox
-                onChange={() => checkHandler("activity")}
-                checked={isChecked.activity}
-                id="activity"
-              />{" "}
-              Recent activity
+              <label
+                htmlFor="activity"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Checkbox
+                  onChange={() => checkHandler("activity")}
+                  checked={isChecked.activity}
+                  id="activity"
+                />
+                Recent activity
+              </label>
             </MenuItem>
             <MenuItem>
-              <Checkbox
-                onChange={() => checkHandler("logged")}
-                checked={isChecked.logged}
-                id="logged"
-              />{" "}
-              Logged hours
+              <label
+                htmlFor="logged"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Checkbox
+                  onChange={() => checkHandler("logged")}
+                  checked={isChecked.logged}
+                  id="logged"
+                />
+                Logged hours
+              </label>
             </MenuItem>
-            {/* Nested Dropdown Menu */}
+
             <div
-              className="flex items-center relative"
+              className="flex items-start flex-col justify-start relative "
               onClick={handleProjectList}
             >
               <Button
@@ -196,32 +212,65 @@ export default function Dashboard() {
                 aria-label="Add Tasks"
                 size="large"
               >
-                <DownArrowIcon className="cursor-pointer fill-none" />
+                {anchorEl1 ? (
+                  <UpArrowBlank className="cursor-pointer fill-none" />
+                ) : (
+                  <DownArrowBlank className="cursor-pointer fill-none" />
+                )}
                 Project Summary
               </Button>
-
-              {/* Nested DropdownMenu component placed outside the main DropdownMenu */}
-              <DropdownMenu
-                button={null} // No button needed as it's nested
-                anchorEl={anchorEl1}
-                handleClose={handleClose}
-              >
+              {anchorEl1 && (
                 <div className="w-[375px] px-20 rounded-none shadow-none">
                   <MenuItem>
-                    <Checkbox />
-                    Project 1
+                    <label
+                      htmlFor="project1"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Checkbox id="project1" />
+                      Project 1
+                    </label>
                   </MenuItem>
                   <MenuItem>
-                    <Checkbox /> Project 2
+                    <label
+                      htmlFor="project2"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Checkbox id="project2" />
+                      Project 2
+                    </label>
                   </MenuItem>
                   <MenuItem>
-                    <Checkbox /> Project 3
+                    <label
+                      htmlFor="project3"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <Checkbox id="project3" />
+                      Project 3
+                    </label>
                   </MenuItem>
                 </div>
-              </DropdownMenu>
+              )}
             </div>
           </div>
         </DropdownMenu>
+        {/* <DropdownMenu
+          button={null} // No button needed as it's nested
+          anchorEl={anchorEl1}
+          handleClose={handleClose}
+        >
+          <div className="w-[375px] px-20 rounded-none shadow-none">
+            <MenuItem>
+              <Checkbox />
+              Project 1
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Project 2
+            </MenuItem>
+            <MenuItem>
+              <Checkbox /> Project 3
+            </MenuItem>
+          </div>
+        </DropdownMenu> */}
       </div>
 
       {isChecked.agents && (
@@ -232,7 +281,7 @@ export default function Dashboard() {
                 Agents Listing
               </Typography>
 
-              <div className="flex mr-20 items-center justify-center gap-32">
+              <div className="flex sm:mr-20 items-center justify-center sm:gap-32 ">
                 <Typography className="text-[16px] font-500">
                   No. of Agents Logged in
                 </Typography>

@@ -44,15 +44,22 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   }
   return null;
 };
+var gradient = "";
 const ActivityChart = () => {
   return (
-    <div className="pt-20 px-10 sm:px-20">
+    <div className="pt-20  sm:px-20">
       <ResponsiveContainer width="100%" height={300}>
         <AreaChart
           data={data}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
           {/* <CartesianGrid strokeDasharray="2 3" />    */}
+          <defs>
+            <linearGradient id="colorHour" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <XAxis
             dataKey="name"
             axisLine={{ stroke: "#4F46E5", strokeWidth: 0 }}
@@ -75,8 +82,9 @@ const ActivityChart = () => {
             dataKey="hour"
             strokeWidth="2"
             stroke="#4E47E5"
-            fill="#E0DDFA"
+            fill="url(#colorHour)"
             opacity={1}
+            activeDot={{ fill: "#4E47E5", r: 8 }}
           />
         </AreaChart>
       </ResponsiveContainer>

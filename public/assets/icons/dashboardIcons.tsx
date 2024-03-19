@@ -174,3 +174,46 @@ export const UpArrowIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+export const UpArrowBlank: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g clip-path="url(#clip0_542_17805)">
+      <path d="M12 10L8 14H16L12 10Z" fill="#9DA0A6" />
+    </g>
+    <defs>
+      <clipPath id="clip0_542_17805">
+        <rect
+          width="24"
+          height="24"
+          fill="white"
+          transform="matrix(1 0 0 -1 0 24)"
+        />
+      </clipPath>
+    </defs>
+  </svg>
+);
+export const DownArrowBlank: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g clip-path="url(#clip0_542_17170)">
+      <path d="M12 14L8 10H16L12 14Z" fill="#9DA0A6" />
+    </g>
+    <defs>
+      <clipPath id="clip0_542_17170">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);

@@ -2,42 +2,26 @@ import {
   Button,
   Checkbox,
   Grid,
+  Tab,
   TableCell,
   TableRow,
-  Theme,
-  Tab,
   Tabs,
+  Theme,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { CalendarIcon } from "@mui/x-date-pickers";
 
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
+import MenuItem from "@mui/material/MenuItem";
 import {
   CalendarLineIcon,
   DownArrowIcon,
   LeftIcon,
   PlusIcon,
   RightIcon,
-  UpArrowIcon,
 } from "public/assets/icons/dashboardIcons";
-import { DownArrow } from "public/assets/icons/topBarIcons";
-import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import DropdownMenu from "src/app/components/Dropdown";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddTaskModal from "src/app/components/tasks/AddTask";
-import RecentData from "src/app/components/tasks/RecentData";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
-import { theme } from "tailwind.config";
 
 const rows = [
   {
@@ -124,16 +108,18 @@ const DashboaredAgenda = () => {
     <Grid container spacing={3} className="px-28 mb-[3rem]">
       <Grid item xs={12} lg={6}>
         <div className="shadow-sm bg-white rounded-lg ">
-          <div className="flex items-center justify-between pr-20 ">
-            <div>
-              <Typography className="text-[16px] font-600 pt-28 px-20 pb-10">
+          <div className="flex sm:items-center justify-between sm:pr-20 sm:flex-row flex-col items-start gap-11">
+            <div className="flex items-center pb-10 justify-between w-full py-28 sm:py-0 pr-[10px] sm:flex-col sm:items-start ">
+              <Typography className="text-[16px] font-600 sm:pt-28 px-20 sm:pb-10 ">
                 Agenda
               </Typography>
-              <div className="flex items-center px-20 gap-8 pb-20">
+              <div className="flex items-center sm:px-20 sm:gap-8 sm:pb-20 ">
                 <span>
                   <CalendarLineIcon />
                 </span>
-                <span className="text-[16px] text-[#757982]">Feb 27, Mon</span>
+                <span className="sm:text-[16px] text-[#757982]">
+                  Feb 27, Mon
+                </span>
                 <div className="flex ">
                   <span>
                     <LeftIcon />
@@ -147,12 +133,12 @@ const DashboaredAgenda = () => {
             <Button
               variant="outlined"
               color="secondary"
-              className="h-[40px] text-[16px] flex gap-8"
-              aria-label="Add Tasks"
+              className="h-[40px] text-[16px] flex gap-8 leading-none sm:leading-5 ml-16 sm:w-[80%] w-[200px]"
+              aria-label=" Add calendar In Integration"
               size="large"
+              startIcon={<PlusIcon color={theme.palette.secondary.main} />}
               onClick={() => setIsOpenAddModal(true)}
             >
-              <PlusIcon color={theme.palette.secondary.main} />
               Add calendar In Integration
             </Button>
           </div>
@@ -168,6 +154,10 @@ const DashboaredAgenda = () => {
                       paddingBottom: "12px",
                       color: theme.palette.primary.main,
                       textAlign: "center",
+                      "@media (max-width: 600px)": {
+                        // Adjust screen width as needed for small screens
+                        textAlign: "left",
+                      },
                     },
                   }}
                 >
@@ -189,15 +179,18 @@ const DashboaredAgenda = () => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md flex items-center justify-between px-20 border-0 border-none flex-col sm:flex-row">
+            <div className="shadow-md flex items-start sm:items-center justify-between px-20 border-0 border-none flex-col sm:flex-row ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
                 aria-label="basic tabs example"
-                className="min-h-0 pb-14 pt-20 px-10 sm:px-20 gap-[50px] border-none bg-none sm:overflow-x-auto overflow-x-visible"
+                className="min-h-0 pb-14 pt-20  sm:px-20  border-none bg-none sm:overflow-x-auto overflow-x-visible"
                 sx={{
                   "& .MuiTabs-flexContainer": {
-                    gap: "50px ",
+                    gap: "50px", // Default gap for large screens
+                    "@media (max-width: 425px)": {
+                      gap: "6px", // Change gap to 6px on small screens
+                    },
                   },
                   "& .MuiTab-root.Mui-selected": {
                     color: theme.palette.secondary.main,
@@ -211,11 +204,11 @@ const DashboaredAgenda = () => {
                 <Tab label="In Progress" {...a11yProps(1)} />
                 <Tab label="Done" {...a11yProps(2)} />
               </Tabs>
-              <div>
+              <div className=" -mr-[6px] ">
                 <DropdownMenu
                   button={
                     <div
-                      className="flex items-center"
+                      className="flex items-start "
                       onClick={handleButtonClick}
                     >
                       <Button>
@@ -263,6 +256,10 @@ const DashboaredAgenda = () => {
                       paddingBottom: "12px",
                       color: theme.palette.primary.main,
                       textAlign: "center",
+                      "@media (max-width: 600px)": {
+                        // Adjust screen width as needed for small screens
+                        textAlign: "left",
+                      },
                     },
                   }}
                 >
@@ -288,19 +285,29 @@ const DashboaredAgenda = () => {
                       paddingBottom: "12px",
                       color: theme.palette.primary.main,
                       textAlign: "center",
+                      "@media (max-width: 600px)": {
+                        // Adjust screen width as needed for small screens
+                        textAlign: "left",
+                      },
                     },
                   }}
                 >
-                  <TableCell
-                    scope="row"
-                    className="flex items-center gap-8 w-full  justify-between"
-                  >
-                    <span>
-                      <Checkbox />
-                      {row.task}
-                    </span>
-                    <Typography className="text-red-500">Feb 8</Typography>
-                  </TableCell>
+                  <div className="flex items-center w-full  justify-between ">
+                    <TableCell
+                      scope="row"
+                      className="flex items-center gap-8   justify-between"
+                    >
+                      <div className="flex gap-10 items-center">
+                        <span className="">
+                          <Checkbox />
+                        </span>
+                        {row.task}
+                      </div>
+                    </TableCell>
+                    <Typography className="text-red-500 w-[40%]  text-right pr-20">
+                      Feb 8
+                    </Typography>
+                  </div>
                 </TableRow>
               ))}
             </>

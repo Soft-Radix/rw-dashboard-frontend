@@ -194,7 +194,7 @@ export default function DashboardRecentActivity() {
               Logged Hours
             </Typography>
 
-            <div className="flex mr-20 items-center justify-center gap-32">
+            <div className="flex sm:mr-20 items-center justify-center sm:gap-32">
               <Typography className="text-[16px] font-500">
                 Total Logged Hours
               </Typography>
