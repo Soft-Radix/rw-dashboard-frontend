@@ -88,9 +88,9 @@ interface CheckboxState {
 export default function Dashboard() {
   const theme: Theme = useTheme();
   const [isChecked, setIsChecked] = useState<CheckboxState>({
-    agents: false,
-    activity: false,
-    logged: false,
+    agents: true,
+    activity: true,
+    logged: true,
   });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -140,7 +140,7 @@ export default function Dashboard() {
               <Button
                 variant="outlined"
                 color="secondary"
-                className="h-[40px] sm:text-[16px] flex gap-8 mb-[1rem] leading-none "
+                className="h-[40px] sm:text-[16px] flex gap-8 sm:mb-[1rem] leading-none "
                 aria-label="Manage Sections"
                 size="large"
                 endIcon={<DownArrowIcon className="cursor-pointer" />}
@@ -208,7 +208,7 @@ export default function Dashboard() {
             >
               <Button
                 variant="text"
-                className="h-[40px] text-[16px] flex gap-8 mb-[1rem]"
+                className="h-[40px] text-[16px] flex gap-8 mb-[1rem] w-full rounded-none justify-start px-24 "
                 aria-label="Add Tasks"
                 size="large"
               >
@@ -220,8 +220,8 @@ export default function Dashboard() {
                 Project Summary
               </Button>
               {anchorEl1 && (
-                <div className="w-[375px] px-20 rounded-none shadow-none">
-                  <MenuItem>
+                <div className="w-[375px]  rounded-none shadow-none">
+                  <MenuItem className="px-36">
                     <label
                       htmlFor="project1"
                       style={{ display: "flex", alignItems: "center" }}
@@ -230,7 +230,7 @@ export default function Dashboard() {
                       Project 1
                     </label>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem className="px-36">
                     <label
                       htmlFor="project2"
                       style={{ display: "flex", alignItems: "center" }}
@@ -239,7 +239,7 @@ export default function Dashboard() {
                       Project 2
                     </label>
                   </MenuItem>
-                  <MenuItem>
+                  <MenuItem className="px-36">
                     <label
                       htmlFor="project3"
                       style={{ display: "flex", alignItems: "center" }}

@@ -166,7 +166,7 @@ export default function DashboardRecentActivity() {
                   <TableCell scope="row">{row.punch}</TableCell>
                   <TableCell
                     scope="row"
-                    className="flex items-center gap-10 justify-center "
+                    className="flex items-center gap-10 justify-center cursor-pointer "
                   >
                     <img src={row.updates[0].arrow} />
                     <span
