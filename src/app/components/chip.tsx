@@ -8,7 +8,8 @@ function CommonChip({ colorSecondary, ...rest }: IProps) {
   return (
     <Chip
       {...rest}
-      className={`rounded-8 py-12 px-14 h-[48px] justify-between flex-row-reverse text-lg ${colorSecondary ? "bg-secondary_bg text-secondary" : "bg-bgGrey text-para_light"} ${rest.className}`}
+      className={`rounded-8 py-12 px-14 h-[48px] justify-between flex-row-reverse text-lg 
+      ${colorSecondary ? "bg-secondary_bg text-secondary" : "bg-bgGrey text-para_light"} ${rest.className}`}
       sx={{
         "& .MuiChip-label": {
           padding: 0,
