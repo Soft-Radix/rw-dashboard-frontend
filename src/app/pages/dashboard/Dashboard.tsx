@@ -20,8 +20,8 @@ import DropdownMenu from "src/app/components/Dropdown";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
-import DashboardRecentActivity from "./DashboardRecentActivity";
-import DashboaredAgenda from "./DashboaredAgenda";
+import DashboardRecentActivity from "../../components/dashboard/DashboardRecentActivity";
+import DashboaredAgenda from "../../components/dashboard/DashboaredAgenda";
 
 const rows = [
   {

@@ -9,6 +9,7 @@ import { GroupIcon } from "public/assets/icons/projectsIcon";
 import CommonChip from "../chip";
 import DropdownMenu from "../Dropdown";
 import { PriorityIcon } from "public/assets/icons/task-icons";
+import { Chip } from "@mui/material";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -53,7 +54,8 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-export default function ProjectMenuItems() {
+export default function ProjectMenuItems(props) {
+  const { icon, label } = props;
   const [groupMenu, setGroupMenu] = React.useState<HTMLElement | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -82,10 +84,12 @@ export default function ProjectMenuItems() {
           anchorEl={groupMenu}
           handleClose={() => setGroupMenu(null)}
           button={
-            <CommonChip
+            <Chip
               onClick={(event) => setGroupMenu(event.currentTarget)}
-              label="Group By"
-              icon={<GroupIcon />}
+              label={label}
+              icon={icon}
+              className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                cursor-pointer text-[12px]"
             />
           }
           popoverProps={{

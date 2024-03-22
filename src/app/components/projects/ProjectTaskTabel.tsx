@@ -1,4 +1,4 @@
-import { Button, Chip, Tab, Tabs, Theme, Typography } from "@mui/material";
+import { Button, Tab, Tabs, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import {
   GroupIcon,
@@ -122,18 +122,12 @@ export default function ProjectTaskTabel() {
               </div>
             </div>
             <div className="px-20 pb-28 flex gap-32 ">
-              <ProjectMenuItems />
-
-              <Chip
-                label="Show/Hide Subtasks"
+              <ProjectMenuItems label={"Group By"} icon={<GroupIcon />} />
+              <ProjectMenuItems
+                label={"Show/Hide Subtasks"}
                 icon={<SubTaskIcon />}
-                className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400 text-[12px]"
               />
-              <Chip
-                label="Show Closed"
-                icon={<ShowIcon />}
-                className="bg-[#F6F6F6] rounded-md px-10 py-20 text-grey-500 font-400 text-[12px]"
-              />
+              <ProjectMenuItems label="Show Closed" icon={<ShowIcon />} />
             </div>
             <CustomTabPanel value={selectedTab} index={0}>
               <ThemePageTable />

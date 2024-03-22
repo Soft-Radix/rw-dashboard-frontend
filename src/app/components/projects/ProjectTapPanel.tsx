@@ -1,12 +1,9 @@
-import { Button, Tab, Tabs, Theme } from "@mui/material";
+import { Tab, Tabs, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { Box } from "@mui/system";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import TitleBar from "src/app/components/TitleBar";
-import AddTaskModal from "src/app/components/tasks/AddTask";
-import RecentData from "src/app/components/tasks/RecentData";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
+import Kanban from "src/app/components/projects/Kanban";
+import ProjectTaskTabel from "./ProjectTaskTabel";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -25,12 +22,17 @@ function CustomTabPanel(props: TabPanelProps) {
       aria-labelledby={`simple-tab-${index}`}
       {...other}
     >
-      {value === index && children}
+      {value === index && <Box>{children}</Box>}
     </div>
   );
 }
 
 function a11yProps(index: number) {
+  const [value, setValue] = useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
   return {
     className:
       "px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982]",
@@ -71,9 +73,9 @@ export default function ProjectTabPanel() {
               }}
             >
               <Tab label="Kanban Board" {...a11yProps(0)} />
-              <Link to="/taskTable">
-                <Tab label=" Task Table" {...a11yProps(1)} />
-              </Link>
+
+              <Tab label=" Task Table" {...a11yProps(1)} />
+
               <Tab label="Task List" {...a11yProps(2)} />
               <Tab label="Calender" {...a11yProps(3)} />
               <Tab label="View" {...a11yProps(4)} />
@@ -81,6 +83,13 @@ export default function ProjectTabPanel() {
           </div>
         </div>
       </div>
+      <CustomTabPanel value={selectedTab} index={0}>
+        <Kanban />
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={1}>
+        <ProjectTaskTabel />
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={2}></CustomTabPanel>
     </div>
   );
 }
