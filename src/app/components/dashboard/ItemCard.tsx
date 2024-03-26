@@ -1,6 +1,6 @@
 import { Checkbox, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { CalendarIcon } from "public/assets/icons/dashboardIcons";
+// import { CalendarIcon } from "public/assets/icons/dashboardIcons";
 
 type CardType = {
   title: string;
@@ -40,7 +40,7 @@ export default function ItemCard({
       </div>
       <div className="mt-10 flex justify-between">
         <div className="flex items-center">
-          <CalendarIcon color={theme.palette.secondary.main} />
+          {/* <CalendarIcon color={theme.palette.secondary.main} /> */}
           <Typography color="primary.light" className="text-[12px] ml-10 ">
             {date}
           </Typography>

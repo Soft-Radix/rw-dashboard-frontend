@@ -1494,6 +1494,14 @@ module.exports = {
           },
         },
       }),
+
+      dropShadow: {
+        "3xl": "0 35px 35px rgba(0, 0, 0, 0.25)",
+        "4xl": [
+          "0 35px 35px rgba(0, 0, 0, 0.25)",
+          "0 45px 65px rgba(0, 0, 0, 0.15)",
+        ],
+      },
     },
   },
   variantOrder: [
@@ -1520,5 +1528,6 @@ module.exports = {
     // Other third party and/or custom plugins
     require("@tailwindcss/typography")({ modifiers: ["sm", "lg"] }),
     require("@tailwindcss/aspect-ratio"),
+    require("tailwindcss-filters"),
   ],
 };

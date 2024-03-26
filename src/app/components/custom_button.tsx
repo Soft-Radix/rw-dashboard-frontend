@@ -10,6 +10,7 @@ interface CustomButtonProps extends ButtonProps {
 
 const Root = styled(Button)(({ theme }) => ({
   borderRadius: "6px",
+
   "&.MuiButton-contained": {},
   "&.MuiButton-outlined": {},
   "&.MuiButton-outlinedPrimary": {

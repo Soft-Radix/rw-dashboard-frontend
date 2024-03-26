@@ -20,6 +20,7 @@ import SharedFilesConfig from "../pages/shared-files/sharedFilesConfig";
 import BillingConfig from "../pages/billing/billingConfig";
 import ProfileConfig from "../pages/profile/profileConfig";
 import SupportConfig from "../pages/support/supportConfig";
+import ProjectsConfig from "../pages/projects/ProjectsConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
@@ -38,6 +39,7 @@ const routeConfigs: FuseRouteConfigsType = [
   ResetPasswordConfig,
   OtpVerificationConfig,
   AddProjectConfig,
+  ProjectsConfig,
 ];
 
 /**

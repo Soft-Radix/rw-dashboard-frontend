@@ -129,7 +129,7 @@ export default function Support() {
 
   return (
     <>
-      <div className="px-32">
+      <div className="px-16">
         <TitleBar title="Support Detail">
           <Button
             variant="outlined"
@@ -144,7 +144,7 @@ export default function Support() {
           </Button>
         </TitleBar>
       </div>
-      <div className="px-40">
+      <div className="px-40 xs:px-10">
         <Grid container spacing={3} className="sm:px-10  xs:px-10 ">
           <Grid item xs={12} sm={8} md={9} className="">
             <div className=" flex flex-col gap-10 py-32 bg-[#FFFFFF] md:h-screen px-32 rounded-12 xs:px-10 xs:h-auto sm:h-auto">
@@ -176,10 +176,7 @@ export default function Support() {
                   </Button>
                 </div>
                 <div className="flex flex-col gap-20 items-start  px-20">
-                  <span className="text-[14px] text-[#757982]">
-                    {" "}
-                    Department
-                  </span>
+                  <span className="text-[14px] text-[#757982]">Department</span>
                   <span className="text-[#111827] font-400 mb-5">
                     Account Manager
                   </span>

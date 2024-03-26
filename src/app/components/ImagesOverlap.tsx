@@ -24,7 +24,8 @@ function ImagesOverlap({ images }: IProps) {
             style={{
               backgroundColor: theme.palette.secondary.main,
             }}
-            className="h-[34px] w-[34px] flex items-center justify-center text-sm text-white bg-secondary rounded-full border-2 border-white ml-[-10px] z-0"
+            className="h-[34px] w-[34px] flex items-center justify-center text-sm text-white bg-secondary 
+            rounded-full border-2 border-white ml-[-10px] z-0"
           >
             +{images.length - 3}
           </span>
