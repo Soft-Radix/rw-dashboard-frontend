@@ -5,7 +5,7 @@ import Menu, { MenuProps } from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
 import Divider from "@mui/material/Divider";
-import { GroupIcon } from "public/assets/icons/projectsIcon";
+import { GroupIcon, RightIcon } from "public/assets/icons/projectsIcon";
 import CommonChip from "../chip";
 import DropdownMenu from "../Dropdown";
 import { PriorityIcon } from "public/assets/icons/task-icons";
@@ -57,10 +57,14 @@ const StyledMenu = styled((props: MenuProps) => (
 export default function ProjectMenuItems(props) {
   const { icon, label } = props;
   const [groupMenu, setGroupMenu] = React.useState<HTMLElement | null>(null);
+  const [activeItem, setActiveItem] = React.useState(null); // State to keep track of active item
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setAnchorEl(event.currentTarget);
+    setActiveItem(index); // Set the clicked item as active
+    console.log(anchorEl, "check");
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -73,10 +77,7 @@ export default function ProjectMenuItems(props) {
     { label: "Label" },
     { label: "Due Date" },
   ];
-  const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-    padding: "8px 20px",
-    minWidth: "250px",
-  }));
+
   return (
     <div>
       <div className="flex gap-20">
@@ -99,11 +100,28 @@ export default function ProjectMenuItems(props) {
             },
           }}
         >
-          {groupMenuData.map((item) => (
-            <StyledMenuItem onClick={() => setGroupMenu(null)}>
-              {item.label}
-            </StyledMenuItem>
-          ))}
+          {groupMenuData.map((item, index) => {
+            const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+              padding: "8px 20px",
+              minWidth: "250px",
+              backgroundColor:
+                activeItem === index
+                  ? alpha(
+                      theme.palette.primary.main,
+                      theme.palette.action.selectedOpacity
+                    )
+                  : "transparent",
+            }));
+
+            return (
+              <StyledMenuItem
+                key={index}
+                onClick={(event) => handleClick(event, index)}
+              >
+                {item.label} {activeItem === index && <RightIcon />}
+              </StyledMenuItem>
+            );
+          })}
         </DropdownMenu>
       </div>
     </div>

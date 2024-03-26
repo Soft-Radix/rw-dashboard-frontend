@@ -4,6 +4,17 @@ import { Box } from "@mui/system";
 import { useState } from "react";
 import Kanban from "src/app/components/projects/Kanban";
 import ProjectTaskTabel from "./ProjectTaskTabel";
+import {
+  CalenderIcon,
+  CalenderIconActive,
+  KanbanIcon,
+  KanbanIconActive,
+  TaskListIcon,
+  TaskListIconActive,
+  TaskTableIcon,
+  TaskTableIconActive,
+  ViewIcon,
+} from "public/assets/icons/projectsIcon";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -52,7 +63,7 @@ export default function ProjectTabPanel() {
 
   return (
     <div>
-      <div className="px-28  flex gap-20 flex-wrap lg:flex-nowrap mb-20">
+      <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20">
         <div className="basis-full lg:basis-auto lg:grow ">
           <div className="shadow-md bg-white rounded-lg ">
             <Tabs
@@ -63,22 +74,66 @@ export default function ProjectTabPanel() {
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
+                  // "@media (max-width: 425px)": {
+                  //   gap: "6px", // Change gap to 6px on small screens
+                  //   flexWrap: "wrap",
+                  // },
                 },
+
                 "& .MuiTab-root.Mui-selected": {
                   color: theme.palette.secondary.main,
                 },
                 "& .MuiTabs-indicator": {
                   backgroundColor: theme.palette.secondary.main,
+                  // "@media (max-width: 425px)": {
+                  //   visibility: "hidden",
+                  // },
                 },
               }}
             >
-              <Tab label="Kanban Board" {...a11yProps(0)} />
+              <Tab
+                label="Kanban Board"
+                {...a11yProps(0)}
+                iconPosition="start"
+                // icon={<KanbanIcon />}
+                icon={selectedTab === 0 ? <KanbanIconActive /> : <KanbanIcon />}
+              />
 
-              <Tab label=" Task Table" {...a11yProps(1)} />
+              <Tab
+                label=" Task Table"
+                {...a11yProps(1)}
+                iconPosition="start"
+                icon={
+                  selectedTab === 1 ? (
+                    <TaskTableIconActive />
+                  ) : (
+                    <TaskTableIcon />
+                  )
+                }
+              />
 
-              <Tab label="Task List" {...a11yProps(2)} />
-              <Tab label="Calender" {...a11yProps(3)} />
-              <Tab label="View" {...a11yProps(4)} />
+              <Tab
+                label="Task List"
+                {...a11yProps(2)}
+                iconPosition="start"
+                icon={
+                  selectedTab == 2 ? <TaskListIconActive /> : <TaskListIcon />
+                }
+              />
+              <Tab
+                label="Calender"
+                {...a11yProps(3)}
+                iconPosition="start"
+                icon={
+                  selectedTab == 3 ? <CalenderIconActive /> : <CalenderIcon />
+                }
+              />
+              <Tab
+                label="View"
+                {...a11yProps(4)}
+                iconPosition="start"
+                icon={<ViewIcon />}
+              />
             </Tabs>
           </div>
         </div>

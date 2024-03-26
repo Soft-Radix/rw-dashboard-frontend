@@ -24,9 +24,26 @@ const navigationConfig: FuseNavItemType[] = [
     id: "projects",
     title: "Projects",
     translate: "Projects",
-    type: "item",
+    type: "collapse",
     icon: "heroicons-outline:list",
-    url: "projects",
+    children: [
+      {
+        id: "project1",
+        title: "Project 1",
+        type: "item",
+        icon: "heroicons-outline:list",
+        url: "/projects",
+        end: true,
+      },
+      {
+        id: "project2",
+        title: "Project 2",
+        type: "item",
+        icon: "heroicons-outline:list",
+        url: "/projects",
+        end: true,
+      },
+    ],
   },
 
   {

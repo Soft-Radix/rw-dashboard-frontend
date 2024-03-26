@@ -17,7 +17,55 @@ export const KanbanIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+export const KanbanIconActive: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M3.35012 15.7001V2.8501L8.73267 2.85073L8.73341 17.5683H5.20846H5.20838C4.73381 17.5684 4.2772 17.3868 3.93219 17.061C3.58995 16.7377 3.38326 16.2967 3.3536 15.8272L3.35012 15.7001ZM11.6833 17.5687L11.6827 13.6842H17.0668V15.7117C17.0668 16.2045 16.871 16.6772 16.5225 17.0257C16.1741 17.3741 15.7015 17.5699 15.2088 17.57C15.2088 17.57 15.2087 17.57 15.2087 17.57C15.2086 17.57 15.2085 17.57 15.2085 17.57L11.6833 17.5687ZM15.2094 2.85083C15.6839 2.85079 16.1405 3.03232 16.4855 3.35819C16.8278 3.68143 17.0345 4.12239 17.0641 4.59192L17.0676 4.71982L17.0669 10.7342H11.6827L11.6834 2.85016L15.2091 2.85083H15.2094Z"
+      stroke="#4F46E5"
+      stroke-width="1.7"
+    />
+  </svg>
+);
+
 export const CalenderIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="16"
+    height="18"
+    viewBox="0 0 16 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M1.33301 3.58333C1.33301 3.36232 1.42081 3.15036 1.57709 2.99408C1.73337 2.8378 1.94533 2.75 2.16634 2.75H13.833C14.054 2.75 14.266 2.8378 14.4223 2.99408C14.5785 3.15036 14.6663 3.36232 14.6663 3.58333V6.91667H1.33301V3.58333Z"
+      stroke="#757982"
+      stroke-width="1.8"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M4.66602 4V1.5M11.3327 4V1.5"
+      stroke="#757982"
+      stroke-width="1.8"
+      stroke-linecap="round"
+    />
+    <path
+      d="M1.33301 6.91602H14.6663V15.416C14.6663 15.637 14.5785 15.849 14.4223 16.0053C14.266 16.1616 14.054 16.2493 13.833 16.2493H2.16634C1.94533 16.2493 1.73337 16.1616 1.57709 16.0053C1.42081 15.849 1.33301 15.637 1.33301 15.416V6.91602Z"
+      stroke="#757982"
+      stroke-width="1.8"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+export const CalenderIconActive: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
   <svg
     width="20"
     height="20"
@@ -46,6 +94,7 @@ export const CalenderIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+
 export const TaskTableIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="20"
@@ -68,6 +117,31 @@ export const TaskTableIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <rect x="6" y="14" width="5" height="1.5" rx="0.75" fill="#777B84" />
   </svg>
 );
+export const TaskTableIconActive: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M8.39022 3.25641C8.39022 2.76595 8.76747 2.38077 9.21788 2.38077H10.7821C11.2325 2.38077 11.6098 2.76595 11.6098 3.25641C11.6098 3.74687 11.2325 4.13205 10.7821 4.13205H9.21788C8.76747 4.13205 8.39022 3.74687 8.39022 3.25641ZM9.21788 0.85C8.19883 0.85 7.34047 1.54111 7.0359 2.49103H5.15084C4.53824 2.49103 3.95227 2.74639 3.52139 3.19842C3.09075 3.6502 2.85 4.26147 2.85 4.89744V16.7436C2.85 17.3796 3.09075 17.9908 3.52139 18.4426C3.95227 18.8946 4.53824 19.15 5.15084 19.15H14.8492C15.4618 19.15 16.0477 18.8946 16.4786 18.4426C16.9093 17.9908 17.15 17.3796 17.15 16.7436V4.89744C17.15 4.26147 16.9093 3.6502 16.4786 3.19842C16.0477 2.74639 15.4618 2.49103 14.8492 2.49103H12.9641C12.6595 1.54111 11.8012 0.85 10.7821 0.85H9.21788ZM10.7821 5.66282C11.8012 5.66282 12.6595 4.97171 12.9641 4.02179H14.8492C15.0663 4.02179 15.2761 4.11221 15.4319 4.27569C15.588 4.43942 15.6768 4.66294 15.6768 4.89744V16.7436C15.6768 16.9781 15.588 17.2016 15.4319 17.3653C15.2761 17.5288 15.0663 17.6192 14.8492 17.6192H5.15084C4.93371 17.6192 4.72394 17.5288 4.56811 17.3653C4.41205 17.2016 4.32318 16.9781 4.32318 16.7436V4.89744C4.32318 4.66294 4.41204 4.43942 4.56811 4.27569C4.72394 4.11221 4.93371 4.02179 5.15084 4.02179H7.0359C7.34047 4.97171 8.19883 5.66282 9.21788 5.66282H10.7821Z"
+      fill="#4F46E5"
+      stroke="#4F46E5"
+      stroke-width="0.3"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <rect x="6" y="8" width="8" height="1.5" rx="0.75" fill="#4F46E5" />
+    <rect x="6" y="11" width="8" height="1.5" rx="0.75" fill="#4F46E5" />
+    <rect x="6" y="14" width="5" height="1.5" rx="0.75" fill="#4F46E5" />
+  </svg>
+);
+
 export const TaskListIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="20"
@@ -93,6 +167,34 @@ export const TaskListIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+export const TaskListIconActive: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M10.7889 9.55357H14.0031M10.7889 14.0137H14.0031M17.1429 17.4286C17.1429 17.7696 17.0074 18.0966 16.7663 18.3377C16.5252 18.5788 16.1981 18.7143 15.8571 18.7143H4.28571C3.94472 18.7143 3.6177 18.5788 3.37658 18.3377C3.13546 18.0966 3 17.7696 3 17.4286V3.28571C3 2.94472 3.13546 2.6177 3.37658 2.37658C3.6177 2.13546 3.94472 2 4.28571 2H11.4677C11.8087 2.00007 12.1357 2.13558 12.3767 2.37671L16.7661 6.76614C17.0073 7.00721 17.1428 7.33418 17.1429 7.67514V17.4286Z"
+      stroke="#4F46E5"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M5.81641 13.9408L6.89383 15.0183L8.68998 12.5047M5.81641 9.40099L6.89383 10.4784L8.68998 7.96484"
+      stroke="#4F46E5"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
+
 export const ViewIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="20"
@@ -185,6 +287,89 @@ export const ShowIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <defs>
       <clipPath id="clip0_569_25005">
         <rect width="20" height="20" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+export const RightIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g clip-path="url(#clip0_579_39149)">
+      <path
+        d="M10.0007 15.1715L19.1927 5.97852L20.6077 7.39252L10.0007 17.9995L3.63672 11.6355L5.05072 10.2215L10.0007 15.1715Z"
+        fill="#4F46E5"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_579_39149">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+export const ProjectNavIconArrow: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clip-path="url(#clip0_265_7896)">
+      <path d="M12 14L8 10H16L12 14Z" fill="#757982" />
+    </g>
+    <defs>
+      <clipPath id="clip0_265_7896">
+        <rect width="24" height="24" fill="white" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
+export const ProjectNavIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      d="M16 17.5C16.8284 17.5 17.5 16.8284 17.5 16C17.5 15.1716 16.8284 14.5 16 14.5C15.1716 14.5 14.5 15.1716 14.5 16C14.5 16.8284 15.1716 17.5 16 17.5Z"
+      fill="#6D65E9"
+    />
+    <path
+      d="M24 17.5C24.8284 17.5 25.5 16.8284 25.5 16C25.5 15.1716 24.8284 14.5 24 14.5C23.1716 14.5 22.5 15.1716 22.5 16C22.5 16.8284 23.1716 17.5 24 17.5Z"
+      fill="#6D65E9"
+    />
+    <path
+      d="M8 17.5C8.82843 17.5 9.5 16.8284 9.5 16C9.5 15.1716 8.82843 14.5 8 14.5C7.17157 14.5 6.5 15.1716 6.5 16C6.5 16.8284 7.17157 17.5 8 17.5Z"
+      fill="#6D65E9"
+    />
+  </svg>
+);
+export const ProjectPlusIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <g clip-path="url(#clip0_265_7897)">
+      <path d="M11 11V7H13V11H17V13H13V17H11V13H7V11H11Z" fill="#6D65E9" />
+    </g>
+    <defs>
+      <clipPath id="clip0_265_7897">
+        <rect width="24" height="24" fill="white" />
       </clipPath>
     </defs>
   </svg>

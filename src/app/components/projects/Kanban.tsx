@@ -20,7 +20,7 @@ const Kanban = () => {
   });
   return (
     <div>
-      <div>
+      <div className="px-20">
         <FilterPage />
       </div>
       <div className="flex gap-20 overflow-x-auto px-28 pb-28 items-start">
