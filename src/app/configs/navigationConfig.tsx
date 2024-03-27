@@ -3,6 +3,7 @@ import i18next from "i18next";
 import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
 import tr from "./navigation-i18n/tr";
+import { ProjectChiildrenIcon } from "public/assets/icons/projectsIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
@@ -26,12 +27,13 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "Projects",
     type: "collapse",
     icon: "heroicons-outline:list",
+
     children: [
       {
         id: "project1",
         title: "Project 1",
         type: "item",
-        icon: "heroicons-outline:list",
+        icon: "material-twotone:compress",
         url: "/projects",
         end: true,
       },
@@ -39,8 +41,8 @@ const navigationConfig: FuseNavItemType[] = [
         id: "project2",
         title: "Project 2",
         type: "item",
-        icon: "heroicons-outline:list",
-        url: "/projects",
+        icon: "material-twotone:compress",
+        url: "/projects/p",
         end: true,
       },
     ],

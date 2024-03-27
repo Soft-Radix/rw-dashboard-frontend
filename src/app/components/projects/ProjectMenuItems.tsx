@@ -117,6 +117,7 @@ export default function ProjectMenuItems(props) {
               <StyledMenuItem
                 key={index}
                 onClick={(event) => handleClick(event, index)}
+                className="w-full justify-between"
               >
                 {item.label} {activeItem === index && <RightIcon />}
               </StyledMenuItem>

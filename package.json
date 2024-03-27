@@ -44,6 +44,7 @@
     "react-apexcharts": "^1.4.1",
     "react-app-alias": "2.2.2",
     "react-autosuggest": "10.1.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-draft-wysiwyg": "1.15.0",
     "react-dropzone": "^14.2.3",
