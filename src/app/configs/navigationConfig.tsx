@@ -30,16 +30,16 @@ const navigationConfig: FuseNavItemType[] = [
 
     children: [
       {
-        id: "project1",
-        title: "Project 1",
+        id: "project-1",
+        title: "Project1",
         type: "item",
         icon: "material-twotone:compress",
         url: "/projects",
         end: true,
       },
       {
-        id: "project2",
-        title: "Project 2",
+        id: "project-2",
+        title: "Project2",
         type: "item",
         icon: "material-twotone:compress",
         url: "/projects/p",

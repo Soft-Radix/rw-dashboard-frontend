@@ -2,7 +2,12 @@ import isUrlInChildren from "@fuse/core/FuseNavigation/isUrlInChildren";
 import NavLinkAdapter from "@fuse/core/NavLinkAdapter";
 import { ListItemButton } from "@mui/material";
 import Collapse from "@mui/material/Collapse";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import {
+  DragDropContext,
+  Draggable,
+  DropResult,
+  Droppable,
+} from "react-beautiful-dnd";
 import IconButton from "@mui/material/IconButton";
 import List, { ListProps } from "@mui/material/List";
 import ListItemText from "@mui/material/ListItemText";
@@ -61,7 +66,7 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
-  const [items, setItems] = useState(item);
+  const [items, setItems] = useState<any>(item);
   const [open, setOpen] = useState(() => needsToBeOpened(location, item));
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
@@ -91,17 +96,38 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   if (checkPermission && !item?.hasPermission) {
     return null;
   }
-  const handleDragEnd = (result) => {
+  const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    if (!destination || source.index === destination.index) {
-      return;
+
+    if (!destination) return;
+
+    if (source.droppableId !== destination.droppableId) {
+      const newData = [...items];
+      const oldDroppableIndex = newData.findIndex(
+        (x) => x.id == source.droppableId.split("droppable")[1]
+      );
+      const newDroppableIndex = newData.findIndex(
+        (x) => x.id == destination.droppableId.split("droppable")[1]
+      );
+      const [item] = newData[oldDroppableIndex].components.splice(
+        source.index,
+        1
+      );
+      newData[newDroppableIndex].components.splice(destination.index, 0, item);
+
+      setItems(newData);
+    } else {
+      const newData = [...items];
+      const droppableIndex = newData.findIndex(
+        (x) => x.id == source.droppableId.split("droppable")[1]
+      );
+      const [item] = newData[droppableIndex].components.splice(source.index, 1);
+      newData[droppableIndex].components.splice(destination.index, 0, item);
+
+      setItems(newData);
     }
-    const reorderedItems = Array.from(item.children);
-    const [removed] = reorderedItems.splice(source.index, 1);
-    reorderedItems.splice(destination.index, 0, removed);
-    setItems({ ...item, children: reorderedItems });
   };
-  console.log(items, "items");
+
   return useMemo(
     () => (
       <Root
@@ -186,7 +212,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {item.children.map((_item, index) => (
+                        {items.children.map((_item, index) => (
                           <Draggable
                             key={_item.id}
                             draggableId={_item.id.toString()}
