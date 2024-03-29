@@ -7,8 +7,15 @@ import InputField from "src/app/components/InputField";
 import SelectField from "../selectField";
 import DropdownMenu from "../Dropdown";
 import { useFormik } from "formik";
+import ProjectMenuItems from "./ProjectMenuItems";
+import { useNavigate } from "react-router";
 
-const FilterPage = () => {
+interface FilterDesign {
+  filterDesign?: boolean;
+}
+const FilterPage = (props: FilterDesign) => {
+  const { filterDesign } = props;
+
   const formik = useFormik({
     initialValues: {
       role: "",
@@ -51,74 +58,86 @@ const FilterPage = () => {
           />
         </div>
         <div className="w-full sm:w-auto flex  flex-row items-center justify-between gap-3 sm:gap-40 cursor-pointer">
-          <DropdownMenu
-            handleClose={() => setFilterMenu(null)}
-            anchorEl={filterMenu}
-            button={
-              <Button
-                variant="text"
-                className="h-[40px] text-[16px] flex gap-12 text-para_light whitespace-nowrap"
-                aria-label="Add User"
-                size="large"
-                onClick={(event) => setFilterMenu(event.currentTarget)}
-              >
-                <FilterIcon className="shrink-0" />
-                Filter
-              </Button>
-            }
-            popoverProps={{
-              open: !!filterMenu,
-              anchorOrigin: {
-                vertical: "bottom",
-                horizontal: "right",
-              },
-              transformOrigin: {
-                vertical: "top",
-                horizontal: "right",
-              },
-              classes: {
-                paper: "pt-0 pb-0",
-              },
-            }}
-          >
-            <div className="w-[810px] h-[300px]">
-              <div className="text-black text-lg font-500 px-20 py-16 border-b border-b-[#EDF2F6] flex items-center justify-between">
-                <div>Filter Options</div>
-                <div className="flex items-center gap-10">
-                  <Button className=" text-para_light">Clear All</Button>
-                  <Button
-                    variant="text"
-                    className="h-[40px] text-[16px] flex gap-12 text-secondary whitespace-nowrap"
+          {!filterDesign ? (
+            <DropdownMenu
+              handleClose={() => setFilterMenu(null)}
+              anchorEl={filterMenu}
+              button={
+                <Button
+                  variant="text"
+                  className="h-[40px] text-[16px] flex gap-12 text-para_light whitespace-nowrap"
+                  aria-label="Add User"
+                  size="large"
+                  onClick={(event) => setFilterMenu(event.currentTarget)}
+                >
+                  <FilterIcon className="shrink-0" />
+                  Filter
+                </Button>
+              }
+              popoverProps={{
+                open: !!filterMenu,
+                anchorOrigin: {
+                  vertical: "bottom",
+                  horizontal: "right",
+                },
+                transformOrigin: {
+                  vertical: "top",
+                  horizontal: "right",
+                },
+                classes: {
+                  paper: "pt-0 pb-0",
+                },
+              }}
+            >
+              <div className="w-[810px] h-[300px]">
+                <div className="text-black text-lg font-500 px-20 py-16 border-b border-b-[#EDF2F6] flex items-center justify-between">
+                  <div>Filter Options</div>
+                  <div className="flex items-center gap-10">
+                    <Button className=" text-para_light">Clear All</Button>
+                    <Button
+                      variant="text"
+                      className="h-[40px] text-[16px] flex gap-12 text-secondary whitespace-nowrap"
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                </div>
+                <div className="px-20 py-14 flex flex-col gap-14 w-1/3">
+                  <SelectField
+                    name="role"
+                    formik={formik}
+                    placeholder="Select Filter"
+                    sx={{
+                      "&.MuiInputBase-root": {
+                        "& .MuiSelect-select": {
+                          minHeight: "40px",
+                        },
+                      },
+                    }}
                   >
-                    Apply
-                  </Button>
+                    <MenuItem value="Designer">Status</MenuItem>
+                    <MenuItem value="Tester">Due Date</MenuItem>
+                    <MenuItem value="Developer">Priority</MenuItem>
+                    <MenuItem value="Designer">Assignee</MenuItem>
+                    <MenuItem value="Tester">Archived</MenuItem>
+                    <MenuItem value="Developer">Label</MenuItem>
+                    <MenuItem value="Tester">Created By</MenuItem>
+                    <MenuItem value="Developer">Date Closed</MenuItem>
+                  </SelectField>
                 </div>
               </div>
-              <div className="px-20 py-14 flex flex-col gap-14 w-1/3 g">
-                <SelectField
-                  name="role"
-                  formik={formik}
-                  placeholder="Select Filter"
-                  sx={{
-                    "&.MuiInputBase-root": {
-                      "& .MuiSelect-select": {
-                        minHeight: "40px",
-                      },
-                    },
-                  }}
-                >
-                  <MenuItem value="Designer">Status</MenuItem>
-                  <MenuItem value="Tester">Due Date</MenuItem>
-                  <MenuItem value="Developer">Priority</MenuItem>
-                  <MenuItem value="Designer">Assignee</MenuItem>
-                  <MenuItem value="Tester">Archived</MenuItem>
-                  <MenuItem value="Developer">Label</MenuItem>
-                  <MenuItem value="Tester">Created By</MenuItem>
-                  <MenuItem value="Developer">Date Closed</MenuItem>
-                </SelectField>
-              </div>
+            </DropdownMenu>
+          ) : (
+            <div className="px-20 flex gap-32 text-para_light  ">
+              <ProjectMenuItems
+                label={"Filter"}
+                icon={<FilterIcon />}
+                className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                cursor-pointer text-[16px]"
+              />
             </div>
-          </DropdownMenu>
+          )}
+
           <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full">
             <Typography className="text-[14px] sm:text-[16px] text-[#9DA0A6]">
               Sort By

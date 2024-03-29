@@ -100,32 +100,6 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     const { source, destination } = result;
 
     if (!destination) return;
-
-    if (source.droppableId !== destination.droppableId) {
-      const newData = [...items];
-      const oldDroppableIndex = newData.findIndex(
-        (x) => x.id == source.droppableId.split("droppable")[1]
-      );
-      const newDroppableIndex = newData.findIndex(
-        (x) => x.id == destination.droppableId.split("droppable")[1]
-      );
-      const [item] = newData[oldDroppableIndex].components.splice(
-        source.index,
-        1
-      );
-      newData[newDroppableIndex].components.splice(destination.index, 0, item);
-
-      setItems(newData);
-    } else {
-      const newData = [...items];
-      const droppableIndex = newData.findIndex(
-        (x) => x.id == source.droppableId.split("droppable")[1]
-      );
-      const [item] = newData[droppableIndex].components.splice(source.index, 1);
-      newData[droppableIndex].components.splice(destination.index, 0, item);
-
-      setItems(newData);
-    }
   };
 
   return useMemo(
@@ -136,13 +110,15 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
         sx={item.sx}
       >
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="">
+          <div className="bg-[#393F4C]">
             <div>
               <ListItemButton
                 component={component}
                 className={clsx(
                   "fuse-list-item hover:opacity-100",
-                  open ? "opacity-100" : "opacity-80"
+                  open
+                    ? "opacity-100 bg-[#393F4C] "
+                    : "opacity-80  bg-[#111827]"
                 )}
                 {...itemProps}
               >
@@ -208,7 +184,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
             </div>
             <div className="">
               {item.children && (
-                <Collapse in={open} className="collapse-children">
+                <Collapse in={open} className="collapse-children ">
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.droppableProps}>
@@ -218,7 +194,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                             draggableId={_item.id.toString()}
                             index={index}
                           >
-                            {(provided, snapshot) => (
+                            {(provided) => (
                               <div
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}

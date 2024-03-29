@@ -21,7 +21,7 @@ const Kanban = () => {
   return (
     <div>
       <div className="px-20">
-        <FilterPage />
+        <FilterPage filterDesign={true} />
       </div>
       <div className="flex gap-20 overflow-x-auto px-28 pb-28 items-start">
         <MainCard title="To Do" />

@@ -55,7 +55,7 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 export default function ProjectMenuItems(props) {
-  const { icon, label } = props;
+  const { icon, label,className } = props;
   const [groupMenu, setGroupMenu] = React.useState<HTMLElement | null>(null);
   const [activeItem, setActiveItem] = React.useState(null); // State to keep track of active item
 
@@ -89,8 +89,7 @@ export default function ProjectMenuItems(props) {
               onClick={(event) => setGroupMenu(event.currentTarget)}
               label={label}
               icon={icon}
-              className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
-                cursor-pointer text-[12px]"
+              className={className}
             />
           }
           popoverProps={{
