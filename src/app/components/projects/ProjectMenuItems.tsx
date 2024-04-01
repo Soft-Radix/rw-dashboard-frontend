@@ -55,20 +55,32 @@ const StyledMenu = styled((props: MenuProps) => (
 }));
 
 export default function ProjectMenuItems(props) {
-  const { icon, label,className } = props;
+  const { icon, label, className, setTableSelectedItemDesign } = props;
   const [groupMenu, setGroupMenu] = React.useState<HTMLElement | null>(null);
   const [activeItem, setActiveItem] = React.useState(null); // State to keep track of active item
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  // const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>, index: number) => {
     setAnchorEl(event.currentTarget);
     setActiveItem(index); // Set the clicked item as active
-    console.log(anchorEl, "check");
+
+    // console.log(groupMenu, "check");
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setGroupMenu(null);
   };
+  const handleMenuItemClick = (
+    event: React.MouseEvent<HTMLElement>,
+    index: number,
+    label: string
+  ) => {
+    handleClick(event, index); // Handle the click event
+    handleClose(); // Close the menu
+    setTableSelectedItemDesign(label);
+  };
+  // console.log(anchorEl, "kkk");
+
   const groupMenuData = [
     { label: "None" },
     { label: "Status" },
@@ -77,6 +89,11 @@ export default function ProjectMenuItems(props) {
     { label: "Label" },
     { label: "Due Date" },
   ];
+  // console.log(groupMenu, "groupenu");
+  const activeLabel =
+    activeItem !== null
+      ? `${label}: ${groupMenuData[activeItem].label}`
+      : label;
 
   return (
     <div>
@@ -87,9 +104,14 @@ export default function ProjectMenuItems(props) {
           button={
             <Chip
               onClick={(event) => setGroupMenu(event.currentTarget)}
-              label={label}
+              label={activeLabel}
               icon={icon}
               className={className}
+              style={
+                !!activeItem || activeItem == 0
+                  ? { border: "1px solid #393F4C" }
+                  : {}
+              }
             />
           }
           popoverProps={{
@@ -103,6 +125,7 @@ export default function ProjectMenuItems(props) {
             const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
               padding: "8px 20px",
               minWidth: "250px",
+
               backgroundColor:
                 activeItem === index
                   ? alpha(
@@ -115,7 +138,9 @@ export default function ProjectMenuItems(props) {
             return (
               <StyledMenuItem
                 key={index}
-                onClick={(event) => handleClick(event, index)}
+                onClick={(event) =>
+                  handleMenuItemClick(event, index, item.label)
+                }
                 className="w-full justify-between"
               >
                 {item.label} {activeItem === index && <RightIcon />}

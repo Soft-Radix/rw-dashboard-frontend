@@ -8,7 +8,6 @@ import SelectField from "../selectField";
 import DropdownMenu from "../Dropdown";
 import { useFormik } from "formik";
 import ProjectMenuItems from "./ProjectMenuItems";
-import { useNavigate } from "react-router";
 
 interface FilterDesign {
   filterDesign?: boolean;
@@ -27,14 +26,13 @@ const FilterPage = (props: FilterDesign) => {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const groupMenuData = [
-    { label: "None" },
-    { label: "Status" },
-    { label: "Asignee" },
-    { label: "Priority" },
-    { label: "Label" },
-    { label: "Due Date" },
-  ];
+  const [selectMenuItems, setSelectMenuItems] = useState<string>("");
+
+  const showMenuItems = (e: any) => {
+    const { value } = e.target;
+    console.log(value, "value");
+    setSelectMenuItems(value);
+  };
 
   return (
     <div className="px-4  mb-20 ">
@@ -107,6 +105,9 @@ const FilterPage = (props: FilterDesign) => {
                     name="role"
                     formik={formik}
                     placeholder="Select Filter"
+                    // value={selectMenuItems}
+                    // value={selectMenuItems || "Select Filter"}
+                    onChange={(e) => showMenuItems(e)}
                     sx={{
                       "&.MuiInputBase-root": {
                         "& .MuiSelect-select": {
@@ -115,14 +116,14 @@ const FilterPage = (props: FilterDesign) => {
                       },
                     }}
                   >
-                    <MenuItem value="Designer">Status</MenuItem>
-                    <MenuItem value="Tester">Due Date</MenuItem>
-                    <MenuItem value="Developer">Priority</MenuItem>
-                    <MenuItem value="Designer">Assignee</MenuItem>
-                    <MenuItem value="Tester">Archived</MenuItem>
-                    <MenuItem value="Developer">Label</MenuItem>
-                    <MenuItem value="Tester">Created By</MenuItem>
-                    <MenuItem value="Developer">Date Closed</MenuItem>
+                    <MenuItem value="Status">Status</MenuItem>
+                    <MenuItem value="Due Date">Due Date</MenuItem>
+                    <MenuItem value="Priority">Priority</MenuItem>
+                    <MenuItem value="Assignee">Assignee</MenuItem>
+                    <MenuItem value="Archived">Archived</MenuItem>
+                    <MenuItem value="Label">Label</MenuItem>
+                    <MenuItem value="Created By">Created By</MenuItem>
+                    <MenuItem value="Date Closed">Date Closed</MenuItem>
                   </SelectField>
                 </div>
               </div>

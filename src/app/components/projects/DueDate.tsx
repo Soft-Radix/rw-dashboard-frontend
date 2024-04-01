@@ -1,95 +1,39 @@
 import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
+import CommonTable from "../commonTable";
+
 import { useTheme } from "@mui/styles";
 import {
   ArrowRightCircleIcon,
   DeleteIcon,
   EditIcon,
 } from "public/assets/icons/common";
-import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
-import DueDate from "../projects/DueDate";
+import { ReactHTMLElement, useState } from "react";
 
-const rows = [
-  {
-    title: "Brand logo design",
-    defaultChecked: true,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: true,
-    assignedImg: [
-      "female-01.jpg",
-      "female-02.jpg",
-      "female-03.jpg",
-      "female-04.jpg",
-      "female-05.jpg",
-    ],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
-  },
-];
-
-function ThemePageTable(props) {
-  const { tableSelectedItemDesign } = props;
+const DueDate = (props) => {
+  const { rows, title, className } = props;
+  const [showTableData, setShowTableData] = useState<boolean>(false);
   const theme: Theme = useTheme();
+  const showTable = () => {
+    setShowTableData(!showTableData);
+  };
   return (
-    <>
-      {tableSelectedItemDesign == "Due Date" ? (
+    <div>
+      <div className="flex items-center gap-20 px-20 h-40 w-full  shadow-sm bg-[#E7E8E9] ">
+        {showTableData ? (
+          <DownArrowBlack onClick={showTable} />
+        ) : (
+          <SortIcon
+            onClick={showTable}
+            className="bg-white h-28 w-28 rounded-sm"
+          />
+        )}
+        <div className={className}>{title}</div>
+      </div>
+      {showTableData && (
         <>
-          <CommonTable
-            headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
-          >
-            <div></div>
-          </CommonTable>
-          <div className="flex flex-col gap-5">
-            <DueDate
-              rows={rows}
-              title={"Overdue (2)"}
-              className="text-lg font-medium text-[#F44336]"
-            />
-            <DueDate
-              title={"No Due Date (5)"}
-              rows={rows}
-              className="text-lg font-medium text-[#757982]"
-            />
-          </div>
-        </>
-      ) : (
-        <CommonTable
-          headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
-        >
-          {rows.map((row, index) => (
+          {rows.map((row: any, index: number) => (
             <TableRow
               key={index}
               sx={{
@@ -142,10 +86,10 @@ function ThemePageTable(props) {
               </TableCell>
             </TableRow>
           ))}
-        </CommonTable>
+        </>
       )}
-    </>
+    </div>
   );
-}
+};
 
-export default ThemePageTable;
+export default DueDate;

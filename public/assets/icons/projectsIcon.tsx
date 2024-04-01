@@ -414,3 +414,17 @@ export const ProjectChiildrenIcon: React.FC<SVGProps<SVGSVGElement>> = (
     />
   </svg>
 );
+export const DownArrowBlack: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="32"
+    height="32"
+    viewBox="0 0 32 32"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" fill="white" />
+    <rect x="0.5" y="0.5" width="31" height="31" rx="3.5" stroke="#E7E8E9" />
+    <path d="M16 14L12 18H20L16 14Z" fill="#111827" />
+  </svg>
+);

@@ -52,9 +52,12 @@ export default function ProjectTaskTabel() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
+    useState<object>({ label: "Group By" });
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+  console.log(tableSelectedItemDesign, "kkkkkkkkkkkkkkkk");
 
   return (
     <div>
@@ -92,6 +95,7 @@ export default function ProjectTaskTabel() {
                 icon={<GroupIcon />}
                 className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
                 cursor-pointer text-[12px]"
+                setTableSelectedItemDesign={setTableSelectedItemDesign}
               />
               <ProjectMenuItems
                 label={"Show/Hide Subtasks"}
@@ -106,8 +110,11 @@ export default function ProjectTaskTabel() {
                 cursor-pointer text-[12px]"
               />
             </div>
+
             <CustomTabPanel value={selectedTab} index={0}>
-              <ThemePageTable />
+              <ThemePageTable
+                tableSelectedItemDesign={tableSelectedItemDesign}
+              />
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>
               <ThemePageTable />
