@@ -8,6 +8,8 @@ import {
 import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
 import DueDate from "../projects/DueDate";
+import { useState } from "react";
+import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
 
 const rows = [
   {
@@ -61,8 +63,11 @@ const rows = [
 ];
 
 function ThemePageTable(props) {
-  const { tableSelectedItemDesign } = props;
+ 
+  const { tableSelectedItemDesign, selectedTab } = props;
   const theme: Theme = useTheme();
+  console.log(selectedTab, "5547747474");
+
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (

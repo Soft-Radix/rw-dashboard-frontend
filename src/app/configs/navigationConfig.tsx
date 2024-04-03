@@ -27,7 +27,6 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "Projects",
     type: "collapse",
     icon: "heroicons-outline:list",
-
     children: [
       {
         id: "project-1",

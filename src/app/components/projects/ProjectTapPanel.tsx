@@ -15,6 +15,7 @@ import {
   TaskTableIconActive,
   ViewIcon,
 } from "public/assets/icons/projectsIcon";
+import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -142,9 +143,11 @@ export default function ProjectTabPanel() {
         <Kanban />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={1}>
-        <ProjectTaskTabel />
+        <ProjectTaskTabel customSelectedTab={selectedTab} />
       </CustomTabPanel>
-      <CustomTabPanel value={selectedTab} index={2}></CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={2}>
+        <ProjectTaskList customSelectedTab={selectedTab} />
+      </CustomTabPanel>
     </div>
   );
 }

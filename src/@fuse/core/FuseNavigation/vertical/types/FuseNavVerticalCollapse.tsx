@@ -66,7 +66,9 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
+  console.log(item, "item");
   const [items, setItems] = useState<any>(item);
+  console.log(items, "ghdjh");
   const [open, setOpen] = useState(() => needsToBeOpened(location, item));
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
@@ -96,12 +98,32 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   if (checkPermission && !item?.hasPermission) {
     return null;
   }
+  // const reorder = (items: any, startIndex: number, endIndex: number) => {
+  //   const newData = Array.from(items);
+  //   const [removed] = newData.splice(startIndex, 1);
+  //   newData.splice(endIndex, 0, removed);
+  //   console.log(newData, "nd");
+  //   return newData;
+  // };
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-
-    if (!destination) return;
+    if (!destination) {
+      return;
+    }
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index === destination.index
+    ) {
+      return;
+    }
+    const newItems = [...items.children];
+    // console.log(newItems, "anw");
+    const [removed] = newItems.splice(source.index, 1);
+    newItems.splice(destination.index, 0, removed);
+    console.log(newItems, "nw");
+    setItems({ ...items, children: newItems });
   };
-
+  console.log(items, "newItem");
   return useMemo(
     () => (
       <Root
@@ -109,81 +131,76 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
         itempadding={itempadding}
         sx={item.sx}
       >
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="bg-[#393F4C]">
-            <div>
-              <ListItemButton
-                component={component}
-                className={clsx(
-                  "fuse-list-item hover:opacity-100",
-                  open
-                    ? "opacity-100 bg-[#393F4C] "
-                    : "opacity-80  bg-[#111827]"
-                )}
-                {...itemProps}
-              >
-                <div className="flex items-center justify-between w-full  ">
-                  <div className="flex items-center gap-10">
-                    {item.icon && (
-                      <FuseSvgIcon
-                        className={clsx(
-                          "fuse-list-item-icon shrink-0 ",
-                          item.iconClass
-                        )}
-                        color="action"
-                      >
-                        {item.icon}
-                      </FuseSvgIcon>
-                    )}
-
-                    <ListItemText
-                      className="fuse-list-item-text"
-                      primary={item.title}
-                      secondary={item.subtitle}
-                      classes={{
-                        primary:
-                          "text-13 font-medium fuse-list-item-text-primary truncate",
-                        secondary:
-                          "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate",
-                      }}
-                    />
-
-                    {item.badge && (
-                      <FuseNavBadge className="mx-4" badge={item.badge} />
-                    )}
-
-                    <IconButton
-                      disableRipple
-                      className="-mx-12 h-20 w-40 p-0 hover:bg-transparent focus:bg-transparent "
-                      onClick={(ev) => {
-                        ev.preventDefault();
-                        ev.stopPropagation();
-                        setOpen(!open);
-                      }}
-                      size="large"
+        <div className="bg-[#393F4C]">
+          <div>
+            <ListItemButton
+              component={component}
+              className={clsx(
+                "fuse-list-item hover:opacity-100",
+                open ? "opacity-100 bg-[#393F4C] " : "opacity-80  bg-[#111827]"
+              )}
+              {...itemProps}
+            >
+              <div className="flex items-center justify-between w-full  ">
+                <div className="flex items-center gap-10">
+                  {item.icon && (
+                    <FuseSvgIcon
+                      className={clsx(
+                        "fuse-list-item-icon shrink-0 ",
+                        item.iconClass
+                      )}
+                      color="action"
                     >
-                      <ProjectNavIconArrow
-                        className="arrow-icon "
-                        color="inherit"
-                      >
-                        {open
-                          ? "heroicons-solid:chevron-down"
-                          : "heroicons-solid:chevron-right"}
-                      </ProjectNavIconArrow>
-                    </IconButton>
-                  </div>
-                  <div className="flex items-center gap-10">
-                    <ProjectNavIcon
-                      className="threeDots-icon"
+                      {item.icon}
+                    </FuseSvgIcon>
+                  )}
+
+                  <ListItemText
+                    className="fuse-list-item-text"
+                    primary={item.title}
+                    secondary={item.subtitle}
+                    classes={{
+                      primary:
+                        "text-13 font-medium fuse-list-item-text-primary truncate",
+                      secondary:
+                        "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate",
+                    }}
+                  />
+
+                  {items.badge && (
+                    <FuseNavBadge className="mx-4" badge={item.badge} />
+                  )}
+
+                  <IconButton
+                    disableRipple
+                    className="-mx-12 h-20 w-40 p-0 hover:bg-transparent focus:bg-transparent "
+                    onClick={(ev) => {
+                      ev.preventDefault();
+                      ev.stopPropagation();
+                      setOpen(!open);
+                    }}
+                    size="large"
+                  >
+                    <ProjectNavIconArrow
+                      className="arrow-icon "
                       color="inherit"
-                    />
-                    <ProjectPlusIcon />
-                  </div>
+                    >
+                      {open
+                        ? "heroicons-solid:chevron-down"
+                        : "heroicons-solid:chevron-right"}
+                    </ProjectNavIconArrow>
+                  </IconButton>
                 </div>
-              </ListItemButton>
-            </div>
+                <div className="flex items-center gap-10">
+                  <ProjectNavIcon className="threeDots-icon" color="inherit" />
+                  <ProjectPlusIcon />
+                </div>
+              </div>
+            </ListItemButton>
+          </div>
+          <DragDropContext onDragEnd={handleDragEnd}>
             <div className="">
-              {item.children && (
+              {items.children && (
                 <Collapse in={open} className="collapse-children ">
                   <Droppable droppableId="droppable">
                     {(provided) => (
@@ -191,7 +208,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                         {items.children.map((_item, index) => (
                           <Draggable
                             key={_item.id}
-                            draggableId={_item.id.toString()}
+                            draggableId={_item.id}
                             index={index}
                           >
                             {(provided) => (
@@ -219,8 +236,8 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                 </Collapse>
               )}
             </div>
-          </div>
-        </DragDropContext>
+          </DragDropContext>
+        </div>
       </Root>
     ),
     [

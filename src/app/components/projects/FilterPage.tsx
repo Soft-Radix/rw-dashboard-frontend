@@ -35,7 +35,7 @@ const FilterPage = (props: FilterDesign) => {
   };
 
   return (
-    <div className="px-4  mb-20 ">
+    <div className="px-4 ">
       <div
         className="relative bg-[#ffff] py-5
       sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl"
