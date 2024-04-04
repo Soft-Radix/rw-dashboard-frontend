@@ -7,9 +7,10 @@ import {
 } from "public/assets/icons/common";
 import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
-import DueDate from "../projects/DueDate";
+// import DueDate from "./DueDate";
 import { useState } from "react";
 import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
+import DueDate from "../projects/DueDate";
 
 const rows = [
   {
@@ -63,7 +64,6 @@ const rows = [
 ];
 
 function ThemePageTable(props) {
- 
   const { tableSelectedItemDesign, selectedTab } = props;
   const theme: Theme = useTheme();
   console.log(selectedTab, "5547747474");

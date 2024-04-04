@@ -4,11 +4,8 @@ import { useFormik } from "formik";
 // import { KanbanIcon } from "public/assets/icons/projectsIcon.tsx";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import InputField from "src/app/components/InputField";
-import MainCard from "src/app/components/dashboard/MainCard";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 
-import FilterPage from "src/app/components/projects/FilterPage";
 import ProjectTabPanel from "../../components/projects/ProjectTapPanel";
 export default function Projects() {
   const theme: Theme = useTheme();
@@ -54,7 +51,6 @@ export default function Projects() {
       <div>
         <ProjectTabPanel />
       </div>
-
       <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </div>
   );

@@ -80,7 +80,7 @@ export default function ProjectMenuItems(props) {
     setTableSelectedItemDesign(label);
   };
   // console.log(anchorEl, "kkk");
-
+  console.log(label, "label");
   const groupMenuData = [
     { label: "None" },
     { label: "Status" },

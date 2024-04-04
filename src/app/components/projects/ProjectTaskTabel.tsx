@@ -13,8 +13,9 @@ import InputField from "src/app/components/InputField";
 import ProjectMenuItems from "src/app/components/projects/ProjectMenuItems";
 import AddTaskModal from "src/app/components/tasks/AddTask";
 import RecentData from "src/app/components/tasks/RecentData";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
+// import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import FilterPage from "./FilterPage";
+import ThemePageTable from "../tasks/TaskPageTable";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,12 +58,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [tableSelectedItemDesign, setTableSelectedItemDesign] =
-    useState<object>({ label: "Group By" });
+    useState<object>();
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-  // console.log(props.customSelectedTab, "check");
-  console.log(typeof props.customSelectedTab, "cheknew");
+  console.log(tableSelectedItemDesign, "item design");
   return (
     <>
       {props.customSelectedTab && (
