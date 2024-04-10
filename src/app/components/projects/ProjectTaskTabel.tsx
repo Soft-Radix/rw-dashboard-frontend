@@ -59,10 +59,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const [selectedTab, setSelectedTab] = useState(0);
   const [tableSelectedItemDesign, setTableSelectedItemDesign] =
     useState<object>();
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-  console.log(tableSelectedItemDesign, "item design");
+
   return (
     <>
       {props.customSelectedTab && (

@@ -16,6 +16,7 @@ import {
   ViewIcon,
 } from "public/assets/icons/projectsIcon";
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
+import CalenderPage from "./Calender/CalenderPage";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -57,7 +58,7 @@ export default function ProjectTabPanel() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(2);
+  const [selectedTab, setSelectedTab] = useState(3);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
@@ -147,6 +148,9 @@ export default function ProjectTabPanel() {
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={2}>
         <ProjectTaskList customSelectedTab={selectedTab} />
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={3}>
+        <CalenderPage />
       </CustomTabPanel>
     </div>
   );

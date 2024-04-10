@@ -9,7 +9,7 @@ import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
 // import DueDate from "./DueDate";
 import { useState } from "react";
-import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
+// import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
 import DueDate from "../projects/DueDate";
 
 const rows = [
@@ -64,10 +64,9 @@ const rows = [
 ];
 
 function ThemePageTable(props) {
-  const { tableSelectedItemDesign, selectedTab } = props;
+  const { tableSelectedItemDesign } = props;
   const theme: Theme = useTheme();
-  console.log(selectedTab, "5547747474");
-
+  console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (

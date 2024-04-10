@@ -45,7 +45,8 @@ const rows = [
   },
 ];
 
-const InProgress = () => {
+const InProgress = (props) => {
+  const { tableSelectedItemDesign } = props;
   const theme: Theme = useTheme();
 
   const [showData, setShowData] = useState(false);
@@ -54,9 +55,9 @@ const InProgress = () => {
   };
   return (
     <div>
-             <div className="block gap-20  pt-10  w-full  my-10 bg-white rounded-lg h-fit border-1 border-solid border-[#D1D7DB] mb-24  ">
-             <div className="flex  flex-col  ">
-              <div className="flex items-center justify-start gap-20 px-20 pb-10">
+      <div className="block gap-20  pt-10  w-full  my-10 bg-white rounded-lg h-fit border-1 border-solid border-[#D1D7DB] mb-24  ">
+        <div className="flex  flex-col  ">
+          <div className="flex items-center justify-start gap-20 px-20 pb-10">
             {!showData ? (
               <DownArrowright onClick={handleShowTable} />
             ) : (
@@ -121,7 +122,7 @@ const InProgress = () => {
                         </span>
                       </TableCell>
                       <TableCell align="left" className="w-[1%]">
-                      <div className="flex gap-20 px-10">
+                        <div className="flex gap-20 px-10">
                           <span className="p-2 cursor-pointer">
                             <DeleteIcon />
                           </span>
@@ -137,19 +138,19 @@ const InProgress = () => {
                   ))}
                 </CommonTable>
                 <div className=" border-1 border-solid border-[#D1D7DB]">
-                      <Button
-                        variant="text"
-                        color="secondary"
-                        className="h-[40px] sm:text-[16px] flex gap-2 sm:mb-[1rem] leading-none pt-10  pl-10"
-                        aria-label="Manage Sections"
-                        size="large"
-                        startIcon={
-                          <PlusIcon color={theme.palette.secondary.main} />
-                        }
-                      >
-                        Add Task
-                      </Button>
-                    </div>
+                  <Button
+                    variant="text"
+                    color="secondary"
+                    className="h-[40px] sm:text-[16px] flex gap-2 sm:mb-[1rem] leading-none pt-10  pl-10"
+                    aria-label="Manage Sections"
+                    size="large"
+                    startIcon={
+                      <PlusIcon color={theme.palette.secondary.main} />
+                    }
+                  >
+                    Add Task
+                  </Button>
+                </div>
               </div>
             </>
           )}
