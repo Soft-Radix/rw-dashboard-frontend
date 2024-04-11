@@ -33,6 +33,7 @@ import Review from "./Review";
 import InProgress from "./InProgress";
 import Completed from "./Completed";
 import TaskListDueData from "./TaskListDueData";
+import Assignee from "./Assignee";
 const rows = [
   {
     title: "Brand logo design",

@@ -1,17 +1,14 @@
-import React from "react";
-import ProjectTaskList from "./ProjectTaskList";
-import DueDate from "../DueDate";
-import CommonTable from "../../commonTable";
 import { Button, Checkbox, TableCell, TableRow, Theme } from "@mui/material";
-import ImagesOverlap from "../../ImagesOverlap";
+import { useTheme } from "@mui/styles";
 import {
   ArrowRightCircleIcon,
   DeleteIcon,
   EditIcon,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useTheme } from "@mui/styles";
 import { DownArrowBlack } from "public/assets/icons/projectsIcon";
+import ImagesOverlap from "../../ImagesOverlap";
+import CommonTable from "../../commonTable";
 const rows = [
   {
     title: "Brand logo design",
@@ -84,7 +81,7 @@ const TaskListDueData = () => {
               <TableCell align="center">
                 <ImagesOverlap images={row.assignedImg} />
               </TableCell>
-              <TableCell align="center">Feb 12,2024</TableCell>
+              <TableCell align="center"></TableCell>
               <TableCell align="center">
                 <span
                   className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500

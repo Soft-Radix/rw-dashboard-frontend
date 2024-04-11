@@ -220,5 +220,43 @@ input:-webkit-autofill:active {
     }
   }
 }
+.rbc-month-header {
+  @apply text-start text-[12px] text-[#757982] font-500 border-1 border-[#E7E8E9];
+
+  .rbc-header  {
+    @apply  py-10 text-left px-20 text-[12px]
+  }
+  
+}
+
+.rbc-row-content {
+
+  .rbc-date-cell {
+    @apply text-left px-20 py-10 text-[12px] text-[#111827] font-500;
+
+  }
+  
+ 
+}
+.rbc-row-bg {
+  .rbc-off-range-bg {
+    @apply bg-transparent;
+
+  }
+  .rbc-day-bg +.rbc-today{
+    @apply border-1 border-[#4F46E5] bg-transparent  
+    
+  } 
+ 
+  .rbc-off-range button {
+    @apply text-red-300;
+  }
+}
+.rbc-off-range .rbc-button-link {
+  @apply text-[#757982]; /* Set text color using regular CSS */
+}
+
+
+
 
 
