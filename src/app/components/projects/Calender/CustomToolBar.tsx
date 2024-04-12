@@ -59,6 +59,7 @@ const CustomToolbar: React.FC<CustomToolbarProps> = ({
         >
           {getViewLabel(selectedView)}
         </Button>
+
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}

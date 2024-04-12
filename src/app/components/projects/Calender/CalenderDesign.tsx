@@ -1,24 +1,68 @@
-import React from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import {} from "console";
 import moment from "moment";
+import React, { useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CustomToolbar from "./CustomToolBar";
+import EventCustomize from "./EventCustomize";
+import { Button, Dialog, TextField, Typography } from "@mui/material";
+import { TimePicker } from "@mui/x-date-pickers/TimePicker";
+import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import InputField from "../../InputField";
 
+interface slotData {
+  start: Date;
+  end: Date;
+  slots: Date[];
+  action: "select" | "click" | "doubleClick" | "contextMenu";
+  bounds: {
+    x: number;
+    y: number;
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+  box: {
+    x: number;
+    y: number;
+    top: number;
+    right: number;
+    bottom: number;
+    left: number;
+  };
+}
+interface CalendarState {
+  events: any[]; // Adjust the type according to your event structure
+  title: string;
+  desc: string;
+  start: Date | null;
+  end: Date | null;
+  openSlot: boolean;
+  openEvent: boolean;
+  clickedEvent: any | null; // Adjust the type according to your event structure
+}
 const localizer = momentLocalizer(moment);
 
-const CalenderDesign = () => {
-  const events = [
-    {
-      title: "Meeting",
-      start: new Date(2024, 3, 15, 10, 0), // 10.00 AM
-      end: new Date(2024, 3, 15, 12, 0), // 12.00 PM
-    },
-    {
-      title: "Coffee Break",
-      start: new Date(2024, 3, 16, 15, 0), // 3.00 PM
-      end: new Date(2024, 3, 16, 15, 30), // 3.30 PM
-    },
-  ];
+const CalenderDesign = ({ events }) => {
+  const [calendarState, setCalendarState] = useState<CalendarState>({
+    events: [],
+    title: "",
+    desc: "",
+    start: null,
+    end: null,
+    openSlot: false,
+    openEvent: false,
+    clickedEvent: null,
+  });
+  const handleClose = () => {
+    setCalendarState({
+      ...calendarState,
+      openSlot: false,
+      openEvent: false,
+    });
+  };
+
   const handleViewChange = (view: string) => {
     console.log(`Switching to ${view} view`);
     // Implement your logic to handle view change (e.g., update state)
@@ -27,46 +71,103 @@ const CalenderDesign = () => {
     weekdayFormat: (date: Date, culture: string, localizer: any) =>
       localizer.format(date, "dddd", culture),
   };
-  const dayPropGetter = (date) => {
-    const today = moment().startOf("day");
-    const day = moment(date).startOf("day");
-
-    if (day.isSame(today)) {
-      return {
-        style: {
-          backgroundColor: "lightblue", // Example background color
-          color: "black", // Example text color
-          // Example rounded appearance
-          padding: "2px", // Example padding
-          textAlign: "center", // Center text
-        },
-        content: "Today", // Custom content to render
-      };
-    }
-
-    // Return an empty object for other days
-    return {};
+  const [today] = React.useState(new Date());
+  const customDayPropGetter = (date) => {
+    const isToday = moment(date).isSame(today, "day");
+    return {
+      className: isToday ? "today-cell" : "",
+    };
+  };
+  const eventComponent = ({ event }) => {
+    return (
+      <EventCustomize
+        event={event}
+        onClickButton={(clickedEvent) => {
+          // Handle button click logic here
+          console.log(`Button clicked for event: ${clickedEvent.title}`);
+        }}
+      />
+    );
   };
 
-  // const eventStyleGetter = (event, start, end, isSelected) => {
-  //   // Define style object with explicit type including backgroundColor
-  //   let style: React.CSSProperties = {};
+  const handleSlotSelected = (slotInfo: slotData) => {
+    // alert("Date is selected");
+    setCalendarState({
+      ...calendarState,
+      title: "",
+      desc: "",
+      start: slotInfo.start,
+      end: slotInfo.end,
+      openSlot: true,
+    });
+    console.log(calendarState, "kkk");
+  };
 
-  //   if (event.type === "meeting") {
-  //     style.backgroundColor = "blue";
-  //   } else if (event.type === "break") {
-  //     style.backgroundColor = "green";
-  //   }
+  const handleEventSelected = (event: any) => {
+    setCalendarState({
+      ...calendarState,
+      openEvent: true,
+      clickedEvent: event,
+      start: event.start,
+      end: event.end,
+      title: event.title,
+      desc: event.desc,
+    });
+  };
 
-  //   style.color = "white";
-  //   style.borderRadius = "0px";
-  //   style.border = "none";
+  const setNewAppointment = () => {
+    const { title, start, end, desc } = calendarState;
+    const newEvent = { title, start, end, desc };
+    setCalendarState({
+      ...calendarState,
+      events: [...calendarState.events, newEvent],
+      openSlot: false,
+    });
+  };
 
-  //   return {
-  //     style,
-  //   };
-  // };
-  console.log(dayPropGetter, "jjj");
+  const updateEvent = () => {
+    const { title, desc, start, end, events, clickedEvent } = calendarState;
+    const updatedEvents = events.map((event) =>
+      event === clickedEvent ? { ...event, title, desc, start, end } : event
+    );
+    setCalendarState({
+      ...calendarState,
+      events: updatedEvents,
+      openEvent: false,
+    });
+  };
+
+  const deleteEvent = () => {
+    const { start, events } = calendarState;
+    const updatedEvents = events.filter((event) => event.start !== start);
+    setCalendarState({
+      ...calendarState,
+      events: updatedEvents,
+      openEvent: false,
+    });
+  };
+
+  const appointmentActions = [
+    <Button key="cancel" onClick={handleClose} color="secondary">
+      Cancel
+    </Button>,
+    <Button key="submit" onClick={setNewAppointment} color="primary">
+      Submit
+    </Button>,
+  ];
+
+  const eventActions = [
+    <Button key="cancel" onClick={handleClose} color="secondary">
+      Cancel
+    </Button>,
+    <Button key="delete" onClick={deleteEvent} color="secondary">
+      Delete
+    </Button>,
+    <Button key="confirmEdit" onClick={updateEvent} color="primary">
+      Confirm Edit
+    </Button>,
+  ];
+
   return (
     <div className="h-[90vh]">
       <Calendar
@@ -74,15 +175,72 @@ const CalenderDesign = () => {
         events={events}
         startAccessor="start"
         endAccessor="end"
+        defaultView="month"
         components={{
           toolbar: (props) => (
             <CustomToolbar {...props} onViewChange={handleViewChange} />
           ),
+          event: eventComponent,
         }}
         formats={formats}
-        // eventStyleGetter={eventStyleGetter}
-        dayPropGetter={dayPropGetter}
+        dayPropGetter={customDayPropGetter}
+        onSelectEvent={handleEventSelected}
+        onSelectSlot={handleSlotSelected} // Handle slot selection
+        selectable={true} // Enable selection of slots
       />
+
+      <Dialog
+        open={calendarState.openSlot}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        PaperProps={{
+          style: {
+            minWidth: "20vw",
+            padding: "2rem",
+          },
+        }}
+      >
+        <div className="flex items-center justify-between mb-20">
+          <Typography className="text-[16px] font-500">Create Task</Typography>
+          {calendarState.start && (
+            <Typography
+              variant="subtitle1"
+              className="text-[14px] text-[#757982]"
+            >
+              {moment(calendarState.start).format("MMMM Do YYYY")}
+            </Typography>
+          )}
+        </div>
+        <div className="mb-20">
+          <InputField
+            name="title"
+            label="Title"
+            placeholder="Enter Task Name"
+            value={calendarState.title}
+            onChange={(e) =>
+              setCalendarState({ ...calendarState, title: e.target.value })
+            }
+          />
+        </div>
+        <div className="flex">
+          <Button
+            variant="contained"
+            color="secondary"
+            className="w-[95px] h-[30px] text-[16px] rounded-[28px]"
+            onClick={setNewAppointment}
+          >
+            Save
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            className="w-[95px] h-[30px] text-[16px] ml-14 rounded-[28px]"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Dialog>
     </div>
   );
 };

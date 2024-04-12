@@ -256,7 +256,34 @@ input:-webkit-autofill:active {
   @apply text-[#757982]; /* Set text color using regular CSS */
 }
 
+.today-cell {
+  background-color: #F0F0F0; /* Example background color */
+  position: relative;
+}
+.today-cell:after {
+  content: 'Today';
+  position: absolute;
+  top:9px;
+  right:14px;
+  font-size: 12px;
+  font-weight: 500px;
+  color: #111827; /* Example text color */
+}
 
+.rbc-row-segment{
 
-
+  .rbc-event{
+  @apply bg-transparent 
+  }
+  .rbc-event.rbc-selected{
+    @apply bg-transparent
+  }
+}
+.selected-slot {
+  background-color: #cceeff;
+  border-radius: 5px;
+}
+// .muiltr-7en360-MuiPaper-root-MuiDialog-paper {
+//   @apply bg-red-200 p-10 w-
+// }
 
