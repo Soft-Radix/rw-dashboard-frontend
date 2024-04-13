@@ -21,11 +21,12 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 type ModalType = {
-  open: boolean;
+  open?: boolean;
   handleToggle: () => void;
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
+  customButton?: boolean;
 };
 
 export default function CommonModal({
@@ -33,6 +34,7 @@ export default function CommonModal({
   open,
   handleToggle,
   children,
+  customButton = false,
   maxWidth = "387",
 }: ModalType) {
   return (
@@ -65,7 +67,7 @@ export default function CommonModal({
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
         >
-          Save
+          {!customButton ? "Save" : "Add List"}
         </Button>
         <Button
           variant="outlined"

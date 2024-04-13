@@ -1,32 +1,16 @@
 // import { Button, Tab, Tabs, Theme } from "@mui/material";
 import {
-  Button,
-  Checkbox,
   Grid,
   TableCell,
   TableRow,
   Theme,
-  Typography,
+  Typography
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddTaskModal from "src/app/components/tasks/AddTask";
-import RecentData from "src/app/components/tasks/RecentData";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
-import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
-import { use } from "i18next";
 import ActivityChart from "./ActivityChart";
+import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
 
 const rows = [
   {

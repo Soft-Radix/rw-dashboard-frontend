@@ -123,6 +123,7 @@ const CalenderDesign = ({ events }) => {
       events: [...calendarState.events, newEvent],
       openSlot: false,
     });
+    console.log(calendarState, "check");
   };
 
   const updateEvent = () => {

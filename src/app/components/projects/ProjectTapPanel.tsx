@@ -1,4 +1,4 @@
-import { Tab, Tabs, Theme } from "@mui/material";
+import { Button, Tab, Tabs, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
 import { useState } from "react";
@@ -17,6 +17,7 @@ import {
 } from "public/assets/icons/projectsIcon";
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
+import WhiteBoard from "./ViewPopUp/WhiteBoard";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -55,6 +56,7 @@ function a11yProps(index: number) {
 }
 
 export default function ProjectTabPanel() {
+  const [showViewWindow, setShowViewWindow] = useState<boolean>(false);
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -62,12 +64,15 @@ export default function ProjectTabPanel() {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-
+  const showWhiteBoard = () => {
+    setShowViewWindow(!showViewWindow);
+    console.log(showViewWindow, "find");
+  };
   return (
     <div>
       <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20">
-        <div className="basis-full lg:basis-auto lg:grow ">
-          <div className="shadow-md bg-white rounded-lg ">
+        <div className="basis-full lg:basis-auto lg:grow  ">
+          <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px]   ">
             <Tabs
               value={selectedTab}
               onChange={handleChange}
@@ -130,13 +135,23 @@ export default function ProjectTabPanel() {
                   selectedTab == 3 ? <CalenderIconActive /> : <CalenderIcon />
                 }
               />
-              <Tab
-                label="View"
-                {...a11yProps(4)}
-                iconPosition="start"
-                icon={<ViewIcon />}
-              />
             </Tabs>
+            {/* <Tab
+              label="View"
+              {...a11yProps(4)}
+              iconPosition="start"
+              icon={<ViewIcon />}
+              onClick={showWhiteBoard}
+            /> */}
+            <span className="border-l-1">
+              <Button
+                onClick={showWhiteBoard}
+                startIcon={<ViewIcon />}
+                className="pl-40  text-[18px] text-[#757982] rounded-none  "
+              >
+                View
+              </Button>
+            </span>
           </div>
         </div>
       </div>
@@ -152,6 +167,8 @@ export default function ProjectTabPanel() {
       <CustomTabPanel value={selectedTab} index={3}>
         <CalenderPage />
       </CustomTabPanel>
+
+      <WhiteBoard isOpen={showViewWindow} setIsOpen={setShowViewWindow} />
     </div>
   );
 }
