@@ -6,12 +6,13 @@
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StyledEngineProvider } from "@mui/material/styles";
-import routes from "app/configs/routesConfig";
+import { adminRoutes } from "app/configs/routesConfig";
 import { useMemo } from "react";
 import { Provider } from "react-redux";
 import ErrorBoundary from "@fuse/utils/ErrorBoundary";
 import AppContext from "./AppContext";
 import store from "./store/store";
+import { getLocalStorage } from "src/utils";
 
 type ComponentProps = {
   name?: string;
@@ -24,15 +25,14 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
   /**
    * The component that wraps the provided component with the necessary context providers.
    */
+  const userDetail = getLocalStorage('userDetail');
   function WithAppProviders(props: React.PropsWithChildren<ComponentProps>) {
     /**
      * The value to pass to the AppContext provider.
      */
     const val = useMemo(
-      () => ({
-        routes,
-      }),
-      [routes]
+      () => (userDetail?.role === 'admin' ? { routes: adminRoutes } : { routes: adminRoutes }),
+      [adminRoutes]
     );
 
     return (

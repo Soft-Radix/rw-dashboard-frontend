@@ -12,7 +12,7 @@ import Error404Page from "../main/404/Error404Page";
 import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
-import DashboardConfig from "../pages/dashboard/DashboardConfig";
+import { AdminDashboardConfig } from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
 import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
@@ -22,34 +22,7 @@ import ProfileConfig from "../pages/profile/profileConfig";
 import SupportConfig from "../pages/support/supportConfig";
 import ProjectsConfig from "../pages/projects/ProjectsConfig";
 
-const routeConfigs: FuseRouteConfigsType = [
-  // ExampleConfig,
-  DashboardConfig,
-  TasksConfig,
-  UsersConfig,
-  PasswordManagerConfig,
-  BillingConfig,
-  SharedFilesConfig,
-  ProfileConfig,
-  SupportConfig,
-  SignOutConfig,
-  SignInConfig,
-  SignUpConfig,
-  ForgotPasswordConfig,
-  ResetPasswordConfig,
-  OtpVerificationConfig,
-  AddProjectConfig,
-  ProjectsConfig,
-];
-
-/**
- * The routes of the application.
- */
-const routes: FuseRoutesType = [
-  ...FuseUtils.generateRoutesFromConfigs(
-    routeConfigs,
-    settingsConfig.defaultAuth
-  ),
+const commonRoutes = [
   {
     path: "/",
     element: <Navigate to="/dashboard" />,
@@ -67,6 +40,38 @@ const routes: FuseRoutesType = [
     path: "*",
     element: <Navigate to="404" />,
   },
+]
+const adminRouteConfigs: FuseRouteConfigsType = [
+  AdminDashboardConfig,
+  BillingConfig,
+  ProfileConfig,
+  SignOutConfig,
+  SignInConfig,
+  SignUpConfig,
+  ForgotPasswordConfig,
+  ResetPasswordConfig,
+  OtpVerificationConfig,
 ];
 
-export default routes;
+/**
+ * The routes of the Admin application.
+ */
+export const adminRoutes: FuseRoutesType = [
+  ...FuseUtils.generateRoutesFromConfigs(
+    adminRouteConfigs,
+    settingsConfig.defaultAuth
+  ),
+  ...commonRoutes
+];
+
+/**
+ * The routes of the Client application.
+ */
+export const clientRoutes: FuseRoutesType = [
+  ...FuseUtils.generateRoutesFromConfigs(
+    adminRouteConfigs,
+    settingsConfig.defaultAuth
+  ),
+  ...commonRoutes
+];
+
