@@ -102,3 +102,26 @@ export const SupportLinkIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+export const AttachmentIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="12" fill="white" fill-opacity="0.36" />
+    <g clip-path="url(#clip0_2_50576)">
+      <path
+        d="M14.6667 6H18.6667V10H17.3334V7.33333H14.6667V6ZM5.33337 6H9.33337V7.33333H6.66671V10H5.33337V6ZM17.3334 16.6667V14H18.6667V18H14.6667V16.6667H17.3334ZM6.66671 16.6667H9.33337V18H5.33337V14H6.66671V16.6667Z"
+        fill="black"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_2_50576">
+        <rect width="16" height="16" fill="white" transform="translate(4 4)" />
+      </clipPath>
+    </defs>
+  </svg>
+);

@@ -201,11 +201,11 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
           <DragDropContext onDragEnd={handleDragEnd}>
             <div className="">
               {items.children && (
-                <Collapse in={open} className="collapse-children ">
+                <Collapse in={open} className="collapse-children">
                   <Droppable droppableId="droppable">
                     {(provided) => (
                       <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {items.children.map((_item, index) => (
+                        {items.children.map((_item, index: number) => (
                           <Draggable
                             key={_item.id}
                             draggableId={_item.id}

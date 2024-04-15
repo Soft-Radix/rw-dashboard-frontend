@@ -10,7 +10,7 @@ import ImagesOverlap from "../../ImagesOverlap";
 import CommonTable from "../../commonTable";
 import { DownArrowBlack } from "public/assets/icons/projectsIcon";
 
-const Assignee = () => {
+const Priority = () => {
   const theme: Theme = useTheme();
   const rows = [
     {
@@ -38,7 +38,7 @@ const Assignee = () => {
               <span>
                 <DownArrowBlack />
               </span>
-              Jone Doe (2)
+              High (2)
             </div>
           </TableCell>
         </TableRow>
@@ -92,7 +92,7 @@ const Assignee = () => {
               <span>
                 <DownArrowBlack />
               </span>
-              Unassigned (2)
+              No Priority (2)
             </div>
           </TableCell>
         </TableRow>
@@ -158,4 +158,4 @@ const Assignee = () => {
   );
 };
 
-export default Assignee;
+export default Priority;

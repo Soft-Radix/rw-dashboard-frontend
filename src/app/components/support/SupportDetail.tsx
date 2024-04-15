@@ -1,23 +1,9 @@
-import {
-  Button,
-  Checkbox,
-  Container,
-  Grid,
-  TableCell,
-  TableRow,
-  Theme,
-} from "@mui/material";
+import { Button, Grid, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { Box } from "@mui/system";
 import { useFormik } from "formik";
-import FsLightbox from "fslightbox-react";
 
 import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import {
+  AttachmentIcon,
   SupportAttachmentIcon,
   SupportLinkIcon,
   SupportProfileIcon,
@@ -25,18 +11,8 @@ import {
 
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import TitleBar from "src/app/components/TitleBar";
-import InputField from "src/app/components/InputField";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
-
-import AddUserModal from "src/app/components/users/AddUser";
-import styled from "styled-components";
-import Paper from "@mui/material/Paper";
-import CustomButton from "src/app/components/custom_button";
 
 const rows = [
   {
@@ -134,7 +110,7 @@ export default function Support() {
           <Button
             variant="outlined"
             color="secondary"
-            className="h-[40px] text-[16px] flex gap-8"
+            className="h-[40px] text-[16px] flex gap-8  leading-5 px-5 sm:px-24"
             aria-label="Add Tasks"
             size="large"
             onClick={() => setIsOpenAddModal(true)}
@@ -170,7 +146,7 @@ export default function Support() {
                   <div className="text-[14px] text-[#757982]">Status</div>
                   <Button
                     variant="outlined"
-                    className="h-20 rounded-3xl min-h-24 text-[#FF5F15] bg-[#ffe2d5] border-none mt-10"
+                    className="h-20 rounded-3xl  text-[#FF5F15] bg-[#ffe2d5] border-none mt-10 sm:min-h-24 leading-none"
                   >
                     In Progress
                   </Button>
@@ -185,27 +161,39 @@ export default function Support() {
               <div className="flex flex-col gap-9 px-20">
                 <div className="text-[#111827] font-500 ">Attachment</div>
                 <div className="flex py-5 gap-10 ">
-                  <div>
+                  <div
+                    className="relative cursor-pointer "
+                    onClick={() =>
+                      handleImageClick(
+                        "../assets/images/pages/supportDetail/black.png"
+                      )
+                    }
+                  >
                     <img
-                      src="../assets/images/pages/supportDetail/blackAttachment.png"
+                      src="../assets/images/pages/supportDetail/black.png"
                       alt="Black Attachment"
-                      onClick={() =>
-                        handleImageClick(
-                          "../assets/images/pages/supportDetail/blackAttachment.png"
-                        )
-                      }
+                      className="h-[97px] w-[200px] rounded-md sm:h-[130px]"
                     />
+                    <div className="absolute top-5 right-5">
+                      <AttachmentIcon />
+                    </div>
                   </div>
-                  <div>
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={() =>
+                      handleImageClick(
+                        "../assets/images/pages/supportDetail/white.jpeg"
+                      )
+                    }
+                  >
                     <img
-                      src="../assets/images/pages/supportDetail/whiteAttachment.png"
+                      src="../assets/images/pages/supportDetail/white.jpeg"
                       alt="White Attachment"
-                      onClick={() =>
-                        handleImageClick(
-                          "../assets/images/pages/supportDetail/whiteAttachment.png"
-                        )
-                      }
+                      className="h-[97px] w-[200px] rounded-md sm:h-[130px] "
                     />
+                    <div className="absolute top-5 right-5">
+                      <AttachmentIcon />
+                    </div>
                   </div>
                   {expandedImage && (
                     <div

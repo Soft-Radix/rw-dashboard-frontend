@@ -46,6 +46,14 @@ const navigationConfig: FuseNavItemType[] = [
       },
     ],
   },
+  {
+    id: "client",
+    title: "Client",
+    translate: "client",
+    type: "item",
+    icon: "heroicons-outline:clipboard-check",
+    url: "client",
+  },
 
   {
     id: "task",

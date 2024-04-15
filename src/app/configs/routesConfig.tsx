@@ -21,6 +21,7 @@ import BillingConfig from "../pages/billing/billingConfig";
 import ProfileConfig from "../pages/profile/profileConfig";
 import SupportConfig from "../pages/support/supportConfig";
 import ProjectsConfig from "../pages/projects/ProjectsConfig";
+import ClientConfig from "../pages/client/clientConfig";
 
 const routeConfigs: FuseRouteConfigsType = [
   // ExampleConfig,
@@ -40,6 +41,7 @@ const routeConfigs: FuseRouteConfigsType = [
   OtpVerificationConfig,
   AddProjectConfig,
   ProjectsConfig,
+  ClientConfig,
 ];
 
 /**

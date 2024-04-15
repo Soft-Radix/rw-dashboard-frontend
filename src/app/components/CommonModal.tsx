@@ -19,7 +19,9 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
-
+const addList = () => {
+  alert("you clicked me");
+};
 type ModalType = {
   open?: boolean;
   handleToggle: () => void;
@@ -66,6 +68,7 @@ export default function CommonModal({
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
+          onClick={!customButton ? null : addList}
         >
           {!customButton ? "Save" : "Add List"}
         </Button>
