@@ -45,7 +45,7 @@ function UserMenu() {
           <Avatar
             sx={{
               background: (theme) => theme.palette.background.default,
-              color: (theme) => theme.palette.text.secondary,
+              color: (theme) => theme.palette.text.primary,
             }}
             className="md:mx-4"
             alt="user photo"

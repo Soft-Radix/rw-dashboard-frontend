@@ -15,6 +15,7 @@ interface IProps {
   name: string;
   label?: string;
   formik?: FormikProps<unknown>;
+  value?: string;
   // props: TextFieldProps;
 }
 
