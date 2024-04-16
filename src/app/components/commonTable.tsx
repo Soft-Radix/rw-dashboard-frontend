@@ -7,6 +7,7 @@ import {
   TableRow,
   TableRowProps,
 } from "@mui/material";
+import { DownArrowBlack } from "public/assets/icons/projectsIcon";
 import { ReactNode } from "react";
 
 interface IProps {
@@ -14,13 +15,18 @@ interface IProps {
   headings: string[];
   headingRowProps?: TableRowProps;
   useBorderDesign?: boolean;
+  headingIcon?: boolean;
+  headIcon?: any;
 }
 function CommonTable({
   children,
   headings,
   headingRowProps,
   useBorderDesign,
+  headingIcon,
+  headIcon,
 }: IProps) {
+  console.log(headIcon, "hjh");
   return (
     <TableContainer>
       <Table
@@ -42,7 +48,20 @@ function CommonTable({
                     : "center"
                 }
               >
-                {item}
+                {headingIcon ? (
+                  <TableCell
+                    align={
+                      headings.length - 1 === index || index === 0
+                        ? "left"
+                        : "center"
+                    }
+                    className="flex items-center "
+                  >
+                    {headIcon[index]} {item}
+                  </TableCell>
+                ) : (
+                  <>{item}</>
+                )}
               </TableCell>
             ))}
           </TableRow>

@@ -4,6 +4,7 @@ import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import ClientTabButton from "src/app/components/client/ClientTabButton";
+import ClientTable from "src/app/components/client/ClientTable";
 import AddTaskModal from "src/app/components/tasks/AddTask";
 import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
@@ -38,8 +39,12 @@ function a11yProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+interface tableHead {
+  headingIcon: boolean;
+}
 
-export default function Clients() {
+export default function Clients(props: tableHead) {
+  const { headingIcon } = props;
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -97,7 +102,7 @@ export default function Clients() {
               </div>
             </div>
             <CustomTabPanel value={selectedTab} index={0}>
-              <ThemePageTable />
+              <ClientTable />
             </CustomTabPanel>
             <CustomTabPanel value={selectedTab} index={1}>
               <ThemePageTable />

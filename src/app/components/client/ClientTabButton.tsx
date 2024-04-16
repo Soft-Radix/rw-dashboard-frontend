@@ -1,7 +1,10 @@
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import InputField from "../InputField";
 import { Button, Typography } from "@mui/material";
-import { SortIcon } from "public/assets/icons/projectsIcon";
+import {
+  ProjectNavIconArrow,
+  SortIcon,
+} from "public/assets/icons/projectsIcon";
 
 const ClientTabButton = () => {
   return (
@@ -25,11 +28,15 @@ sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between ga
         />
       </div>
       {/* <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full"> */}
-      <Button className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full">
+      <Button
+        sx={{}}
+        className="flex items-center bg-[#F6F6F6] justify-between px-5 
+      focus:border-solid border-1 border-[#4F46E5] sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full"
+      >
         <Typography className="text-[14px] sm:text-[16px] text-[#9DA0A6] font-400">
           Manage Columns
         </Typography>
-        <SortIcon className="shrink-0" />
+        <ProjectNavIconArrow className="shrink-0" />
       </Button>
       {/* </div> */}
     </div>
