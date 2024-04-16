@@ -43,8 +43,7 @@ interface tableHead {
   headingIcon: boolean;
 }
 
-export default function Clients(props: tableHead) {
-  const { headingIcon } = props;
+export default function Clients() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);

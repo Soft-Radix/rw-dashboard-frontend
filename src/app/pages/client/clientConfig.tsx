@@ -19,7 +19,7 @@ const ClientConfig = {
   },
   routes: [
     {
-      path: "client",
+      path: "admin/client",
       element: <Client />,
     },
   ],
