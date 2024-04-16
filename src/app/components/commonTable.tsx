@@ -49,9 +49,9 @@ function CommonTable({
                 }
               >
                 {headingIcon ? (
-                  <div className="flex items-center ">
+                  <>
                     {headIcon[index]} {item}
-                  </div>
+                  </>
                 ) : (
                   <>{item}</>
                 )}
