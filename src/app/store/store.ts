@@ -15,6 +15,9 @@ import { useDispatch } from 'react-redux';
 import { setupListeners } from '@reduxjs/toolkit/query';
 import { createLogger } from 'redux-logger';
 
+// import all slices
+import { authSlice } from './Auth';
+
 /**
  * The dynamic middleware instance.
  */
@@ -34,14 +37,15 @@ if (process.env.NODE_ENV === 'development') {
 /**
  * The type definition for the lazy loaded slices.
  */
-export interface LazyLoadedSlices {}
+export interface LazyLoadedSlices { }
 
 /**
  * The static reducers.
  */
 const staticReducers: ReducersMapObject = {
 	i18n,
-	[apiService.reducerPath]: apiService.reducer
+	[apiService.reducerPath]: apiService.reducer,
+	auth: authSlice.reducer
 };
 
 /**

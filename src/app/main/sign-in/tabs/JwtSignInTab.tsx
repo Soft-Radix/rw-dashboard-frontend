@@ -134,14 +134,14 @@ function jwtSignInTab() {
         Log In
       </Button>
 
-      <div className="mt-12 flex items-center">
-        <div className="mt-px flex-auto border-t" />
+      <div className="flex items-center mt-12">
+        <div className="flex-auto mt-px border-t" />
         <Typography className="mx-8" color="text.secondary">
           Or continue with
         </Typography>
-        <div className="mt-px flex-auto border-t" />
+        <div className="flex-auto mt-px border-t" />
       </div>
-      <div className="mt-16 flex justify-center">
+      <div className="flex justify-center mt-16">
         <Button
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
@@ -151,7 +151,7 @@ function jwtSignInTab() {
           Log In with Google
         </Button>
       </div>
-      <div className="mt-8 flex justify-center">
+      <div className="flex justify-center mt-8">
         <Button
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
@@ -161,7 +161,7 @@ function jwtSignInTab() {
           Log In with Facebook
         </Button>
       </div>
-      <div className="mt-20 flex items-center cursor-pointer justify-center">
+      <div className="flex items-center justify-center mt-20 cursor-pointer">
         <Typography color="text.secondary">New User?</Typography>
         <Typography color="secondary.main">
           <Link className="ml-2 !no-underline font-bold " to="/sign-up">

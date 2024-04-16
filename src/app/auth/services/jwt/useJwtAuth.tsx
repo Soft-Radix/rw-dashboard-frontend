@@ -66,15 +66,16 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	const authConfig = _.defaults(config, defaultAuthConfig);
 
 	const [user, setUser] = useState<User>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 	/**
 	 * Set session
 	 */
-	const setSession = useCallback((accessToken: string) => {
+	const setSession = useCallback((accessToken: string, userDetail?: User) => {
 		if (accessToken) {
 			localStorage.setItem(authConfig.tokenStorageKey, accessToken);
+			localStorage.setItem('userDetail', JSON.stringify(userDetail));
 			axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
 		}
 	}, []);
@@ -95,10 +96,8 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	 * Handle sign-in success
 	 */
 	const handleSignInSuccess = useCallback((userData: User, accessToken: string) => {
-		setSession(accessToken);
-
+		setSession(accessToken, userData);
 		setIsAuthenticated(true);
-
 		setUser(userData);
 
 		onSignedIn(userData);
@@ -108,8 +107,7 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	 */
 
 	const handleSignUpSuccess = useCallback((userData: User, accessToken: string) => {
-		setSession(accessToken);
-
+		setSession(accessToken, userData);
 		setIsAuthenticated(true);
 
 		setUser(userData);
@@ -172,6 +170,7 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	useEffect(() => {
 		const attemptAutoLogin = async () => {
 			const accessToken = getAccessToken();
+
 			if (isTokenValid(accessToken)) {
 				try {
 					setIsLoading(true);
@@ -181,6 +180,7 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 					});
 
 					const userData = response?.data;
+					console.log(userData, 'userData');
 
 					handleSignInSuccess(userData, accessToken);
 
@@ -312,7 +312,8 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 			const accessToken = response?.headers?.['New-Access-Token'] as string;
 
 			if (accessToken) {
-				setSession(accessToken);
+				setSession(accessToken,);
+
 				return accessToken;
 			}
 			return null;
