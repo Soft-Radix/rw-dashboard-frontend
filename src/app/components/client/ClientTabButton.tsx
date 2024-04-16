@@ -38,6 +38,7 @@ sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between ga
         </Typography>
         <ProjectNavIconArrow className="shrink-0" />
       </Button>
+
       {/* </div> */}
     </div>
   );

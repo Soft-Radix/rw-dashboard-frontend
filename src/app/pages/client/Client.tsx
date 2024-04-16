@@ -6,9 +6,14 @@ import TitleBar from "src/app/components/TitleBar";
 import ClientTabButton from "src/app/components/client/ClientTabButton";
 import ClientTable from "src/app/components/client/ClientTable";
 import AddTaskModal from "src/app/components/tasks/AddTask";
-import RecentData from "src/app/components/tasks/RecentData";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 
+import MenuItem from "@mui/material/MenuItem";
+import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
+import DropdownMenu from "src/app/components/Dropdown";
+import InputField from "src/app/components/InputField";
+import { SearchIcon } from "public/assets/icons/topBarIcons";
+import AddClient from "src/app/components/client/AddClient";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -39,34 +44,102 @@ function a11yProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
-interface tableHead {
-  headingIcon: boolean;
-}
 
 export default function Clients() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
+  };
+  const [selectedValue, setSelectedValue] = useState<string | null>(null);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleMenuItemClick = (value: string) => {
+    setSelectedValue(value);
+    setAnchorEl(null);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
   };
 
   return (
     <div>
       <TitleBar title="Clients">
-        {" "}
-        <Button
-          variant="outlined"
-          color="secondary"
-          className="h-[40px] text-[16px] flex gap-8"
-          aria-label="Clients"
-          size="large"
-          onClick={() => setIsOpenAddModal(true)}
-        >
-          <PlusIcon color={theme.palette.secondary.main} />
-          Add Client
-        </Button>
+        <div className="flex items-center gap-20 py-10">
+          <DropdownMenu
+            button={
+              <div className="flex items-center" onClick={handleButtonClick}>
+                <Button
+                  variant="contained"
+                  className="h-[40px] sm:text-[16px] text-secondary  flex gap-8 bg-[#EDEDFC] leading-none
+                   hover:bg-[#EDEDFC] "
+                  aria-label="Manage Sections"
+                  size="large"
+                  style={{
+                    border: anchorEl ? "1px #4F46E5 solid" : "none",
+                  }}
+                >
+                  Assign to account manager
+                </Button>
+              </div>
+            }
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+          >
+            <MenuItem className=" px-20 py-10">
+              <InputField
+                name="search"
+                placeholder="search"
+                className=""
+                inputProps={{
+                  className: "ps-[4rem] w-full sm:w-[227px]",
+                }}
+              />
+              <SearchIcon
+                width={18}
+                height={18}
+                className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
+              />
+            </MenuItem>
+          </DropdownMenu>
+          {/* <Button
+            variant="contained"
+            className="h-[40px] text-[16px] text-[#4F46E5] font-500
+            flex gap-8 bg-[#EDEDFC] hover:bg-transparent  focus:border-solid border-1 border-[#4F46E5]"
+            aria-label="Assign to account manager"
+            size="large"
+          >
+            Assign to account manager
+          </Button> */}
+          <Button
+            variant="contained"
+            className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
+            aria-label="delete"
+            size="large"
+            onClick={() => setIsOpenAddModal(true)}
+          >
+            Delete
+          </Button>{" "}
+          <Button
+            variant="outlined"
+            color="secondary"
+            className="h-[40px] text-[16px] flex gap-8 font-600"
+            aria-label="Clients"
+            size="large"
+            onClick={() => setIsOpenAddModal(true)}
+          >
+            <PlusIcon color={theme.palette.secondary.main} />
+            Add Client
+          </Button>
+        </div>
       </TitleBar>
 
       <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap">
@@ -118,7 +191,7 @@ export default function Clients() {
           </div>
         </div>
       </div>
-      <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddClient isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </div>
   );
 }

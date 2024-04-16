@@ -62,7 +62,7 @@ export default function CommonModal({
         </IconButton>
       </div>
       <div className="p-20">{children}</div>
-
+      
       <div className="flex p-20 pt-10">
         <Button
           variant="contained"

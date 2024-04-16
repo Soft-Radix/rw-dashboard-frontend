@@ -49,9 +49,16 @@ function CommonTable({
                 }
               >
                 {headingIcon ? (
-                  <>
+                  <TableCell
+                    align={
+                      headings.length - 1 === index || index === 0
+                        ? "left"
+                        : "center"
+                    }
+                    className={`th ${index === 0 ? "flex gap-10 justify-start items-center" : "flex gap-10 justify-center items-center"}`}
+                  >
                     {headIcon[index]} {item}
-                  </>
+                  </TableCell>
                 ) : (
                   <>{item}</>
                 )}
