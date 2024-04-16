@@ -17,17 +17,12 @@ import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
 import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
 import SharedFilesConfig from "../pages/shared-files/sharedFilesConfig";
-import BillingConfig from "../pages/billing/billingConfig";
+import BillingConfig, { AdminBillingConfig } from "../pages/billing/billingConfig";
 import ProfileConfig from "../pages/profile/profileConfig";
 import SupportConfig from "../pages/support/supportConfig";
 import ProjectsConfig from "../pages/projects/ProjectsConfig";
 
 const commonRoutes = [
-  {
-    path: "/",
-    element: <Navigate to="/dashboard" />,
-    auth: settingsConfig.defaultAuth,
-  },
   {
     path: "loading",
     element: <FuseLoading />,
@@ -43,7 +38,7 @@ const commonRoutes = [
 ]
 const adminRouteConfigs: FuseRouteConfigsType = [
   AdminDashboardConfig,
-  BillingConfig,
+  AdminBillingConfig,
   ProfileConfig,
   SignOutConfig,
   SignInConfig,
@@ -61,6 +56,11 @@ export const adminRoutes: FuseRoutesType = [
     adminRouteConfigs,
     settingsConfig.defaultAuth
   ),
+  {
+    path: "/",
+    element: <Navigate to="/admin/dashboard" />,
+    auth: settingsConfig.defaultAuth,
+  },
   ...commonRoutes
 ];
 

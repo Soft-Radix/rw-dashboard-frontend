@@ -123,4 +123,57 @@ const navigationConfig: FuseNavItemType[] = [
   },
 ];
 
+export const adminNavigationConfig: FuseNavItemType[] = [
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    translate: "DASHBOARD",
+    type: "item",
+    icon: "heroicons-outline:template",
+    url: "admin/dashboard",
+  },
+  {
+    id: "clients",
+    title: "Clients",
+    translate: "Clients",
+    type: "item",
+    icon: "heroicons-outline:clipboard-check",
+    url: "admin/client",
+  },
+  {
+    id: "reports",
+    title: "Reports",
+    translate: "Reports",
+    type: "item",
+    icon: "heroicons-outline:clipboard-check",
+    url: "admin/reports",
+  },
+  {
+    id: "agents",
+    title: "Agents",
+    translate: "Agents",
+    type: "item",
+    icon: "heroicons-outline:user-group",
+    url: "admin/agents",
+  },
+  {
+    id: "billings",
+    title: "Billings",
+    translate: "Billings",
+    type: "item",
+    icon: "heroicons-outline:cash",
+    url: "admin/billings",
+  },
+
+  {
+    id: "settings",
+    title: "Settings",
+    translate: "Settings",
+    type: "item",
+    icon: "heroicons-outline:cog",
+    url: "admin/settings",
+  },
+
+];
+
 export default navigationConfig;

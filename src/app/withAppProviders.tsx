@@ -30,6 +30,7 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
     /**
      * The value to pass to the AppContext provider.
      */
+
     const val = useMemo(
       () => (userDetail?.role === 'admin' ? { routes: adminRoutes } : { routes: adminRoutes }),
       [adminRoutes]

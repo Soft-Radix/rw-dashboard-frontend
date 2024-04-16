@@ -22,7 +22,7 @@ export const AdminDashboardConfig = {
   ...commonSetting,
   routes: [
     {
-      path: "dashboard",
+      path: "admin/dashboard",
       element: <Dashboard />,
     },
   ],
