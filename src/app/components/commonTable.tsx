@@ -45,7 +45,7 @@ function CommonTable({
                 align={
                   headings.length - 1 === index || index === 0
                     ? "left"
-                    : "center"
+                    : "left"
                 }
               >
                 {headingIcon ? (

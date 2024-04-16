@@ -11,6 +11,7 @@ export type FuseNavItemType = {
   title?: string;
   translate?: string;
   auth?: string[] | string;
+  hideOption?:boolean;
   subtitle?: string;
   icon?: string | ReactNode;
   iconClass?: string;

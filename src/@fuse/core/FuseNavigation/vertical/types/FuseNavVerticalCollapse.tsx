@@ -141,14 +141,19 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
               )}
               {...itemProps}
             >
-              <div className="flex items-center justify-between w-full  ">
+              <div className="flex items-center justify-between w-full " onClick={(ev) => {
+                ev.preventDefault();
+                ev.stopPropagation();
+                setOpen(!open);
+              }}>
                 <div className="flex items-center gap-10">
                   {item.icon && (
                     <FuseSvgIcon
-                      className={clsx(
-                        "fuse-list-item-icon shrink-0 ",
-                        item.iconClass
-                      )}
+                      className="mr-[0.8rem]"
+                      // className={clsx(
+                      //   "fuse-list-item-icon shrink-0 pr-[1.6rem] ",
+                      //   item.iconClass
+                      // )}
                       color="action"
                     >
                       {item.icon}
@@ -173,16 +178,11 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
                   <IconButton
                     disableRipple
-                    className="-mx-12 h-20 w-40 p-0 hover:bg-transparent focus:bg-transparent "
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      ev.stopPropagation();
-                      setOpen(!open);
-                    }}
+                    // className="w-40 h-20 p-0 -mx-12 hover:bg-transparent focus:bg-transparent "
                     size="large"
                   >
                     <ProjectNavIconArrow
-                      className="arrow-icon "
+                      // className="arrow-icon"
                       color="inherit"
                     >
                       {open
@@ -191,52 +191,32 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                     </ProjectNavIconArrow>
                   </IconButton>
                 </div>
-                <div className="flex items-center gap-10">
-                  <ProjectNavIcon className="threeDots-icon" color="inherit" />
-                  <ProjectPlusIcon />
-                </div>
+                {/* {!items?.hideOption &&
+                  <div className="flex items-center gap-10">
+                    <ProjectNavIcon className="threeDots-icon" color="inherit" />
+                    <ProjectPlusIcon />
+                  </div>
+                } */}
               </div>
             </ListItemButton>
           </div>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="">
-              {items.children && (
-                <Collapse in={open} className="collapse-children">
-                  <Droppable droppableId="droppable">
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {items.children.map((_item, index: number) => (
-                          <Draggable
-                            key={_item.id}
-                            draggableId={_item.id}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <FuseNavItem
-                                  key={_item.id}
-                                  type={`vertical-${_item.type}`}
-                                  item={_item}
-                                  nestedLevel={nestedLevel + 1}
-                                  onItemClick={onItemClick}
-                                  checkPermission={checkPermission}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </Collapse>
-              )}
-            </div>
-          </DragDropContext>
+
+          {items.children && (
+            <Collapse
+              in={open}
+              className="collapse-children"
+            >
+              {item.children.map((_item) => (
+                <FuseNavItem
+                  key={_item.id}
+                  type={`vertical-${_item.type}`}
+                  item={_item}
+                  nestedLevel={nestedLevel + 1}
+                  onItemClick={onItemClick}
+                  checkPermission={checkPermission}
+                />
+              ))}
+            </Collapse>)}
         </div>
       </Root>
     ),

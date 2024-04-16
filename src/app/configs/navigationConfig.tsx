@@ -160,10 +160,29 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     id: "agents",
     title: "Agents",
     translate: "Agents",
-    type: "item",
+    type: "collapse",
+    hideOption: true,
     icon: "heroicons-outline:user-group",
-    url: "admin/agents",
+    children: [
+      {
+        id: "agents_list",
+        title: "Agents",
+        type: "item",
+        icon: "material-twotone:compress",
+        url: "/admin/agents/list",
+        end: true,
+      },
+      {
+        id: "agentsGroup",
+        title: "AgentsGroup",
+        type: "item",
+        icon: "material-twotone:compress",
+        url: "/admin/agents/groups",
+        end: true,
+      },
+    ],
   },
+
   {
     id: "billings",
     title: "Billings",

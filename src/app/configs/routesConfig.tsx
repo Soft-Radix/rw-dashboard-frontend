@@ -24,6 +24,7 @@ import ProfileConfig from "../pages/profile/profileConfig";
 import SupportConfig from "../pages/support/supportConfig";
 import ProjectsConfig from "../pages/projects/ProjectsConfig";
 import ClientConfig from "../pages/client/clientConfig";
+import AdminAgentsConfig from "../pages/agents/agentsListConfig";
 
 const commonRoutes = [
   {
@@ -50,6 +51,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   ResetPasswordConfig,
   OtpVerificationConfig,
   ClientConfig,
+  AdminAgentsConfig
 ];
 
 /**
