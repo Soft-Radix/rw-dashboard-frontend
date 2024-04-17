@@ -220,13 +220,24 @@ input:-webkit-autofill:active {
     }
   }
 }
+.common-inputField_v2 {
+  input{
+    border-radius: 12px !important
+  }
+  .input_wrap {
+    .MuiInputBase-root {
+      border-radius: 12px;
+    }
+  }
+
+}
 .rbc-month-header {
   @apply text-start text-[12px] text-[#757982] font-500 border-1 border-[#E7E8E9];
 
   .rbc-header  {
     @apply  py-10 text-left px-20 text-[12px]
   }
-  
+
 }
 
 .rbc-row-content {
@@ -235,8 +246,8 @@ input:-webkit-autofill:active {
     @apply text-left px-20 py-10 text-[12px] text-[#111827] font-500;
 
   }
-  
- 
+
+
 }
 .rbc-row-bg {
   .rbc-off-range-bg {
@@ -244,10 +255,10 @@ input:-webkit-autofill:active {
 
   }
   .rbc-day-bg +.rbc-today{
-    @apply border-1 border-[#4F46E5] bg-transparent  
-    
-  } 
- 
+    @apply border-1 border-[#4F46E5] bg-transparent
+
+  }
+
   .rbc-off-range button {
     @apply text-red-300;
   }
@@ -273,7 +284,7 @@ input:-webkit-autofill:active {
 .rbc-row-segment{
 
   .rbc-event{
-  @apply bg-transparent 
+  @apply bg-transparent
   }
   .rbc-event.rbc-selected{
     @apply bg-transparent

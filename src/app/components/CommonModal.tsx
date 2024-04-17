@@ -66,7 +66,7 @@ export default function CommonModal({
         </div>
       ) : (
         <>
-          <IconButton className=" rounded-none flex items-center justify-end pr-20 pt-20">
+          <IconButton className="flex items-center justify-end pt-20 pr-20 rounded-none ">
             <CrossIcon
               className="cursor-pointer"
               color="#9DA0A6"

@@ -1,6 +1,7 @@
 import { lazy } from "react";
 const AgentsList = lazy(() => import("./AgentsList"));
 const AgentDetails = lazy(() => import("../../components/agents/AgentDetails"));
+const AgentsGroup = lazy(() => import("./AgentsGroup"));
 
 /**
  * The Tasks page config.
@@ -17,6 +18,10 @@ const AdminAgentsConfig = {
     {
       path: "admin/agent-detail",
       element: <AgentDetails />,
+    },
+    {
+      path: "admin/agents/groups",
+      element: <AgentsGroup />,
     },
   ],
 };

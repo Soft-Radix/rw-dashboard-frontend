@@ -14,7 +14,8 @@ import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
-import AddAgentModel from "src/app/components/agents/AddAgentModel";
+import AddGroupModel from "src/app/components/agents/AddGroupModel";
+import SearchInput from "src/app/components/SearchInput";
 
 const rows = [
   {
@@ -22,7 +23,7 @@ const rows = [
     subject: "Web page design",
     status: "In Progress",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -30,7 +31,7 @@ const rows = [
     subject: "Web page design",
     status: "In Review",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -38,7 +39,7 @@ const rows = [
     subject: "Web page design",
     status: "Completed",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -46,7 +47,7 @@ const rows = [
     subject: "Web page design",
     status: "In Progress",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -54,7 +55,7 @@ const rows = [
     subject: "Web page design",
     status: "In Review",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -62,7 +63,7 @@ const rows = [
     subject: "Web page design",
     status: "Completed",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -70,7 +71,7 @@ const rows = [
     subject: "Web page design",
     status: "In Progress",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -78,7 +79,7 @@ const rows = [
     subject: "Web page design",
     status: "In Review",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
   {
@@ -86,12 +87,12 @@ const rows = [
     subject: "Web page design",
     status: "Completed",
     department: "Account Manager",
-    date: "Feb 12,2024",
+    date: "4",
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
   },
 ];
 
-export default function AgentsList() {
+export default function AgentsGroup() {
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -108,34 +109,31 @@ export default function AgentsList() {
 
   return (
     <>
-      <div>
-        <TitleBar title="Agents">
+      <>
+        <TitleBar title="Agents Groups">
           <Button
             variant="outlined"
             color="secondary"
             className="h-[40px] text-[16px] flex gap-8 font-[600]"
-            aria-label="Add Tasks"
+            aria-label="Add New Group"
             size="large"
             onClick={() => setIsOpenAddModal(true)}
           >
             <PlusIcon color={theme.palette.secondary.main} />
-            Add Agent
+            Add New Group
           </Button>
         </TitleBar>
         <div className="px-28 mb-[3rem]">
           <div className="bg-white rounded-lg shadow-sm">
-            <div className="h-24" />
-
+            <div className="p-[2rem]">
+              <SearchInput name="search" placeholder="Search agents group" />
+            </div>
             <CommonTable
               headings={[
                 "ID",
-                "First Name",
-                "Last Name",
-                "Start Date",
-                "Last Login",
-                "Assigned Clients",
-                "Status",
-                "",
+                "Group Name",
+                "Number of Agents",
+                "Action",
               ]}
             >
               <>
@@ -159,30 +157,15 @@ export default function AgentsList() {
                     <TableCell align="left" className="whitespace-nowrap">
                       {row.date}
                     </TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.date}
-                    </TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.date}
-                    </TableCell>
 
-                    <TableCell align="center">
-                      <ImagesOverlap images={row.assignedImg} />
-                    </TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                      >
-                        {row.status}
-                      </span>
-                    </TableCell>
+
                     <TableCell align="left" className="w-[1%]">
                       <div className="flex gap-20 pe-20">
                         <span className="p-2 cursor-pointer">
-                          <Link to="/admin/agent-detail">
-                            <ArrowRightCircleIcon />
-                          </Link>
+                          <DeleteIcon />
+                        </span>
+                        <span className="p-2 cursor-pointer">
+                          <EditIcon />
                         </span>
                       </div>
                     </TableCell>
@@ -195,8 +178,8 @@ export default function AgentsList() {
             </div>
           </div>
         </div>
-        <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
-      </div>
+        <AddGroupModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      </>
     </>
   );
 }
