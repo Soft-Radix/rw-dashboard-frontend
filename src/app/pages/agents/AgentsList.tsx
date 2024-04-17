@@ -14,7 +14,7 @@ import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
-import AddNewTicket from "src/app/components/support/AddNewTicket";
+import AddAgentModel from "src/app/components/agents/AddAgentModel";
 
 const rows = [
   {
@@ -195,7 +195,7 @@ export default function AgentsList() {
             </div>
           </div>
         </div>
-        <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+        <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
       </div>
     </>
   );

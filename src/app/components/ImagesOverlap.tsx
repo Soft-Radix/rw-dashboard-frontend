@@ -3,13 +3,14 @@ import React from "react";
 
 interface IProps {
   images: string[];
+  alignLeft?: boolean
 }
 
-function ImagesOverlap({ images }: IProps) {
+function ImagesOverlap({ images, alignLeft }: IProps) {
   const theme = useTheme();
 
   return (
-    <div className="flex justify-center">
+    <div className={`flex ${alignLeft ? 'justify-left' : "justify-center"} `}>
       {images.map((item, index) =>
         index < 3 ? (
           <img
@@ -24,7 +25,7 @@ function ImagesOverlap({ images }: IProps) {
             style={{
               backgroundColor: theme.palette.secondary.main,
             }}
-            className="h-[34px] w-[34px] flex items-center justify-center text-sm text-white bg-secondary 
+            className="h-[34px] w-[34px] flex items-center justify-center text-sm text-white bg-secondary
             rounded-full border-2 border-white ml-[-10px] z-0"
           >
             +{images.length - 3}

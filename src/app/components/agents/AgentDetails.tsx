@@ -47,11 +47,11 @@ export default function AgentDetails() {
             </div>
             <div className="px-40 xs:px-10">
                 <Grid container spacing={3} className="sm:px-10 xs:px-10 ">
-                    <Grid item xs={12} sm={8} md={9} className="">
-                        <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-screen md:h-[calc(100vh-164px)]  rounded-12 xs:px-20 ">
-                            <div className="border border-[#E7E8E9] rounded-lg flex justify-start items-center">
-                                <div>
-                                    <img src="../assets/images/pages/temp/avatar_.png" />
+                    <Grid item xs={12} sm={12} md={9} className="">
+                        <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
+                            <div className="border border-[#E7E8E9] rounded-lg flex  justify-between gap-[30px] items-start p-[2rem] flex-col sm:flex-row">
+                                <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
+                                    <img src="../assets/images/pages/agent/luis_.jpg" />
                                 </div>
                                 <div>
                                     <div className="flex items-center gap-40 mb-10">
@@ -78,16 +78,16 @@ export default function AgentDetails() {
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center justify-start w-full py-20 gap-31">
+                                    <div className="flex items-baseline justify-between w-full py-20 gap-31">
                                         <div className="flex flex-col pr-10 gap-7 ">
-                                            <span className="text-[1.8rem] text-[#757982] w-max">Assigned Clients</span>
-                                            <div>
-                                                <ImagesOverlap images={images} />
+                                            <span className="text-[1.8rem] text-title font-500 w-max">Assigned Clients</span>
+                                            <div className="pl-14">
+                                                <ImagesOverlap images={images} alignLeft={true} />
                                             </div>
                                         </div>
-                                        <div className="flex flex-col items-start gap-20 px-20">
-                                            <span className="text-[1.8rem] text-[#757982]">Department</span>
-                                            <span className=" text-[#757982]  text-[2rem] font-400 mb-5 flex w-11/12" >
+                                        <div className="flex flex-col items-start w-8/12 gap-7">
+                                            <span className="text-[1.8rem] text-title font-500">Address</span>
+                                            <span className=" text-[#757982]  text-[2rem] font-400 mb-5 flex " >
                                                 <img src="../assets/icons/loaction.svg" className="mr-4" />
                                                 Akshya Nagar 1st Block 1st Cross, Rammurthy, Bangalore-560016
                                             </span>
@@ -95,8 +95,8 @@ export default function AgentDetails() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col px-20 gap-9">
-                                <div className="text-[#111827] font-500 ">Attachment</div>
+                            <div className="flex flex-col px-20 mt-[2rem] gap-9">
+                                <div className="text-2xl text-title font-600">Attachment</div>
                                 <div className="flex gap-10 py-5 ">
                                     <div
                                         className="relative cursor-pointer "
