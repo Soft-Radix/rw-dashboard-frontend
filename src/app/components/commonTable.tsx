@@ -43,9 +43,7 @@ function CommonTable({
                 className={`th ${index === 0 ? "pl-20" : ""}`}
                 key={index}
                 align={
-                  headings.length - 1 === index || index === 0
-                    ? "left"
-                    : "left"
+                  headings.length - 1 === index || index === 0 ? "left" : "left"
                 }
               >
                 {headingIcon ? (
@@ -53,7 +51,7 @@ function CommonTable({
                     align={
                       headings.length - 1 === index || index === 0
                         ? "left"
-                        : "center"
+                        : "left"
                     }
                     className={`th ${index === 0 ? "flex gap-10 justify-start items-center" : "flex gap-10 justify-center items-center"}`}
                   >

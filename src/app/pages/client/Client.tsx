@@ -73,7 +73,7 @@ export default function Clients() {
   return (
     <div>
       <TitleBar title="Clients">
-        <div className="flex items-center gap-20 py-10">
+        <div className="flex items-center gap-20 ">
           <DropdownMenu
             button={
               <div className="flex items-center" onClick={handleButtonClick}>

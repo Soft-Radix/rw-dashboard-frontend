@@ -6,6 +6,7 @@ import {
   SortIcon,
 } from "public/assets/icons/projectsIcon";
 import DropdownMenu from "../Dropdown";
+import ManageButton from "./ManageButton";
 
 const ClientTabButton = () => {
   return (
@@ -28,20 +29,7 @@ const ClientTabButton = () => {
           className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
         />
       </div>
-      {/* <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full"> */}
-
-      <Button
-        sx={{}}
-        className="flex items-center bg-[#F6F6F6] justify-between px-5 
-        focus:border-solid border-1 border-[#4F46E5] sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full"
-      >
-        <Typography className="text-[12px] text-[#9DA0A6] font-400">
-          Manage Columns
-        </Typography>
-        <ProjectNavIconArrow className="shrink-0" />
-      </Button>
-
-      {/* </div> */}
+      <ManageButton />
     </div>
   );
 };
