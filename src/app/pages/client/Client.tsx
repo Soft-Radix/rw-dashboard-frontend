@@ -5,15 +5,14 @@ import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import ClientTabButton from "src/app/components/client/ClientTabButton";
 import ClientTable from "src/app/components/client/ClientTable";
-import AddTaskModal from "src/app/components/tasks/AddTask";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 
 import MenuItem from "@mui/material/MenuItem";
-import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
+import { SearchIcon } from "public/assets/icons/topBarIcons";
 import DropdownMenu from "src/app/components/Dropdown";
 import InputField from "src/app/components/InputField";
-import { SearchIcon } from "public/assets/icons/topBarIcons";
 import AddClient from "src/app/components/client/AddClient";
+import DeleteClient from "src/app/components/client/DeleteClient";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -49,6 +48,7 @@ export default function Clients() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState(0);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -124,7 +124,7 @@ export default function Clients() {
             className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
             aria-label="delete"
             size="large"
-            onClick={() => setIsOpenAddModal(true)}
+            onClick={() => setIsOpenDeletedModal(true)}
           >
             Delete
           </Button>{" "}
@@ -192,6 +192,10 @@ export default function Clients() {
         </div>
       </div>
       <AddClient isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+      />
     </div>
   );
 }

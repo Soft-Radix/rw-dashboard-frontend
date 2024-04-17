@@ -29,6 +29,7 @@ type ModalType = {
   children: ReactNode;
   maxWidth?: string;
   customButton?: boolean;
+  DeleteModal?: boolean;
 };
 
 export default function CommonModal({
@@ -37,6 +38,7 @@ export default function CommonModal({
   handleToggle,
   children,
   customButton = false,
+  DeleteModal = false,
   maxWidth = "387",
 }: ModalType) {
   return (
@@ -49,20 +51,32 @@ export default function CommonModal({
         },
       }}
     >
-      <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
-        <Typography className="text-[16px] font-medium" color="#fff">
-          {modalTitle}
-        </Typography>
-        <IconButton>
-          <CrossIcon
-            className="cursor-pointer"
-            color="#fff"
-            onClick={handleToggle}
-          />
-        </IconButton>
-      </div>
+      {!DeleteModal ? (
+        <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
+          <Typography className="text-[16px] font-medium" color="#fff">
+            {modalTitle}
+          </Typography>
+          <IconButton>
+            <CrossIcon
+              className="cursor-pointer"
+              color="#fff"
+              onClick={handleToggle}
+            />
+          </IconButton>
+        </div>
+      ) : (
+        <>
+          <IconButton className=" rounded-none flex items-center justify-end pr-20 pt-20">
+            <CrossIcon
+              className="cursor-pointer"
+              color="#9DA0A6"
+              onClick={handleToggle}
+            />
+          </IconButton>
+        </>
+      )}
       <div className="p-20">{children}</div>
-      
+
       <div className="flex p-20 pt-10">
         <Button
           variant="contained"
@@ -70,7 +84,7 @@ export default function CommonModal({
           className="w-[156px] h-[48px] text-[18px]"
           onClick={!customButton ? null : addList}
         >
-          {!customButton ? "Save" : "Add List"}
+          {customButton ? "Add List" : DeleteModal ? "Yes" : "save"}
         </Button>
         <Button
           variant="outlined"
