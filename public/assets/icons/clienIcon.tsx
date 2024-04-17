@@ -43,3 +43,15 @@ export const HeadIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+export const UpArrowBlank: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
+    <path d="M12 10L8 14H16L12 10Z" fill="#9DA0A6" />
+  </svg>
+);

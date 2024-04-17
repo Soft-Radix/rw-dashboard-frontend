@@ -53,7 +53,7 @@ export default function CommonModal({
     >
       {!DeleteModal ? (
         <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
-          <Typography className="text-[16px] font-medium" color="#fff">
+          <Typography className="text-[16px] font-semibold" color="#fff">
             {modalTitle}
           </Typography>
           <IconButton>
@@ -84,7 +84,7 @@ export default function CommonModal({
           className="w-[156px] h-[48px] text-[18px]"
           onClick={!customButton ? null : addList}
         >
-          {customButton ? "Add List" : DeleteModal ? "Yes" : "save"}
+          {customButton ? "Add List" : DeleteModal ? "Yes" : "Save"}
         </Button>
         <Button
           variant="outlined"
