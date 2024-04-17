@@ -28,8 +28,9 @@ type ModalType = {
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
-  customButton?: boolean;
   DeleteModal?: boolean;
+  btnTitle?: string,
+  onSubmit?: () => void
 };
 
 export default function CommonModal({
@@ -37,9 +38,10 @@ export default function CommonModal({
   open,
   handleToggle,
   children,
-  customButton = false,
+  btnTitle,
   DeleteModal = false,
   maxWidth = "387",
+  onSubmit
 }: ModalType) {
   return (
     <StylesDialog
@@ -82,9 +84,9 @@ export default function CommonModal({
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
-          onClick={!customButton ? null : addList}
+          onClick={onSubmit}
         >
-          {customButton ? "Add List" : DeleteModal ? "Yes" : "Save"}
+          {btnTitle}
         </Button>
         <Button
           variant="outlined"

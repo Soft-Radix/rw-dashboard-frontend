@@ -25,6 +25,7 @@ function InputField({
   const handleEyeToggle = () => {
     setIsType(isType === "text" ? "password" : "text");
   };
+
   return (
     <div className={`${rest.className} common-inputField w-full`}>
       {label && (
@@ -59,8 +60,10 @@ function InputField({
           </span>
         )}
       </div>
-      <span className="">
-        {formik?.errors[name ?? ""] && formik?.touched[name ?? ""]}
+      <span className="inline-block text-red pt-[5px]">
+        {(formik?.errors[name ?? ""]
+          && formik?.touched[name ?? ""]) && formik?.errors[name ?? ""]
+        }
       </span>
     </div>
   );
