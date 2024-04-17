@@ -5,6 +5,7 @@ import tr from "./i18n/tr";
 import ar from "./i18n/ar";
 
 const Client = lazy(() => import("./Client"));
+const ClientDetail = lazy(() => import("../../components/client/ClientDetail"));
 
 i18next.addResourceBundle("en", "tasksPage", en);
 i18next.addResourceBundle("tr", "tasksPage", tr);
@@ -21,6 +22,10 @@ const ClientConfig = {
     {
       path: "admin/client",
       element: <Client />,
+    },
+    {
+      path: "admin/client/detail",
+      element: <ClientDetail />,
     },
   ],
 };

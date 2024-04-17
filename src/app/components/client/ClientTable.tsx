@@ -188,7 +188,7 @@ export default function ClientTable() {
                     </span>
                   </TableCell>
                   <TableCell scope="row">
-                    <Link to="/supportdetail">
+                    <Link to="/admin/client/detail">
                       <ArrowRightCircleIcon />
                     </Link>
                   </TableCell>
