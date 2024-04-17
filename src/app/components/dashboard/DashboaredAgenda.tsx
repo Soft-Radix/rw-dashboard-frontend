@@ -292,10 +292,10 @@ const DashboaredAgenda = () => {
                     },
                   }}
                 >
-                  <div className="flex items-center w-full  justify-between ">
+                  <div className="flex items-center w-full justify-between ">
                     <TableCell
                       scope="row"
-                      className="flex items-center gap-8   justify-between"
+                      className="flex items-center gap-8 justify-between"
                     >
                       <div className="flex gap-10 items-center">
                         <span className="">
