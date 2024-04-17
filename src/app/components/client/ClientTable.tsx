@@ -14,11 +14,11 @@ import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 
-const rows = [
+const intialData = [
   {
     defaultChecked: true,
-    id: "1542145611525",
-    name: "Web page design",
+    id: 1,
+    name: "A",
     twoStep: "Enabled",
     companyName: "Account Manager",
     date: "Feb 12,2024",
@@ -26,72 +26,80 @@ const rows = [
   },
   {
     defaultChecked: true,
-    id: "1542145611525",
-    name: "Web page design",
+    id: 2,
+    name: "B",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Review",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 3,
+    name: "C",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "Completed",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 4,
+    name: "D",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Progress",
   },
   {
     defaultChecked: true,
-    id: "1542145611525",
-    name: "Web page design",
+    id: 5,
+    name: "E",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Review",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 6,
+    name: "F",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Progress",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 7,
+    name: "G",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Review",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 8,
+    name: "H",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "Completed",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 9,
+    name: "I",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Progress",
   },
   {
-    id: "1542145611525",
-    name: "Web page design",
+    id: 10,
+    name: "J",
     companyName: "Account Manager",
     date: "Feb 12,2024",
     status: "In Review",
   },
 ];
 
-export default function   ClientTable() {
+const columnKey = {
+  Id: 'id',
+  Name: 'name',
+  CompanyName: 'companyName',
+  Date: 'date',
+  Status: 'status',
+};
+
+export default function ClientTable() {
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -99,17 +107,29 @@ export default function   ClientTable() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
-
+  const [rows, setrows] = useState(intialData);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  const [sortBy, setSortBy] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const sortData = (column: string) => {
+    const isAsc = sortBy === column && sortOrder === "asc";
+    setSortBy(column);
+    setSortOrder(isAsc ? "desc" : "asc");
+    const sortedRows = [...rows].sort((a, b) => {
+      if (a[columnKey[column]] < b[columnKey[column]]) return isAsc ? -1 : 1;
+      if (a[columnKey[column]] > b[columnKey[column]]) return isAsc ? 1 : -1;
+      return 0;
+    });
+    setrows(sortedRows)
+  };
 
   return (
     <>
       <div>
-        <div className="shadow-sm bg-white rounded-lg">
+        <div className="bg-white rounded-lg shadow-sm">
           <div className="h-24" />
 
           <CommonTable
@@ -118,6 +138,9 @@ export default function   ClientTable() {
               <HeadIcon key={index} />
             ))}
             headings={["Id", "Name", "CompanyName", "Date", "Status", ""]}
+            sortColumn={sortBy}
+            sortOrder={sortOrder}
+            onSort={sortData}
           >
             <>
               {rows.map((row, index) => (

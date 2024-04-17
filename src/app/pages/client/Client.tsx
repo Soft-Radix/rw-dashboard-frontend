@@ -94,7 +94,7 @@ export default function Clients() {
             anchorEl={anchorEl}
             handleClose={handleClose}
           >
-            <MenuItem className=" px-20 py-10">
+            <MenuItem className="px-20 py-10 ">
               <InputField
                 name="search"
                 placeholder="search"
@@ -142,9 +142,9 @@ export default function Clients() {
         </div>
       </TitleBar>
 
-      <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap">
+      <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="shadow-md bg-white rounded-lg">
+          <div className="bg-white rounded-lg shadow-md">
             <div className="flex items-center justify-between">
               <Tabs
                 value={selectedTab}

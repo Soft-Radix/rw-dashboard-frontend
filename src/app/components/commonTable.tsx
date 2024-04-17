@@ -17,6 +17,9 @@ interface IProps {
   useBorderDesign?: boolean;
   headingIcon?: boolean;
   headIcon?: any;
+  sortColumn?: string;
+  sortOrder?: string;
+  onSort?: (column: string) => void
 }
 function CommonTable({
   children,
@@ -24,9 +27,8 @@ function CommonTable({
   headingRowProps,
   useBorderDesign,
   headingIcon,
-  headIcon,
+  headIcon, onSort
 }: IProps) {
-  console.log(headIcon, "hjh");
   return (
     <TableContainer>
       <Table
@@ -46,6 +48,12 @@ function CommonTable({
                   headings.length - 1 === index || index === 0
                     ? "left"
                     : "left"
+                }
+                onClick={() => {
+                  if (typeof onSort == 'function') {
+                    onSort(item)
+                  } else null
+                }
                 }
               >
                 {headingIcon ? (
