@@ -104,7 +104,7 @@ export default function Clients() {
               <div className="mt-20 px-20">
                 <SearchInput placeholder="Search" name="name" />
               </div>
-              <div className="flex items-center gap-10 px-24 pb-20">
+              <div className="flex items-center gap-10 px-2 pb-20">
                 <span>
                   <img src={img1} alt=""></img>
                 </span>
