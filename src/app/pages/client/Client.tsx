@@ -13,6 +13,8 @@ import DropdownMenu from "src/app/components/Dropdown";
 import InputField from "src/app/components/InputField";
 import AddClient from "src/app/components/client/AddClient";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import SearchInput from "src/app/components/SearchInput";
+import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -55,7 +57,6 @@ export default function Clients() {
     setSelectedTab(newValue);
   };
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
-
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -69,56 +70,48 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const showList = () => {
+    alert("hii");
+  };
 
   return (
     <div>
       <TitleBar title="Clients">
-        <div className="flex items-center gap-20 ">
-          <DropdownMenu
-            button={
-              <div className="flex items-center" onClick={handleButtonClick}>
-                <Button
-                  variant="contained"
-                  className="h-[40px] sm:text-[16px] text-secondary  flex gap-8 bg-[#EDEDFC] leading-none
-                   hover:bg-[#EDEDFC] "
-                  aria-label="Manage Sections"
-                  size="large"
-                  style={{
-                    border: anchorEl ? "1px #4F46E5 solid" : "none",
-                  }}
+        <div className="flex items-center gap-20">
+          <div>
+            <DropdownMenu
+              button={
+                <div
+                  className="flex items-center relative"
+                  onClick={handleButtonClick}
                 >
-                  Assign to account manager
-                </Button>
+                  <Button
+                    variant="contained"
+                    className="h-[40px] sm:text-[16px] text-secondary flex gap-8 bg-[#EDEDFC] leading-none hover:bg-[#EDEDFC]"
+                    aria-label="Manage Sections"
+                    size="large"
+                    style={{
+                      border: anchorEl ? "1px #4F46E5 solid" : "none",
+                    }}
+                  >
+                    Assign to account manager
+                  </Button>
+                </div>
+              }
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+            >
+              <div className="mt-20 px-20">
+                <SearchInput placeholder="Search" name="name" />
               </div>
-            }
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-          >
-            <MenuItem className="px-20 py-10 ">
-              <InputField
-                name="search"
-                placeholder="search"
-                className=""
-                inputProps={{
-                  className: "ps-[4rem] w-full sm:w-[227px]",
-                }}
-              />
-              <SearchIcon
-                width={18}
-                height={18}
-                className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
-              />
-            </MenuItem>
-          </DropdownMenu>
-          {/* <Button
-            variant="contained"
-            className="h-[40px] text-[16px] text-[#4F46E5] font-500
-            flex gap-8 bg-[#EDEDFC] hover:bg-transparent  focus:border-solid border-1 border-[#4F46E5]"
-            aria-label="Assign to account manager"
-            size="large"
-          >
-            Assign to account manager
-          </Button> */}
+              <div className="flex items-center gap-10 px-24 pb-20">
+                <span>
+                  <img src={img1} alt=""></img>
+                </span>
+                <span>Hello</span>
+              </div>
+            </DropdownMenu>
+          </div>
           <Button
             variant="contained"
             className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
@@ -145,7 +138,7 @@ export default function Clients() {
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
           <div className="bg-white rounded-lg shadow-md">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
@@ -169,9 +162,8 @@ export default function Clients() {
                 <Tab label="Cancelled" {...a11yProps(3)} />
                 <Tab label="Past due" {...a11yProps(4)} />
               </Tabs>
-              <div>
-                <ClientTabButton />
-              </div>
+
+              <ClientTabButton />
             </div>
             <CustomTabPanel value={selectedTab} index={0}>
               <ClientTable />

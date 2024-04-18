@@ -28,18 +28,18 @@ export default function ManageButton() {
     setIsOpen(false);
   };
 
-  const handleCheckboxToggle = (itemName: string) => () => {
-    const selectedIndex = selectedItems.indexOf(itemName);
-    const newSelectedItems = [...selectedItems];
+  //   const handleCheckboxToggle = (itemName: string) => () => {
+  //     const selectedIndex = selectedItems.indexOf(itemName);
+  //     const newSelectedItems = [...selectedItems];
 
-    if (selectedIndex === -1) {
-      newSelectedItems.push(itemName);
-    } else {
-      newSelectedItems.splice(selectedIndex, 1);
-    }
+  //     if (selectedIndex === -1) {
+  //       newSelectedItems.push(itemName);
+  //     } else {
+  //       newSelectedItems.splice(selectedIndex, 1);
+  //     }
 
-    setSelectedItems(newSelectedItems);
-  };
+  //     setSelectedItems(newSelectedItems);
+  //   };
 
   const handleApply = () => {
     console.log("Selected Items:", selectedItems);
@@ -49,6 +49,17 @@ export default function ManageButton() {
 
   const isItemSelected = (itemName: string) => {
     return selectedItems.indexOf(itemName) !== -1;
+  };
+  const handleToggleItem = (itemName: string) => () => {
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems.includes(itemName)) {
+        // Remove the item if already selected
+        return prevSelectedItems.filter((item) => item !== itemName);
+      } else {
+        // Add the item if not selected
+        return [...prevSelectedItems, itemName];
+      }
+    });
   };
 
   return (
@@ -73,7 +84,7 @@ export default function ManageButton() {
             marginTop: 2,
             marginRight: 2,
             "& ul": {
-              padding: 0, // Example: Remove padding from the ul element inside Paper
+              padding: 1, // Example: Remove padding from the ul element inside Paper
               listStyle: "none", // Example: Remove default list styles
               overflowY: "auto",
             },
@@ -81,11 +92,8 @@ export default function ManageButton() {
         }}
       >
         {names.map((name) => (
-          <MenuItem key={name} sx={{}}>
-            <Checkbox
-              checked={isItemSelected(name)}
-              onChange={handleCheckboxToggle(name)}
-            />
+          <MenuItem key={name} onClick={handleToggleItem(name)}>
+            <Checkbox checked={isItemSelected(name)} />
             <ListItemText primary={name} />
           </MenuItem>
         ))}
