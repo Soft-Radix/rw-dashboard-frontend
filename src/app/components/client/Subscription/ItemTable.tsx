@@ -6,24 +6,28 @@ import { useFormik } from "formik";
 
 const rows = [
   {
+    name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
     status: "PDF",
   },
   {
+    name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
     status: "PDF",
   },
   {
+    name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
     status: "PDF",
   },
   {
+    name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
@@ -43,8 +47,8 @@ const ItemTable = () => {
     onSubmit: (values) => {},
   });
   return (
-    <div>
-      <div className="flex items-center justify-between  py-24 px-[2rem]">
+    <div className="bg-white rounded-lg shadow-sm py-[2rem] mx-28 mb-[3rem]">
+      <div className="flex items-center justify-between  py-24 px-[2rem] ">
         <h5 className="text-title text-xl font-600 flex items-center gap-12">
           Billing History
         </h5>
@@ -74,10 +78,26 @@ const ItemTable = () => {
                 },
               }}
             >
-              <TableCell scope="row">{row.agents}</TableCell>
-              <TableCell align="left">{row.task}</TableCell>
-              <TableCell align="left">${row.DueDate}</TableCell>
-              <TableCell align="center">{row.status}</TableCell>
+              <TableCell
+                scope="row"
+                className="flex items-center gap-8 font-500"
+              >
+                <img
+                  src={`../assets/images/avatars/male-01.jpg`}
+                  className="w-[34px] rounded-full"
+                />
+                {row.name}
+              </TableCell>
+              <TableCell align="center">{row.task}</TableCell>
+              <TableCell align="center">${row.DueDate}</TableCell>
+              <TableCell align="center" className="whitespace-nowrap">
+                <span
+                  className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      ${row.status === "Unassigned" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                >
+                  {row.status}
+                </span>
+              </TableCell>
             </TableRow>
           ))}
         </>

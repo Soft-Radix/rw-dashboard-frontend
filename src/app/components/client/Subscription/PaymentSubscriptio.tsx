@@ -6,11 +6,13 @@ import { DeleteIcon, EditIcon } from "public/assets/icons/common";
 
 const cardsData = [
   {
+    title: "Credit card",
     lastDigits: "2020",
     name: "Visa",
     type: "visa",
   },
   {
+    title: "Credit card",
     lastDigits: "1428",
     name: "HDFC bank",
     type: "bank",
@@ -32,6 +34,9 @@ function PaymentMethods() {
               className="p-16 pe-20 rounded-[10px] bg-bgGrey basis-full lg:basis-[calc(50%_-_16px)]"
               key={index}
             >
+              <Typography variant="h6" className="mb-4">
+                {card.title}
+              </Typography>
               <div className="flex items-center gap-[1.8rem]">
                 <div className="w-[86px] h-[68px] rounded-8 bg-white flex items-center justify-center shrink-0">
                   {card.type === "visa" ? (
