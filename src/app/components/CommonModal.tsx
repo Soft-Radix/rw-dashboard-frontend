@@ -19,9 +19,7 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
     padding: theme.spacing(1),
   },
 }));
-const addList = () => {
-  alert("you clicked me");
-};
+
 type ModalType = {
   open?: boolean;
   handleToggle: () => void;
@@ -68,11 +66,10 @@ export default function CommonModal({
         </div>
       ) : (
         <>
-          <IconButton className="flex items-center justify-end pt-20 pr-20 rounded-none ">
+          <IconButton className="flex items-center justify-end pt-20 pr-20 rounded-none " onClick={handleToggle}>
             <CrossIcon
               className="cursor-pointer"
               color="#9DA0A6"
-              onClick={handleToggle}
             />
           </IconButton>
         </>

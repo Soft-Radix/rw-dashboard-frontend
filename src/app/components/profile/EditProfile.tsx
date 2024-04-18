@@ -6,10 +6,23 @@ import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import SelectField from "../selectField";
 
+type profileState = {
+  value: string,
+  label: string
+}
+
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
+
+export const profileStatus: profileState[] = [
+  { value: "inprogress", label: "Active" },
+  { value: "complete", label: "Suspended" },
+  { value: "paused", label: "Paused" },
+  { value: "onHold", label: "On hold" },
+];
+
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
@@ -52,7 +65,7 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
       email: "",
       phone: "",
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
 
   const roleItems = [
@@ -67,12 +80,13 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Edit Profile"
       maxWidth="733"
+      btnTitle={'Save'}
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
           src="/assets/images/avatars/male-01.jpg"
           alt=""
-          className="h-full w-full rounded-full"
+          className="w-full h-full rounded-full"
         />
         <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
           <FuseSvgIcon className="text-white" size={20}>
@@ -89,16 +103,16 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
         />
         <SelectField
           formik={formik}
-          name="role"
-          label="Role"
-          placeholder="Select Role"
+          name="status"
+          label="Status"
+          placeholder="Select Status"
           sx={{
             "& .radioIcon": { display: "none" },
           }}
         >
-          {roleItems.map((item) => (
+          {profileStatus.map((item) => (
             <StyledMenuItem key={item.value} value={item.value}>
-              <div className="radioIcon" />
+              {/* <div className="radioIcon" /> */}
               {item.label}
             </StyledMenuItem>
           ))}
@@ -106,7 +120,7 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
         <InputField
           formik={formik}
           name="email"
-          label="Email Address"
+          label="Enter Email Address"
           placeholder="Enter Email Address"
         />
         <InputField
@@ -114,6 +128,18 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
           name="phone"
           label="Phone Number"
           placeholder="Enter Phone Number"
+        />
+        <InputField
+          formik={formik}
+          name="company"
+          label="Company Name"
+          placeholder="Enter Company Name"
+        />
+        <InputField
+          formik={formik}
+          name="address"
+          label="Address"
+          placeholder="Enter Address"
         />
       </div>
     </CommonModal>

@@ -34,10 +34,16 @@ function CommonTable({
       <Table
         size="small"
         aria-label="simple table"
-        className={`${useBorderDesign ? "border-design" : "common_table"}`}
+        className={`${useBorderDesign ? "border-design" : "common_table "}`}
       >
         <TableHead
-          className={`${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"}`}
+          className={`${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
+
+          sx={{
+            "& th": {
+              borderBottom: "1px solid #EDF2F6",
+            },
+          }}
         >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
@@ -45,7 +51,7 @@ function CommonTable({
                 className={`th ${index === 0 ? "pl-20" : ""}`}
                 key={index}
                 align={
-                  headings.length - 1 === index || index === 0 ? "left" : "left"
+                  headings.length - 1 === index || index === 0 ? "left" : "center"
                 }
                 onClick={() => {
                   if (typeof onSort == 'function') {
