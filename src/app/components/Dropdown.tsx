@@ -39,7 +39,7 @@ function DropdownMenu({
         }}
         {...popoverProps}
         classes={{
-          paper: `text-title_light shadow-[0_0_54px_0_rgba(214,215,227,0.6)] ${popoverProps?.classes?.paper}`,
+          paper: `text-title_light shadow-[0_0_54px_0_rgba(214,215,227,0.6)]  ${popoverProps?.classes?.paper}`,
           root: popoverProps?.classes?.root,
         }}
       >

@@ -92,11 +92,11 @@ const intialData = [
 ];
 
 const columnKey = {
-  Id: 'id',
-  Name: 'name',
-  CompanyName: 'companyName',
-  Date: 'date',
-  Status: 'status',
+  Id: "id",
+  Name: "name",
+  CompanyName: "companyName",
+  Date: "date",
+  Status: "status",
 };
 
 export default function ClientTable() {
@@ -107,7 +107,7 @@ export default function ClientTable() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => { },
+    onSubmit: (values) => {},
   });
   const [rows, setrows] = useState(intialData);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -123,7 +123,7 @@ export default function ClientTable() {
       if (a[columnKey[column]] > b[columnKey[column]]) return isAsc ? 1 : -1;
       return 0;
     });
-    setrows(sortedRows)
+    setrows(sortedRows);
   };
 
   return (
@@ -168,18 +168,18 @@ export default function ClientTable() {
                       {row.id}
                     </div>
                   </TableCell>
-                  <TableCell align="left" className="whitespace-nowrap">
+                  <TableCell align="center" className="whitespace-nowrap">
                     {row.name}
                   </TableCell>
 
-                  <TableCell align="left" className="whitespace-nowrap">
+                  <TableCell align="center" className="whitespace-nowrap">
                     {row.companyName}
                   </TableCell>
-                  <TableCell align="left" className="whitespace-nowrap">
+                  <TableCell align="center" className="whitespace-nowrap">
                     {row.date}
                   </TableCell>
 
-                  <TableCell scope="row" align="left">
+                  <TableCell scope="row" align="center">
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
