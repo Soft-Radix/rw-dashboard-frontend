@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 interface IProps {
   button: ReactNode;
   children: ReactNode;
+  marginTop?: string;
   anchorEl: HTMLElement | null;
   handleClose: () => void;
   popoverProps?: PopoverProps;
@@ -14,18 +15,8 @@ function DropdownMenu({
   children,
   anchorEl,
   handleClose,
-  popoverProps,
+  popoverProps, marginTop
 }: IProps) {
-  //   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
-
-  //   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-  //     setUserMenu(event.currentTarget);
-  //   };
-
-  //   const userMenuClose = () => {
-  //     setUserMenu(null);
-  //   };
-
   return (
     <>
       {button}
@@ -39,7 +30,7 @@ function DropdownMenu({
         }}
         {...popoverProps}
         classes={{
-          paper: `text-title_light shadow-[0_0_54px_0_rgba(214,215,227,0.6)]  ${popoverProps?.classes?.paper}`,
+          paper: `text-title_light shadow-[0_0_54px_0_rgba(214,215,227,0.6)]   ${popoverProps?.classes?.paper} ${marginTop}`,
           root: popoverProps?.classes?.root,
         }}
       >

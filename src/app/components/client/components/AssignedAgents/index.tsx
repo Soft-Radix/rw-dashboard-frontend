@@ -129,7 +129,6 @@ export default function AssignedAgents() {
                                             paddingTop: "12px",
                                             paddingBottom: "12px",
                                             color: theme.palette.primary.main,
-                                            // paddingLeft:
                                         },
                                     }}
                                 >
