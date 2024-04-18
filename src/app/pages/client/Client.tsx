@@ -82,7 +82,7 @@ export default function Clients() {
             <DropdownMenu
               button={
                 <div
-                  className="flex items-center relative"
+                  className="relative flex items-center"
                   onClick={handleButtonClick}
                 >
                   <Button
@@ -101,7 +101,7 @@ export default function Clients() {
               anchorEl={anchorEl}
               handleClose={handleClose}
             >
-              <div className="mt-20 px-20">
+              <div className="px-20 mt-20">
                 <SearchInput placeholder="Search" name="name" />
               </div>
               <div className="flex items-center gap-10 px-2 pb-20">

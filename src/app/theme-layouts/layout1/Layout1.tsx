@@ -52,14 +52,14 @@ function Layout1(props: Layout1Props) {
     <Root id="fuse-layout" config={config} className="flex w-full">
       {config.leftSidePanel.display && <LeftSideLayout1 />}
 
-      <div className="flex min-w-0 flex-auto">
+      <div className="flex flex-auto min-w-0">
         {config.navbar.display && config.navbar.position === "left" && (
           <NavbarWrapperLayout1 />
         )}
 
         <main
           id="fuse-main"
-          className="relative z-10 flex min-h-full min-w-0 flex-auto flex-col"
+          className="relative z-10 flex flex-col flex-auto min-w-0 min-h-full"
         >
           {config.toolbar.display && (
             <ToolbarLayout1
@@ -71,7 +71,7 @@ function Layout1(props: Layout1Props) {
             <Configurator />
           </div> */}
 
-          <div className="relative z-10 flex min-h-0 flex-auto flex-col">
+          <div className="relative z-10 flex flex-col flex-auto min-h-0">
             <FuseSuspense>{useRoutes(routes)}</FuseSuspense>
 
             <Suspense>
