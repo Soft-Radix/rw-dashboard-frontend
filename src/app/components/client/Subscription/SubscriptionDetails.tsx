@@ -43,6 +43,8 @@ import {
 import { AttachmentIcon } from "public/assets/icons/supportIcons";
 import PaymentSubscriptio from "./PaymentSubscriptio";
 import ItemTable from "./ItemTable";
+import SubLogTable from "./SubLogTable";
+import CancelButtonPage from "./CancelButtonPage";
 
 const rows = [
   {
@@ -166,10 +168,10 @@ export default function SubscriptionDetails() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [value, setValue] = useState(0);
-
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
   return (
     <>
       <TitleBar title="Subscriptions Details"></TitleBar>
@@ -181,14 +183,7 @@ export default function SubscriptionDetails() {
               Client Information
             </Typography>
             <div className="flex gap-10 flex-col sm:flex-row">
-              <Button
-                variant="contained"
-                color="secondary"
-                endIcon={<DownArrowwhite />}
-                className="text-[#fff] font-600 text-[16px] px-36"
-              >
-                Cancel
-              </Button>
+              <CancelButtonPage />
               <Button
                 variant="outlined"
                 color="secondary"
@@ -330,10 +325,10 @@ export default function SubscriptionDetails() {
               </Grid>
             </Grid>
           </Box>
-          <div className="h-24" />
-          <ItemTable />
         </div>
       </div>
+      <ItemTable />
+      <SubLogTable />
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </>
   );
