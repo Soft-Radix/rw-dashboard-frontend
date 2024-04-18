@@ -13,6 +13,7 @@ import DropdownMenu from "src/app/components/Dropdown";
 import InputField from "src/app/components/InputField";
 import AddClient from "src/app/components/client/AddClient";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import SearchInput from "src/app/components/SearchInput";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -94,21 +95,9 @@ export default function Clients() {
             anchorEl={anchorEl}
             handleClose={handleClose}
           >
-            <MenuItem className="px-20 py-10 ">
-              <InputField
-                name="search"
-                placeholder="search"
-                className=""
-                inputProps={{
-                  className: "ps-[4rem] w-full sm:w-[227px]",
-                }}
-              />
-              <SearchIcon
-                width={18}
-                height={18}
-                className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
-              />
-            </MenuItem>
+            <div className="bg-red-">
+              <SearchInput placeholder="Search" name="name" />
+            </div>
           </DropdownMenu>
           {/* <Button
             variant="contained"
@@ -145,7 +134,7 @@ export default function Clients() {
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
           <div className="bg-white rounded-lg shadow-md">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
@@ -169,9 +158,8 @@ export default function Clients() {
                 <Tab label="Cancelled" {...a11yProps(3)} />
                 <Tab label="Past due" {...a11yProps(4)} />
               </Tabs>
-              <div>
-                <ClientTabButton />
-              </div>
+
+              <ClientTabButton />
             </div>
             <CustomTabPanel value={selectedTab} index={0}>
               <ClientTable />
