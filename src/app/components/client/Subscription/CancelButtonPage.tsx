@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import DropdownMenu from "../../Dropdown";
 import { Button, MenuItem, Theme, Typography } from "@mui/material";
-import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
+import {
+  DownArrowBlank,
+  DownArrowIcon,
+} from "public/assets/icons/dashboardIcons";
 import { useTheme } from "@mui/styles";
 import { DownArrowwhite } from "public/assets/icons/subscription";
+import InputField from "../../InputField";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -21,9 +25,13 @@ const CancelButtonPage = () => {
     setSelectedTab(newValue);
   };
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
+  };
+  const handleButtonClick1 = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl1(event.currentTarget);
   };
   const handleMenuItemClick = (value: string) => {
     setSelectedValue(value);
@@ -32,17 +40,24 @@ const CancelButtonPage = () => {
 
   const handleClose = () => {
     setAnchorEl(null);
+    setAnchorEl1(null);
   };
   return (
     <div>
       <DropdownMenu
+        marginTop={"mt-20"}
         button={
-          <div className="flex items-start " onClick={handleButtonClick}>
+          <div
+            className="relative flex items-center"
+            onClick={handleButtonClick}
+          >
             <Button
               variant="contained"
               color="secondary"
-              endIcon={<DownArrowwhite />}
-              className="text-[#fff] font-600 text-[16px] px-36"
+              className="h-[40px] sm:text-[16px] flex gap-8  leading-none "
+              aria-label="Manage Sections"
+              size="large"
+              endIcon={<DownArrowwhite className="cursor-pointer" />}
             >
               Cancel
             </Button>
@@ -51,15 +66,50 @@ const CancelButtonPage = () => {
         anchorEl={anchorEl}
         handleClose={handleClose}
       >
-        <div style={{ marginTop: "8px" }}>
-          <MenuItem
-            onClick={() => handleMenuItemClick("Project 1")}
-            className="w-[300px] px-20 py-10 "
-          >
-            <Typography className="text-[#111827] font-600 text-[16px] ">
+        <div className="min-w-[400px] p-20">
+          <p className="text-title font-600 text-[1.6rem]">Client</p>
+
+          <div className="relative w-full mt-10 mb-3 sm:mb-0 flex ">
+            <DropdownMenu
+              marginTop={"mt-20"}
+              button={
+                <div
+                  className="relative flex items-center justify-between w-full bg-bgGrey rounded-sm my-20"
+                  onClick={handleButtonClick1}
+                >
+                  <Button
+                    variant="text"
+                    color="secondary"
+                    className="h-[40px] sm:text-[16px] font-400 text-[#9DA0A6] sm:mb-[1rem] leading-none"
+                    aria-label="Manage Sections"
+                    size="large"
+                  >
+                    Select Cancel Options
+                  </Button>
+                  <span>
+                    <DownArrowBlank />
+                  </span>
+                </div>
+              }
+              anchorEl={anchorEl1}
+              handleClose={handleClose}
+            >
+              <div className="w-[375px] ">
+                <MenuItem>Cancel immediately</MenuItem>
+                <MenuItem>Cancel at the end of billing cycle</MenuItem>
+                <MenuItem></MenuItem>
+              </div>
+            </DropdownMenu>
+          </div>
+          <div className="flex pt-10">
+            <Button
+              variant="contained"
+              color="secondary"
+              className="w-[156px] h-[48px] text-[18px]"
+            >
               Cancel
-            </Typography>
-          </MenuItem>
+            </Button>
+          </div>
         </div>
       </DropdownMenu>
     </div>
