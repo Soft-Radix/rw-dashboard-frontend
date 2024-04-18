@@ -9,7 +9,7 @@ import {
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { NavigateFunction, useLocation, Location, useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -20,8 +20,10 @@ import CommonTab from "../../components/CommonTab";
 import Profile from "./components/Profile";
 import AssignedAgents from "./components/AssignedAgents";
 import DropdownMenu from "../../../app/components/Dropdown";
-import { DownArrowIcon } from 'public/assets/icons/dashboardIcons';
+import { DownArrowIconWhite } from 'public/assets/icons/dashboardIcons';
 import InputField from "../InputField";
+import AssignedAccountManager from "./components/AssignedAccountManager";
+import SubscriptionList from "./components/SubscriptionList";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,7 +44,12 @@ export default function ClientDetail() {
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(false);
+  const location: Location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
 
+  // Get a specific query parameter
+  const paramValue = queryParams.get('type');
   //custom dropdown
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
@@ -67,13 +74,12 @@ export default function ClientDetail() {
           >
             <Button
               variant="outlined"
-              color="secondary"
-              className="h-[40px] sm:text-[16px] flex gap-8  leading-none "
+              className="h-[40px] sm:text-[16px] flex gap-8  text-white leading-none bg-secondary hover:bg-secondary"
               aria-label="Manage Sections"
               size="large"
-              endIcon={<DownArrowIcon className="cursor-pointer" />}
+              endIcon={<DownArrowIconWhite className="cursor-pointer" />}
             >
-              Manage Sections
+              Assigned
             </Button>
           </div>
         }
@@ -107,6 +113,7 @@ export default function ClientDetail() {
               variant="outlined"
               color="secondary"
               className="w-[156px] h-[48px] text-[18px] ml-14"
+              onClick={handleClose}
             >
               Cancel
             </Button>
@@ -135,20 +142,38 @@ export default function ClientDetail() {
     {
       id: 'assigned-account',
       label: 'Assigned account manager',
-      content: <div>Content of Tab 3</div>,
-      actionBtn: () => null
+      content: <AssignedAccountManager />,
+      actionBtn: CustomDropDown
     },
     {
       id: 'subscription',
       label: 'Subscriptions',
-      content: <div>Content of Tab 4</div>,
+      content: <SubscriptionList />,
       actionBtn: () => null
     },
   ];
 
   return (
     <>
-      <TitleBar title="Clients" />
+      <TitleBar title="Clients" minHeight="min-h-[80px]">
+        {
+          paramValue == 'subscription' &&
+          <Button
+            variant="outlined"
+            color="secondary"
+            className="h-[40px] text-[16px] flex gap-8 font-[600]"
+            aria-label="Add Tasks"
+            size="large"
+            onClick={() => {
+              navigate('/admin/client/add-subscription')
+
+            }}
+          >
+            <PlusIcon color={theme.palette.secondary.main} />
+            Add Subscription
+          </Button>
+        }
+      </TitleBar>
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm py-[2rem]">
           <CommonTab tabs={tabs} />
