@@ -1,19 +1,13 @@
 import React, { useState } from "react";
 import DropdownMenu from "../../Dropdown";
-import { Button, MenuItem, Theme, Typography } from "@mui/material";
+import { Button, MenuItem, Theme } from "@mui/material";
+import { DownArrowwhite } from "public/assets/icons/subscription";
+import { useTheme } from "@mui/styles";
 import {
   DownArrowBlank,
-  DownArrowIcon,
+  UpArrowBlank,
 } from "public/assets/icons/dashboardIcons";
-import { useTheme } from "@mui/styles";
-import { DownArrowwhite } from "public/assets/icons/subscription";
 import InputField from "../../InputField";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
-}
 
 const CancelButtonPage = () => {
   const theme: Theme = useTheme();
@@ -21,27 +15,27 @@ const CancelButtonPage = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setSelectedTab(newValue);
-  };
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleButtonClick1 = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl1(event.currentTarget);
   };
+
   const handleMenuItemClick = (value: string) => {
     setSelectedValue(value);
-    setAnchorEl(null);
+    setAnchorEl1(null); // Close the second dropdown menu
   };
 
   const handleClose = () => {
     setAnchorEl(null);
     setAnchorEl1(null);
   };
+
   return (
     <div>
       <DropdownMenu
@@ -54,7 +48,7 @@ const CancelButtonPage = () => {
             <Button
               variant="contained"
               color="secondary"
-              className="h-[40px] sm:text-[16px] flex gap-8  leading-none "
+              className="h-[40px] sm:text-[16px] flex gap-8 leading-none"
               aria-label="Manage Sections"
               size="large"
               endIcon={<DownArrowwhite className="cursor-pointer" />}
@@ -69,12 +63,12 @@ const CancelButtonPage = () => {
         <div className="min-w-[400px] p-20">
           <p className="text-title font-600 text-[1.6rem]">Client</p>
 
-          <div className="relative w-full mt-10 mb-3 sm:mb-0 flex ">
+          <div className="relative w-full mt-10 mb-3 sm:mb-0 flex">
             <DropdownMenu
               marginTop={"mt-20"}
               button={
                 <div
-                  className="relative flex items-center justify-between w-full bg-bgGrey rounded-sm my-20"
+                  className="relative flex items-center justify-between w-full bg-bgGrey  my-20 hover:bg-transparent rounded-none"
                   onClick={handleButtonClick1}
                 >
                   <Button
@@ -84,23 +78,41 @@ const CancelButtonPage = () => {
                     aria-label="Manage Sections"
                     size="large"
                   >
-                    Select Cancel Options
+                    {selectedValue || "Select Cancel Options"}
                   </Button>
                   <span>
-                    <DownArrowBlank />
+                    {anchorEl1 ? <DownArrowBlank /> : <UpArrowBlank />}
                   </span>
                 </div>
               }
               anchorEl={anchorEl1}
               handleClose={handleClose}
             >
-              <div className="w-[375px] ">
-                <MenuItem>Cancel immediately</MenuItem>
-                <MenuItem>Cancel at the end of billing cycle</MenuItem>
-                <MenuItem></MenuItem>
+              <div className="w-[375px] flex flex-col py-20">
+                <MenuItem
+                  onClick={() => handleMenuItemClick("Cancel immediately")}
+                  className="px-36 py-10 text-[14px] font-400"
+                >
+                  Cancel immediately
+                </MenuItem>
+                <MenuItem
+                  onClick={() =>
+                    handleMenuItemClick("Cancel at the end of billing cycle")
+                  }
+                  className="px-36 py-10 text-[14px] font-400"
+                >
+                  Cancel at the end of billing cycle
+                </MenuItem>
+                <MenuItem
+                  onClick={() => handleMenuItemClick("Cancel on custom date")}
+                  className="px-36 py-10 text-[14px] font-400"
+                >
+                  Cancel on custom date
+                </MenuItem>
               </div>
             </DropdownMenu>
           </div>
+
           <div className="flex pt-10">
             <Button
               variant="contained"

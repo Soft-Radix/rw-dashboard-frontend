@@ -10,28 +10,28 @@ const rows = [
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
-    status: "PDF",
+    status: "Unassigned",
   },
   {
     name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
-    status: "PDF",
+    status: "Unassigned",
   },
   {
     name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
-    status: "PDF",
+    status: "Unassigned",
   },
   {
     name: "Penelope",
     agents: "Feb 13, 2024",
     task: "Lorem ipsum dolor sit amet",
     DueDate: 300,
-    status: "PDF",
+    status: "Unassigned",
   },
 ];
 const ItemTable = () => {
@@ -88,9 +88,13 @@ const ItemTable = () => {
                 />
                 {row.name}
               </TableCell>
-              <TableCell align="center">{row.task}</TableCell>
-              <TableCell align="center">${row.DueDate}</TableCell>
-              <TableCell align="center" className="whitespace-nowrap">
+              <TableCell align="center" className="font-500">
+                {row.task}
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                ${row.DueDate}
+              </TableCell>
+              <TableCell align="center" className="whitespace-nowrap font-500">
                 <span
                   className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Unassigned" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}

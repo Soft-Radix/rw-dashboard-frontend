@@ -70,9 +70,15 @@ const SubLogTable = () => {
                 },
               }}
             >
-              <TableCell scope="row">{row.title}</TableCell>
-              <TableCell align="center">${row.Date}</TableCell>
-              <TableCell align="center">{row.status}</TableCell>
+              <TableCell scope="row" className="font-500">
+                {row.title}
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                ${row.Date}
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                {row.status}
+              </TableCell>
             </TableRow>
           ))}
         </>
