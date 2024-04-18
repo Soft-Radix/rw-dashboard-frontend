@@ -33,7 +33,7 @@ const TabComponent: React.FC<TabProps> = ({ tabs }) => {
                             key={tab.id}
                             className={`${activeTab === tab.id
                                 ? 'border-b-[3px] border-secondary text-secondary'
-                                : 'border-b border-transparent'
+                                : 'border-b border-transparent text-para_light'
                                 } py-2 pr-[10px] focus:outline-none text-[1.8rem] font-500`}
                             onClick={() => {
                                 setActiveTab(tab.id)
