@@ -222,7 +222,7 @@ export default function SubscriptionDetails() {
                           In Progress
                         </Button>
                       </div>
-                      <div className="flex text-[2rem] text-para_light ">
+                      <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-8 ">
                         <div className="flex items-center pr-20">
                           <span>
                             <Timericon />
@@ -236,7 +236,7 @@ export default function SubscriptionDetails() {
                           />
                           <span>info456@gmail.com</span>
                         </div>
-                        <div className="flex items-center px-20">
+                        <div className="flex items-center sm:px-20">
                           <span>
                             <img
                               src="../assets/icons/ph_phone.svg"
@@ -247,7 +247,7 @@ export default function SubscriptionDetails() {
                         </div>
                       </div>
 
-                      <div className="flex items-baseline  w-full py-20 gap-14">
+                      <div className="flex items-baseline w-full py-20 gap-14 flex-col">
                         <div className="flex flex-col items-start gap-14">
                           <span className="text-[1.8rem] text-title font-500">
                             Company Name

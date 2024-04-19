@@ -3,6 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { Link } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
 import InputField from "src/app/components/InputField";
 
@@ -22,10 +23,10 @@ export default function ForgotPassword() {
           <div className="flex items-center">
             <img src="assets/icons/remote-icon.svg" alt="" />
           </div>
-
           <Typography className="mt-96 text-[48px] font-bold leading-tight tracking-tight">
             Forgot Password
           </Typography>
+
           <div className="mt-2 flex items-baseline font-medium">
             <Typography className="text-[18px] text-[#757982] mt-8 max-w-[480px]">
               Please enter your email address and we will send you a one-time
@@ -41,16 +42,18 @@ export default function ForgotPassword() {
               label="Email Address"
               placeholder="Enter Email Address"
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              className="mt-40 w-full h-[50px] text-[18px] font-bold"
-              aria-label="Log In"
-              size="large"
-              onClick={() => formik.handleSubmit()}
-            >
-              Send
-            </Button>
+            <Link to="/otp-verification">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="mt-40 w-full h-[50px] text-[18px] font-bold"
+                aria-label="Log In"
+                size="large"
+                onClick={() => formik.handleSubmit()}
+              >
+                Send
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Paper>

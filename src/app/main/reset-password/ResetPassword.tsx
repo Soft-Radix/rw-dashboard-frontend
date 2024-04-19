@@ -3,6 +3,7 @@ import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
+import { Link } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
 import InputField from "src/app/components/InputField";
 
@@ -49,16 +50,18 @@ export default function ResetPassword() {
               type="password"
               placeholder="Enter New Password"
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              className="mt-40 w-full h-[50px] text-[18px] font-bold"
-              aria-label="Log In"
-              size="large"
-              onClick={() => formik.handleSubmit()}
-            >
-              Reset
-            </Button>
+            <Link to="/sign-up">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="mt-40 w-full h-[50px] text-[18px] font-bold"
+                aria-label="Log In"
+                size="large"
+                onClick={() => formik.handleSubmit()}
+              >
+                Reset
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Paper>

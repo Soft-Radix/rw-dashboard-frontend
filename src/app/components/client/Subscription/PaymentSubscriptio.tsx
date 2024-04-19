@@ -28,13 +28,13 @@ function PaymentMethods() {
   return (
     <>
       <div className="shadow-sm bg-white rounded-lg py-24 ">
-        <div className="flex justify-between flex-wrap gap-y-[32px] ">
+        <div className="flex justify-between flex-wrap gap-y-[32px] flex-col sm:flex-row ">
           {cardsData.map((card, index) => (
             <>
-              <div className="w-[49%]  ">
+              <div className="sm:w-[49%]  ">
                 <Typography
                   variant="h6"
-                  className="mb-4 text-[20px] font-600 text-[#0A0F18] py-20"
+                  className="mb-4 text-[20px] font-600 text-[#0A0F18] py-20 px-20"
                 >
                   {card.title}
                 </Typography>

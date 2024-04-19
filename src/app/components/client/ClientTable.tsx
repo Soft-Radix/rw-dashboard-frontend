@@ -130,8 +130,6 @@ export default function ClientTable() {
     <>
       <div>
         <div className="bg-white rounded-lg shadow-sm">
-          <div className="h-24" />
-
           <CommonTable
             headingIcon={true}
             headIcon={Array.from({ length: 5 }, (_, index) => (
@@ -155,31 +153,35 @@ export default function ClientTable() {
                     },
                   }}
                 >
-                  <TableCell scope="row">
-                    <div className="flex items-center">
+                  <TableCell
+                    scope="row"
+                    className="flex items-center gap-8 font-500"
+                  >
+                    <span className="flex items-center gap-10">
                       <Checkbox
                         sx={{ padding: "4px" }}
                         color="primary"
                         defaultChecked={row.defaultChecked}
-                        inputProps={{
-                          "aria-labelledby": `table-checkbox-${index}`,
-                        }}
-                      />{" "}
+                      />
                       {row.id}
-                    </div>
+                    </span>
                   </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
                     {row.name}
                   </TableCell>
-
-                  <TableCell align="center" className="whitespace-nowrap">
+                  <TableCell align="center" className="font-500">
                     {row.companyName}
                   </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
                     {row.date}
                   </TableCell>
-
-                  <TableCell scope="row" align="center">
+                  <TableCell align="center" className="whitespace-nowrap">
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}

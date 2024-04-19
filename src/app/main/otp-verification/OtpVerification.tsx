@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { useFormik } from "formik";
 import { useState } from "react";
 import OTPInput from "react-otp-input";
+import { Link } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
 
 export default function OtpVerification() {
@@ -46,16 +47,18 @@ export default function OtpVerification() {
               inputStyle="h-[55px] !w-[62px] bg-[#F6F6F6] rounded-[7px] text-[16px] border focus:border-[#4F46E5]"
               renderInput={(props) => <input {...props} />}
             />
-            <Button
-              variant="contained"
-              color="secondary"
-              className="mt-40 w-full h-[50px] text-[18px] font-bold"
-              aria-label="Log In"
-              size="large"
-              onClick={() => formik.handleSubmit()}
-            >
-              Submit
-            </Button>
+            <Link to="/reset-password">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="mt-40 w-full h-[50px] text-[18px] font-bold"
+                aria-label="Log In"
+                size="large"
+                onClick={() => formik.handleSubmit()}
+              >
+                Submit
+              </Button>
+            </Link>
             <div className="mt-28 flex items-center cursor-pointer justify-center">
               <Typography color="text.secondary" className="font-medium">
                 Resend OTP in
