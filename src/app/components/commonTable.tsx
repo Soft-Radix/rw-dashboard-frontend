@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -19,7 +20,7 @@ interface IProps {
   headIcon?: any;
   sortColumn?: string;
   sortOrder?: string;
-  onSort?: (column: string) => void
+  onSort?: (column: string) => void;
 }
 function CommonTable({
   children,
@@ -27,7 +28,8 @@ function CommonTable({
   headingRowProps,
   useBorderDesign,
   headingIcon,
-  headIcon, onSort
+  headIcon,
+  onSort,
 }: IProps) {
   return (
     <TableContainer>
@@ -39,11 +41,11 @@ function CommonTable({
         <TableHead
           className={`${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
 
-          sx={{
-            "& th": {
-              borderBottom: "1px solid #EDF2F6",
-            },
-          }}
+          // sx={{
+          //   "& th": {
+          //     borderBottom: "1px solid #EDF2F6",
+          //   },
+          // }}
         >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
@@ -51,14 +53,15 @@ function CommonTable({
                 className={`th ${index === 0 ? "pl-20" : ""}`}
                 key={index}
                 align={
-                  headings.length - 1 === index || index === 0 ? "left" : "center"
+                  headings.length - 1 === index || index === 0
+                    ? "left"
+                    : "center"
                 }
                 onClick={() => {
-                  if (typeof onSort == 'function') {
-                    onSort(item)
-                  } else null
-                }
-                }
+                  if (typeof onSort == "function") {
+                    onSort(item);
+                  } else null;
+                }}
               >
                 {headingIcon ? (
                   <TableCell
@@ -69,7 +72,14 @@ function CommonTable({
                     }
                     className={`th ${index === 0 ? "flex gap-10 justify-start items-center" : "flex gap-10 justify-center items-center"}`}
                   >
-                    {headIcon[index]} {item}
+                    {index === 0 && (
+                      <div>
+                        <Checkbox />
+                      </div>
+                    )}
+                    <div className="flex items-center gap-10">
+                      {headIcon[index]} {item}
+                    </div>
                   </TableCell>
                 ) : (
                   <>{item}</>

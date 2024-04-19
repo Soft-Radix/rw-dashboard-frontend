@@ -1,27 +1,19 @@
-import {
-  Button,
-  InputAdornment,
-  Tab,
-  Tabs,
-  TextField,
-  Theme,
-} from "@mui/material";
+import { Button, InputAdornment, TextField, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
-import ClientTabButton from "src/app/components/client/ClientTabButton";
-import ClientTable from "src/app/components/client/ClientTable";
-import ThemePageTable from "src/app/components/tasks/TaskPageTable";
+import CommonTab from "../../components/CommonTab";
 
-import MenuItem from "@mui/material/MenuItem";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import DropdownMenu from "src/app/components/Dropdown";
-import InputField from "src/app/components/InputField";
 import AddClient from "src/app/components/client/AddClient";
 import DeleteClient from "src/app/components/client/DeleteClient";
-import SearchInput from "src/app/components/SearchInput";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
+import AssignedAgents from "src/app/components/client/components/AssignedAgents";
+import CustomButton from "src/app/components/custom_button";
+import ClientTable from "src/app/components/client/ClientTable";
+import ClientTabButton from "src/app/components/client/ClientTabButton";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -60,31 +52,56 @@ export default function Clients() {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const [selectedTab, setSelectedTab] = useState(0);
+
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
-  const [selectedValue, setSelectedValue] = useState<string | null>(null);
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
-  };
-  const handleMenuItemClick = (value: string) => {
-    setSelectedValue(value);
-    setAnchorEl(null);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const showList = () => {
-    alert("hii");
-  };
+  const tabs = [
+    {
+      id: "all",
+      label: "All",
+      content: <ClientTable />,
+      actionBtn: ClientTabButton,
+    },
+    {
+      id: "active",
+      label: "Active",
+      content: <AssignedAgents />,
+      actionBtn: () => null,
+    },
+    {
+      id: "passed",
+      label: "Passed",
+      content: <AssignedAgents />,
+      actionBtn: () => null,
+    },
+    {
+      id: "cancel",
+      label: "Cancelled",
+      content: <AssignedAgents />,
+      actionBtn: () => null,
+    },
+    {
+      id: "pastDue",
+      label: "Past Due",
+      content: <AssignedAgents />,
+      actionBtn: () => null,
+    },
+  ];
 
   return (
-    <div>
+    <>
       <TitleBar title="Clients">
-        <div className="flex items-center gap-20">
+        <div className="flex sm:items-center flex-col sm:flex-row items-start gap-20">
           <div>
             <DropdownMenu
               marginTop={"mt-20"}
@@ -110,7 +127,7 @@ export default function Clients() {
               handleClose={handleClose}
             >
               <div className="w-[375px]">
-                <div className="w-full border-b-1 flex pt-10">
+                <div className="w-full border-b-1 flex">
                   <TextField
                     hiddenLabel
                     id="filled-hidden-label-small"
@@ -175,49 +192,9 @@ export default function Clients() {
 
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-md">
-            <div className="flex items-center justify-between ">
-              <Tabs
-                value={selectedTab}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-                className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
-                sx={{
-                  "& .MuiTabs-flexContainer": {
-                    gap: "50px",
-                  },
-                  "& .MuiTab-root.Mui-selected": {
-                    color: theme.palette.secondary.main,
-                  },
-                  "& .MuiTabs-indicator": {
-                    backgroundColor: theme.palette.secondary.main,
-                  },
-                }}
-              >
-                <Tab label="All" {...a11yProps(0)} />
-                <Tab label="Active" {...a11yProps(1)} />
-                <Tab label="Paused" {...a11yProps(2)} />
-                <Tab label="Cancelled" {...a11yProps(3)} />
-                <Tab label="Past due" {...a11yProps(4)} />
-              </Tabs>
-
-              <ClientTabButton />
-            </div>
-            <CustomTabPanel value={selectedTab} index={0}>
-              <ClientTable />
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={1}>
-              <ThemePageTable />
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={2}>
-              <ThemePageTable />
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={3}>
-              <ThemePageTable />
-            </CustomTabPanel>
-            <CustomTabPanel value={selectedTab} index={4}>
-              <ThemePageTable />
-            </CustomTabPanel>
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem]">
+            <CommonTab tabs={tabs} />
+            <div className="h-24" />
           </div>
         </div>
       </div>
@@ -226,6 +203,6 @@ export default function Clients() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
       />
-    </div>
+    </>
   );
 }
