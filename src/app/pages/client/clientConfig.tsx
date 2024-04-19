@@ -6,6 +6,7 @@ import ar from "./i18n/ar";
 
 const Client = lazy(() => import("./Client"));
 const ClientDetail = lazy(() => import("../../components/client/ClientDetail"));
+const AddSubscription = lazy(() => import("../../components/client/Subscription/AddSubscription"));
 const SubscriptionDetails = lazy(
   () => import("../../components/client/Subscription/SubscriptionDetails")
 );
@@ -32,6 +33,10 @@ const ClientConfig = {
     },
     {
       path: "admin/client/add-subscription",
+      element: <AddSubscription />,
+    },
+    {
+      path: "admin/client/subscription-detail",
       element: <SubscriptionDetails />,
     },
   ],

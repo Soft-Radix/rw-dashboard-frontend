@@ -3,18 +3,15 @@ import { FormikProps } from "formik";
 import { useState } from "react";
 
 interface CustomButtonProps {
-  // className?: string;
   name: string;
   label?: string;
   formik?: FormikProps<unknown>;
   type?: string;
   inputClass?: string;
   hideTopPadding?: boolean;
-  // props: TextFieldProps;
 }
 
-function InputField({
-  // className,
+function InputFieldWithOption({
   name,
   formik,
   label,
@@ -30,11 +27,6 @@ function InputField({
 
   return (
     <div className={`${rest.className} common-inputField w-full`}>
-      {label && (
-        <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
-          {label}
-        </FormLabel>
-      )}
       <div className={`input_wrap ${inputClass}`}>
         <TextField
           type={isType}
@@ -73,4 +65,4 @@ function InputField({
   );
 }
 
-export default InputField;
+export default InputFieldWithOption;
