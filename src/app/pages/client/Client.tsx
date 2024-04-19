@@ -1,4 +1,11 @@
-import { Button, Tab, Tabs, Theme } from "@mui/material";
+import {
+  Button,
+  InputAdornment,
+  Tab,
+  Tabs,
+  TextField,
+  Theme,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
@@ -80,6 +87,7 @@ export default function Clients() {
         <div className="flex items-center gap-20">
           <div>
             <DropdownMenu
+              marginTop={"mt-20"}
               button={
                 <div
                   className="relative flex items-center"
@@ -101,10 +109,40 @@ export default function Clients() {
               anchorEl={anchorEl}
               handleClose={handleClose}
             >
-              <div className="px-20 mt-20">
-                <SearchInput placeholder="Search" name="name" />
+              <div className="w-[375px]">
+                <div className="w-full border-b-1 flex pt-10">
+                  <TextField
+                    hiddenLabel
+                    id="filled-hidden-label-small"
+                    defaultValue=""
+                    variant="standard"
+                    sx={{
+                      pl: 2,
+                      pr: 2,
+                      pt: 1,
+                      width: "43ch",
+                      "& .MuiInputBase-input": {
+                        textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                        border: "none", // Hide the border of the input element
+                      },
+                      "& .MuiInput-underline:before": {
+                        borderBottom: "none !important", // Hide the underline (if using underline variant)
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottom: "none !important", // Hide the underline (if using underline variant)
+                      },
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon />
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </div>
               </div>
-              <div className="flex items-center gap-10 px-2 pb-20">
+              <div className="flex items-center gap-10 px-20 p-20">
                 <span>
                   <img src={img1} alt=""></img>
                 </span>

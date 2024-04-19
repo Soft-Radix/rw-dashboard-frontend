@@ -48,9 +48,9 @@ const ItemTable = () => {
   });
   return (
     <div className="bg-white rounded-lg shadow-sm py-[2rem] mx-28 mb-[3rem]">
-      <div className="flex items-center justify-between  py-24 px-[2rem] ">
+      <div className="flex items-center justify-between  pb-24 px-[2rem] ">
         <h5 className="text-title text-xl font-600 flex items-center gap-12">
-          Billing History
+          Subscription Details
         </h5>
       </div>
       <CommonTable
@@ -80,7 +80,7 @@ const ItemTable = () => {
             >
               <TableCell
                 scope="row"
-                className="flex items-center gap-8 font-500"
+                className="flex items-center gap-8 font-500 flex-col sm:flex-row"
               >
                 <img
                   src={`../assets/images/avatars/male-01.jpg`}
