@@ -26,7 +26,8 @@ import {
 } from "public/assets/icons/dashboardIcons";
 import InputField from "../../InputField";
 import SelectField from "../../tableSelectField";
-import { MonthlyOptions, StyledMenuItem } from "src/utils";
+import SelectUser from "../../selectField";
+import { MonthlyOptions, StyledMenuItem, EmployOptions } from "src/utils";
 
 const rows = [
   {
@@ -83,8 +84,7 @@ export default function AddSubscription() {
       <>
         <div className="flex items-center gap-20 mr-20 ">
           <Button
-            className="rounded-lg px-20   text-secondary
-         bg-secondary_bg w-max  font-600 items-center "
+            className="items-center px-20 rounded-lg text-secondary bg-secondary_bg w-max font-600 "
             endIcon={<EditIcon fill="#4F46E5" />}
           >
             Edit Column
@@ -154,43 +154,41 @@ export default function AddSubscription() {
   const selectCurrency = (): JSX.Element => {
     return (
       <>
-        <div>
-          <DropdownMenu
-            marginTop={"mt-[-20px] "}
-            button={
-              <div className="relative w-max" onClick={handleButtonClick}>
-                <div className="p-[2.7rem] flex items-center">
-                  <span className="text-20 font-600 text-[#0A0F18]">
-                    Currency :{" "}
-                  </span>
-                  <span className="inline-block pl-5 text-secondary font-600 text-18">
-                    {" "}
-                    Us Dollar (USD)$
-                  </span>
-                  <span className="inline-block ml-10">
-                    <DownArrowIcon className="cursor-pointer" />
-                  </span>
-                </div>
-              </div>
-            }
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-          >
-            <div className="w-[375px] p-20 ">
-              <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
-                <h4>$ USD</h4>
+        <DropdownMenu
+          marginTop={"mt-[-20px] "}
+          button={
+            <div className="relative w-max" onClick={handleButtonClick}>
+              <div className="p-[2.7rem] flex items-center">
+                <span className="text-20 font-600 text-[#0A0F18]">
+                  Currency :{" "}
+                </span>
+                <span className="inline-block pl-5 text-secondary font-600 text-18">
+                  {" "}
+                  Us Dollar (USD)$
+                </span>
+                <span className="inline-block ml-10">
+                  <DownArrowIcon className="cursor-pointer" />
+                </span>
               </div>
             </div>
-          </DropdownMenu>
-        </div>
+          }
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+        >
+          <div className="w-[375px] p-20 ">
+            <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+              <h4>$ USD</h4>
+            </div>
+          </div>
+        </DropdownMenu>
       </>
     );
   };
   return (
     <>
       <TitleBar title="Add Subscriptions" />
-      <div className="mb-[3rem] px-[3rem] ">
-        <div className="bg-white rounded-lg shadow-sm ">
+      <div className="px-[3rem]">
+        <div className="bg-white rounded-lg shadow-sm pb-[2.7rem] mb-[3rem]">
           <div className="flex items-center justify-between">
             {selectCurrency()}
             {SubButton()}
@@ -253,7 +251,7 @@ export default function AddSubscription() {
                   </TableCell>
                   <TableCell
                     align="center"
-                    className="whitespace-nowrap font-500 cursor-pointer "
+                    className="cursor-pointer whitespace-nowrap font-500 "
                   >
                     <TextField
                       hiddenLabel
@@ -334,9 +332,48 @@ export default function AddSubscription() {
               ))}
             </>
           </CommonTable>
-          <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+          <div className="flex justify-end py-14 px-[3rem] mt-[2rem] w-full  md:w-9/12">
+            <SelectUser
+              formik={formik}
+              name="status"
+              label="Assign employees to this Subscriptions"
+              placeholder="Select"
+              sx={{
+                "& .radioIcon": { display: "none" },
+              }}
+            >
+              {EmployOptions.map((item) => (
+                <StyledMenuItem key={item.value} value={item.value}>
+                  {item.label}
+                </StyledMenuItem>
+              ))}
+            </SelectUser>
           </div>
+        </div>
+        <div className="bg-white rounded-lg shadow-sm py-[2.7rem] mb-[3rem]">
+          <h5 className="text-[#0A0F18] text-20 font-500 mb-20 px-[3rem] ">
+            Summary
+          </h5>
+          <ul className="flex flex-col text-14 gap-[4rem]">
+            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
+              <span className="text-para_light  px-[3rem]">
+                Subtotal---------------------------------------------------
+              </span>
+              <span className="inline-block ml-20 font-500">$444.00</span>
+            </li>
+            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
+              <span className="text-para_light  px-[3rem]">
+                Due Now--------------------------------------------------
+              </span>
+              <span className="inline-block ml-20 font-500">$444.00</span>
+            </li>
+            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
+              <span className="text-para_light  px-[3rem]">
+                Future payments------------------------------------------
+              </span>
+              <span className="inline-block ml-20 font-500">$444.00</span>
+            </li>
+          </ul>
         </div>
       </div>
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />

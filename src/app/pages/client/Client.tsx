@@ -101,7 +101,7 @@ export default function Clients() {
   return (
     <>
       <TitleBar title="Clients">
-        <div className="flex sm:items-center flex-col sm:flex-row items-start gap-20">
+        <div className="flex flex-col items-start gap-20 sm:items-center sm:flex-row">
           <div>
             <DropdownMenu
               marginTop={"mt-20"}
@@ -127,7 +127,7 @@ export default function Clients() {
               handleClose={handleClose}
             >
               <div className="w-[375px]">
-                <div className="w-full border-b-1 flex">
+                <div className="flex w-full border-b-1">
                   <TextField
                     hiddenLabel
                     id="filled-hidden-label-small"
@@ -159,7 +159,7 @@ export default function Clients() {
                   />
                 </div>
               </div>
-              <div className="flex items-center gap-10 px-20 p-20">
+              <div className="flex items-center gap-10 p-20 px-20">
                 <span>
                   <img src={img1} alt=""></img>
                 </span>

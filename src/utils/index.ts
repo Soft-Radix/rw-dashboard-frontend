@@ -1,6 +1,6 @@
 import { MenuItem, styled, useTheme } from "@mui/material";
 
-type MonthlyProp = {
+type SelectProp = {
   value: string,
   label: string
 }
@@ -47,7 +47,15 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 
-export const MonthlyOptions: MonthlyProp[] = [
+export const MonthlyOptions: SelectProp[] = [
+  { value: "One", label: "One time" },
+  { value: "Monthly", label: "Monthly" },
+  { value: "Quarterly", label: "Quarterly" },
+  { value: "Semi", label: "Semi annually" },
+  { value: "Add weekly and bi-weekly", label: "Annually" },
+  { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+];
+export const EmployOptions: SelectProp[] = [
   { value: "One", label: "One time" },
   { value: "Monthly", label: "Monthly" },
   { value: "Quarterly", label: "Quarterly" },
