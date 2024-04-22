@@ -1,5 +1,12 @@
 import * as Yup from "yup";
 
+const noSpaceMessage = "No spaces allowed";
+
+const emailField = {
+    email: Yup.string().required("Email is required")
+        .email('Invalid email format') // Check for a valid email structure
+}
+
 /**
  * Login Validation Schema
  */
@@ -9,7 +16,8 @@ const loginSchema = Yup.object({
 });
 
 const forgotPasswordSchema = Yup.object({
-    email: Yup.string().required("Email is required"),
+    email: Yup.string().required("Email is required")
+        .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
 });
 
 const resetPassSchema = Yup.object({
@@ -23,10 +31,12 @@ const resetPassSchema = Yup.object({
 });
 
 const addClientSchema = Yup.object({
-    first_name: Yup.string().required("First name is required"),
-    last_name: Yup.string().required("Last name is required"),
-    email: Yup.string().required("Last name is required"),
-    company_name: Yup.string().required("Last name is required"),
+    first_name: Yup.string().required("First name is required")
+        .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    last_name: Yup.string().required("Last name is required")
+        .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    ...emailField,
+    company_name: Yup.string().required("Compnay name is required")
 });
 
 
