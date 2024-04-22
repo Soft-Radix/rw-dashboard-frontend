@@ -1,9 +1,9 @@
 import { MenuItem, styled, useTheme } from "@mui/material";
 
 type SelectProp = {
-  value: string,
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 /**
  * Get access token from local storage
@@ -12,7 +12,6 @@ export const getLocalStorage = (item) => {
   let data = localStorage.getItem(item);
   return data ? JSON.parse(data) : null;
 };
-
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   display: "flex",
@@ -46,7 +45,6 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   },
 }));
 
-
 export const MonthlyOptions: SelectProp[] = [
   { value: "One", label: "One time" },
   { value: "Monthly", label: "Monthly" },
@@ -62,4 +60,12 @@ export const EmployOptions: SelectProp[] = [
   { value: "Semi", label: "Semi annually" },
   { value: "Add weekly and bi-weekly", label: "Annually" },
   { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+];
+export const UnitDiscount: SelectProp[] = [
+  { value: "percentage", label: "%" },
+  { value: "Doller", label: "$" },
+];
+export const BillingTermsOptions: SelectProp[] = [
+  { value: "One", label: "Fixed number of payments" },
+  { value: "two", label: "Automatically renew until cancelled" },
 ];

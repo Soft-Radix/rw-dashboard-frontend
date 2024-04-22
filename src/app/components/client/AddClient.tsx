@@ -1,14 +1,8 @@
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { FormLabel, Grid, MenuItem, styled } from "@mui/material";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
-import CommonModal from "../CommonModal";
-import DropdownMenu from "../Dropdown";
-import InputField from "../InputField";
-import CommonChip from "../chip";
-import CustomButton from "../custom_button";
+import { Dispatch, SetStateAction } from "react";
 import * as Yup from "yup";
-
+import CommonModal from "../CommonModal";
+import InputField from "../InputField";
 
 interface IProps {
   isOpen: boolean;
@@ -16,7 +10,6 @@ interface IProps {
 }
 
 function AddClient({ isOpen, setIsOpen }: IProps) {
-
   const validationSchema = Yup.object({
     fName: Yup.string().required("First name is required"),
     lName: Yup.string().required("Last name is required"),
@@ -28,12 +21,12 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
       lName: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => { },
+    onSubmit: (values) => {},
   });
 
   const handleSubmit = () => {
-    formik.handleSubmit()
-  }
+    formik.handleSubmit();
+  };
 
   return (
     <CommonModal
