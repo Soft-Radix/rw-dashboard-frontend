@@ -122,7 +122,10 @@ export default function AddSubscription() {
             handleClose={handleClose}
           >
             <div className="w-[375px] pt-1 pb-20 flex flex-col gap-10  ">
-              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
+              <MenuItem
+                className="rounded-lg hover:bg-[#E7E8E9] py-10"
+                onClick={() => setCustomLine(true)}
+              >
                 <label
                   htmlFor="agents"
                   style={{
@@ -133,10 +136,14 @@ export default function AddSubscription() {
                     color: "#111827",
                   }}
                 >
-                  Add one time discount
+                  Select from product library
                 </label>
               </MenuItem>
-              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
+
+              <MenuItem
+                className="rounded-lg hover:bg-[#E7E8E9] py-10"
+                onClick={() => setIsLineModal(true)}
+              >
                 <label
                   htmlFor="activity"
                   style={{
@@ -147,21 +154,7 @@ export default function AddSubscription() {
                     color: "#111827",
                   }}
                 >
-                  Add one time fee
-                </label>
-              </MenuItem>
-              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
-                <label
-                  htmlFor="activity"
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "16px",
-                    fontWeight: "500",
-                    color: "#111827",
-                  }}
-                >
-                  Add one time tax
+                  Create custom line item
                 </label>
               </MenuItem>
             </div>
@@ -321,7 +314,7 @@ export default function AddSubscription() {
                       className="bg-bgGrey border-solid border-1 border-[#9DA0A6] "
                       sx={{
                         borderRadius: "10px",
-                        pl: 2,
+                        pl: "4px",
                         pr: 2,
                         pt: 1,
                         pb: 1,
@@ -410,7 +403,6 @@ export default function AddSubscription() {
                         "&  .MuiInputBase-input": {
                           border: "0.5px solid #9DA0A6",
                           borderRadius: "7px",
-
                           maxWidth: "80 px", // Limit the width of the input
                           overflow: "hidden", // Hide overflowing content
                           textOverflow: "ellipsis", // Display ellipsis for truncated text
