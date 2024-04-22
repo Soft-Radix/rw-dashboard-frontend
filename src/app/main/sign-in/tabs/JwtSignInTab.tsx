@@ -1,10 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
+import { logIn } from "app/store/Auth";
 import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "app/store/store";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
@@ -42,8 +44,8 @@ function jwtSignInTab() {
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
-      email: "",
-      password: "",
+      email: "admin@yopmail.com",
+      password: "123456",
     },
     // validationSchema: validationSchemaProperty,
     onSubmit: (values) => {
@@ -70,36 +72,36 @@ function jwtSignInTab() {
 
   function onSubmit(formData: FormType) {
     const { email, password } = formData;
-
+    // dispatch(logIn({ email, password }));
     jwtService
       .signIn({
         email,
         password,
       })
-      .catch(
-        (
-          error: AxiosError<
-            {
-              type:
-                | "email"
-                | "password"
-                | "remember"
-                | `root.${string}`
-                | "root";
-              message: string;
-            }[]
-          >
-        ) => {
-          const errorData = error.response.data;
+    // .catch(
+    //   (
+    //     error: AxiosError<
+    //       {
+    //         type:
+    //         | "email"
+    //         | "password"
+    //         | "remember"
+    //         | `root.${string}`
+    //         | "root";
+    //         message: string;
+    //       }[]
+    //     >
+    //   ) => {
+    //     const errorData = error.response.data;
 
-          errorData.forEach((err) => {
-            setError(err.type, {
-              type: "manual",
-              message: err.message,
-            });
-          });
-        }
-      );
+    //     errorData.forEach((err) => {
+    //       setError(err.type, {
+    //         type: "manual",
+    //         message: err.message,
+    //       });
+    //     });
+    //   }
+    // );
   }
 
   return (

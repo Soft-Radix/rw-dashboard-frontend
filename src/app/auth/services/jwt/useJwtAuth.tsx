@@ -3,6 +3,9 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import _ from '@lodash';
 import { PartialDeep } from 'type-fest';
+import { useAppDispatch } from 'app/store/store';
+import { logIn } from 'app/store/Auth';
+import { getLocalStorage } from 'src/utils';
 
 const defaultAuthConfig = {
 	tokenStorageKey: 'jwt_access_token',
@@ -35,11 +38,15 @@ export type JwtAuthProps<T> = {
 	onError?: (error: AxiosError) => void;
 };
 
-export type JwtAuth<User, SignInPayload, SignUpPayload> = {
+type SignInPayload = {
+	email?: string;
+	password?: string;
+};
+export type JwtAuth<User, SignUpPayload> = {
 	user: User;
 	isAuthenticated: boolean;
 	isLoading: boolean;
-	signIn: (U: SignInPayload) => Promise<AxiosResponse<User, AxiosError>>;
+	signIn: (U: SignInPayload) => void;
 	signOut: () => void;
 	signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
 	updateUser: (U: PartialDeep<User>) => void;
@@ -57,10 +64,11 @@ export type JwtAuth<User, SignInPayload, SignUpPayload> = {
  * It uses Axios interceptors to sign out the user if the refresh token is invalid or expired
  */
 
-const useJwtAuth = <User, SignInPayload, SignUpPayload>(
+const useJwtAuth = <User, SignUpPayload>(
 	props: JwtAuthProps<User>
-): JwtAuth<User, SignInPayload, SignUpPayload> => {
+): JwtAuth<User, SignUpPayload> => {
 	const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } = props;
+	const dispatch = useAppDispatch();
 
 	// Merge default config with the one from the props
 	const authConfig = _.defaults(config, defaultAuthConfig);
@@ -81,8 +89,8 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	}, []);
 
 	const resetSession = useCallback(() => {
-		localStorage.removeItem(authConfig.tokenStorageKey);
-		delete axios.defaults.headers.common.Authorization;
+		// localStorage.removeItem(authConfig.tokenStorageKey);
+		// delete axios.defaults.headers.common.Authorization;
 	}, []);
 
 	/**
@@ -99,7 +107,6 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 		setSession(accessToken, userData);
 		setIsAuthenticated(true);
 		setUser(userData);
-
 		onSignedIn(userData);
 	}, []);
 	/**
@@ -119,6 +126,7 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	 * Handle sign-in failure
 	 */
 	const handleSignInFailure = useCallback((error: AxiosError) => {
+
 		resetSession();
 
 		setIsAuthenticated(false);
@@ -170,27 +178,29 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	useEffect(() => {
 		const attemptAutoLogin = async () => {
 			const accessToken = getAccessToken();
+			const userData = getLocalStorage('userDetail')
 
-			if (isTokenValid(accessToken)) {
-				try {
-					setIsLoading(true);
+			if (!!accessToken) {
+				handleSignInSuccess(userData, accessToken);
+				// try {
+				// 	setIsLoading(true);
 
-					const response: AxiosResponse<User> = await axios.get(authConfig.getUserUrl, {
-						headers: { Authorization: `Bearer ${accessToken}` }
-					});
+				// 	const response: AxiosResponse<User> = await axios.get(authConfig.getUserUrl, {
+				// 		headers: { Authorization: `Bearer ${accessToken}` }
+				// 	});
 
-					const userData = response?.data;
-					console.log(userData, 'userData');
+				// 	const userData = response?.data;
+				// 	console.log(userData, 'userData');
 
-					handleSignInSuccess(userData, accessToken);
+				// 	handleSignInSuccess(userData, accessToken);
 
-					return true;
-				} catch (error) {
-					const axiosError = error as AxiosError;
+				// 	return true;
+				// } catch (error) {
+				// 	const axiosError = error as AxiosError;
 
-					handleSignInFailure(axiosError);
-					return false;
-				}
+				// 	handleSignInFailure(axiosError);
+				// 	return false;
+				// }
 			} else {
 				resetSession();
 				return false;
@@ -216,25 +226,34 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	 * Sign in
 	 */
 	const signIn = async (credentials: SignInPayload) => {
-		const response = axios.post(authConfig.signInUrl, credentials);
+		// const response = axios.post(authConfig.signInUrl, credentials);
+		let response = dispatch(logIn({ email: credentials?.email, password: credentials?.password }));
 
-		response.then(
-			(res: AxiosResponse<{ user: User; access_token: string }>) => {
-				const userData = res?.data?.user;
-				const accessToken = res?.data?.access_token;
+		response.then(res => {
+			const { payload } = res
+			const userData = payload?.data?.user;
+			const accessToken = payload?.data?.access_token;
+			handleSignInSuccess(userData, accessToken);
+		}).catch((error: AxiosError) => {
+			console.log(error, 'error');
+		})
+		// response.then(
+		// 	(res: AxiosResponse<{ user: User; access_token: string }>) => {
+		// 		const userData = res?.data?.user;
+		// 		const accessToken = res?.data?.access_token;
 
-				handleSignInSuccess(userData, accessToken);
+		// 		handleSignInSuccess(userData, accessToken);
 
-				return userData;
-			},
-			(error) => {
-				const axiosError = error as AxiosError;
+		// 		return userData;
+		// 	},
+		// 	(error) => {
+		// 		const axiosError = error as AxiosError;
 
-				handleSignInFailure(axiosError);
+		// 		handleSignInFailure(axiosError);
 
-				return axiosError;
-			}
-		);
+		// 		return axiosError;
+		// 	}
+		// );
 
 		return response;
 	};
@@ -306,6 +325,9 @@ const useJwtAuth = <User, SignInPayload, SignUpPayload>(
 	 */
 	const refreshToken = async () => {
 		setIsLoading(true);
+
+		console.log('accessToken4544', 'accessToken4544');
+
 		try {
 			const response: AxiosResponse<string> = await axios.post(authConfig.tokenRefreshUrl);
 

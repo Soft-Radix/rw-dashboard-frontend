@@ -2,15 +2,20 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootStateType } from 'app/store/types';
 import ApiHelperFunction from 'src/api';
 
+// Define a type for the payload
+interface LoginPayload {
+    email: string;
+    password: string;
+}
+
 /**
  * API calling
  */
-export const logIn = createAsyncThunk("todos/1", async () => {
+export const logIn = createAsyncThunk("auth/login", async (payload: LoginPayload) => {
     const response = await ApiHelperFunction({
-        url: "todos/1", // end point
-        method: "get", // method
-        data: {}, // payload data
-        params: '' // query params
+        url: "auth/login", // end point
+        method: "post", // method
+        data: payload, // payload data
     });
     let resData = response?.data;
     return resData;
