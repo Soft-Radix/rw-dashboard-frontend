@@ -20,6 +20,7 @@ import useJwtAuth, { JwtAuth } from './services/jwt/useJwtAuth';
 import { User } from './user';
 import useFirebaseAuth from './services/firebase/useFirebaseAuth';
 import UserModel from './user/models/UserModel';
+import { resetSessionRedirectUrl } from '@fuse/core/FuseAuthorization/sessionRedirectUrl';
 
 /**
  * Initialize Firebase
@@ -175,7 +176,6 @@ function AuthRoute(props: AuthProviderProps) {
 			},
 			updateUser: (userData) => {
 				const authService = getAuthService();
-				console.log(authService, 'authService');
 
 				if (authService === 'jwt') {
 					return jwtService?.updateUser(userData);

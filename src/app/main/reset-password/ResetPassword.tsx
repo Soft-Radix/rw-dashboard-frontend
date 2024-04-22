@@ -2,24 +2,56 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import { restPassword } from "app/store/Auth";
+import { AuthRootState } from "app/store/Auth/Interface";
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
 import InputField from "src/app/components/InputField";
+import { resetPassSchema } from "src/formSchema";
 
+type FormType = {
+  cnfPassword: string;
+  password: string;
+};
 export default function ResetPassword() {
+  // State to track loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const dispatch = useAppDispatch()
+  const navigate = useNavigate();
+
+  const store = useSelector((store: AuthRootState) => store)
+
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
-      password: "",
-      confirmPassword: "",
+      cnfPassword: "",
+      password: ""
     },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    validationSchema: resetPassSchema,
+    onSubmit: (values) => { onSubmit(values) },
   });
+
+  async function onSubmit(formData: FormType) {
+    let data = {
+      password: formData.password,
+      email: store.auth?.email,
+    }
+    setIsLoading(true)
+    let { payload } = await dispatch(restPassword(data))
+    setIsLoading(false)
+    if (payload?.data?.status) {
+      navigate('/sign-in')
+    }
+  }
+
   return (
-    <div className="flex min-w-0 flex-1 flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start">
-      <Paper className="h-full w-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none flex justify-center">
+    <div className="flex flex-col items-center flex-1 min-w-0 sm:flex-row sm:justify-center md:items-start md:justify-start">
+      <Paper className="flex justify-center w-full h-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none">
         <CardContent className="mx-auto max-w-420 sm:mx-0 sm:w-420">
           <div className="flex items-center">
             <img src="assets/icons/remote-icon.svg" alt="" />
@@ -28,7 +60,7 @@ export default function ResetPassword() {
           <Typography className="mt-96 text-[48px] font-bold leading-tight tracking-tight">
             Reset Password
           </Typography>
-          <div className="mt-2 flex items-baseline font-medium">
+          <div className="flex items-baseline mt-2 font-medium">
             <Typography className="text-[18px] text-[#757982] mt-8 max-w-[480px]">
               Please reset your password by entering a new password.
             </Typography>
@@ -39,29 +71,28 @@ export default function ResetPassword() {
             <InputField
               formik={formik}
               name="password"
-              label="Old Password"
-              type="password"
-              placeholder="Enter Old Password"
-            />
-            <InputField
-              formik={formik}
-              name="confirmPassword"
               label="New Password"
               type="password"
               placeholder="Enter New Password"
             />
-            <Link to="/sign-up">
-              <Button
-                variant="contained"
-                color="secondary"
-                className="mt-40 w-full h-[50px] text-[18px] font-bold"
-                aria-label="Log In"
-                size="large"
-                onClick={() => formik.handleSubmit()}
-              >
-                Reset
-              </Button>
-            </Link>
+            <InputField
+              formik={formik}
+              name="cnfPassword"
+              label="Confirm Password"
+              type="password"
+              placeholder="Enter Confirm Password"
+            />
+            <Button
+              variant="contained"
+              color="secondary"
+              className="mt-40 w-full h-[50px] text-[18px] font-bold"
+              aria-label="Log In"
+              size="large"
+              onClick={() => formik.handleSubmit()}
+              disabled={isLoading}
+            >
+              Reset
+            </Button>
           </div>
         </CardContent>
       </Paper>

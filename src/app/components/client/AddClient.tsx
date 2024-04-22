@@ -8,6 +8,7 @@ import InputField from "../InputField";
 import CommonChip from "../chip";
 import CustomButton from "../custom_button";
 import * as Yup from "yup";
+import { addClientSchema } from "src/formSchema";
 
 
 interface IProps {
@@ -17,23 +18,18 @@ interface IProps {
 
 function AddClient({ isOpen, setIsOpen }: IProps) {
 
-  const validationSchema = Yup.object({
-    fName: Yup.string().required("First name is required"),
-    lName: Yup.string().required("Last name is required"),
-  });
+  const onSubmit = () => {
+    formik.handleSubmit()
+  }
 
   const formik = useFormik({
     initialValues: {
       fName: "",
       lName: "",
     },
-    validationSchema: validationSchema,
-    onSubmit: (values) => { },
+    validationSchema: addClientSchema,
+    onSubmit
   });
-
-  const handleSubmit = () => {
-    formik.handleSubmit()
-  }
 
   return (
     <CommonModal
@@ -42,7 +38,7 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
       modalTitle="Add Client"
       maxWidth="910"
       btnTitle="Save"
-      onSubmit={handleSubmit}
+      onSubmit={onSubmit}
     >
       <div className="flex flex-col gap-20">
         <InputField

@@ -1,3 +1,4 @@
+import React, { useCallback, useState } from 'react'
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -10,21 +11,9 @@ import { useAppDispatch } from "app/store/store";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
-import { z } from "zod";
+import { loginSchema } from "src/formSchema";
+import toast from 'react-hot-toast';
 
-/**
- * Form Validation Schema
- */
-const schema = z.object({
-  email: z
-    .string()
-    .email("You must enter a valid email")
-    .nonempty("You must enter an email"),
-  password: z
-    .string()
-    .min(4, "Password is too short - must be at least 4 chars.")
-    .nonempty("Please enter your password."),
-});
 
 type FormType = {
   email: string;
@@ -32,110 +21,69 @@ type FormType = {
   remember?: boolean;
 };
 
-const defaultValues = {
-  email: "",
-  password: "",
-  remember: true,
-};
-
 function jwtSignInTab() {
   const { jwtService } = useAuth();
+
+  // State to track loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onSubmit = useCallback(async (formData) => {
+    const { email, password } = formData;
+    setIsLoading(true);
+    await jwtService.signIn({ email, password });
+    setIsLoading(false)
+  }, []);
 
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
-      email: "admin@yopmail.com",
-      password: "123456",
+      email: "",
+      password: "",
     },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
+    validationSchema: loginSchema,
+    onSubmit
   });
 
-  const { control, formState, handleSubmit, setValue, setError } =
-    useForm<FormType>({
-      mode: "onChange",
-      defaultValues,
-      resolver: zodResolver(schema),
-    });
-
-  const { isValid, dirtyFields, errors } = formState;
-
-  useEffect(() => {
-    setValue("email", "admin@fusetheme.com", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
-  }, [setValue]);
-
-  function onSubmit(formData: FormType) {
-    const { email, password } = formData;
-    // dispatch(logIn({ email, password }));
-    jwtService
-      .signIn({
-        email,
-        password,
-      })
-    // .catch(
-    //   (
-    //     error: AxiosError<
-    //       {
-    //         type:
-    //         | "email"
-    //         | "password"
-    //         | "remember"
-    //         | `root.${string}`
-    //         | "root";
-    //         message: string;
-    //       }[]
-    //     >
-    //   ) => {
-    //     const errorData = error.response.data;
-
-    //     errorData.forEach((err) => {
-    //       setError(err.type, {
-    //         type: "manual",
-    //         message: err.message,
-    //       });
-    //     });
-    //   }
-    // );
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form behavior
+    formik.handleSubmit(); // Trigger formik form submission
+  };
 
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
-      <InputField
-        formik={formik}
-        name="email"
-        label="Email Address"
-        placeholder="Enter Email Address"
-      />
-      <InputField
-        formik={formik}
-        name="password"
-        label="Password"
-        type="password"
-        placeholder="Enter Password"
-      />
-      <Link
-        className="text-[16px] font-medium !no-underline w-fit"
-        to="/forgot-password"
-      >
-        Forgot Password
-      </Link>
-      <Button
-        variant="contained"
-        color="secondary"
-        className="mt-28 w-full h-[50px] text-[18px] font-bold"
-        aria-label="Log In"
-        size="large"
-        onClick={() => formik.handleSubmit()}
-      >
-        Log In
-      </Button>
-
+      <form onSubmit={handleSubmit}>
+        <InputField
+          formik={formik}
+          name="email"
+          label="Email Address"
+          placeholder="Enter Email Address"
+        // inputRef={input => input && input.focus()}
+        />
+        <InputField
+          formik={formik}
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Enter Password"
+        />
+        <Link
+          className="text-[16px] font-medium !no-underline w-fit"
+          to="/forgot-password"
+        >
+          Forgot Password
+        </Link>
+        <Button
+          variant="contained"
+          color="secondary"
+          className="mt-28 w-full h-[50px] text-[18px] font-bold"
+          aria-label="Log In"
+          size="large"
+          type="submit"
+          disabled={isLoading}
+        >
+          Log In
+        </Button>
+      </form>
       <div className="flex items-center mt-12">
         <div className="flex-auto mt-px border-t" />
         <Typography className="mx-8" color="text.secondary">
@@ -174,5 +122,4 @@ function jwtSignInTab() {
     </div>
   );
 }
-
-export default jwtSignInTab;
+export default React.memo(jwtSignInTab);

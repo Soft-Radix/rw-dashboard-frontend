@@ -1,12 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { RootStateType } from 'app/store/types';
+import toast from 'react-hot-toast';
 import ApiHelperFunction from 'src/api';
+import { ApiResponse, ForgotPassPayload, LoginPayload, initialStateProps } from './Interface';
 
 // Define a type for the payload
-interface LoginPayload {
-    email: string;
-    password: string;
-}
 
 /**
  * API calling
@@ -21,18 +19,72 @@ export const logIn = createAsyncThunk("auth/login", async (payload: LoginPayload
     return resData;
 });
 
-/**
- * The type definition for the initial state of the auth slice.
- */
-type initialStateProps = {
-    status: string;
-};
+export const forgotPassword = createAsyncThunk(
+    "auth/forgot-password",
+    async (payload: ForgotPassPayload) => {
+        const response = await ApiHelperFunction({
+            url: "auth/forgot-password",
+            method: "post",
+            data: payload,
+        });
+
+        if (response.error) {
+            return { data: response?.error?.response?.data }; // Ensure errors are propagated
+        }
+
+        // Return only the data you need to keep it serializable
+        return {
+            data: response.data,
+        };
+    }
+);
+export const restPassword = createAsyncThunk(
+    "auth/reset-password",
+    async (payload: ForgotPassPayload) => {
+        const response = await ApiHelperFunction({
+            url: "auth/reset-password",
+            method: "post",
+            data: payload,
+        });
+
+        if (response.error) {
+            return { data: response?.error?.response?.data }; // Ensure errors are propagated
+        }
+
+        // Return only the data you need to keep it serializable
+        return {
+            data: response.data,
+        };
+    }
+);
+
+export const verifyOtp = createAsyncThunk(
+    "otp-verify",
+    async (payload: ForgotPassPayload) => {
+        const response = await ApiHelperFunction({
+            url: "otp-verify",
+            method: "post",
+            data: payload,
+        });
+
+        if (response.error) {
+            return response?.error?.response?.data; // Ensure errors are propagated
+        }
+
+        // Return only the data you need to keep it serializable
+        return {
+            data: response.data,
+        };
+    }
+);
 
 /**
  * The initial state of the auth slice.
  */
-const initialState: initialStateProps = {
+export const initialState: initialStateProps = {
     status: 'idle',
+    email: ''
+
 };
 
 /**
@@ -44,15 +96,41 @@ export const authSlice = createSlice({
     reducers: {},
     extraReducers(builder) {
         builder
-            .addCase(logIn.pending, (state) => {
-                console.log('pending78')
+            .addCase(logIn.fulfilled, (state, action) => {
+                const payload = action.payload as ApiResponse; // Assert type
+                if (payload?.data?.status) {
+                    toast.success(payload?.data?.message)
+                } else {
+                    toast.error(payload?.data?.message)
+                }
             })
-            .addCase(logIn.fulfilled, (state) => {
-                console.log('fulfilled78')
+
+            .addCase(forgotPassword.fulfilled, (state, action) => {
+                const payload = action.payload as ApiResponse; // Assert type
+
+                if (payload?.data?.status) {
+                    state.email = action?.meta?.arg?.email;
+                    toast.success(payload?.data?.message)
+                } else {
+                    toast.error(payload?.data?.message)
+                }
             })
-            .addCase(logIn.rejected, (state) => {
-                console.log('rejected78')
-            });
+            .addCase(verifyOtp.fulfilled, (state, action) => {
+                const payload = action.payload as ApiResponse; // Assert type
+                if (payload?.data?.status) {
+                    toast.success(payload?.data?.message)
+                } else {
+                    toast.error(payload?.data?.message)
+                }
+            })
+            .addCase(restPassword.fulfilled, (state, action) => {
+                const payload = action.payload as ApiResponse; // Assert type
+                if (payload?.data?.status) {
+                    toast.success(payload?.data?.message)
+                } else {
+                    toast.error(payload?.data?.message)
+                }
+            })
     }
 })
 

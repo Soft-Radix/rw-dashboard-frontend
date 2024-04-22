@@ -11,6 +11,7 @@ import { selectMainTheme } from "@fuse/core/FuseSettings/store/fuseSettingsSlice
 import MockAdapterProvider from "@mock-api/MockAdapterProvider";
 import withAppProviders from "./withAppProviders";
 import { AuthRouteProvider } from "./auth/AuthRouteProvider";
+import { Toaster } from 'react-hot-toast';
 
 // import axios from 'axios';
 /**
@@ -54,19 +55,11 @@ function App() {
       >
         <FuseTheme theme={mainTheme} direction={langDirection}>
           <AuthRouteProvider>
-            <SnackbarProvider
-              maxSnack={5}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "right",
-              }}
-              classes={{
-                containerRoot:
-                  "bottom-0 right-0 mb-52 md:mb-68 mr-8 lg:mr-80 z-99",
-              }}
-            >
-              <FuseLayout layouts={themeLayouts} />
-            </SnackbarProvider>
+            <FuseLayout layouts={themeLayouts} />
+            <Toaster
+              position="top-center"
+              reverseOrder={false}
+            />
           </AuthRouteProvider>
         </FuseTheme>
       </CacheProvider>

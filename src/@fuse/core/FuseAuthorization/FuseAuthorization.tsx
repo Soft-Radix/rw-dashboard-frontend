@@ -97,6 +97,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     ];
 
     if (matched && !userHasPermission && !ignoredPaths.includes(pathname)) {
+
       setSessionRedirectUrl(pathname);
     }
 

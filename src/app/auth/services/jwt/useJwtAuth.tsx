@@ -89,8 +89,8 @@ const useJwtAuth = <User, SignUpPayload>(
 	}, []);
 
 	const resetSession = useCallback(() => {
-		// localStorage.removeItem(authConfig.tokenStorageKey);
-		// delete axios.defaults.headers.common.Authorization;
+		localStorage.removeItem(authConfig.tokenStorageKey);
+		delete axios.defaults.headers.common.Authorization;
 	}, []);
 
 	/**
@@ -182,25 +182,6 @@ const useJwtAuth = <User, SignUpPayload>(
 
 			if (!!accessToken) {
 				handleSignInSuccess(userData, accessToken);
-				// try {
-				// 	setIsLoading(true);
-
-				// 	const response: AxiosResponse<User> = await axios.get(authConfig.getUserUrl, {
-				// 		headers: { Authorization: `Bearer ${accessToken}` }
-				// 	});
-
-				// 	const userData = response?.data;
-				// 	console.log(userData, 'userData');
-
-				// 	handleSignInSuccess(userData, accessToken);
-
-				// 	return true;
-				// } catch (error) {
-				// 	const axiosError = error as AxiosError;
-
-				// 	handleSignInFailure(axiosError);
-				// 	return false;
-				// }
 			} else {
 				resetSession();
 				return false;
@@ -226,35 +207,13 @@ const useJwtAuth = <User, SignUpPayload>(
 	 * Sign in
 	 */
 	const signIn = async (credentials: SignInPayload) => {
-		// const response = axios.post(authConfig.signInUrl, credentials);
-		let response = dispatch(logIn({ email: credentials?.email, password: credentials?.password }));
+		let response = await dispatch(logIn({ email: credentials?.email, password: credentials?.password }));
 
-		response.then(res => {
-			const { payload } = res
-			const userData = payload?.data?.user;
-			const accessToken = payload?.data?.access_token;
+		if (response?.payload !== undefined) {
+			const userData = response?.payload.data?.user;
+			const accessToken = response?.payload.data?.access_token;
 			handleSignInSuccess(userData, accessToken);
-		}).catch((error: AxiosError) => {
-			console.log(error, 'error');
-		})
-		// response.then(
-		// 	(res: AxiosResponse<{ user: User; access_token: string }>) => {
-		// 		const userData = res?.data?.user;
-		// 		const accessToken = res?.data?.access_token;
-
-		// 		handleSignInSuccess(userData, accessToken);
-
-		// 		return userData;
-		// 	},
-		// 	(error) => {
-		// 		const axiosError = error as AxiosError;
-
-		// 		handleSignInFailure(axiosError);
-
-		// 		return axiosError;
-		// 	}
-		// );
-
+		}
 		return response;
 	};
 
