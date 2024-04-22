@@ -27,6 +27,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   "&.MuiInputBase-root": {
     "& .MuiOutlinedInput-notchedOutline": {
       borderColor: "transparent",
+      border: "none",
     },
     "&.Mui-focused": {
       "& .MuiOutlinedInput-notchedOutline": {
@@ -75,7 +76,7 @@ function TableSelectField({
   };
 
   return (
-    <div className={`${rest.className} w-max`}>
+    <div className={`${rest.className} w-max `}>
       {label && (
         <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
           {label}

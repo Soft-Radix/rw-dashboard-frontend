@@ -1,33 +1,33 @@
 import {
   Button,
-  Checkbox,
   InputAdornment,
   MenuItem,
   TableCell,
   TableRow,
   TextField,
   Theme,
-  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
+import { EditIcon } from "public/assets/icons/common";
+import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import { ArrowRightCircleIcon, EditIcon } from "public/assets/icons/common";
-import { Link } from "react-router-dom";
-import TitleBar from "../../TitleBar";
-import DropdownMenu from "../../Dropdown";
+import CommonTable from "src/app/components/commonTable";
 import {
-  DownArrowBlank,
-  DownArrowIcon,
-} from "public/assets/icons/dashboardIcons";
+  BillingTermsOptions,
+  EmployOptions,
+  MonthlyOptions,
+  StyledMenuItem,
+  UnitDiscount,
+} from "src/utils";
+import DropdownMenu from "../../Dropdown";
 import InputField from "../../InputField";
-import SelectField from "../../tableSelectField";
+import TitleBar from "../../TitleBar";
 import SelectUser from "../../selectField";
-import { MonthlyOptions, StyledMenuItem, EmployOptions } from "src/utils";
+import SelectField from "../../tableSelectField";
+import CustomLineModal from "./CustomLineModal";
+import LineModal from "./LineModal";
 
 const rows = [
   {
@@ -65,6 +65,9 @@ export default function AddSubscription() {
   //custom dropdown
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
+  const [selectedOption, setSelectedOption] = useState("");
+  const [customLine, setCustomLine] = useState(false);
+  const [isLineModal, setIsLineModal] = useState(false);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -76,6 +79,14 @@ export default function AddSubscription() {
     setAnchorEl(event.currentTarget);
   };
   const handlelineClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+    setAnchorEl1(event.currentTarget);
+  };
+
+  const handleOptionChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+  const handleTexFeeClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl1(event.currentTarget);
   };
@@ -110,38 +121,47 @@ export default function AddSubscription() {
             anchorEl={anchorEl1}
             handleClose={handleClose}
           >
-            <div className="w-[375px] py-20 px-10 ">
-              <MenuItem>
+            <div className="w-[375px] pt-1 pb-20 flex flex-col gap-10  ">
+              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
                 <label
                   htmlFor="agents"
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    color: "#111827",
                   }}
                 >
-                  Agents logged-in
+                  Add one time discount
                 </label>
               </MenuItem>
-              <MenuItem>
+              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
                 <label
                   htmlFor="activity"
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    color: "#111827",
                   }}
                 >
-                  Recent activity
+                  Add one time fee
                 </label>
               </MenuItem>
-              <MenuItem>
+              <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
                 <label
-                  htmlFor="logged"
+                  htmlFor="activity"
                   style={{
                     display: "flex",
                     alignItems: "center",
+                    fontSize: "16px",
+                    fontWeight: "500",
+                    color: "#111827",
                   }}
                 >
-                  Logged hours
+                  Add one time tax
                 </label>
               </MenuItem>
             </div>
@@ -170,6 +190,34 @@ export default function AddSubscription() {
                   <DownArrowIcon className="cursor-pointer" />
                 </span>
               </div>
+            </div>
+          }
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+        >
+          <div className="w-[375px] p-20 ">
+            <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+              <h4>$ USD</h4>
+            </div>
+          </div>
+        </DropdownMenu>
+      </>
+    );
+  };
+  const DiscountFee = (): JSX.Element => {
+    return (
+      <>
+        <DropdownMenu
+          marginTop={"mt-[20px] "}
+          button={
+            <div className="relative w-max flex" onClick={handleTexFeeClick}>
+              <span className="inline-block pl-5 text-secondary font-600 text-18">
+                {" "}
+                +Add discount fee or tax
+              </span>
+              <span className="inline-block ml-10">
+                <DownArrowIcon className="cursor-pointer" />
+              </span>
             </div>
           }
           anchorEl={anchorEl}
@@ -218,7 +266,7 @@ export default function AddSubscription() {
                     },
                   }}
                 >
-                  <TableCell scope="row" className="font-500">
+                  <TableCell scope="row" className="font-500 ">
                     {row.ticket}
                   </TableCell>
                   <TableCell align="center" className="font-500">
@@ -226,7 +274,7 @@ export default function AddSubscription() {
                   </TableCell>
                   <TableCell
                     align="center"
-                    className="whitespace-nowrap font-500"
+                    className="whitespace-nowrap font-500 border-1 border-solid"
                   >
                     <InputField
                       name={"name"}
@@ -236,6 +284,11 @@ export default function AddSubscription() {
                         className: "ps-[1rem] max-w-[90px] m-auto ",
                       }}
                       hideTopPadding={true}
+                      sx={{
+                        "&  .MuiInputBase-input": {
+                          border: "0.5px solid #9DA0A6",
+                        },
+                      }}
                     />
                   </TableCell>
                   <TableCell align="center">
@@ -247,11 +300,16 @@ export default function AddSubscription() {
                         className: "ps-[1rem] max-w-[90px] m-auto ",
                       }}
                       hideTopPadding={true}
+                      sx={{
+                        "&  .MuiInputBase-input": {
+                          border: "0.5px solid #9DA0A6",
+                        },
+                      }}
                     />
                   </TableCell>
                   <TableCell
                     align="center"
-                    className="cursor-pointer whitespace-nowrap font-500 "
+                    className="cursor-pointer whitespace-nowrap font-500 border-1 border-solid border-red"
                   >
                     <TextField
                       hiddenLabel
@@ -260,7 +318,7 @@ export default function AddSubscription() {
                       variant="standard"
                       size="small"
                       placeholder="$444.00"
-                      className="bg-bgGrey "
+                      className="bg-bgGrey border-solid border-1 border-[#9DA0A6] "
                       sx={{
                         borderRadius: "10px",
                         pl: 2,
@@ -280,11 +338,35 @@ export default function AddSubscription() {
                         },
                       }}
                       InputProps={{
-                        className: "ps-[1rem] max-w-[100px] m-auto",
+                        className: " max-w-[130px] m-auto",
                         startAdornment: (
                           <InputAdornment position="start">
-                            <span>%</span>
-                            <DownArrowBlank />
+                            <SelectField
+                              formik={formik}
+                              name="Billing"
+                              defaultValue={"percentage"}
+                              sx={{
+                                borderRight: "0.5px solid #9DA0A6",
+                                borderRadius: "0px",
+
+                                "& .radioIcon": { display: "none" },
+                                "&.MuiInputBase-root": {
+                                  "& .MuiSelect-select": {
+                                    paddingTop: "6px",
+                                    PaddingBottom: "8px",
+                                  },
+                                },
+                              }}
+                            >
+                              {UnitDiscount.map((item) => (
+                                <StyledMenuItem
+                                  key={item.value}
+                                  value={item.value}
+                                >
+                                  {item.label}
+                                </StyledMenuItem>
+                              ))}
+                            </SelectField>
                           </InputAdornment>
                         ),
                       }}
@@ -297,12 +379,17 @@ export default function AddSubscription() {
                     {row.date}
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap">
+                    {/* <div className="border-[0.5px] border-[#9DA0A6] rounded-8 text-center"> */}
                     <SelectField
                       formik={formik}
                       name="Billing"
                       defaultValue={"Monthly"}
                       sx={{
                         "& .radioIcon": { display: "none" },
+                        "&  .MuiInputBase-input": {
+                          border: "0.5px solid #9DA0A6",
+                          borderRadius: "7px",
+                        },
                       }}
                     >
                       {MonthlyOptions.map((item) => (
@@ -311,17 +398,27 @@ export default function AddSubscription() {
                         </StyledMenuItem>
                       ))}
                     </SelectField>
+                    {/* </div> */}
                   </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
+                  <TableCell align="center" className="whitespace-nowrap ">
                     <SelectField
                       formik={formik}
                       name="billingTerms"
-                      defaultValue={"Monthly"}
+                      defaultValue={"One"}
                       sx={{
                         "& .radioIcon": { display: "none" },
+                        "&  .MuiInputBase-input": {
+                          border: "0.5px solid #9DA0A6",
+                          borderRadius: "7px",
+
+                          maxWidth: "80 px", // Limit the width of the input
+                          overflow: "hidden", // Hide overflowing content
+                          textOverflow: "ellipsis", // Display ellipsis for truncated text
+                          whiteSpace: "nowrap",
+                        },
                       }}
                     >
-                      {MonthlyOptions.map((item) => (
+                      {BillingTermsOptions.map((item) => (
                         <StyledMenuItem key={item.value} value={item.value}>
                           {item.label}
                         </StyledMenuItem>
@@ -355,11 +452,21 @@ export default function AddSubscription() {
             Summary
           </h5>
           <ul className="flex flex-col text-14 gap-[4rem]">
-            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
-              <span className="text-para_light  px-[3rem]">
-                Subtotal---------------------------------------------------
+            <li className="border-b pb-[2rem] bg-[#F7F9FB] flex flex-col gap-10">
+              <div className="mb-10">
+                <span className="text-para_light  px-[3rem]">
+                  Subtotal---------------------------------------------------
+                </span>
+                <span className="inline-block ml-20 font-500">$444.00</span>
+              </div>
+              <span className="px-[3rem] text-secondary text-[14px] font-500 flex items-center">
+                {DiscountFee()}
+                {/* +Add discount fee or tax{" "}
+                <span>
+                  {" "}
+                  <DownArrowIcon className="ml-10" />
+                </span> */}
               </span>
-              <span className="inline-block ml-20 font-500">$444.00</span>
             </li>
             <li className="border-b pb-[2rem] bg-[#F7F9FB]">
               <span className="text-para_light  px-[3rem]">
@@ -371,12 +478,31 @@ export default function AddSubscription() {
               <span className="text-para_light  px-[3rem]">
                 Future payments------------------------------------------
               </span>
-              <span className="inline-block ml-20 font-500">$444.00</span>
+              <div className="inline-block ml-20 text-[#111827) text-[14px] font-300 ">
+                <span className="flex flex-col gap-5">
+                  <span>
+                    <span className="font-500">$555.00 / Month </span>
+                    starting 4 days after payment
+                  </span>
+                  <span>
+                    {" "}
+                    <span className="font-500">$555.00 / Month </span>starting 1
+                    month after payment
+                  </span>
+                </span>
+              </div>
+            </li>
+            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
+              <span className="text-[#0A0F18] text-[20px] font-600 px-[3rem]">
+                Total -
+              </span>
             </li>
           </ul>
         </div>
       </div>
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <CustomLineModal isOpen={customLine} setIsOpen={setCustomLine} />
+      <LineModal isOpen={isLineModal} setIsOpen={setIsLineModal} />
     </>
   );
 }

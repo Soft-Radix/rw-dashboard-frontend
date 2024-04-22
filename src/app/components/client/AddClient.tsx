@@ -1,15 +1,9 @@
-import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { FormLabel, Grid, MenuItem, styled } from "@mui/material";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
-import CommonModal from "../CommonModal";
-import DropdownMenu from "../Dropdown";
-import InputField from "../InputField";
-import CommonChip from "../chip";
-import CustomButton from "../custom_button";
+import { Dispatch, SetStateAction } from "react";
 import * as Yup from "yup";
 import { addClientSchema } from "src/formSchema";
-
+import CommonModal from "../CommonModal";
+import InputField from "../InputField";
 
 interface IProps {
   isOpen: boolean;
