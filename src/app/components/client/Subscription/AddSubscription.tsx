@@ -65,6 +65,7 @@ export default function AddSubscription() {
   //custom dropdown
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
+  const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
   const [selectedOption, setSelectedOption] = useState("");
   const [customLine, setCustomLine] = useState(false);
   const [isLineModal, setIsLineModal] = useState(false);
@@ -72,6 +73,7 @@ export default function AddSubscription() {
   const handleClose = () => {
     setAnchorEl(null);
     setAnchorEl1(null);
+    setAnchorEl2(null);
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -88,7 +90,7 @@ export default function AddSubscription() {
   };
   const handleTexFeeClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setAnchorEl1(event.currentTarget);
+    setAnchorEl2(event.currentTarget);
   };
   const SubButton = (): JSX.Element => {
     return (
@@ -213,13 +215,52 @@ export default function AddSubscription() {
               </span>
             </div>
           }
-          anchorEl={anchorEl}
+          anchorEl={anchorEl2}
           handleClose={handleClose}
         >
-          <div className="w-[375px] p-20 ">
-            <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
-              <h4>$ USD</h4>
-            </div>
+          <div className="p-5 w-[300px]">
+            <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
+              <label
+                htmlFor="activity"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  color: "#111827",
+                }}
+              >
+                Add one time discount
+              </label>
+            </MenuItem>
+            <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
+              <label
+                htmlFor="activity"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  color: "#111827",
+                }}
+              >
+                Add one time tax
+              </label>
+            </MenuItem>
+            <MenuItem className="rounded-lg hover:bg-[#E7E8E9] py-10">
+              <label
+                htmlFor="activity"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  fontSize: "16px",
+                  fontWeight: "500",
+                  color: "#111827",
+                }}
+              >
+                Add one time fee
+              </label>
+            </MenuItem>
           </div>
         </DropdownMenu>
       </>
@@ -302,9 +343,55 @@ export default function AddSubscription() {
                   </TableCell>
                   <TableCell
                     align="center"
-                    className="cursor-pointer whitespace-nowrap font-500 border-1 border-solid border-red"
+                    className="cursor-pointer whitespace-nowrap font-500 "
                   >
-                    <TextField
+                    <div
+                      className="border-[0.5px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10"
+                    >
+                      <div className="border-r-1 border-solid border-[#9DA0A6] ">
+                        <SelectField
+                          formik={formik}
+                          name="unitDiscount"
+                          defaultValue={"percentage"}
+                          sx={{
+                            "& .MuiSelect-selectMenu": {
+                              paddingRight: "0px", // Adjust padding for the select menu
+                            },
+                          }}
+                        >
+                          {UnitDiscount.map((item) => (
+                            <StyledMenuItem key={item.value} value={item.value}>
+                              {item.label}
+                            </StyledMenuItem>
+                          ))}
+                        </SelectField>
+                      </div>
+                      <div className="flex-1">
+                        <TextField
+                          hiddenLabel
+                          id="filled-hidden-label-small"
+                          defaultValue=""
+                          variant="standard"
+                          size="small"
+                          placeholder="$444.00"
+                          sx={{
+                            width: "60px",
+                            "& .MuiInputBase-input": {
+                              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                              border: "none", // Hide the border of the input element
+                            },
+                            "& .MuiInput-underline:before": {
+                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                            },
+                            "& .MuiInput-underline:after": {
+                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                            },
+                          }}
+                        ></TextField>
+                      </div>
+                    </div>
+                    {/* <TextField
                       hiddenLabel
                       id="filled-hidden-label-small"
                       defaultValue=""
@@ -363,7 +450,7 @@ export default function AddSubscription() {
                           </InputAdornment>
                         ),
                       }}
-                    ></TextField>
+                    ></TextField> */}
                   </TableCell>
                   <TableCell
                     align="center"
@@ -451,7 +538,7 @@ export default function AddSubscription() {
                 </span>
                 <span className="inline-block ml-20 font-500">$444.00</span>
               </div>
-              <span className="px-[3rem] text-secondary text-[14px] font-500 flex items-center">
+              <span className="px-[3rem] text-secondary text-[14px] font-500 flex items-center cursor-pointer">
                 {DiscountFee()}
                 {/* +Add discount fee or tax{" "}
                 <span>
