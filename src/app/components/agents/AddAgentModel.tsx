@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import { Dispatch, SetStateAction } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
+import { addAgentSchema } from "src/formSchema";
 
 interface IProps {
   isOpen: boolean;
@@ -11,13 +12,14 @@ interface IProps {
 function AddAgentModel({ isOpen, setIsOpen }: IProps) {
   const formik = useFormik({
     initialValues: {
-      name: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      password: "",
-      confirm_password: "",
-      role: "",
     },
-    onSubmit: (values) => { },
+    validationSchema: addAgentSchema,
+    onSubmit: (values) => {
+      console.log(values, "h");
+    },
   });
 
   return (
@@ -26,6 +28,8 @@ function AddAgentModel({ isOpen, setIsOpen }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Add Agent"
       maxWidth="733"
+      btnTitle="Save"
+      onSubmit={formik.handleSubmit}
     >
       <div className="flex flex-col gap-20 mb-20">
         <InputField

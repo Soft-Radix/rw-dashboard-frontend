@@ -15,14 +15,13 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-
 function AddClient({ isOpen, setIsOpen }: IProps) {
   const dispatch = useAppDispatch();
   const clientState = useSelector((store: ClientRootState) => store.client);
 
   const onSubmit = async (values: ClientType) => {
     await dispatch(addClient(values));
-  }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -32,20 +31,19 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
       company_name: "",
     },
     validationSchema: addClientSchema,
-    onSubmit
+    onSubmit,
   });
-
 
   useEffect(() => {
     if (!!clientState?.successMsg) {
-      dispatch(restAll())
-      setIsOpen((prev) => !prev)
+      dispatch(restAll());
+      setIsOpen((prev) => !prev);
     } else if (!!clientState?.errorMsg) {
-      dispatch(restAll())
+      dispatch(restAll());
     }
-  }, [clientState])
+  }, [clientState]);
 
-  console.log(clientState, 'clientState')
+  console.log(clientState, "clientState");
   return (
     <CommonModal
       open={isOpen}
