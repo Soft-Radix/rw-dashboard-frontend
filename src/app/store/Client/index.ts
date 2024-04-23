@@ -24,6 +24,22 @@ export const addClient = createAsyncThunk(
   }
 );
 
+export const getClientList = createAsyncThunk(
+  "client/list",
+  async (payload: AddClientType) => {
+    const response = await ApiHelperFunction({
+      url: "client/list",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */

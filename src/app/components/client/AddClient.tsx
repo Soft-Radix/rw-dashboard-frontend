@@ -26,10 +26,10 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
 
   const formik = useFormik({
     initialValues: {
-      first_name: "vijay",
-      last_name: "manoher",
-      email: "vk@gmail.com",
-      company_name: "newjers",
+      first_name: "",
+      last_name: "",
+      email: "",
+      company_name: "",
     },
     validationSchema: addClientSchema,
     onSubmit
