@@ -6,7 +6,7 @@ import { Input, InputAdornment, TextField } from "@mui/material";
 
 const ClientTabButton = () => {
   return (
-    <div className="flex gap-10 flex-col sm:flex-row">
+    <div className="flex flex-col gap-10 sm:flex-row">
       <TextField
         hiddenLabel
         id="filled-hidden-label-small"

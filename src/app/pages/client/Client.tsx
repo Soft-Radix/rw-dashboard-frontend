@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Button, InputAdornment, TextField, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTab from "../../components/CommonTab";
+import { debounce } from "lodash";
 
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import DropdownMenu from "src/app/components/Dropdown";
@@ -13,12 +14,12 @@ import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
 import AssignedAgents from "src/app/components/client/components/AssignedAgents";
 import CustomButton from "src/app/components/custom_button";
 import ClientTable from "src/app/components/client/ClientTable";
-import ClientTabButton from "src/app/components/client/ClientTabButton";
 import { useAppDispatch } from "app/store/store";
 import { getClientList } from "app/store/Client";
 import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
+import ManageButton from "src/app/components/client/ManageButton";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -36,20 +37,67 @@ export default function Clients() {
     "search": ""
   })
   const clientState = useSelector((store: ClientRootState) => store.client)
-  const [selectedTab, setSelectedTab] = useState(0);
 
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  // Debounce function to delay executing the search
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setSelectedTab(newValue);
-  };
-  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
+  const ClientTabButton = () => {
+    return (
+      <div className="flex flex-col gap-10 sm:flex-row">
+        <TextField
+          hiddenLabel
+          id="filled-hidden-label-small"
+          defaultValue=""
+          variant="standard"
+          placeholder="Search"
+          onChange={handleSearchChange}
+          sx={{
+            pl: 2,
+            // border: "1px solid blue",
+            backgroundColor: "#F6F6F6",
+            borderRadius: "8px",
+            "&:focus-within": {
+              border: "1px solid blue", // Show border when focused
+            },
+            "& .MuiInputBase-input": {
+              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+              border: "none", // Hide the border of the input element
+            },
+            "& .MuiInput-underline:before": {
+              border: "none !important", // Hide the underline (if using underline variant)
+            },
+            "& .MuiInput-underline:after": {
+              borderBottom: "none !important", // Hide the underline (if using underline variant)
+            },
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon className="p-2" />
+              </InputAdornment>
+            ),
+          }}
+        />
+
+        {/* <input type="text" placeholder="enter></input> */}
+        <ManageButton />
+      </div>
+    );
   };
+
+
+
   const tabs = [
     {
       id: "all",
@@ -85,7 +133,7 @@ export default function Clients() {
 
   useEffect(() => {
     dispatch(getClientList(filters))
-  }, [])
+  }, [filters])
 
   return (
     <>
