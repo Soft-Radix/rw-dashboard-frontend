@@ -22,8 +22,9 @@ export const logIn = createAsyncThunk(
       method: "post", // method
       data: payload, // payload data
     });
+
     if (response?.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
+        return { data: response?.error?.response?.data }; // Ensure errors are propagated
     }
     let resData = response?.data;
     return resData;
@@ -101,19 +102,26 @@ export const initialState: initialStateProps = {
  * The auth slice.
  */
 export const authSlice = createSlice({
-  name: "auth",
-  initialState,
-  reducers: {},
-  extraReducers(builder) {
-    builder
-      .addCase(logIn.fulfilled, (state, action) => {
-        const payload = action.payload as ApiResponse; // Assert type
-        if (payload?.data?.status) {
-          toast.success(payload?.data?.message);
-        } else {
-          toast.error(payload?.data?.message);
-        }
-      })
+    name: 'auth',
+    initialState,
+    reducers: {},
+    extraReducers(builder) {
+        builder
+
+            .addCase(logIn.pending, (state, action) => {
+                console.log(state, 'action.payload4');
+
+            })
+            .addCase(logIn.fulfilled, (state, action) => {
+                const payload = action.payload as ApiResponse; // Assert type
+
+
+                if (payload?.data?.status) {
+                    toast.success(payload?.data?.message)
+                } else {
+                    toast.error(payload?.data?.message)
+                }
+            })
 
       .addCase(forgotPassword.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type

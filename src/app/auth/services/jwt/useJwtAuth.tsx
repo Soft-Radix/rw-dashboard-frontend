@@ -209,7 +209,7 @@ const useJwtAuth = <User, SignUpPayload>(
 	const signIn = async (credentials: SignInPayload) => {
 		let response = await dispatch(logIn({ email: credentials?.email, password: credentials?.password }));
 
-		if (response?.payload !== undefined) {
+		if (response?.payload?.status) {
 			const userData = response?.payload.data?.user;
 			const accessToken = response?.payload.data?.access_token;
 			handleSignInSuccess(userData, accessToken);

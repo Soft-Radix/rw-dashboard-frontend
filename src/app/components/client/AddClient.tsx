@@ -12,14 +12,16 @@ interface IProps {
 
 function AddClient({ isOpen, setIsOpen }: IProps) {
 
-  const onSubmit = () => {
-    formik.handleSubmit()
+  const onSubmit = (values) => {
+    console.log(values, 'formvalue');
   }
 
   const formik = useFormik({
     initialValues: {
-      fName: "",
-      lName: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      company_name: "",
     },
     validationSchema: addClientSchema,
     onSubmit
@@ -32,18 +34,18 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
       modalTitle="Add Client"
       maxWidth="910"
       btnTitle="Save"
-      onSubmit={onSubmit}
+      onSubmit={formik.handleSubmit}
     >
       <div className="flex flex-col gap-20">
         <InputField
           formik={formik}
-          name="fName"
+          name="first_name"
           label="First Name"
           placeholder="Enter First Name"
         />
         <InputField
           formik={formik}
-          name="lName"
+          name="last_name"
           label="Last Name"
           placeholder="Enter Last Name"
         />
@@ -55,7 +57,7 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
         />
         <InputField
           formik={formik}
-          name="cName"
+          name="company_name"
           label="Company Name"
           placeholder="Enter Company Name"
         />
