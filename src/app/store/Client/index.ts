@@ -79,7 +79,8 @@ export const clientSlice = createSlice({
   reducers: {
     restAll: (state) => {
       state.successMsg = '';
-      state.errorMsg = ''
+      state.errorMsg = '';
+      state.selectedColumn = []
     },
     updateSelectedColumn: (state, { payload }) => {
       const predefinedItems = {

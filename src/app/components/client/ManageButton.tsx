@@ -19,7 +19,6 @@ const names = ["Id", "Name", "Company Name", "Date", "Status"];
 
 export default function ManageButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const dispatch = useAppDispatch();
   const clientState = useSelector((store: ClientRootState) => store.client)
@@ -33,41 +32,12 @@ export default function ManageButton() {
     setIsOpen(false);
   };
 
-  const handleCheckboxToggle = (itemName: string) => () => {
-    const selectedIndex = selectedItems.indexOf(itemName);
-    const newSelectedItems = [...selectedItems];
-
-    if (selectedIndex === -1) {
-      newSelectedItems.push(itemName);
-    } else {
-      newSelectedItems.splice(selectedIndex, 1);
-    }
-
-    setSelectedItems(newSelectedItems);
-  };
-
-  const handleApply = () => {
-    console.log("Selected Items:", selectedItems);
-    setAnchorEl(null);
-    setIsOpen(false);
-  };
-
   const isItemSelected = (itemName: string) => {
-    return selectedItems.indexOf(itemName) !== -1;
+    return clientState?.selectedColumn.indexOf(itemName) !== -1;
   };
   const handleToggleItem = (itemName: string) => () => {
     dispatch(updateSelectedColumn(itemName))
-    setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems.includes(itemName)) {
-        // Remove the item if already selected
-        return prevSelectedItems.filter((item) => item !== itemName);
-      } else {
-        // Add the item if not selected
-        return [...prevSelectedItems, itemName];
-      }
-    });
   };
-
 
   return (
     <div>

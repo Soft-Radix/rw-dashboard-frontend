@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/common";
 import { CalenderIcon, SortIcon } from "public/assets/icons/projectsIcon";
 import { HeadIcon } from "public/assets/icons/clienIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
@@ -136,6 +136,8 @@ export default function ClientTable({ clientState }) {
       return true
     }
   }
+
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm">
