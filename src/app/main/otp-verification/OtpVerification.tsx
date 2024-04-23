@@ -2,37 +2,52 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { verifyOtp } from "app/store/Auth";
+import { forgotPassword, verifyOtp } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
 import { useSelector } from "react-redux";
-import { Link, NavigateFunction, useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
+import { useCountdownTimer } from "./UseCountdownTimer";
 
 export default function OtpVerification() {
+  // const initialTime = 60;
   const [otp, setOtp] = useState<string>("");
   // State to track loading
-  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const dispatch = useAppDispatch()
-  const store = useSelector((store: AuthRootState) => store)
+  const dispatch = useAppDispatch();
+  const store = useSelector((store: AuthRootState) => store);
   const navigate: NavigateFunction = useNavigate();
+
+  const initialTime = 60; // Initial countdown time in seconds
+  const { timer, startTimer, resetTimer } = useCountdownTimer(initialTime);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   async function onSubmit() {
     let data = {
       email: store.auth?.email,
-      otp
-    }
-    setIsLoading(true)
-    let { payload } = await dispatch(verifyOtp(data))
+      otp,
+    };
+    // console.log(data, "jj");
+    setIsLoading(true);
+    let { payload } = await dispatch(verifyOtp(data));
     if (payload?.data?.status) {
-      setIsLoading(false)
-      navigate('/reset-password')
+      setIsLoading(false);
+      navigate("/reset-password");
     }
   }
+  useEffect(() => {
+    startTimer(); // Start the countdown timer
+  }, []);
 
+  const resendOtp = async () => {
+    if (timer !== 0) return null;
+    await dispatch(forgotPassword({ email: store.auth.email }));
+    resetTimer(); // Reset the countdown timer
+    startTimer(); // Start the countdown timer
+  };
   return (
     <div className="flex flex-col items-center flex-1 min-w-0 sm:flex-row sm:justify-center md:items-start md:justify-start">
       <Paper className="flex justify-center w-full h-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none">
@@ -72,12 +87,20 @@ export default function OtpVerification() {
               Submit
             </Button>
             <div className="flex items-center justify-center cursor-pointer mt-28">
-              <Typography color="text.secondary" className="font-medium">
-                Resend OTP in
+              <Typography
+                color="text.secondary"
+                className="font-medium"
+                onClick={resendOtp}
+              >
+                Resend OTP {timer !== 0 && "in"}
               </Typography>
-              <Typography color="secondary.main" className="ml-5 font-bold">
-                00:24
-              </Typography>
+
+              {timer !== 0 && (
+                <Typography color="secondary.main" className="ml-5 font-bold">
+                  {Math.floor(timer / 60)}:
+                  {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+                </Typography>
+              )}
             </div>
           </div>
         </CardContent>
