@@ -17,6 +17,7 @@ import { createLogger } from 'redux-logger';
 
 // import all slices
 import { authSlice } from './Auth';
+import { clientSlice } from './Client';
 
 /**
  * The dynamic middleware instance.
@@ -45,7 +46,8 @@ export interface LazyLoadedSlices { }
 const staticReducers: ReducersMapObject = {
 	i18n,
 	[apiService.reducerPath]: apiService.reducer,
-	auth: authSlice.reducer
+	auth: authSlice.reducer,
+	client: clientSlice.reducer
 };
 
 /**

@@ -59,6 +59,11 @@ function App() {
             <Toaster
               position="top-center"
               reverseOrder={false}
+              toastOptions={{
+                style: {
+                  zIndex: 9999, // Set z-index to your desired value
+                },
+              }}
             />
           </AuthRouteProvider>
         </FuseTheme>

@@ -1,32 +1,51 @@
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import * as Yup from "yup";
 import { addClientSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
+import { addClient, restAll } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { ClientRootState, AddClientType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-function AddClient({ isOpen, setIsOpen }: IProps) {
 
-  const onSubmit = (values) => {
-    console.log(values, 'formvalue');
+function AddClient({ isOpen, setIsOpen }: IProps) {
+  const dispatch = useAppDispatch();
+  const clientState = useSelector((store: ClientRootState) => store.client);
+
+  const onSubmit = async (values: AddClientType) => {
+    await dispatch(addClient(values));
   }
 
   const formik = useFormik({
     initialValues: {
-      first_name: "",
-      last_name: "",
-      email: "",
-      company_name: "",
+      first_name: "vijay",
+      last_name: "manoher",
+      email: "vk@gmail.com",
+      company_name: "newjers",
     },
     validationSchema: addClientSchema,
     onSubmit
   });
 
+
+  useEffect(() => {
+    if (!!clientState?.successMsg) {
+      dispatch(restAll())
+      setIsOpen((prev) => !prev)
+    } else if (!!clientState?.errorMsg) {
+      dispatch(restAll())
+    }
+  }, [clientState])
+
+  console.log(clientState, 'clientState')
   return (
     <CommonModal
       open={isOpen}

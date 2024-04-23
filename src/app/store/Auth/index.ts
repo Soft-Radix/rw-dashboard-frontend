@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { RootStateType } from "app/store/types";
+import { RootStateType, ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
 import {
-  ApiResponse,
   ForgotPassPayload,
   LoginPayload,
   initialStateProps,
@@ -23,9 +22,6 @@ export const logIn = createAsyncThunk(
       data: payload, // payload data
     });
 
-    if (response?.error) {
-        return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
     let resData = response?.data;
     return resData;
   }
@@ -39,10 +35,6 @@ export const forgotPassword = createAsyncThunk(
       method: "post",
       data: payload,
     });
-
-    if (response.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
 
     // Return only the data you need to keep it serializable
     return {
@@ -59,10 +51,6 @@ export const restPassword = createAsyncThunk(
       data: payload,
     });
 
-    if (response.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
-
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -78,10 +66,6 @@ export const verifyOtp = createAsyncThunk(
       method: "post",
       data: payload,
     });
-
-    if (response.error) {
-      return response?.error?.response?.data; // Ensure errors are propagated
-    }
 
     // Return only the data you need to keep it serializable
     return {
@@ -102,26 +86,22 @@ export const initialState: initialStateProps = {
  * The auth slice.
  */
 export const authSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {},
-    extraReducers(builder) {
-        builder
-
-            .addCase(logIn.pending, (state, action) => {
-                console.log(state, 'action.payload4');
-
-            })
-            .addCase(logIn.fulfilled, (state, action) => {
-                const payload = action.payload as ApiResponse; // Assert type
-
-
-                if (payload?.data?.status) {
-                    toast.success(payload?.data?.message)
-                } else {
-                    toast.error(payload?.data?.message)
-                }
-            })
+  name: 'auth',
+  initialState,
+  reducers: {},
+  extraReducers(builder) {
+    builder
+      .addCase(logIn.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        if (payload?.status) {
+          toast.success(payload?.message)
+        } else {
+          toast.error(payload?.message)
+        }
+      })
+      .addCase(logIn.rejected, (state, { error }) => {
+        toast.error(error?.message)
+      })
 
       .addCase(forgotPassword.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
@@ -133,6 +113,9 @@ export const authSlice = createSlice({
           toast.error(payload?.data?.message);
         }
       })
+      .addCase(forgotPassword.rejected, (state, { error }) => {
+        toast.error(error?.message)
+      })
       .addCase(verifyOtp.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         if (payload?.data?.status) {
@@ -141,6 +124,9 @@ export const authSlice = createSlice({
           toast.error(payload?.data?.message);
         }
       })
+      .addCase(verifyOtp.rejected, (state, { error }) => {
+        toast.error(error?.message)
+      })
       .addCase(restPassword.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         if (payload?.data?.status) {
@@ -148,10 +134,13 @@ export const authSlice = createSlice({
         } else {
           toast.error(payload?.data?.message);
         }
+      })
+      .addCase(restPassword.rejected, (state, { error }) => {
+        toast.error(error?.message)
       });
   },
 });
 
-export const {} = authSlice.actions;
+export const { } = authSlice.actions;
 
 export default authSlice.reducer;
