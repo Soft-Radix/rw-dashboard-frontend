@@ -8,7 +8,7 @@ import { addClient, restAll } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { ClientRootState, AddClientType } from "app/store/Client/Interface";
+import { ClientRootState, ClientType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -20,7 +20,7 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
   const dispatch = useAppDispatch();
   const clientState = useSelector((store: ClientRootState) => store.client);
 
-  const onSubmit = async (values: AddClientType) => {
+  const onSubmit = async (values: ClientType) => {
     await dispatch(addClient(values));
   }
 

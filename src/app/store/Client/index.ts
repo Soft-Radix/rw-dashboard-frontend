@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
-import { AddClientType, initialStateProps, } from "./Interface";
+import { ClientType, initialStateProps, filterType, clientIDType, } from "./Interface";
 
 /**
  * API calling
@@ -10,7 +10,7 @@ import { AddClientType, initialStateProps, } from "./Interface";
 
 export const addClient = createAsyncThunk(
   "client/add",
-  async (payload: AddClientType) => {
+  async (payload: ClientType) => {
     const response = await ApiHelperFunction({
       url: "client/add",
       method: "post",
@@ -26,9 +26,25 @@ export const addClient = createAsyncThunk(
 
 export const getClientList = createAsyncThunk(
   "client/list",
-  async (payload: AddClientType) => {
+  async (payload: filterType) => {
     const response = await ApiHelperFunction({
       url: "client/list",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getClientInfo = createAsyncThunk(
+  "client/information",
+  async (payload: clientIDType) => {
+    const response = await ApiHelperFunction({
+      url: `client/${payload?.client_id}`,
       method: "post",
       data: payload,
     });
@@ -45,8 +61,11 @@ export const getClientList = createAsyncThunk(
  */
 export const initialState: initialStateProps = {
   status: "idle",
+  fetchStatus: 'loading',
   successMsg: "",
-  errorMsg: ""
+  errorMsg: "",
+  list: [],
+  clientDetail: {}
 };
 
 /**
@@ -66,12 +85,9 @@ export const clientSlice = createSlice({
       .addCase(addClient.pending, (state) => {
         state.status = 'loading'
       })
-
       .addCase(addClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         state.status = 'idle'
-        console.log(action.payload, 'payload?.data?.status44');
-
         if (payload?.data?.status) {
           state.successMsg = payload?.data?.message
           toast.success(payload?.data?.message)
@@ -80,9 +96,22 @@ export const clientSlice = createSlice({
           toast.error(payload?.data?.message)
         }
       })
-
       .addCase(addClient.rejected, (state, { error }) => {
         toast.error(error?.message)
+      })
+
+      .addCase(getClientList.pending, (state) => {
+        state.status = 'loading'
+      })
+      .addCase(getClientList.fulfilled, (state, action) => {
+        const { data: { list } } = action.payload?.data
+        state.status = 'idle';
+        state.list = list
+      })
+      .addCase(getClientInfo.fulfilled, (state, action) => {
+        const { data } = action.payload?.data;
+        state.fetchStatus = 'idle';
+        state.clientDetail = data
       })
   },
 });

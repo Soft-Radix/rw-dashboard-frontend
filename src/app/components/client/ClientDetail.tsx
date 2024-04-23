@@ -1,15 +1,9 @@
 import { Button, Box, Grid, Checkbox, Typography, TableCell, Tab, Tabs, TableRow, Theme, IconButton } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  LastPayment,
-} from "public/assets/icons/common";
+
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
-import { NavigateFunction, useLocation, Location, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import { NavigateFunction, useLocation, Location, useNavigate, useParams } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -24,6 +18,8 @@ import { DownArrowIconWhite } from 'public/assets/icons/dashboardIcons';
 import InputField from "../InputField";
 import AssignedAccountManager from "./components/AssignedAccountManager";
 import SubscriptionList from "./components/SubscriptionList";
+import { getClientInfo } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -32,19 +28,12 @@ interface TabPanelProps {
 }
 export default function ClientDetail() {
   const theme: Theme = useTheme();
-  const formik = useFormik({
-    initialValues: {
-      role: "",
-      verification: "",
-    },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => { },
-  });
-
+  const dispatch = useAppDispatch()
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(false);
   const location: Location = useLocation();
+  const { client_id } = useParams()
   const navigate: NavigateFunction = useNavigate();
   const queryParams = new URLSearchParams(location.search);
 
@@ -152,6 +141,12 @@ export default function ClientDetail() {
       actionBtn: () => null
     },
   ];
+
+  useEffect(() => {
+    if (!client_id) return null
+    dispatch(getClientInfo({ client_id }))
+  }, [])
+
 
   return (
     <>

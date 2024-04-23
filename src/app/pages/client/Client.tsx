@@ -1,7 +1,7 @@
+import { useEffect, useState } from "react";
 import { Button, InputAdornment, TextField, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTab from "../../components/CommonTab";
 
@@ -14,6 +14,11 @@ import AssignedAgents from "src/app/components/client/components/AssignedAgents"
 import CustomButton from "src/app/components/custom_button";
 import ClientTable from "src/app/components/client/ClientTable";
 import ClientTabButton from "src/app/components/client/ClientTabButton";
+import { useAppDispatch } from "app/store/store";
+import { getClientList } from "app/store/Client";
+import { ClientRootState, filterType } from "app/store/Client/Interface";
+import { useSelector } from "react-redux";
+import FuseLoading from "@fuse/core/FuseLoading";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -47,10 +52,15 @@ function a11yProps(index: number) {
 
 export default function Clients() {
   const theme: Theme = useTheme();
-
+  const dispatch = useAppDispatch()
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
-
+  const [filters, setfilters] = useState<filterType>({
+    "start": 0,
+    "limit": 10,
+    "search": ""
+  })
+  const clientState = useSelector((store: ClientRootState) => store.client)
   const [selectedTab, setSelectedTab] = useState(0);
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -69,7 +79,7 @@ export default function Clients() {
     {
       id: "all",
       label: "All",
-      content: <ClientTable />,
+      content: <ClientTable clientState={clientState} />,
       actionBtn: ClientTabButton,
     },
     {
@@ -98,6 +108,10 @@ export default function Clients() {
     },
   ];
 
+  useEffect(() => {
+    dispatch(getClientList(filters))
+  }, [])
+  
   return (
     <>
       <TitleBar title="Clients">

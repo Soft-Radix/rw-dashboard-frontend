@@ -13,6 +13,8 @@ import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
+import ListLoading from "@fuse/core/ListLoading";
+import moment from "moment";
 
 const intialData = [
   {
@@ -99,7 +101,7 @@ const columnKey = {
   Status: "status",
 };
 
-export default function ClientTable() {
+export default function ClientTable({ clientState }) {
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -107,7 +109,7 @@ export default function ClientTable() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
   const [rows, setrows] = useState(intialData);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -126,85 +128,151 @@ export default function ClientTable() {
     setrows(sortedRows);
   };
 
+  if (clientState.status === 'loading') {
+    return <ListLoading />
+  }
   return (
     <>
-      <div>
-        <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable
-            headingIcon={true}
-            headIcon={Array.from({ length: 5 }, (_, index) => (
-              <HeadIcon key={index} />
-            ))}
-            headings={["Id", "Name", "CompanyName", "Date", "Status", ""]}
-            sortColumn={sortBy}
-            sortOrder={sortOrder}
-            onSort={sortData}
-          >
-            <>
-              {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "& td": {
-                      borderBottom: "1px solid #EDF2F6",
-                      paddingTop: "12px",
-                      paddingBottom: "12px",
-                      color: theme.palette.primary.main,
-                    },
-                  }}
-                >
-                  <TableCell
-                    scope="row"
-                    className="flex items-center gap-8 font-500"
-                  >
-                    <span className="flex items-center gap-10">
-                      <Checkbox
-                        sx={{ padding: "4px" }}
-                        color="primary"
-                        defaultChecked={row.defaultChecked}
-                      />
-                      {row.id}
-                    </span>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="center" className="font-500">
-                    {row.companyName}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {row.date}
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    <span
-                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                    >
-                      {row.status}
-                    </span>
-                  </TableCell>
-                  <TableCell scope="row">
-                    <Link to="/admin/client/detail">
-                      <ArrowRightCircleIcon />
-                    </Link>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </>
-          </CommonTable>
-          <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
-          </div>
-        </div>
 
-        <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <div className="bg-white rounded-lg shadow-sm">
+        <CommonTable
+          headings={["Id", "Name", "Company Name", "Date", "Status", ""]}
+          sortColumn={sortBy}
+          sortOrder={sortOrder}
+          onSort={sortData}
+        >
+          <>
+            {clientState?.list.map((row, index) => (
+              <TableRow
+                key={index}
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell scope="row" className="font-500">
+                  <div className="flex items-center pe-[3.25rem]">
+                    <Checkbox
+                      sx={{ padding: "4px" }}
+                      color="primary"
+                      defaultChecked={row.defaultChecked}
+                      inputProps={{
+                        "aria-labelledby": `table-checkbox-${index}`,
+                      }}
+                    />{" "}
+                    <div className="flex ml-10 grow">
+                      #{row.id}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell align="center" className="whitespace-nowrap font-500">
+                  {row.first_name + " " + row.last_name}
+                </TableCell>
+                <TableCell align="center" className="whitespace-nowrap font-500">
+                  {row.company_name}
+                </TableCell>
+                <TableCell align="center" className="whitespace-nowrap font-500">
+                  {moment(row.created_at).format('ll')}
+                </TableCell>
+                <TableCell align="center" className="whitespace-nowrap font-500">
+                  <span
+                    className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                      ${row.status === "Enabled" ? "text-[#4CAF50] bg-[#4CAF502E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                  >
+                    {row.status || 'N/A'}
+                  </span>
+                </TableCell>
+
+                <TableCell scope="row">
+                  <Link to={`/admin/client/detail/${row.id}`}>
+                    <ArrowRightCircleIcon />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </>
+        </CommonTable>
+        <div className="flex justify-end py-14 px-[3rem]">
+          <CommonPagination count={1} />
+        </div>
       </div>
+
+      <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+
     </>
   );
 }
+
+
+{/* <CommonTable
+          headingIcon={true}
+          headIcon={Array.from({ length: 5 }, (_, index) => (
+            <HeadIcon key={index} />
+          ))}
+          headings={["Id", "Name", "CompanyName", "Date", "Status", ""]}
+          sortColumn={sortBy}
+          sortOrder={sortOrder}
+          onSort={sortData}
+        >
+          <>
+            {clientState?.list?.map((row, index) => (
+              <TableRow
+                key={index}
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell
+                  scope="row"
+                  className="flex items-center gap-8 font-500"
+                >
+                  <span className="flex items-center ">
+                    <Checkbox
+                      sx={{ padding: "4px" }}
+                      color="primary"
+                      defaultChecked={row.defaultChecked}
+                    />
+                    {row.id}
+                  </span>
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row.name}
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  {row.companyName}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row.date}
+                </TableCell>
+                <TableCell align="center" className="whitespace-nowrap">
+                  <span
+                    className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                  >
+                    {row.status}
+                  </span>
+                </TableCell>
+                <TableCell scope="row">
+                  <Link to="/admin/client/detail">
+                    <ArrowRightCircleIcon />
+                  </Link>
+                </TableCell>
+              </TableRow>
+            ))}
+          </>
+        </CommonTable> */}

@@ -28,7 +28,7 @@ const ClientConfig = {
       element: <Client />,
     },
     {
-      path: "admin/client/detail",
+      path: "admin/client/detail/:client_id",
       element: <ClientDetail />,
     },
     {

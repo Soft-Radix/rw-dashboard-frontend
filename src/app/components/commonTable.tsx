@@ -41,11 +41,11 @@ function CommonTable({
         <TableHead
           className={`${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
 
-          // sx={{
-          //   "& th": {
-          //     borderBottom: "1px solid #EDF2F6",
-          //   },
-          // }}
+        // sx={{
+        //   "& th": {
+        //     borderBottom: "1px solid #EDF2F6",
+        //   },
+        // }}
         >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
