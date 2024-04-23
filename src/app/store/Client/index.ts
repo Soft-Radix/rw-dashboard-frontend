@@ -32,6 +32,7 @@ export const getClientList = createAsyncThunk(
       method: "post",
       data: payload,
     });
+    console.log(response.data, 'response.data');
 
     // Return only the data you need to keep it serializable
     return {
@@ -44,7 +45,7 @@ export const getClientInfo = createAsyncThunk(
   "client/information",
   async (payload: clientIDType) => {
     const response = await ApiHelperFunction({
-      url: `client/${payload?.client_id}`,
+      url: `client/detail/${payload?.client_id}`,
       method: "post",
       data: payload,
     });
@@ -65,7 +66,8 @@ export const initialState: initialStateProps = {
   successMsg: "",
   errorMsg: "",
   list: [],
-  clientDetail: {}
+  clientDetail: {},
+  selectedColumn: []
 };
 
 /**
@@ -78,6 +80,30 @@ export const clientSlice = createSlice({
     restAll: (state) => {
       state.successMsg = '';
       state.errorMsg = ''
+    },
+    updateSelectedColumn: (state, { payload }) => {
+      const predefinedItems = {
+        "Id": 0,
+        "Name": 1,
+        "Company Name": 2,
+        "Date": 3,
+        "Status": 4,
+        "": -1 // Place "Actions" at the end
+      };
+
+      let isExist = state.selectedColumn.indexOf(payload)
+      if (isExist !== -1) {
+        state.selectedColumn = state.selectedColumn.filter(item => item !== payload)
+      } else {
+        state.selectedColumn.push(payload)
+      }
+
+      // Sort selectedColumn based on predefined positions
+      state.selectedColumn.sort((a, b) => {
+        const indexA = predefinedItems[a] !== undefined ? predefinedItems[a] : state.selectedColumn.length;
+        const indexB = predefinedItems[b] !== undefined ? predefinedItems[b] : state.selectedColumn.length;
+        return indexA - indexB;
+      });
     }
   },
   extraReducers(builder) {
@@ -104,9 +130,15 @@ export const clientSlice = createSlice({
         state.status = 'loading'
       })
       .addCase(getClientList.fulfilled, (state, action) => {
-        const { data: { list } } = action.payload?.data
+        const response = action.payload?.data
         state.status = 'idle';
-        state.list = list
+        if (!response.status) {
+          toast.error(response?.message)
+        }
+        state.list = response?.data?.list || []
+      })
+      .addCase(getClientList.rejected, (state, action) => {
+        state.status = 'idle';
       })
       .addCase(getClientInfo.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
@@ -116,6 +148,6 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll } = clientSlice.actions;
+export const { restAll, updateSelectedColumn } = clientSlice.actions;
 
 export default clientSlice.reducer;

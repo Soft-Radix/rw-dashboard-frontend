@@ -15,6 +15,8 @@ import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 import ListLoading from "@fuse/core/ListLoading";
 import moment from "moment";
+import { useSelector } from "react-redux";
+import { ClientRootState } from "app/store/Client/Interface";
 
 const intialData = [
   {
@@ -103,14 +105,6 @@ const columnKey = {
 
 export default function ClientTable({ clientState }) {
   const theme: Theme = useTheme();
-  const formik = useFormik({
-    initialValues: {
-      role: "",
-      verification: "",
-    },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => { },
-  });
   const [rows, setrows] = useState(intialData);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [sortBy, setSortBy] = useState("");
@@ -131,12 +125,23 @@ export default function ClientTable({ clientState }) {
   if (clientState.status === 'loading') {
     return <ListLoading />
   }
+  const renderCell = (cellId) => {
+    if (clientState?.selectedColumn?.length > 0) {
+      if (clientState?.selectedColumn.indexOf(cellId) !== -1) {
+        return true
+      } else {
+        return false
+      }
+    } else {
+      return true
+    }
+  }
   return (
     <>
-
       <div className="bg-white rounded-lg shadow-sm">
         <CommonTable
-          headings={["Id", "Name", "Company Name", "Date", "Status", ""]}
+          headings={clientState?.selectedColumn?.length > 0 ? clientState?.selectedColumn :
+            ["Id", "Name", "Company Name", "Date", "Status", ""]}
           sortColumn={sortBy}
           sortOrder={sortOrder}
           onSort={sortData}
@@ -154,38 +159,49 @@ export default function ClientTable({ clientState }) {
                   },
                 }}
               >
-                <TableCell scope="row" className="font-500">
-                  <div className="flex items-center pe-[3.25rem]">
-                    <Checkbox
-                      sx={{ padding: "4px" }}
-                      color="primary"
-                      defaultChecked={row.defaultChecked}
-                      inputProps={{
-                        "aria-labelledby": `table-checkbox-${index}`,
-                      }}
-                    />{" "}
-                    <div className="flex ml-10 grow">
-                      #{row.id}
+                {renderCell('Id') &&
+                  <TableCell scope="row" className="font-500">
+                    <div className="flex items-center pe-[3.25rem]">
+                      <Checkbox
+                        sx={{ padding: "4px" }}
+                        color="primary"
+                        defaultChecked={row.defaultChecked}
+                        inputProps={{
+                          "aria-labelledby": `table-checkbox-${index}`,
+                        }}
+                      />{" "}
+                      <div className="flex ml-10 grow">
+                        #{row.id}
+                      </div>
                     </div>
-                  </div>
-                </TableCell>
-                <TableCell align="center" className="whitespace-nowrap font-500">
-                  {row.first_name + " " + row.last_name}
-                </TableCell>
-                <TableCell align="center" className="whitespace-nowrap font-500">
-                  {row.company_name}
-                </TableCell>
-                <TableCell align="center" className="whitespace-nowrap font-500">
-                  {moment(row.created_at).format('ll')}
-                </TableCell>
-                <TableCell align="center" className="whitespace-nowrap font-500">
-                  <span
-                    className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-                      ${row.status === "Enabled" ? "text-[#4CAF50] bg-[#4CAF502E]" : "text-[#F44336] bg-[#F443362E]"}`}
-                  >
-                    {row.status || 'N/A'}
-                  </span>
-                </TableCell>
+                  </TableCell>
+                }
+                {renderCell('Name') &&
+                  <TableCell align="center" className="whitespace-nowrap font-500">
+                    {row.first_name + " " + row.last_name}
+                  </TableCell>
+                }
+
+                {renderCell('Company Name') &&
+                  <TableCell align="center" className="whitespace-nowrap font-500">
+                    {row.company_name}
+                  </TableCell>
+                }
+                {renderCell('Date') &&
+                  <TableCell align="center" className="whitespace-nowrap font-500">
+                    {moment(row.created_at).format('ll')}
+                  </TableCell>
+                }
+                {renderCell('Status') &&
+                  <TableCell align="center" className="whitespace-nowrap font-500">
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                    ${row.status === "Enabled" ? "text-[#4CAF50] bg-[#4CAF502E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                    >
+                      {row.status || 'N/A'}
+                    </span>
+                  </TableCell>
+                }
 
                 <TableCell scope="row">
                   <Link to={`/admin/client/detail/${row.id}`}>
@@ -200,9 +216,7 @@ export default function ClientTable({ clientState }) {
           <CommonPagination count={1} />
         </div>
       </div>
-
       <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
-
     </>
   );
 }

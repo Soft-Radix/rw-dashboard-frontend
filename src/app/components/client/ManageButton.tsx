@@ -10,6 +10,10 @@ import {
   DownArrowIcon,
   UpArrowBlank,
 } from "public/assets/icons/dashboardIcons";
+import { useAppDispatch } from "app/store/store";
+import { ClientRootState } from "app/store/Client/Interface";
+import { useSelector } from "react-redux";
+import { updateSelectedColumn } from "app/store/Client";
 
 const names = ["Id", "Name", "Company Name", "Date", "Status"];
 
@@ -17,7 +21,8 @@ export default function ManageButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = React.useState<string[]>([]);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
+  const dispatch = useAppDispatch();
+  const clientState = useSelector((store: ClientRootState) => store.client)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setIsOpen(true);
@@ -28,18 +33,18 @@ export default function ManageButton() {
     setIsOpen(false);
   };
 
-  //   const handleCheckboxToggle = (itemName: string) => () => {
-  //     const selectedIndex = selectedItems.indexOf(itemName);
-  //     const newSelectedItems = [...selectedItems];
+  const handleCheckboxToggle = (itemName: string) => () => {
+    const selectedIndex = selectedItems.indexOf(itemName);
+    const newSelectedItems = [...selectedItems];
 
-  //     if (selectedIndex === -1) {
-  //       newSelectedItems.push(itemName);
-  //     } else {
-  //       newSelectedItems.splice(selectedIndex, 1);
-  //     }
+    if (selectedIndex === -1) {
+      newSelectedItems.push(itemName);
+    } else {
+      newSelectedItems.splice(selectedIndex, 1);
+    }
 
-  //     setSelectedItems(newSelectedItems);
-  //   };
+    setSelectedItems(newSelectedItems);
+  };
 
   const handleApply = () => {
     console.log("Selected Items:", selectedItems);
@@ -51,6 +56,7 @@ export default function ManageButton() {
     return selectedItems.indexOf(itemName) !== -1;
   };
   const handleToggleItem = (itemName: string) => () => {
+    dispatch(updateSelectedColumn(itemName))
     setSelectedItems((prevSelectedItems) => {
       if (prevSelectedItems.includes(itemName)) {
         // Remove the item if already selected
@@ -61,6 +67,7 @@ export default function ManageButton() {
       }
     });
   };
+
 
   return (
     <div>

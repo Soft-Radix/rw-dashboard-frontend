@@ -31,7 +31,8 @@ export type initialStateProps = {
     errorMsg: string
     fetchStatus?: string,
     clientDetail?: object,
-    list: ClientType[]
+    list: ClientType[],
+    selectedColumn: string[]
 };
 
 
@@ -40,6 +41,7 @@ export interface ClientState {
     successMsg: string,
     errorMsg: string,
     list: ClientType[]
+    selectedColumn: string[]
 }
 
 export interface ClientRootState {

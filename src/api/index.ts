@@ -16,6 +16,7 @@ const ApiHelperFunction =
             return { data: result.data };
         } catch (axiosError) {
             const error = axiosError as AxiosError;
+
             if (error?.response) {
                 return { data: error?.response?.data }
             } else {

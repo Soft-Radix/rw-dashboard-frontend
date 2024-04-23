@@ -45,7 +45,6 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
     }
   }, [clientState])
 
-  console.log(clientState, 'clientState')
   return (
     <CommonModal
       open={isOpen}
