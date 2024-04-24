@@ -51,7 +51,6 @@ const addAgentSchema = Yup.object({
     .required("Last name is required")
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
   ...emailField,
-  company_name: Yup.string().required("Compnay name is required"),
 });
 
 export {

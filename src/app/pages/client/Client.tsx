@@ -1,25 +1,21 @@
-import { ChangeEvent, useEffect, useState } from "react";
 import { Button, InputAdornment, TextField, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
+import { debounce } from "lodash";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { useEffect, useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTab from "../../components/CommonTab";
-import { debounce } from "lodash";
 
-import { SearchIcon } from "public/assets/icons/topBarIcons";
-import DropdownMenu from "src/app/components/Dropdown";
-import AddClient from "src/app/components/client/AddClient";
-import DeleteClient from "src/app/components/client/DeleteClient";
-import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
-import AssignedAgents from "src/app/components/client/components/AssignedAgents";
-import CustomButton from "src/app/components/custom_button";
-import ClientTable from "src/app/components/client/ClientTable";
-import { useAppDispatch } from "app/store/store";
 import { getClientList } from "app/store/Client";
 import { ClientRootState, filterType } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
+import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { useSelector } from "react-redux";
-import FuseLoading from "@fuse/core/FuseLoading";
+import AddClient from "src/app/components/client/AddClient";
+import ClientTable from "src/app/components/client/ClientTable";
+import DeleteClient from "src/app/components/client/DeleteClient";
 import ManageButton from "src/app/components/client/ManageButton";
+import AssignedAgents from "src/app/components/client/components/AssignedAgents";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -28,15 +24,15 @@ interface TabPanelProps {
 
 export default function Clients() {
   const theme: Theme = useTheme();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [filters, setfilters] = useState<filterType>({
-    "start": 0,
-    "limit": 10,
-    "search": ""
-  })
-  const clientState = useSelector((store: ClientRootState) => store.client)
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const clientState = useSelector((store: ClientRootState) => store.client);
 
   // Debounce function to delay executing the search
   const debouncedSearch = debounce((searchValue) => {
@@ -96,8 +92,6 @@ export default function Clients() {
     );
   };
 
-
-
   const tabs = [
     {
       id: "all",
@@ -132,86 +126,13 @@ export default function Clients() {
   ];
 
   useEffect(() => {
-    dispatch(getClientList(filters))
-  }, [filters])
+    dispatch(getClientList(filters));
+  }, [filters]);
 
   return (
     <>
       <TitleBar title="Clients">
         <div className="flex flex-col items-start gap-20 sm:items-center sm:flex-row">
-          {/* <DropdownMenu
-            marginTop={"mt-20"}
-            button={
-              <div
-                className="relative flex items-center"
-                onClick={handleButtonClick}
-              >
-                <Button
-                  variant="contained"
-                  className="h-[40px] sm:text-[16px] text-secondary flex gap-8 bg-[#EDEDFC] leading-none hover:bg-[#EDEDFC]"
-                  aria-label="Manage Sections"
-                  size="large"
-                  style={{
-                    border: anchorEl ? "1px #4F46E5 solid" : "none",
-                  }}
-                >
-                  Assign to account manager
-                </Button>
-              </div>
-            }
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-          >
-            <div className="w-[375px]">
-              <div className="flex w-full border-b-1">
-                <TextField
-                  hiddenLabel
-                  id="filled-hidden-label-small"
-                  defaultValue=""
-                  variant="standard"
-                  sx={{
-                    pl: 2,
-                    pr: 2,
-                    pt: 1,
-                    width: "43ch",
-                    "& .MuiInputBase-input": {
-                      textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                      border: "none", // Hide the border of the input element
-                    },
-                    "& .MuiInput-underline:before": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                    "& .MuiInput-underline:after": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-10 p-20 px-20">
-              <span>
-                <img src={img1} alt=""></img>
-              </span>
-              <span>Hello</span>
-            </div>
-          </DropdownMenu>
-
-          <Button
-            variant="contained"
-            className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
-            aria-label="delete"
-            size="large"
-            onClick={() => setIsOpenDeletedModal(true)}
-          >
-            Delete
-          </Button>{" "} */}
           <Button
             variant="outlined"
             color="secondary"

@@ -22,13 +22,13 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
 
 type ModalType = {
   open?: boolean;
-  handleToggle: () => void;
+  handleToggle: (e: React.FormEvent) => void;
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
   DeleteModal?: boolean;
-  btnTitle?: string,
-  onSubmit?: () => void
+  btnTitle?: string;
+  onSubmit?: () => void;
 };
 
 export default function CommonModal({
@@ -39,7 +39,7 @@ export default function CommonModal({
   btnTitle,
   DeleteModal = false,
   maxWidth = "387",
-  onSubmit
+  onSubmit,
 }: ModalType) {
   return (
     <StylesDialog
@@ -66,11 +66,11 @@ export default function CommonModal({
         </div>
       ) : (
         <>
-          <IconButton className="flex items-center justify-end pt-20 pr-20 rounded-none " onClick={handleToggle}>
-            <CrossIcon
-              className="cursor-pointer"
-              color="#9DA0A6"
-            />
+          <IconButton
+            className="flex items-center justify-end pt-20 pr-20 rounded-none "
+            onClick={handleToggle}
+          >
+            <CrossIcon className="cursor-pointer" color="#9DA0A6" />
           </IconButton>
         </>
       )}
