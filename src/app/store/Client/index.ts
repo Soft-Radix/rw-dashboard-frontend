@@ -82,6 +82,9 @@ export const clientSlice = createSlice({
       state.errorMsg = '';
       state.selectedColumn = []
     },
+    sortColumn: (state, { payload }) => {
+      state.list = payload || []
+    },
     updateSelectedColumn: (state, { payload }) => {
       const predefinedItems = {
         "Id": 0,
@@ -149,6 +152,6 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll, updateSelectedColumn } = clientSlice.actions;
+export const { restAll, updateSelectedColumn, sortColumn } = clientSlice.actions;
 
 export default clientSlice.reducer;

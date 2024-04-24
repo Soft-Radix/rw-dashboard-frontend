@@ -10,14 +10,14 @@ import {
 } from "@mui/material";
 import { DownArrowBlack } from "public/assets/icons/projectsIcon";
 import { ReactNode } from "react";
+import { HeadIcon } from "public/assets/icons/clienIcon";
 
 interface IProps {
   children: ReactNode;
   headings: string[];
   headingRowProps?: TableRowProps;
   useBorderDesign?: boolean;
-  headingIcon?: boolean;
-  headIcon?: any;
+  isSorting?: boolean;
   sortColumn?: string;
   sortOrder?: string;
   onSort?: (column: string) => void;
@@ -27,8 +27,7 @@ function CommonTable({
   headings,
   headingRowProps,
   useBorderDesign,
-  headingIcon,
-  headIcon,
+  isSorting,
   onSort,
 }: IProps) {
   return (
@@ -39,7 +38,7 @@ function CommonTable({
         className={`${useBorderDesign ? "border-design" : "common_table "}`}
       >
         <TableHead
-          className={`${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
+          className={`${isSorting && 'cursor-pointer'} ${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
 
         // sx={{
         //   "& th": {
@@ -63,27 +62,21 @@ function CommonTable({
                   } else null;
                 }}
               >
-                {headingIcon ? (
-                  <TableCell
-                    align={
-                      headings.length - 1 === index || index === 0
-                        ? "left"
-                        : "left"
-                    }
-                    className={`th ${index === 0 ? "flex gap-10 justify-start items-center" : "flex gap-10 justify-center items-center"}`}
-                  >
+                {isSorting ?
+                  (<div className="flex items-center">
                     {index === 0 && (
-                      <div>
-                        <Checkbox />
-                      </div>
+                      <Checkbox
+                        sx={{
+                          paddingLeft: 0, // Set paddingLeft to 0
+                          '&:hover': {
+                            backgroundColor: 'transparent', // No hover background globally
+                          },
+                        }}
+                      />
                     )}
-                    <div className="flex items-center gap-10">
-                      {headIcon[index]} {item}
-                    </div>
-                  </TableCell>
-                ) : (
-                  <>{item}</>
-                )}
+                    {index !== headings.length - 1 && <HeadIcon className="mr-10" />}  {item}
+                  </div>)
+                  : (item)}
               </TableCell>
             ))}
           </TableRow>

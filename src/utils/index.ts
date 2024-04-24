@@ -8,7 +8,7 @@ type SelectProp = {
 /**
  * Get access token from local storage
  */
-export const getLocalStorage = (item) => {
+export const getLocalStorage = (item: string) => {
   let data = localStorage.getItem(item);
   return data ? JSON.parse(data) : null;
 };
@@ -69,3 +69,20 @@ export const BillingTermsOptions: SelectProp[] = [
   { value: "One", label: "Fixed number of payments" },
   { value: "two", label: "Automatically renew until cancelled" },
 ];
+
+const columnKey = {
+  ID: "id",
+  Name: "first_name",
+  ['Company Name']: "company_name",
+  Date: "date",
+  Status: "status",
+};
+
+export const sortList = (column: string, isAsc: boolean, list: any) => {
+  const sortedRows = [...list].sort((a, b) => {
+    if (a[columnKey[column]] < b[columnKey[column]]) return isAsc ? -1 : 1;
+    if (a[columnKey[column]] > b[columnKey[column]]) return isAsc ? 1 : -1;
+    return 0;
+  });
+  return sortedRows
+}
