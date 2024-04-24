@@ -23,7 +23,7 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
 
 type ModalType = {
   open?: boolean;
-  handleToggle: () => void;
+  handleToggle: (e: React.FormEvent) => void;
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
@@ -69,11 +69,11 @@ export default function CommonModal({
         </div>
       ) : (
         <>
-          <IconButton className="flex items-center justify-end pt-20 pr-20 rounded-none " onClick={handleToggle}>
-            <CrossIcon
-              className="cursor-pointer"
-              color="#9DA0A6"
-            />
+          <IconButton
+            className="flex items-center justify-end pt-20 pr-20 rounded-none "
+            onClick={handleToggle}
+          >
+            <CrossIcon className="cursor-pointer" color="#9DA0A6" />
           </IconButton>
         </>
       )}

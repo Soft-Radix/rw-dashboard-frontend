@@ -1,14 +1,12 @@
+import { addClient, restAll } from "app/store/Client";
+import { ClientRootState, ClientType } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction, useEffect } from "react";
-import * as Yup from "yup";
+import { useSelector } from "react-redux";
 import { addClientSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
-import { addClient, restAll } from "app/store/Client";
-import { useAppDispatch } from "app/store/store";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { ClientRootState, ClientType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -19,8 +17,10 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
   const dispatch = useAppDispatch();
   const clientState = useSelector((store: ClientRootState) => store.client);
 
-  const onSubmit = async (values: ClientType) => {
+  const onSubmit = async (values: ClientType, { resetForm }) => {
+    // console.log(values, "cvheck");
     await dispatch(addClient(values));
+    resetForm();
   };
 
   const formik = useFormik({
