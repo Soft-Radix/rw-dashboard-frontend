@@ -1,7 +1,7 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { MenuItem, styled, useTheme } from "@mui/material";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import SelectField from "../selectField";
@@ -33,10 +33,10 @@ interface IProps {
 }
 
 export const profileStatus: profileState[] = [
-  { value: "inprogress", label: "Active" },
-  { value: "complete", label: "Suspended" },
-  { value: "paused", label: "Paused" },
-  { value: "onHold", label: "On hold" },
+  { value: "Active", label: "Active" },
+  { value: "Suspended", label: "Suspended" },
+  { value: "Paused", label: "Paused" },
+  { value: "On Hold", label: "On hold" },
 ];
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
@@ -74,11 +74,24 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
   const dispatch = useAppDispatch();
   const onSubmit = async (values: FormType) => {
-    const { payload } = await dispatch(updateProfile({ ...values, client_id: clientDetail.id }))
-    if (payload?.data?.status) {
-      setIsOpen(false)
+    const formData = new FormData();
+
+    // Append form fields to FormData
+    Object.entries(values).forEach(([key, value]) => {
+      formData.append(key, String(value))
+    });
+    
+    formData.append('client_id', String(clientDetail.id))
+    if (selectedImage) {
+      formData.append('files', selectedImage); // Add the selected image to the FormData
     }
-  }
+
+    const { payload } = await dispatch(updateProfile({ formData }));
+
+    if (payload?.data?.status) {
+      setIsOpen(false);
+    }
+  };
   const formik = useFormik({
     initialValues: {
       first_name: '',
@@ -109,13 +122,15 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     }
   }, [clientDetail]); // Dependency on clientDetail
 
-  const [selectedImage, setSelectedImage] = useState('/assets/images/avatars/male-01.jpg'); // Default image path
+  const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
+  const [previewUrl, setpreviewUrl] = useState<string>('')
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
     if (file) {
+      setSelectedImage(file); // Store the selected file
       const imageUrl = URL.createObjectURL(file); // Create a temporary URL for the uploaded image
-      setSelectedImage(imageUrl); // Set the new image
+      setpreviewUrl(imageUrl); // Set the new image
     }
   };
 
@@ -132,7 +147,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
-          src="/assets/images/avatars/male-01.jpg"
+          src={previewUrl || "/assets/images/avatars/male-01.jpg"}
           alt="profile_picture"
           className="w-full h-full rounded-full"
         />

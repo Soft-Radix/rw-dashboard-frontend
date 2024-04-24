@@ -2,6 +2,7 @@ export interface ClientType {
     first_name?: string,
     last_name?: string,
     email?: string;
+    files?: File,
     company_name?: string,
     id?: number,
     client_id?: number | string,
@@ -48,3 +49,7 @@ export interface clientIDType {
     client_id: string
 }
 
+// Type for the payload that updateProfile expects
+export interface UpdateProfilePayload {
+    formData: FormData; // The form data object
+  }
