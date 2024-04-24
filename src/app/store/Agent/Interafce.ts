@@ -9,7 +9,7 @@ export interface AgentType {
   country_code?: number;
   phone_number?: number;
   address?: string;
-  user_image?: any
+  user_image?: any;
   company_name?: string;
   status?: string;
   deleted_at?: string;
@@ -43,6 +43,7 @@ export interface AgentState {
   errorMsg: string;
   list: AgentType[];
   selectedColumn: string[];
+  agentDetail: AgentType;
 }
 
 export interface AgentRootState {

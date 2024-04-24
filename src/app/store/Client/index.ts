@@ -79,7 +79,7 @@ export const updateProfile = createAsyncThunk(
       url: `client/update-profile`,
       method: "put",
       data: payload.formData,
-      formData: true
+      formData: true,
     });
 
     // Return only the data you need to keep it serializable
@@ -110,124 +110,134 @@ export const changePassword = createAsyncThunk(
  */
 export const initialState: initialStateProps = {
   status: "idle",
-  fetchStatus: 'loading',
+  fetchStatus: "loading",
   actionStatus: false,
   successMsg: "",
   errorMsg: "",
   list: [],
   clientDetail: {},
-  selectedColumn: []
+  selectedColumn: [],
 };
 
 /**
  * The auth slice.
  */
 export const clientSlice = createSlice({
-  name: 'clientSlice',
+  name: "clientSlice",
   initialState,
   reducers: {
     restAll: (state) => {
-      state.successMsg = '';
-      state.errorMsg = '';
-      state.selectedColumn = []
+      state.successMsg = "";
+      state.errorMsg = "";
+      state.selectedColumn = [];
     },
     sortColumn: (state, { payload }) => {
-      state.list = payload || []
+      state.list = payload || [];
     },
     updateSelectedColumn: (state, { payload }) => {
       const predefinedItems = {
-        "Id": 0,
-        "Name": 1,
+        Id: 0,
+        Name: 1,
         "Company Name": 2,
-        "Date": 3,
-        "Status": 4,
-        "": -1 // Place "Actions" at the end
+        Date: 3,
+        Status: 4,
+        "": -1, // Place "Actions" at the end
       };
 
-      let isExist = state.selectedColumn.indexOf(payload)
+      let isExist = state.selectedColumn.indexOf(payload);
       if (isExist !== -1) {
-        state.selectedColumn = state.selectedColumn.filter(item => item !== payload)
+        state.selectedColumn = state.selectedColumn.filter(
+          (item) => item !== payload
+        );
       } else {
-        state.selectedColumn.push(payload)
+        state.selectedColumn.push(payload);
       }
 
       // Sort selectedColumn based on predefined positions
       state.selectedColumn.sort((a, b) => {
-        const indexA = predefinedItems[a] !== undefined ? predefinedItems[a] : state.selectedColumn.length;
-        const indexB = predefinedItems[b] !== undefined ? predefinedItems[b] : state.selectedColumn.length;
+        const indexA =
+          predefinedItems[a] !== undefined
+            ? predefinedItems[a]
+            : state.selectedColumn.length;
+        const indexB =
+          predefinedItems[b] !== undefined
+            ? predefinedItems[b]
+            : state.selectedColumn.length;
         return indexA - indexB;
       });
-    }
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(addClient.pending, (state) => {
-        state.status = 'loading'
+        state.status = "loading";
       })
       .addCase(addClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        state.status = 'idle'
+        state.status = "idle";
         if (payload?.data?.status) {
-          state.successMsg = payload?.data?.message
-          toast.success(payload?.data?.message)
+          state.successMsg = payload?.data?.message;
+          toast.success(payload?.data?.message);
         } else {
-          state.errorMsg = payload?.data?.message
-          toast.error(payload?.data?.message)
+          state.errorMsg = payload?.data?.message;
+          toast.error(payload?.data?.message);
         }
       })
       .addCase(addClient.rejected, (state, { error }) => {
-        toast.error(error?.message)
+        toast.error(error?.message);
       })
       .addCase(deletClient.pending, (state) => {
-        state.actionStatus = true
+        state.actionStatus = true;
       })
       .addCase(deletClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { client_ids } = action.meta?.arg;
         state.actionStatus = false;
         if (payload?.data?.status) {
-          state.list = state.list?.filter(item => !client_ids?.includes(item.id))
-          toast.success(payload?.data?.message)
+          state.list = state.list?.filter(
+            (item) => !client_ids?.includes(item.id)
+          );
+          toast.success(payload?.data?.message);
         } else {
-          toast.error(payload?.data?.message)
+          toast.error(payload?.data?.message);
         }
       })
       .addCase(deletClient.rejected, (state, { error }) => {
-        toast.error(error?.message)
+        toast.error(error?.message);
         state.actionStatus = false;
       })
 
       .addCase(getClientList.pending, (state) => {
-        state.status = 'loading'
+        state.status = "loading";
       })
       .addCase(getClientList.fulfilled, (state, action) => {
-        const response = action.payload?.data
-        state.status = 'idle';
+        const response = action.payload?.data;
+        state.status = "idle";
         if (!response.status) {
-          toast.error(response?.message)
+          toast.error(response?.message);
         }
-        state.list = response?.data?.list || []
+        state.list = response?.data?.list || [];
       })
       .addCase(getClientList.rejected, (state, action) => {
-        state.status = 'idle';
+        state.status = "idle";
       })
       .addCase(getClientInfo.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
-        state.fetchStatus = 'idle';
-        state.clientDetail = data
+        state.fetchStatus = "idle";
+        state.clientDetail = data;
       })
 
       .addCase(updateProfile.pending, (state) => {
-        state.actionStatus = true
+        state.actionStatus = true;
       })
       .addCase(updateProfile.fulfilled, (state, action) => {
-        const response = action.payload?.data
-        state.actionStatus = false
+        const response = action.payload?.data;
+        state.actionStatus = false;
         if (!response.status) {
-          toast.error(response?.message)
+          toast.error(response?.message);
         } else {
-          state.clientDetail = { ...response?.data }
-          toast.success(response?.message)
+          state.clientDetail = { ...response?.data };
+          toast.success(response?.message);
         }
       })
       .addCase(updateProfile.rejected, (state, action) => {
@@ -252,6 +262,7 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll, updateSelectedColumn, sortColumn } = clientSlice.actions;
+export const { restAll, updateSelectedColumn, sortColumn } =
+  clientSlice.actions;
 
 export default clientSlice.reducer;
