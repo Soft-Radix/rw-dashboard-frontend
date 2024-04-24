@@ -43,7 +43,6 @@ export default function AgentsList() {
     dispatch(getAgentList(filters));
   }, [filters]);
 
-
   return (
     <>
       <TitleBar title="Agents">
@@ -96,26 +95,43 @@ export default function AgentsList() {
                       },
                     }}
                   >
-                    <TableCell scope="row">{row.id}</TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
+                    <TableCell scope="row" className="font-500">
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
                       {row.first_name}
                     </TableCell>
 
-                    <TableCell align="center" className="whitespace-nowrap">
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
                       {row.last_name}
                     </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
                       {moment(row.created_at).format("MMMM Do, YYYY")}
                     </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
                       {moment(row.updated_at).format("MMMM Do, YYYY")}
                     </TableCell>
 
-                    <TableCell align="center">
+                    <TableCell align="center" className="font-500">
                       {row.role_id}
                       {/* <ImagesOverlap images={row.user_image} /> */}
                     </TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
                       <span
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
@@ -123,10 +139,10 @@ export default function AgentsList() {
                         {row.status || "N/A"}
                       </span>
                     </TableCell>
-                    <TableCell align="left" className="w-[1%]">
+                    <TableCell align="left" className="w-[1%] font-500">
                       <div className="flex gap-20 pe-20">
                         <span className="p-2 cursor-pointer">
-                          <Link to={`/admin/agent-detail/${agent_id}`}>
+                          <Link to={`/admin/agent-detail/${row.id}`}>
                             <ArrowRightCircleIcon />
                           </Link>
                         </span>

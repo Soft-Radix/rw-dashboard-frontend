@@ -48,10 +48,11 @@ export const getAgentInfo = createAsyncThunk(
   "agent/information",
   async (payload: agentIDType) => {
     const response = await ApiHelperFunction({
-      url: `admin/agent-detail/${payload?.agent_id}`,
+      url: `/agent/detail/${payload?.agent_id}`,
       method: "post",
       data: payload,
     });
+
     console.log(response.data, "response.Id");
     // Return only the data you need to keep it serializable
     return {
@@ -124,6 +125,7 @@ export const agentSlice = createSlice({
         const { data } = action.payload?.data;
         state.fetchStatus = "idle";
         state.agentDetail = data;
+        console.log(data, "checkk");
       });
   },
 });

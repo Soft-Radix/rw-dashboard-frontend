@@ -18,27 +18,23 @@ import { useParams } from "react-router";
 import { getAgentInfo } from "app/store/Agent";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "app/store/store";
+import { useSelector } from "react-redux";
+import { AgentRootState } from "app/store/Agent/Interafce";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
 export default function AgentDetails() {
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
+  const agentDetail = useSelector(
+    (store: AgentRootState) => store?.agent.agentDetail
+  );
+  console.log(agentDetail, "hghghg");
 
   const [expandedImage, setExpandedImage] = useState(null);
   const theme: Theme = useTheme();
-  const formik = useFormik({
-    initialValues: {
-      role: "",
-      verification: "",
-    },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
-  });
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const handleImageClick = (imageUrl) => {
     if (expandedImage === imageUrl) {
       setExpandedImage(null); // If already expanded, close it
@@ -61,25 +57,26 @@ export default function AgentDetails() {
         <Grid container spacing={3} className="sm:px-10 xs:px-10 ">
           <Grid item xs={12} sm={12} md={9} className="">
             <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
-              <div className="border border-[#E7E8E9] rounded-lg flex  justify-between gap-[30px] items-start p-[2rem] flex-col sm:flex-row">
+              <div className="border border-[#E7E8E9] rounded-lg flex  justify-start gap-[30px] items-start p-[2rem] flex-col sm:flex-row">
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
                   <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
                 <div>
                   <div className="flex items-center gap-40 mb-10">
                     <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                      Bernadette Jone
+                      {agentDetail?.first_name + " " + agentDetail?.last_name}
                     </span>
                     <Button
                       variant="outlined"
                       className="h-20 rounded-3xl  text-[#FF5F15] bg-[#ffe2d5] border-none sm:min-h-24 leading-none"
                     >
-                      In Progress
+                      {agentDetail?.status || "N/A"}
                     </Button>
                   </div>
                   <div className="flex text-[2rem] text-para_light ">
                     <div className="flex">
                       <img src="../assets/icons/group.svg" className="mr-4" />
+
                       <span>#2367055342</span>
                     </div>
                     <div className="flex px-20">
@@ -89,11 +86,11 @@ export default function AgentDetails() {
                           className="mr-4"
                         />{" "}
                       </span>
-                      <span>Feb 21,2024</span>
+                      <span>{agentDetail?.phone_number || "N/A"}</span>
                     </div>
                   </div>
 
-                  <div className="flex items-baseline justify-between w-full py-20 gap-31">
+                  <div className="flex items-baseline justify-start w-full py-20 gap-31">
                     <div className="flex flex-col pr-10 gap-7 ">
                       <span className="text-[1.8rem] text-title font-500 w-max">
                         Assigned Clients
@@ -111,8 +108,9 @@ export default function AgentDetails() {
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
                         />
-                        Akshya Nagar 1st Block 1st Cross, Rammurthy,
-                        Bangalore-560016
+                        {agentDetail?.address || "N/A"}
+                        {/* Akshya Nagar 1st Block 1st Cross, Rammurthy,
+                        Bangalore-560016 */}
                       </span>
                     </div>
                   </div>
