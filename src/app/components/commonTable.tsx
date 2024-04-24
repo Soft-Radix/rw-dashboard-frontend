@@ -9,7 +9,7 @@ import {
   TableRowProps,
 } from "@mui/material";
 import { DownArrowBlack } from "public/assets/icons/projectsIcon";
-import { ReactNode } from "react";
+import { BaseSyntheticEvent, ReactNode } from "react";
 import { HeadIcon } from "public/assets/icons/clienIcon";
 
 interface IProps {
@@ -21,6 +21,7 @@ interface IProps {
   sortColumn?: string;
   sortOrder?: string;
   onSort?: (column: string) => void;
+  handleSelectAll?: () => void
 }
 function CommonTable({
   children,
@@ -29,6 +30,7 @@ function CommonTable({
   useBorderDesign,
   isSorting,
   onSort,
+  handleSelectAll,
 }: IProps) {
   return (
     <TableContainer>
@@ -39,12 +41,6 @@ function CommonTable({
       >
         <TableHead
           className={`${isSorting && 'cursor-pointer'} ${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
-
-        // sx={{
-        //   "& th": {
-        //     borderBottom: "1px solid #EDF2F6",
-        //   },
-        // }}
         >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
@@ -66,6 +62,10 @@ function CommonTable({
                   (<div className="flex items-center">
                     {index === 0 && (
                       <Checkbox
+                        onClick={(e: BaseSyntheticEvent) => {
+                          e.stopPropagation()
+                          handleSelectAll()
+                        }}
                         sx={{
                           paddingLeft: 0, // Set paddingLeft to 0
                           '&:hover': {

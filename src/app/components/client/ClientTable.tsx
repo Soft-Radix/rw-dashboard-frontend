@@ -1,13 +1,7 @@
 import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import { CalenderIcon, SortIcon } from "public/assets/icons/projectsIcon";
-import { useEffect, useState } from "react";
+import { ArrowRightCircleIcon, } from "public/assets/icons/common";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
@@ -17,20 +11,15 @@ import moment from "moment";
 import { sortColumn } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { sortList } from "src/utils";
-
-const columnKey = {
-  ID: "id",
-  Name: "first_name",
-  ['Company Name']: "company_name",
-  Date: "date",
-  Status: "status",
-};
+import { ClientType } from "app/store/Client/Interface";
 
 function ClientTable({ clientState }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedIds, setSelectedIds] = useState([]);
+
   const dispatch = useAppDispatch()
 
   const sortData = (column: string) => {
@@ -50,6 +39,26 @@ function ClientTable({ clientState }) {
     return selectedColumn.includes(cellId);
   };
 
+  const handleCheckboxChange = (rowId: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(rowId)
+        ? prev.filter((id) => id !== rowId) // Deselect
+        : [...prev, rowId] // Select
+    );
+  };
+
+  const handleSelectAll = () => {
+    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+    const allSelected = allRowIds.every((id: number) => selectedIds.includes(id));
+
+    if (allSelected) {
+      setSelectedIds([]); // Deselect all
+    } else {
+      setSelectedIds(allRowIds); // Select all
+    }
+  };
+
+
   if (clientState.status === 'loading') {
     return <ListLoading />
   }
@@ -63,6 +72,7 @@ function ClientTable({ clientState }) {
           isSorting={true}
           sortOrder={sortOrder}
           onSort={sortData}
+          handleSelectAll={handleSelectAll}
         >
           <>
             {clientState?.list.map((row, index) => (
@@ -79,11 +89,14 @@ function ClientTable({ clientState }) {
               >
                 {renderCell('Id') &&
                   <TableCell scope="row" className="font-500">
-                    <div className="flex items-center pe-[3.25rem]">
+                    <div className="flex items-center pe-[3.25rem] cursor-pointer"
+                      onClick={() => handleCheckboxChange(row.id)}>
                       <Checkbox
                         sx={{ padding: "4px" }}
                         color="secondary"
-                        defaultChecked={row.defaultChecked}
+                        checked={
+                          selectedIds.includes(row.id)
+                        }
                         inputProps={{
                           "aria-labelledby": `table-checkbox-${index}`,
                         }}
