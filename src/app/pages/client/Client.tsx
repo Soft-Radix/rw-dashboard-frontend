@@ -5,6 +5,7 @@ import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTab from "../../components/CommonTab";
 import { debounce } from "lodash";
+import { ClientType } from "app/store/Client/Interface";
 
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import DropdownMenu from "src/app/components/Dropdown";
@@ -15,7 +16,7 @@ import AssignedAgents from "src/app/components/client/components/AssignedAgents"
 import CustomButton from "src/app/components/custom_button";
 import ClientTable from "src/app/components/client/ClientTable";
 import { useAppDispatch } from "app/store/store";
-import { getClientList } from "app/store/Client";
+import { deletClient, getClientList } from "app/store/Client";
 import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
@@ -37,7 +38,16 @@ export default function Clients() {
     "search": ""
   })
   const clientState = useSelector((store: ClientRootState) => store.client)
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   // Debounce function to delay executing the search
   const debouncedSearch = debounce((searchValue) => {
     // Update the search filter here
@@ -51,6 +61,38 @@ export default function Clients() {
     const { value } = event.target;
     debouncedSearch(value);
   };
+
+  const handleCheckboxChange = (rowId: number) => {
+    setSelectedIds((prev) =>
+      prev.includes(rowId)
+        ? prev.filter((id) => id !== rowId) // Deselect
+        : [...prev, rowId] // Select
+    );
+  };
+
+  const handleSelectAll = () => {
+    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+    const allSelected = allRowIds.every((id: number) => selectedIds.includes(id));
+
+    if (allSelected) {
+      setSelectedIds([]); // Deselect all
+    } else {
+      setSelectedIds(allRowIds); // Select all
+    }
+  };
+
+
+  const deleteClient = async () => {
+    const { payload } = await dispatch(deletClient({ client_ids: selectedIds }))
+    if (payload?.data?.status) {
+      setIsOpenDeletedModal(false)
+    }
+  }
+
+  useEffect(() => {
+    dispatch(getClientList(filters))
+  }, [filters])
+
 
   const ClientTabButton = () => {
     return (
@@ -96,13 +138,14 @@ export default function Clients() {
     );
   };
 
-
-
   const tabs = [
     {
       id: "all",
       label: "All",
-      content: <ClientTable clientState={clientState} />,
+      content: <ClientTable clientState={clientState}
+        handleSelectAll={handleSelectAll}
+        selectedIds={selectedIds}
+        handleCheckboxChange={handleCheckboxChange} />,
       actionBtn: ClientTabButton,
     },
     {
@@ -131,9 +174,6 @@ export default function Clients() {
     },
   ];
 
-  useEffect(() => {
-    dispatch(getClientList(filters))
-  }, [filters])
 
   return (
     <>
@@ -201,17 +241,19 @@ export default function Clients() {
               </span>
               <span>Hello</span>
             </div>
-          </DropdownMenu>
+          </DropdownMenu> */}
 
-          <Button
-            variant="contained"
-            className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
-            aria-label="delete"
-            size="large"
-            onClick={() => setIsOpenDeletedModal(true)}
-          >
-            Delete
-          </Button>{" "} */}
+          {selectedIds?.length > 0 &&
+            <Button
+              variant="contained"
+              className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
+              aria-label="delete"
+              size="large"
+              onClick={() => setIsOpenDeletedModal(true)}
+            >
+              Delete
+            </Button>
+          }
           <Button
             variant="outlined"
             color="secondary"
@@ -238,6 +280,8 @@ export default function Clients() {
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
+        loading={clientState?.actionStatus}
+        onDelete={deleteClient}
       />
     </>
   );

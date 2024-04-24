@@ -2,14 +2,15 @@ import React from 'react'
 import { Button, Box, Grid, Checkbox, Typography, TableCell, Tab, Tabs, TableRow, Theme, IconButton } from "@mui/material";
 import { ArrowRightCircleIcon, EditIcon, LastPayment } from 'public/assets/icons/common';
 import { Link } from 'react-router-dom';
+import { ClientType } from 'app/store/Client/Interface';
 
 interface ProfileProps {
     setIsOpenEditModal: (prev: boolean) => void,
     setIsOpenChangePassModal: (prev: boolean) => void,
-
+    clientDetail: ClientType
 }
 export default function Profile({ setIsOpenEditModal,
-    setIsOpenChangePassModal }: ProfileProps) {
+    setIsOpenChangePassModal, clientDetail }: ProfileProps) {
     return (
         <>
             <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
@@ -34,7 +35,7 @@ export default function Profile({ setIsOpenEditModal,
                                 <div className="flex items-center gap-40 mb-10">
 
                                     <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                                        Alexandra
+                                        {clientDetail?.first_name + " " + clientDetail?.last_name}
                                     </span>
                                     <Button
                                         variant="outlined"
@@ -47,12 +48,12 @@ export default function Profile({ setIsOpenEditModal,
                                     <div className="flex">
                                         <img src="../assets/icons/ic_outline-email.svg" className="mr-4" />
                                         <span >
-                                            info456@gmail.com
+                                            {clientDetail?.email}
                                         </span>
                                     </div>
                                     <div className="flex items-center px-20">
                                         <span><img src="../assets/icons/ph_phone.svg" className="mr-4" /> </span>
-                                        <span>+1 2513652150</span>
+                                        <span>{clientDetail?.country_code} {clientDetail?.phone_number || "N/A"}</span>
                                     </div>
                                 </div>
 
@@ -61,24 +62,23 @@ export default function Profile({ setIsOpenEditModal,
                                         <span className="text-[1.8rem] text-title font-500 w-max">Status</span>
                                         <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex " >
                                             <img src="../assets/icons/circle.svg" className="mr-4" />
-                                            Active
+                                            {clientDetail?.status || 'N/A'}
                                         </span>
                                     </div>
                                     <div className="flex flex-col items-start w-8/12 gap-7">
                                         <span className="text-[1.8rem] text-title font-500">Company Name</span>
                                         <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex " >
                                             <img src="../assets/icons/tech.svg" className="mr-4" />
-                                            Tech 23.com
+                                            {clientDetail?.company_name}
                                         </span>
                                     </div>
-
                                 </div>
                                 <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31">
                                     <div className="flex flex-col pr-10 gap-7 ">
                                         <span className="text-[1.8rem] text-title font-500 w-max">Address</span>
                                         <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex " >
                                             <img src="../assets/icons/loaction.svg" className="mr-4" />
-                                            Akshya Nagar 1st Block 1st Cross, Rammurthy, Bangalore-560016
+                                            {clientDetail?.address ?? "Akshya Nagar 1st Block 1st Cross, Rammurthy, Bangalore-560016"}
                                         </span>
                                     </div>
                                 </div>
@@ -155,4 +155,5 @@ export default function Profile({ setIsOpenEditModal,
         </>
     )
 }
+
 

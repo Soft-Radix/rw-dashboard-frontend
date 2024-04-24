@@ -1,11 +1,9 @@
-import { Button, Box, Grid, Checkbox, Typography, TableCell, Tab, Tabs, TableRow, Theme, IconButton } from "@mui/material";
+import { Button, Theme, } from "@mui/material";
 import { useTheme } from "@mui/styles";
 
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
 import { NavigateFunction, useLocation, Location, useNavigate, useParams } from 'react-router-dom';
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import EditProfile from "../profile/EditProfile";
@@ -20,6 +18,8 @@ import AssignedAccountManager from "./components/AssignedAccountManager";
 import SubscriptionList from "./components/SubscriptionList";
 import { getClientInfo } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
+import { useSelector } from "react-redux";
+import { ClientRootState } from "app/store/Client/Interface";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -33,6 +33,7 @@ export default function ClientDetail() {
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(false);
   const location: Location = useLocation();
+  const { clientDetail, actionStatus } = useSelector((store: ClientRootState) => store?.client)
   const { client_id } = useParams()
   const navigate: NavigateFunction = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -117,6 +118,7 @@ export default function ClientDetail() {
       id: 'profile',
       label: 'Profile',
       content: <Profile
+        clientDetail={clientDetail}
         setIsOpenEditModal={setIsOpenEditModal}
         setIsOpenChangePassModal={setIsOpenChangePassModal}
       />,
@@ -180,6 +182,8 @@ export default function ClientDetail() {
       <EditProfile
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}
+        clientDetail={clientDetail}
+        loading={actionStatus}
       />
       <ChangePassword
         isOpen={isOpenChangePassModal}

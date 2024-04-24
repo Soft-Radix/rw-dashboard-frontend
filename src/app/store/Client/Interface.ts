@@ -1,12 +1,13 @@
 export interface ClientType {
-    first_name: string,
-    last_name: string,
-    email: string;
-    company_name: string,
+    first_name?: string,
+    last_name?: string,
+    email?: string;
+    company_name?: string,
     id?: number,
+    client_id?: number | string,
     role_id?: number,
-    country_code?: number,
-    phone_number?: number,
+    country_code?: number | string,
+    phone_number?: number | string,
     address?: string,
     user_image?: string,
     status?: string,
@@ -22,6 +23,10 @@ export interface filterType {
     search: string
 }
 
+export interface deleteClientType {
+    client_ids: number[]
+}
+
 /**
  * The type definition for the initial state of the auth slice.
  */
@@ -33,19 +38,10 @@ export type initialStateProps = {
     clientDetail?: object,
     list: ClientType[],
     selectedColumn: string[]
+    actionStatus: boolean
 };
-
-
-export interface ClientState {
-    status: string;
-    successMsg: string,
-    errorMsg: string,
-    list: ClientType[]
-    selectedColumn: string[]
-}
-
 export interface ClientRootState {
-    client: ClientState; // Add other slices if needed
+    client: initialStateProps; // Add other slices if needed
 }
 
 export interface clientIDType {

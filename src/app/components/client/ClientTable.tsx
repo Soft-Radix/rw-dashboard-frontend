@@ -11,14 +11,14 @@ import moment from "moment";
 import { sortColumn } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { sortList } from "src/utils";
-import { ClientType } from "app/store/Client/Interface";
 
-function ClientTable({ clientState }) {
+function ClientTable({ clientState, handleSelectAll,
+  selectedIds,
+  handleCheckboxChange }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedIds, setSelectedIds] = useState([]);
 
   const dispatch = useAppDispatch()
 
@@ -38,26 +38,6 @@ function ClientTable({ clientState }) {
     // Return true if the cellId is in the selectedColumn array
     return selectedColumn.includes(cellId);
   };
-
-  const handleCheckboxChange = (rowId: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(rowId)
-        ? prev.filter((id) => id !== rowId) // Deselect
-        : [...prev, rowId] // Select
-    );
-  };
-
-  const handleSelectAll = () => {
-    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
-    const allSelected = allRowIds.every((id: number) => selectedIds.includes(id));
-
-    if (allSelected) {
-      setSelectedIds([]); // Deselect all
-    } else {
-      setSelectedIds(allRowIds); // Select all
-    }
-  };
-
 
   if (clientState.status === 'loading') {
     return <ListLoading />

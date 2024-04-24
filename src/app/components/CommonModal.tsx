@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
+import CustomButton from "./custom_button";
 
 const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -28,6 +29,7 @@ type ModalType = {
   maxWidth?: string;
   DeleteModal?: boolean;
   btnTitle?: string,
+  disabled?: boolean,
   onSubmit?: () => void
 };
 
@@ -39,7 +41,8 @@ export default function CommonModal({
   btnTitle,
   DeleteModal = false,
   maxWidth = "387",
-  onSubmit
+  onSubmit,
+  disabled
 }: ModalType) {
   return (
     <StylesDialog
@@ -74,14 +77,15 @@ export default function CommonModal({
           </IconButton>
         </>
       )}
-      <div className="p-20">{children}</div>
+      <div className="p-20 pb-0">{children}</div>
 
-      <div className="flex p-20 pt-10">
+      <div className="flex p-20 pt-0">
         <Button
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
           onClick={onSubmit}
+          disabled={disabled}
         >
           {btnTitle}
         </Button>
