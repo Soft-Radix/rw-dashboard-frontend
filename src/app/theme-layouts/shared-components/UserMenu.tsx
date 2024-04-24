@@ -19,7 +19,6 @@ import { getLocalStorage } from "src/utils";
  * The user menu.
  */
 function UserMenu() {
-  // const user = useSelector(selectUser);
   const user = getLocalStorage('userDetail')
   const { signOut } = useAuth();
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);

@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ForgotPassPayload,
   LoginPayload,
+  SetPasswordType,
   initialStateProps,
 } from "./Interface";
 
@@ -23,9 +24,6 @@ export const logIn = createAsyncThunk(
       data: payload, // payload data
     });
 
-    if (response?.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
     let resData = response?.data;
     return resData;
   }
@@ -39,10 +37,6 @@ export const forgotPassword = createAsyncThunk(
       method: "post",
       data: payload,
     });
-
-    if (response.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
 
     // Return only the data you need to keep it serializable
     return {
@@ -59,9 +53,6 @@ export const restPassword = createAsyncThunk(
       data: payload,
     });
 
-    if (response.error) {
-      return { data: response?.error?.response?.data }; // Ensure errors are propagated
-    }
 
     // Return only the data you need to keep it serializable
     return {
@@ -79,9 +70,22 @@ export const verifyOtp = createAsyncThunk(
       data: payload,
     });
 
-    if (response.error) {
-      return response?.error?.response?.data; // Ensure errors are propagated
-    }
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const setPassword = createAsyncThunk(
+  "client/set-password",
+  async (payload: SetPasswordType) => {
+    const response = await ApiHelperFunction({
+      url: "client/set-password",
+      method: "post",
+      data: payload,
+    });
+
 
     // Return only the data you need to keep it serializable
     return {

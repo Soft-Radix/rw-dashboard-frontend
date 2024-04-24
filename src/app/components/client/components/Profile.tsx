@@ -7,10 +7,10 @@ import { ClientType } from 'app/store/Client/Interface';
 interface ProfileProps {
     setIsOpenEditModal: (prev: boolean) => void,
     setIsOpenChangePassModal: (prev: boolean) => void,
-    clientDetail: ClientType
+    clientDetail: ClientType,
 }
 export default function Profile({ setIsOpenEditModal,
-    setIsOpenChangePassModal, clientDetail }: ProfileProps) {
+    setIsOpenChangePassModal, clientDetail, }: ProfileProps) {
     return (
         <>
             <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
@@ -19,8 +19,9 @@ export default function Profile({ setIsOpenEditModal,
                         <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative">
                             <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
                                 <img
-                                    src="/assets/images/avatars/male-21.jpg"
-                                    alt=""
+                                    // src={!clientDetail?.user_image ? `${import.meta.env.VITE_API_BASE_URL}client/image/${clientDetail?.user_image}` : "/assets/images/avatars/male-21.jpg"}
+                                    src={"/assets/images/avatars/male-21.jpg"}
+                                    alt="images"
                                     className="h-[100px] w-[100px] rounded-full"
                                 />
                             </div>
@@ -104,7 +105,9 @@ export default function Profile({ setIsOpenEditModal,
                             </div>
                         </div>
                         <div className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
-                            onClick={() => setIsOpenChangePassModal(true)}
+                            onClick={() => {
+                                setIsOpenChangePassModal(true)
+                            }}
                         >
                             <ArrowRightCircleIcon />
                         </div>
@@ -114,24 +117,24 @@ export default function Profile({ setIsOpenEditModal,
 
             <Grid container spacing="26px" className="px-[2rem]">
                 <Grid item lg={6} className="basis-full">
-                    <Link to="/change-password" className="contents">
-                        <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey">
-                            <div>
-                                <Typography
-                                    component="h4"
-                                    className="mb-8 text-2xl text-title font-600"
-                                >
-                                    Last payment amount and date
-                                </Typography>
-                                <p className="text-para_light">
-                                    <span className="text-secondary">$230</span>, Feb 23, 2024
-                                </p>
-                            </div>
-                            <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
-                                <LastPayment />
-                            </div>
+                    {/* <Link to="/change-password" className="contents"> */}
+                    <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey">
+                        <div>
+                            <Typography
+                                component="h4"
+                                className="mb-8 text-2xl text-title font-600"
+                            >
+                                Last payment amount and date
+                            </Typography>
+                            <p className="text-para_light">
+                                <span className="text-secondary">$230</span>, Feb 23, 2024
+                            </p>
                         </div>
-                    </Link>
+                        <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
+                            <LastPayment />
+                        </div>
+                    </div>
+                    {/* </Link> */}
                 </Grid>
                 <Grid item lg={6} className="basis-full">
                     <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey ">

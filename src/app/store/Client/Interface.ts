@@ -7,6 +7,7 @@ export interface ClientType {
     id?: number,
     client_id?: number | string,
     role_id?: number,
+    role?: string,
     country_code?: number | string,
     phone_number?: number | string,
     address?: string,
@@ -52,4 +53,10 @@ export interface clientIDType {
 // Type for the payload that updateProfile expects
 export interface UpdateProfilePayload {
     formData: FormData; // The form data object
-  }
+}
+
+
+export interface ChangePassword {
+    token: string,
+    password: string
+}

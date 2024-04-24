@@ -11,9 +11,10 @@ import InputField from "../InputField";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  fetchList: () => void
 }
 
-function AddClient({ isOpen, setIsOpen }: IProps) {
+function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
   const dispatch = useAppDispatch();
   const clientState = useSelector((store: ClientRootState) => store.client);
 
@@ -37,7 +38,9 @@ function AddClient({ isOpen, setIsOpen }: IProps) {
   useEffect(() => {
     if (!!clientState?.successMsg) {
       dispatch(restAll());
+      fetchList()
       setIsOpen((prev) => !prev);
+
     } else if (!!clientState?.errorMsg) {
       dispatch(restAll());
     }

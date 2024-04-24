@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
-import { ClientType, initialStateProps, filterType, clientIDType, deleteClientType, UpdateProfilePayload, } from "./Interface";
+import { ClientType, initialStateProps, filterType, clientIDType, deleteClientType, UpdateProfilePayload, ChangePassword, } from "./Interface";
 
 /**
  * API calling
@@ -91,12 +91,11 @@ export const updateProfile = createAsyncThunk(
 
 export const changePassword = createAsyncThunk(
   "client/set-password",
-  async (payload: any) => {
+  async (payload: ChangePassword) => {
     const response = await ApiHelperFunction({
       url: `client/set-password`,
       method: "post",
       data: payload,
-      formData: true
     });
 
     // Return only the data you need to keep it serializable
@@ -232,6 +231,22 @@ export const clientSlice = createSlice({
         }
       })
       .addCase(updateProfile.rejected, (state, action) => {
+        state.actionStatus = false
+      })
+
+      .addCase(changePassword.pending, (state) => {
+        state.actionStatus = true
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        const response = action.payload?.data
+        state.actionStatus = false
+        if (!response.status) {
+          toast.error(response?.message)
+        } else {
+          toast.success(response?.message)
+        }
+      })
+      .addCase(changePassword.rejected, (state, action) => {
         state.actionStatus = false
       })
   },

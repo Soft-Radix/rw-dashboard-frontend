@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Button, InputAdornment, TextField, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
@@ -88,9 +88,15 @@ export default function Clients() {
       setIsOpenDeletedModal(false)
     }
   }
+  const fetchList = useCallback(
+    () => {
+      dispatch(getClientList(filters))
+    },
+    [filters],
+  )
 
   useEffect(() => {
-    dispatch(getClientList(filters))
+    fetchList()
   }, [filters])
 
 
@@ -276,7 +282,9 @@ export default function Clients() {
           </div>
         </div>
       </div>
-      <AddClient isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddClient isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}
+        fetchList={fetchList}
+      />
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}

@@ -6,6 +6,10 @@ export interface LoginPayload {
 export interface ForgotPassPayload {
     email: string;
 }
+export interface SetPasswordType {
+    token: string;
+    password: string
+}
 export interface Pyalod {
     code?: number | undefined,
     data: any,

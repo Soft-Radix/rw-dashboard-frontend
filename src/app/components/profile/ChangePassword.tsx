@@ -4,47 +4,19 @@ import { useFormik } from "formik";
 import { Dispatch, SetStateAction } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
-import SelectField from "../selectField";
+import { useAppDispatch } from "app/store/store";
+import { changePassword } from "app/store/Client";
 
 interface IProps {
     isOpen: boolean;
     setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
-    display: "flex",
-    alignItems: "center",
-    gap: "16px",
-    "& .radioIcon": {
-        color: "#9DA0A6",
-        border: "2px solid currentColor",
-        height: "16px",
-        aspectRatio: 1,
-        borderRadius: "50%",
-        position: "relative",
-    },
-    "&.Mui-selected": {
-        backgroundColor: "transparent",
-        "& .radioIcon": {
-            color: theme.palette.secondary.main,
-            "&::after": {
-                content: '""',
-                display: "block",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                height: "7px",
-                aspectRatio: 1,
-                borderRadius: "50%",
-                backgroundColor: "currentColor",
-            },
-        },
-    },
-}));
 
-function EditProfile({ isOpen, setIsOpen }: IProps) {
-    const theme = useTheme();
-
+function ChangePassword({ isOpen, setIsOpen }: IProps) {
+    const dispatch = useAppDispatch()
+    const onSubmit = async (values) => {
+        dispatch(changePassword({ token: '', password: values.password }))
+    }
     const formik = useFormik({
         initialValues: {
             name: "",
@@ -52,8 +24,9 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
             email: "",
             phone: "",
         },
-        onSubmit: (values) => { },
+        onSubmit
     });
+
     return (
         <CommonModal
             open={isOpen}
@@ -71,13 +44,13 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
                 />
                 <InputField
                     formik={formik}
-                    name="email"
+                    name="password"
                     label="New Password"
                     placeholder="Enter New Password "
                 />
                 <InputField
                     formik={formik}
-                    name="phone"
+                    name="cnfPassword"
                     label="Confirm New Password"
                     placeholder="Enter Confirm New Password"
                 />
@@ -86,4 +59,4 @@ function EditProfile({ isOpen, setIsOpen }: IProps) {
     );
 }
 
-export default EditProfile;
+export default ChangePassword;

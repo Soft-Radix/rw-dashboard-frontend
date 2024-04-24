@@ -20,6 +20,7 @@ import { getClientInfo } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { ClientRootState } from "app/store/Client/Interface";
+import { getLocalStorage } from "src/utils";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -148,7 +149,6 @@ export default function ClientDetail() {
     if (!client_id) return null
     dispatch(getClientInfo({ client_id }))
   }, [])
-
 
   return (
     <>

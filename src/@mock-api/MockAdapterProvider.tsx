@@ -47,11 +47,11 @@ function MockAdapterProvider(props: MockAdapterProviderProps) {
 			setLoading(false);
 		};
 	}, [enabled]);
-
+	
 	useEffect(() => {
 		if (import.meta.hot) {
 			if (!isInitialMount.current) {
-				dispatch(apiService.util.resetApiState());
+				// dispatch(apiService.util.resetApiState());
 			}
 			isInitialMount.current = false;
 		}

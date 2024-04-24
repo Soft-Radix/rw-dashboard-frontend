@@ -10,6 +10,7 @@ import SignOutConfig from "../main/sign-out/SignOutConfig";
 import Error404Page from "../main/404/Error404Page";
 // import ExampleConfig from "../main/example/ExampleConfig";
 import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
+import SetPasswordConfig from "../main/set-password/SetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import { AdminDashboardConfig } from "../pages/dashboard/DashboardConfig";
@@ -49,6 +50,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   SignUpConfig,
   ForgotPasswordConfig,
   ResetPasswordConfig,
+  SetPasswordConfig,
   OtpVerificationConfig,
   ClientConfig,
   AdminAgentsConfig
