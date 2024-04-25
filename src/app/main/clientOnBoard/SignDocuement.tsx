@@ -18,7 +18,7 @@ type FormType = {
   password: string;
 };
 
-export default function SetPassword() {
+export default function SignDocuement() {
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams()
