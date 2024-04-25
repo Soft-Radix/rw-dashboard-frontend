@@ -1,8 +1,8 @@
 import { FuseRouteConfigType } from "@fuse/utils/FuseUtils";
 import authRoles from "../../auth/authRoles";
-import SetPassword from "./ClientOnBoard";
+import SignDocuement from "./SignDocuement";
 
-const SetPasswordConfig: FuseRouteConfigType = {
+const ClientOnBoardConfig: FuseRouteConfigType = {
   settings: {
     layout: {
       config: {
@@ -27,10 +27,10 @@ const SetPasswordConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "set-password/:token",
-      element: <SetPassword />,
+      path: "sign-document",
+      element: <SignDocuement />,
     },
   ],
 };
 
-export default SetPasswordConfig;
+export default ClientOnBoardConfig;

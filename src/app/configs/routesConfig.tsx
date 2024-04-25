@@ -27,6 +27,7 @@ import ProjectsConfig from "../pages/projects/ProjectsConfig";
 import ClientConfig from "../pages/client/clientConfig";
 import AdminAgentsConfig from "../pages/agents/agentsListConfig";
 import SettingConfig from "../pages/setting/settingConfig";
+import ClientOnBoardConfig from "../main/clientOnBoard/ClientOnBoardConfig";
 
 const commonRoutes = [
   {
@@ -56,6 +57,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   ClientConfig,
   AdminAgentsConfig,
   SettingConfig,
+  ClientOnBoardConfig
 ];
 
 /**
