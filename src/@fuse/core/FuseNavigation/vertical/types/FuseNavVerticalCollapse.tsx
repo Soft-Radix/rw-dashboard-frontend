@@ -131,22 +131,27 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
         itempadding={itempadding}
         sx={item.sx}
       >
-        <div  >
+        <div>
           <div>
             <ListItemButton
               component={component}
               className={clsx(
                 "fuse-list-item hover:opacity-100",
-                open ? "opacity-100 bg-[#393F4C] " : "opacity-100  bg-[#393f4c00]"
+                open
+                  ? "opacity-100 bg-[#393F4C] "
+                  : "opacity-100  bg-[#393f4c00]"
               )}
               {...itemProps}
             >
-              <div className="flex items-center justify-between w-full " onClick={(ev) => {
-                ev.preventDefault();
-                ev.stopPropagation();
-                setOpen(!open);
-              }}>
-                <div className="flex items-center gap-10">
+              <div
+                className="flex items-center justify-between w-full "
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  setOpen(!open);
+                }}
+              >
+                <div className="flex items-center">
                   {item.icon && (
                     // <FuseSvgIcon
                     //   className="mr-[0.8rem]"
@@ -154,8 +159,14 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                     // >
                     //   {item.icon}
                     // </FuseSvgIcon>
-                    <span className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
-                    >{item.customIcon}</span>
+                    <span
+                      className={clsx(
+                        "shrink-0 inline-block mr-16",
+                        item.iconClass
+                      )}
+                    >
+                      {item.customIcon}
+                    </span>
                   )}
 
                   <ListItemText
@@ -200,10 +211,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
           </div>
 
           {items.children && (
-            <Collapse
-              in={open}
-              className="collapse-children"
-            >
+            <Collapse in={open} className="collapse-children">
               {item.children.map((_item) => (
                 <FuseNavItem
                   key={_item.id}
@@ -214,7 +222,8 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                   checkPermission={checkPermission}
                 />
               ))}
-            </Collapse>)}
+            </Collapse>
+          )}
         </div>
       </Root>
     ),
