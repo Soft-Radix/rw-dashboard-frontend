@@ -131,13 +131,13 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
         itempadding={itempadding}
         sx={item.sx}
       >
-        <div className="bg-[#393F4C]">
+        <div  >
           <div>
             <ListItemButton
               component={component}
               className={clsx(
                 "fuse-list-item hover:opacity-100",
-                open ? "opacity-100 bg-[#393F4C] " : "opacity-80  bg-[#111827]"
+                open ? "opacity-100 bg-[#393F4C] " : "opacity-100  bg-[#393f4c00]"
               )}
               {...itemProps}
             >
@@ -148,16 +148,14 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
               }}>
                 <div className="flex items-center gap-10">
                   {item.icon && (
-                    <FuseSvgIcon
-                      className="mr-[0.8rem]"
-                      // className={clsx(
-                      //   "fuse-list-item-icon shrink-0 pr-[1.6rem] ",
-                      //   item.iconClass
-                      // )}
-                      color="action"
-                    >
-                      {item.icon}
-                    </FuseSvgIcon>
+                    // <FuseSvgIcon
+                    //   className="mr-[0.8rem]"
+                    //   color="action"
+                    // >
+                    //   {item.icon}
+                    // </FuseSvgIcon>
+                    <span className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
+                    >{item.customIcon}</span>
                   )}
 
                   <ListItemText

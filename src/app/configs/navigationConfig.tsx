@@ -7,7 +7,9 @@ import { ProjectChiildrenIcon } from "public/assets/icons/projectsIcon";
 import {
   ClientNavIcon,
   DashBoardIcon,
-  ReportNavIcon,
+  AgentNavIcon,
+  BillingNavIcon,
+  SettingNavIcon,
 } from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
@@ -143,7 +145,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     translate: "DASHBOARD",
     type: "item",
     icon: "dashboard",
-    // customIcon: <DashBoardIcon />,
+    customIcon: <DashBoardIcon />,
     url: "admin/dashboard",
   },
 
@@ -164,7 +166,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     type: "collapse",
     hideOption: true,
     icon: "agents",
-    customIcon: <DashBoardIcon />,
+    customIcon: <AgentNavIcon />,
     children: [
       {
         id: "agents_list",
@@ -190,7 +192,8 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     title: "Billings",
     translate: "Billings",
     type: "item",
-    icon: "heroicons-outline:cash",
+    icon: 'billing',
+    customIcon: <BillingNavIcon />,
     url: "admin/billings",
   },
 
@@ -200,6 +203,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     translate: "Settings",
     type: "item",
     icon: "heroicons-outline:cog",
+    customIcon: <SettingNavIcon />,
     url: "admin/settings",
   },
 ];

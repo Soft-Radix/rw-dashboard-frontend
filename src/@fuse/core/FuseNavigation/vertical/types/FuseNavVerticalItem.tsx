@@ -16,24 +16,21 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
   ({ theme, ...props }) => ({
     minHeight: 44,
     width: "100%",
-    borderRadius: "6px",
+    // borderRadius: "6px",
     margin: "0 0 4px 0",
     paddingRight: 16,
     paddingLeft: props.itempadding > 80 ? 80 : props.itempadding,
     paddingTop: 10,
     paddingBottom: 10,
-    color: alpha(theme.palette.text.primary, 0.7),
+    color: alpha(theme.palette.text.primary, 1),
     cursor: "pointer",
     textDecoration: "none!important",
     "&:hover": {
-      color: theme.palette.text.primary,
+      color: "white",
     },
     "&.active": {
-      color: theme.palette.text.primary,
-      backgroundColor:
-        theme.palette.mode === "light"
-          ? "rgba(0, 0, 0, .05)!important"
-          : "rgba(255, 255, 255, .1)!important",
+      color: 'theme.palette.text.primary',
+      backgroundColor: "#393F4C",
       pointerEvents: "none",
       transition: "border-radius .15s cubic-bezier(0.4,0.0,0.2,1)",
       "& > .fuse-list-item-text-primary": {
@@ -87,12 +84,16 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
         {...itemProps}
       >
         {item.icon && (
-          <FuseSvgIcon
-            className={clsx("fuse-list-item-icon shrink-0", item.iconClass)}
-            color="action"
-          >
-            {item.icon}
-          </FuseSvgIcon>
+          <>
+            {/* <FuseSvgIcon
+              className={clsx("fuse-list-item-icon shrink-0", item.iconClass)}
+            // color="action"
+            >
+              {item.icon}
+            </FuseSvgIcon> */}
+            <span className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
+            >{item.customIcon}</span>
+          </>
         )}
 
         <ListItemText

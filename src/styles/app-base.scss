@@ -116,7 +116,6 @@ a[role="button"] {
     background-color: transparent;
   }
 }
-
 /* Medium Devices, Desktops Only */
 @media only screen and (min-width: 992px) {
   ::-webkit-scrollbar {
@@ -292,4 +291,3 @@ input:-webkit-autofill:active {
 .edit_profile_btn {
   @apply cursor-pointer flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center absolute right-[2rem] top-[2rem];
 }
-
