@@ -7,7 +7,7 @@ import {
   EditIcon,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
@@ -17,7 +17,7 @@ import CommonPagination from "src/app/components/pagination";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import { useSelector } from "react-redux";
 import { AgentRootState, filterType } from "app/store/Agent/Interafce";
-import { getAgentInfo, getAgentList } from "app/store/Agent";
+import { addAgent, getAgentInfo, getAgentList } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import moment from "moment";
 import ListLoading from "@fuse/core/ListLoading";
@@ -26,7 +26,6 @@ export default function AgentsList() {
   const { agent_id } = useParams();
 
   const agentState = useSelector((store: AgentRootState) => store.agent);
-  console.log(agentState.list, "ddd");
 
   const dispatch = useAppDispatch();
 
@@ -39,10 +38,17 @@ export default function AgentsList() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 
-  useEffect(() => {
+  const fetchAgentList = useCallback(() => {
     dispatch(getAgentList(filters));
   }, [filters]);
 
+  useEffect(() => {
+    fetchAgentList();
+  }, [fetchAgentList]);
+
+  // useEffect(() => {
+  //   dispatch(addAgent(store.agent));
+  // });
   return (
     <>
       <TitleBar title="Agents">
@@ -155,12 +161,16 @@ export default function AgentsList() {
           </CommonTable>
 
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+            <CommonPagination count={1} />
           </div>
         </div>
       </div>
 
-      <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddAgentModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        fetchAgentList={fetchAgentList}
+      />
     </>
   );
 }
