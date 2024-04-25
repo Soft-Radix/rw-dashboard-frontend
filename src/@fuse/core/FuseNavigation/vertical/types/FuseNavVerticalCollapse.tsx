@@ -136,7 +136,8 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
             <ListItemButton
               component={component}
               className={clsx(
-                "fuse-list-item hover:opacity-100",
+                "fuse-list-item hover:opacity-100 py-0",
+
                 open
                   ? "opacity-100 bg-[#393F4C] "
                   : "opacity-100  bg-[#393f4c00]"

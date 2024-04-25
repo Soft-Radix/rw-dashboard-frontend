@@ -10,6 +10,7 @@ import {
   AgentNavIcon,
   BillingNavIcon,
   SettingNavIcon,
+  AgentGroupIcon,
 } from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
@@ -174,6 +175,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
         type: "item",
         icon: "material-twotone:compress",
         url: "/admin/agents/list",
+        customIcon: <AgentNavIcon />,
         end: true,
       },
       {
@@ -182,6 +184,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
         type: "item",
         icon: "material-twotone:compress",
         url: "/admin/agents/groups",
+        customIcon: <AgentGroupIcon />,
         end: true,
       },
     ],
