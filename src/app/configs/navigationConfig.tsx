@@ -186,35 +186,23 @@ export const adminNavigationConfig: FuseNavItemType[] = [
       },
     ],
   },
-
   {
     id: "billings",
     title: "Billings",
     translate: "Billings",
     type: "item",
-    icon: 'billing',
+    icon: "billing",
     customIcon: <BillingNavIcon />,
     url: "admin/billings",
   },
-
   {
     id: "setting",
     title: "Setting",
     translate: "Setting",
-    type: "collapse",
+    type: "item",
     icon: "heroicons-outline:cog",
     customIcon: <SettingNavIcon />,
-    children: [
-      {
-        id: "role",
-        title: "Roles and Permissions",
-        type: "item",
-        icon: "material-twotone:compress",
-        url: "admin/setting",
-        customIcon: <SettingNavIcon />,
-        end: true,
-      },
-    ],
+    url: "admin/setting",
   },
 ];
 
