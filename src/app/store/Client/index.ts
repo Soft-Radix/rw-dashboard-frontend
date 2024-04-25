@@ -90,10 +90,10 @@ export const updateProfile = createAsyncThunk(
 );
 
 export const changePassword = createAsyncThunk(
-  "client/set-password",
+  "auth/change-password",
   async (payload: ChangePassword) => {
     const response = await ApiHelperFunction({
-      url: `client/set-password`,
+      url: `auth/change-password`,
       method: "post",
       data: payload,
     });

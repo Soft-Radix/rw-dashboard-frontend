@@ -32,6 +32,30 @@ const resetPassSchema = Yup.object({
     .oneOf([Yup.ref("password"), null], "Passwords must match"), // Must match the password field
 });
 
+const changePasswordByAdmin = Yup.object({
+  new_password: Yup.string()
+    .required("New Password is required") // Field is required
+    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+
+  cnfPassword: Yup.string()
+    .required("Confirm password is required") // Field is required
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+});
+
+const changePasswordByClient = Yup.object({
+  old_password: Yup.string()
+    .required("New Password is required") // Field is required
+    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+
+  new_password: Yup.string()
+    .required("New Password is required") // Field is required
+    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+
+  cnfPassword: Yup.string()
+    .required("Confirm password is required") // Field is required
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+});
+
 const addClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
@@ -59,4 +83,6 @@ export {
   resetPassSchema,
   addClientSchema,
   addAgentSchema,
+  changePasswordByAdmin,
+  changePasswordByClient
 };

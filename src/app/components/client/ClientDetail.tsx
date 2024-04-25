@@ -35,6 +35,7 @@ export default function ClientDetail() {
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(false);
   const location: Location = useLocation();
   const { clientDetail, actionStatus } = useSelector((store: ClientRootState) => store?.client)
+  const { role } = useSelector((store: any) => store?.user)
   const { client_id } = useParams()
   const navigate: NavigateFunction = useNavigate();
   const queryParams = new URLSearchParams(location.search);
@@ -163,7 +164,6 @@ export default function ClientDetail() {
             size="large"
             onClick={() => {
               navigate('/admin/client/add-subscription')
-
             }}
           >
             <PlusIcon color={theme.palette.secondary.main} />
@@ -186,6 +186,7 @@ export default function ClientDetail() {
         loading={actionStatus}
       />
       <ChangePassword
+        role={role}
         isOpen={isOpenChangePassModal}
         setIsOpen={setIsOpenChangePassModal}
       />

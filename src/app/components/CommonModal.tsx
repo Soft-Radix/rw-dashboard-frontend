@@ -79,7 +79,7 @@ export default function CommonModal({
       )}
       <div className="p-20 pb-0">{children}</div>
 
-      <div className="flex p-20 pt-0">
+      <div className="flex p-20 pt-20">
         <Button
           variant="contained"
           color="secondary"
