@@ -71,6 +71,7 @@ export const initialState: initialStateProps = {
   list: [],
   agentDetail: {},
   selectedColumn: [],
+  actionStatus: false
 };
 
 /**
@@ -84,15 +85,18 @@ export const agentSlice = createSlice({
       state.successMsg = "";
       state.errorMsg = "";
     },
+    changeFetchStatus: (state) => {
+      state.fetchStatus = 'loading'
+    },
   },
   extraReducers(builder) {
     builder
       .addCase(addAgent.pending, (state) => {
-        state.status = "loading";
+        state.actionStatus = true;
       })
       .addCase(addAgent.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        state.status = "idle";
+        state.actionStatus = false;
         if (payload?.data?.status) {
           state.successMsg = payload?.data?.message;
           toast.success(payload?.data?.message);
@@ -103,15 +107,13 @@ export const agentSlice = createSlice({
       })
       .addCase(addAgent.rejected, (state, { error }) => {
         toast.error(error?.message);
+        state.actionStatus = false;
       })
       .addCase(getAgentList.pending, (state) => {
         state.status = "loading";
       })
       .addCase(getAgentList.fulfilled, (state, action) => {
         const response = action.payload?.data;
-
-        console.log(response, "5465544554");
-
         state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
@@ -121,15 +123,20 @@ export const agentSlice = createSlice({
       .addCase(getAgentList.rejected, (state, action) => {
         state.status = "idle";
       })
+      .addCase(getAgentInfo.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
       .addCase(getAgentInfo.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
         state.fetchStatus = "idle";
         state.agentDetail = data;
-        console.log(data, "checkk");
-      });
+      })
+      .addCase(getAgentInfo.rejected, (state) => {
+        state.fetchStatus = "idle";
+      })
   },
 });
 
-export const { restAll } = agentSlice.actions;
+export const { restAll, changeFetchStatus } = agentSlice.actions;
 
 export default agentSlice.reducer;

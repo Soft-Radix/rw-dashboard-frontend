@@ -16,11 +16,12 @@ import { DownArrowIconWhite } from 'public/assets/icons/dashboardIcons';
 import InputField from "../InputField";
 import AssignedAccountManager from "./components/AssignedAccountManager";
 import SubscriptionList from "./components/SubscriptionList";
-import { getClientInfo } from "app/store/Client";
+import { changeFetchStatus, getClientInfo } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { ClientRootState } from "app/store/Client/Interface";
 import { getLocalStorage } from "src/utils";
+import ListLoading from "@fuse/core/ListLoading";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -34,7 +35,7 @@ export default function ClientDetail() {
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(false);
   const location: Location = useLocation();
-  const { clientDetail, actionStatus } = useSelector((store: ClientRootState) => store?.client)
+  const { clientDetail, actionStatus, fetchStatus } = useSelector((store: ClientRootState) => store?.client)
   const { role } = useSelector((store: any) => store?.user)
   const { client_id } = useParams()
   const navigate: NavigateFunction = useNavigate();
@@ -149,7 +150,14 @@ export default function ClientDetail() {
   useEffect(() => {
     if (!client_id) return null
     dispatch(getClientInfo({ client_id }))
+    return () => {
+      dispatch(changeFetchStatus())
+    }
   }, [])
+
+  if (fetchStatus === 'loading') {
+    return <ListLoading />
+  }
 
   return (
     <>
@@ -178,7 +186,7 @@ export default function ClientDetail() {
         </div>
       </div >
 
-      <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      {/* <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
       <EditProfile
         isOpen={isOpenEditModal}
         setIsOpen={setIsOpenEditModal}

@@ -7,7 +7,7 @@ import { useAppDispatch } from "app/store/store";
 
 import { useSelector } from "react-redux";
 import { addAgent } from "app/store/Agent";
-import { restAll } from "app/store/Client";
+import { restAll } from "app/store/Agent";
 import { AgentRootState, AgentType } from "app/store/Agent/Interafce";
 
 interface IProps {
@@ -21,9 +21,11 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
   const agentState = useSelector((store: AgentRootState) => store.agent);
 
   const onSubmit = async (values: AgentType, { resetForm }) => {
-    console.log(values, "llll");
-    await dispatch(addAgent(values));
-    resetForm();
+    const { payload } = await dispatch(addAgent(values));
+    if (payload?.data?.status) {
+      fetchAgentList();
+      resetForm();
+    }
   };
   const formik = useFormik({
     initialValues: {
@@ -34,11 +36,11 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
     validationSchema: addAgentSchema,
     onSubmit,
   });
+
   useEffect(() => {
     if (!!agentState?.successMsg) {
       dispatch(restAll());
-      fetchAgentList();
-      setIsOpen((prev) => !prev);
+      setIsOpen((prev) => false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }

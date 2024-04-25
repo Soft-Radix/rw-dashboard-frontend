@@ -39,7 +39,7 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
     if (!!clientState?.successMsg) {
       dispatch(restAll());
       fetchList()
-      setIsOpen((prev) => !prev);
+      setIsOpen((prev) => false);
 
     } else if (!!clientState?.errorMsg) {
       dispatch(restAll());

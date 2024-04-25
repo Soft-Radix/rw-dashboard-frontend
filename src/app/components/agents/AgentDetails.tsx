@@ -15,24 +15,22 @@ import TitleBar from "src/app/components/TitleBar";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 import ImagesOverlap from "../ImagesOverlap";
 import { useParams } from "react-router";
-import { getAgentInfo } from "app/store/Agent";
+import { changeFetchStatus, getAgentInfo } from "app/store/Agent";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AgentRootState } from "app/store/Agent/Interafce";
+import ListLoading from "@fuse/core/ListLoading";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
 export default function AgentDetails() {
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
-  const agentDetail = useSelector(
-    (store: AgentRootState) => store?.agent.agentDetail
+  const { agentDetail, fetchStatus } = useSelector(
+    (store: AgentRootState) => store?.agent
   );
-  console.log(agentDetail, "hghghg");
-
   const [expandedImage, setExpandedImage] = useState(null);
-  const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const handleImageClick = (imageUrl) => {
@@ -44,9 +42,15 @@ export default function AgentDetails() {
   };
   useEffect(() => {
     if (!agent_id) return null;
-    console.log(agent_id, "iddd");
     dispatch(getAgentInfo({ agent_id }));
+    return () => {
+      dispatch(changeFetchStatus())
+    }
   }, []);
+
+  if (fetchStatus === 'loading') {
+    return <ListLoading />
+  }
 
   return (
     <>

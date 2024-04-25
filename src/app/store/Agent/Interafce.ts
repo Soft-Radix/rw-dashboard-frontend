@@ -1,5 +1,3 @@
-import { Url } from "url";
-
 export interface AgentType {
   first_name: string;
   last_name: string;
@@ -32,22 +30,14 @@ export type initialStateProps = {
   successMsg: string;
   errorMsg: string;
   fetchStatus?: string;
-  agentDetail?: object;
+  agentDetail?: AgentType;
   list: AgentType[];
   selectedColumn: string[];
+  actionStatus: boolean
 };
 
-export interface AgentState {
-  status: string;
-  successMsg: string;
-  errorMsg: string;
-  list: AgentType[];
-  selectedColumn: string[];
-  agentDetail: AgentType;
-}
-
 export interface AgentRootState {
-  agent: AgentState; // Add other slices if needed
+  agent: initialStateProps; // Add other slices if needed
 }
 
 export interface agentIDType {

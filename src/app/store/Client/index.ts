@@ -131,6 +131,9 @@ export const clientSlice = createSlice({
       state.errorMsg = "";
       state.selectedColumn = [];
     },
+    changeFetchStatus: (state) => {
+      state.fetchStatus = 'loading'
+    },
     sortColumn: (state, { payload }) => {
       state.list = payload || [];
     },
@@ -221,10 +224,16 @@ export const clientSlice = createSlice({
       .addCase(getClientList.rejected, (state, action) => {
         state.status = "idle";
       })
+      .addCase(getClientInfo.pending, (state) => {
+        state.fetchStatus = 'loading';
+      })
       .addCase(getClientInfo.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
         state.fetchStatus = "idle";
         state.clientDetail = data;
+      })
+      .addCase(getClientInfo.rejected, (state) => {
+        state.fetchStatus = 'idle';
       })
 
       .addCase(updateProfile.pending, (state) => {
@@ -262,7 +271,7 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll, updateSelectedColumn, sortColumn } =
+export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
   clientSlice.actions;
 
 export default clientSlice.reducer;
