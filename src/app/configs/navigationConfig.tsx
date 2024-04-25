@@ -198,13 +198,23 @@ export const adminNavigationConfig: FuseNavItemType[] = [
   },
 
   {
-    id: "settings",
-    title: "Settings",
-    translate: "Settings",
-    type: "item",
+    id: "setting",
+    title: "Setting",
+    translate: "Setting",
+    type: "collapse",
     icon: "heroicons-outline:cog",
     customIcon: <SettingNavIcon />,
-    url: "admin/settings",
+    children: [
+      {
+        id: "role",
+        title: "Roles and Permissions",
+        type: "item",
+        icon: "material-twotone:compress",
+        url: "admin/setting",
+        customIcon: <SettingNavIcon />,
+        end: true,
+      },
+    ],
   },
 ];
 

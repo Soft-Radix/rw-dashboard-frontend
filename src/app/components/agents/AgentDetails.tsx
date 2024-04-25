@@ -44,12 +44,12 @@ export default function AgentDetails() {
     if (!agent_id) return null;
     dispatch(getAgentInfo({ agent_id }));
     return () => {
-      dispatch(changeFetchStatus())
-    }
+      dispatch(changeFetchStatus());
+    };
   }, []);
 
-  if (fetchStatus === 'loading') {
-    return <ListLoading />
+  if (fetchStatus === "loading") {
+    return <ListLoading />;
   }
 
   return (
@@ -62,11 +62,11 @@ export default function AgentDetails() {
           <Grid item xs={12} sm={12} md={9} className="">
             <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
               <div className="border border-[#E7E8E9] rounded-lg flex  justify-start gap-[30px] items-start p-[2rem] flex-col sm:flex-row">
-                <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
+                <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                   <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-40 mb-10">
+                <div className="">
+                  <div className="flex items-center gap-[7rem] mb-10">
                     <span className="text-[24px] text-[#111827] font-semibold inline-block">
                       {agentDetail?.first_name + " " + agentDetail?.last_name}
                     </span>
@@ -94,7 +94,7 @@ export default function AgentDetails() {
                     </div>
                   </div>
 
-                  <div className="flex items-baseline justify-start w-full py-20 gap-31">
+                  <div className="flex items-baseline justify-start w-full py-20 gap-28">
                     <div className="flex flex-col pr-10 gap-7 ">
                       <span className="text-[1.8rem] text-title font-500 w-max">
                         Assigned Clients
