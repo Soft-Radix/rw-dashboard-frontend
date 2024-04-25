@@ -66,9 +66,9 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
-  console.log(item, "item");
+  // console.log(item, "item");
   const [items, setItems] = useState<any>(item);
-  console.log(items, "ghdjh");
+  // console.log(items, "ghdjh");
   const [open, setOpen] = useState(() => needsToBeOpened(location, item));
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
@@ -120,10 +120,10 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     // console.log(newItems, "anw");
     const [removed] = newItems.splice(source.index, 1);
     newItems.splice(destination.index, 0, removed);
-    console.log(newItems, "nw");
+    // console.log(newItems, "nw");
     setItems({ ...items, children: newItems });
   };
-  console.log(items, "newItem");
+  // console.log(items, "newItem");
   return useMemo(
     () => (
       <Root

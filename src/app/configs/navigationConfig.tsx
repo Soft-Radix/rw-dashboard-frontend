@@ -4,6 +4,11 @@ import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
 import tr from "./navigation-i18n/tr";
 import { ProjectChiildrenIcon } from "public/assets/icons/projectsIcon";
+import {
+  ClientNavIcon,
+  DashBoardIcon,
+  ReportNavIcon,
+} from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
@@ -137,32 +142,29 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     title: "Dashboard",
     translate: "DASHBOARD",
     type: "item",
-    icon: "heroicons-outline:template",
+    icon: "dashboard",
+    // customIcon: <DashBoardIcon />,
     url: "admin/dashboard",
   },
+
   {
     id: "clients",
     title: "Clients",
     translate: "Clients",
     type: "item",
-    icon: "heroicons-outline:clipboard-check",
+    icon: "dashboard",
+    customIcon: <ClientNavIcon />,
     url: "admin/client",
   },
-  {
-    id: "reports",
-    title: "Reports",
-    translate: "Reports",
-    type: "item",
-    icon: "heroicons-outline:clipboard-check",
-    url: "admin/reports",
-  },
+
   {
     id: "agents",
     title: "Agents",
     translate: "Agents",
     type: "collapse",
     hideOption: true,
-    icon: "heroicons-outline:user-group",
+    icon: "agents",
+    customIcon: <DashBoardIcon />,
     children: [
       {
         id: "agents_list",
@@ -200,7 +202,6 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     icon: "heroicons-outline:cog",
     url: "admin/settings",
   },
-
 ];
 
 export default navigationConfig;
