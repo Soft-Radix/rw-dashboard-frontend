@@ -13,9 +13,10 @@ import { AgentRootState, AgentType } from "app/store/Agent/Interafce";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  fetchAgentList: () => void;
 }
 
-function AddAgentModel({ isOpen, setIsOpen }: IProps) {
+function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
   const dispatch = useAppDispatch();
   const agentState = useSelector((store: AgentRootState) => store.agent);
 
@@ -36,6 +37,7 @@ function AddAgentModel({ isOpen, setIsOpen }: IProps) {
   useEffect(() => {
     if (!!agentState?.successMsg) {
       dispatch(restAll());
+      fetchAgentList();
       setIsOpen((prev) => !prev);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
