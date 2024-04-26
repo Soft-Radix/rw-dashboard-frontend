@@ -1,11 +1,5 @@
 // import { Button, Tab, Tabs, Theme } from "@mui/material";
-import {
-  Grid,
-  TableCell,
-  TableRow,
-  Theme,
-  Typography
-} from "@mui/material";
+import { Grid, TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useState } from "react";
 import CommonTable from "src/app/components/commonTable";
@@ -171,8 +165,8 @@ export default function DashboardRecentActivity() {
           </CommonTable>
         </div>
       </Grid>
-      <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg">
+      {/* <Grid item xs={12} lg={6}> */}
+      {/* <div className="shadow-sm bg-white rounded-lg">
           <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
             <Typography className="text-[16px] font-600">
               Logged Hours
@@ -190,10 +184,10 @@ export default function DashboardRecentActivity() {
           </div>
           <div className="pb-10">
             {/* <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" /> */}
-            <ActivityChart />
-          </div>
-        </div>
-      </Grid>
+      {/* <ActivityChart /> */}
+      {/* </div> */}
+      {/* </div> */}
+      {/* </Grid> */}
     </Grid>
   );
 }
