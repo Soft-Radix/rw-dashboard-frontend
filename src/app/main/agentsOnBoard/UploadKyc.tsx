@@ -56,7 +56,7 @@ export default function CreatePassword() {
       navigate("/sign-in");
     }
   }
-
+//
   return (
     <div className="flex justify-center items-center flex-col h-screen gap-32 px-28 ">
       <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
