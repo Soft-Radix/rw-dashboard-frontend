@@ -86,3 +86,18 @@ export const sortList = (column: string, isAsc: boolean, list: any) => {
   });
   return sortedRows
 }
+
+/**
+ * Calculates the page number for a given item index.
+ * @param itemIndex - The zero-based index of the item.
+ * @param itemsPerPage - The number of items displayed on each page.
+ * @returns The one-based page number where the item resides.
+ */
+export function calculatePageNumber(itemIndex: number, itemsPerPage: number): number {
+  if (itemsPerPage <= 0) {
+    return 1
+  }
+
+  // This is a one-based page number, so add 1 to the result.
+  return Math.floor(itemIndex / itemsPerPage) + 1;
+}

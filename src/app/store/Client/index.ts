@@ -3,6 +3,7 @@ import { ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
 import { ClientType, initialStateProps, filterType, clientIDType, deleteClientType, UpdateProfilePayload, ChangePassword, } from "./Interface";
+import { calculatePageNumber } from "src/utils";
 
 /**
  * API calling
@@ -117,6 +118,7 @@ export const initialState: initialStateProps = {
   list: [],
   clientDetail: {},
   selectedColumn: [],
+  total_records: 0,
 };
 
 /**
@@ -173,11 +175,11 @@ export const clientSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(addClient.pending, (state) => {
-        state.status = "loading";
+        state.actionStatus = true
       })
       .addCase(addClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        state.status = "idle";
+        state.actionStatus = false;
         if (payload?.data?.status) {
           state.successMsg = payload?.data?.message;
           toast.success(payload?.data?.message);
@@ -188,6 +190,7 @@ export const clientSlice = createSlice({
       })
       .addCase(addClient.rejected, (state, { error }) => {
         toast.error(error?.message);
+        state.actionStatus = false
       })
       .addCase(deletClient.pending, (state) => {
         state.actionStatus = true;
@@ -218,8 +221,10 @@ export const clientSlice = createSlice({
         state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
+        } else {
+          state.list = response?.data?.list || [];
+          state.total_records = calculatePageNumber(response?.data?.total_records, 10);
         }
-        state.list = response?.data?.list || [];
       })
       .addCase(getClientList.rejected, (state, action) => {
         state.status = "idle";

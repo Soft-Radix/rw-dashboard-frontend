@@ -19,9 +19,10 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
   const clientState = useSelector((store: ClientRootState) => store.client);
 
   const onSubmit = async (values: ClientType, { resetForm }) => {
-    // console.log(values, "cvheck");
-    await dispatch(addClient(values));
-    resetForm();
+    const { payload } = await dispatch(addClient(values));
+    if (payload?.data?.status) {
+      resetForm();
+    }
   };
 
   const formik = useFormik({
@@ -39,21 +40,26 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
     if (!!clientState?.successMsg) {
       dispatch(restAll());
       fetchList()
-      setIsOpen((prev) => false);
-
+      setIsOpen(false);
+      formik.resetForm()
     } else if (!!clientState?.errorMsg) {
       dispatch(restAll());
     }
   }, [clientState]);
 
+
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => {
+        setIsOpen((prev) => !prev)
+        formik.resetForm()
+      }}
       modalTitle="Add Client"
       maxWidth="910"
       btnTitle="Save"
       onSubmit={formik.handleSubmit}
+      disabled={clientState.actionStatus}
     >
       <div className="flex flex-col gap-20">
         <InputField

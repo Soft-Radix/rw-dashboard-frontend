@@ -39,6 +39,7 @@ export type initialStateProps = {
     fetchStatus?: string;
     clientDetail?: object;
     list: ClientType[];
+    total_records: number,
     selectedColumn: string[];
     actionStatus: boolean;
 };

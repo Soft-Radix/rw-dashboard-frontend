@@ -124,7 +124,7 @@ function ClientTable({ clientState, handleSelectAll,
           </>
         </CommonTable>
         <div className="flex justify-end py-14 px-[3rem]">
-          <CommonPagination count={1} />
+          <CommonPagination count={clientState?.total_records} />
         </div>
       </div>
       <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
