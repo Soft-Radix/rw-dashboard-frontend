@@ -66,19 +66,22 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
+  console.log(checkPermission, "location");
   // console.log(item, "item");
   const [items, setItems] = useState<any>(item);
   // console.log(items, "ghdjh");
   const [open, setOpen] = useState(() => needsToBeOpened(location, item));
-
+  // console.log(open, "open");
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
   useEffect(() => {
     if (needsToBeOpened(location, item)) {
+      console.log(item, "itemr");
       if (!open) {
         setOpen(true);
       }
     }
+
     // eslint-disable-next-line
   }, [location, item]);
 
