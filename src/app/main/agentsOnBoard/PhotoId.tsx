@@ -11,6 +11,7 @@ import {
 } from "public/assets/icons/welcome";
 import { useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import { resetPassSchema } from "src/formSchema";
 
@@ -54,7 +55,7 @@ export default function CreatePassword() {
   }
 
   return (
-    <div className="flex justify-center items-center flex-col h-screen gap-32 px-28 ">
+    <div className="flex  items-center flex-col  gap-32 px-28 py-32">
       <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
       <CircleLeft1Icon className=" hidden sm:block absolute bottom-0 left-0 z-[-1]" />
       <CircleLeft2Icon className="hidden sm:block absolute bottom-[28px] left-0 z-[-1]" />
@@ -72,14 +73,16 @@ export default function CreatePassword() {
           <div></div>
         </div>
       </div>
-      <Button
-        variant="contained"
-        color="secondary"
-        size="large"
-        className="text-[18px] font-500"
-      >
-        Save
-      </Button>
+      <Link to="/upload-doc">
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          className="text-[18px] font-500  min-w-[196px]"
+        >
+          Next
+        </Button>
+      </Link>
     </div>
   );
 }
