@@ -21,7 +21,7 @@ export default function ManageButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const clientState = useSelector((store: ClientRootState) => store.client)
+  const clientState = useSelector((store: ClientRootState) => store.client);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setIsOpen(true);
@@ -36,7 +36,7 @@ export default function ManageButton() {
     return clientState?.selectedColumn.indexOf(itemName) !== -1;
   };
   const handleToggleItem = (itemName: string) => () => {
-    dispatch(updateSelectedColumn(itemName))
+    dispatch(updateSelectedColumn(itemName));
   };
 
   return (

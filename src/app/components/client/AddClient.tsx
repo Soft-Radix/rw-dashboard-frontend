@@ -8,10 +8,11 @@ import { addClientSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 
+
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  fetchList: () => void
+  fetchList: () => void;
 }
 
 function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
@@ -39,21 +40,20 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
   useEffect(() => {
     if (!!clientState?.successMsg) {
       dispatch(restAll());
-      fetchList()
+      fetchList();
       setIsOpen(false);
-      formik.resetForm()
+      formik.resetForm();
     } else if (!!clientState?.errorMsg) {
       dispatch(restAll());
     }
   }, [clientState]);
 
-
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => !prev)
-        formik.resetForm()
+        setIsOpen((prev) => !prev);
+        formik.resetForm();
       }}
       modalTitle="Add Client"
       maxWidth="910"
@@ -61,6 +61,7 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
       onSubmit={formik.handleSubmit}
       disabled={clientState.actionStatus}
     >
+      
       <div className="flex flex-col gap-20">
         <InputField
           formik={formik}

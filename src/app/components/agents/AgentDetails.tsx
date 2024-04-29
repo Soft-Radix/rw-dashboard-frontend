@@ -1,9 +1,18 @@
-import { Button, Grid, Theme } from "@mui/material";
+import {
+  Button,
+  Grid,
+  TableCell,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
 
 import {
+  AttachmentDeleteIcon,
   AttachmentIcon,
+  AttachmentUploadIcon,
   SupportAttachmentIcon,
   SupportLinkIcon,
   SupportProfileIcon,
@@ -21,11 +30,37 @@ import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AgentRootState } from "app/store/Agent/Interafce";
 import ListLoading from "@fuse/core/ListLoading";
-import { EditIcon } from "public/assets/icons/common";
+import {
+  ArrowRightCircleIcon,
+  DeleteIcon,
+  EditIcon,
+} from "public/assets/icons/common";
+import CommonTable from "../commonTable";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
+const rows = [
+  {
+    id: "1542145611525",
+    name: "Web page design",
+    companyName: "Tech23.com",
+    status: "Suspended",
+  },
+  {
+    id: "1542145611525",
+    name: "Web page design",
+    companyName: "Tech23.com",
+    status: "Pending",
+  },
+  {
+    id: "1542145611525",
+    name: "Web page design",
+    companyName: "Tech23.com",
+    status: "Active",
+  },
+];
 
 export default function AgentDetails() {
+  const theme: Theme = useTheme();
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
   const { agentDetail, fetchStatus } = useSelector(
@@ -81,24 +116,24 @@ export default function AgentDetails() {
                         {agentDetail?.status || "N/A"}
                       </Button>
                     </div>
-                    <div className="flex text-[2rem] text-para_light ">
+                    <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                       <div className="flex">
                         <img src="../assets/icons/group.svg" className="mr-4" />
 
                         <span>#2367055342</span>
                       </div>
-                      <div className="flex px-20">
+                      <div className="flex smpx-20">
                         <span>
                           <img
                             src="../assets/icons/ri_time-line.svg"
-                            className="mr-4"
+                            className="sm:mr-4"
                           />{" "}
                         </span>
                         <span>{agentDetail?.phone_number || "N/A"}</span>
                       </div>
                     </div>
 
-                    <div className="flex items-baseline justify-start w-full py-20 gap-28">
+                    <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
                       <div className="flex flex-col pr-10 gap-7 ">
                         <span className="text-[1.8rem] text-title font-500 w-max">
                           Assigned Clients
@@ -124,15 +159,14 @@ export default function AgentDetails() {
                     </div>
                   </div>
                 </div>
-                {/* <Button>hello</Button>   */}
                 <Button className="cursor-pointer flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center ">
                   Edit
                   <EditIcon fill="#4F46E5" />
                 </Button>
               </div>
-              <div className="flex flex-col px-20 mt-[2rem] gap-9">
+              <div className="flex flex-col px-20 my-[2rem] gap-9">
                 <div className="text-2xl text-title font-600">Attachment</div>
-                <div className="flex gap-10 py-5 ">
+                <div className="flex gap-10 py-5 flex-wrap">
                   <div
                     className="relative cursor-pointer "
                     onClick={() =>
@@ -144,10 +178,13 @@ export default function AgentDetails() {
                     <img
                       src="../assets/images/pages/supportDetail/black.png"
                       alt="Black Attachment"
-                      className="h-[97px] w-[200px] rounded-md sm:h-[130px]"
+                      className=" w-[200px] rounded-md sm:h-[130px]"
                     />
-                    <div className="absolute top-5 right-5">
+                    <div className="absolute top-7 left-7">
                       <AttachmentIcon />
+                    </div>
+                    <div className="absolute top-7 right-7">
+                      <AttachmentDeleteIcon />
                     </div>
                   </div>
                   <div
@@ -161,10 +198,13 @@ export default function AgentDetails() {
                     <img
                       src="../assets/images/pages/supportDetail/white.jpeg"
                       alt="White Attachment"
-                      className="h-[97px] w-[200px] rounded-md sm:h-[130px] "
+                      className=" w-[200px] rounded-md sm:h-[130px] "
                     />
-                    <div className="absolute top-5 right-5">
+                    <div className="absolute top-7 left-7">
                       <AttachmentIcon />
+                    </div>
+                    <div className="absolute top-7 right-7">
+                      <AttachmentDeleteIcon />
                     </div>
                   </div>
                   {expandedImage && (
@@ -179,34 +219,80 @@ export default function AgentDetails() {
                       />
                     </div>
                   )}
+                  <div
+                    className=" cursor-pointer border-[0.5px] border-[#4F46E5] rounded-8 bg-[#EDEDFC] flex 
+                  flex-col items-center sm:h-[97px] w-[200px] justify-center sm:py-64 py-36"
+                  >
+                    <div>
+                      <AttachmentUploadIcon />
+                    </div>
+                    <Typography className="text-[16px] text-[#4F46E5]">
+                      Upload File
+                    </Typography>
+                  </div>
                 </div>
+              </div>
+              <div className="border-1 border-[#EDF2F6] rounded-6 py-20 mt-10">
+                <Typography className="text-[20px] font-600 pl-20 py-10 ">
+                  Assigned Clients
+                </Typography>
+                <CommonTable
+                  headings={["Id", "Name", "Company Name", "Status", " "]}
+                >
+                  <>
+                    {rows.map((row, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "& td": {
+                            borderBottom: "1px solid #EDF2F6",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            color: theme.palette.primary.main,
+                          },
+                        }}
+                      >
+                        <TableCell
+                          scope="row"
+                          className="font-500 text-[14px] leading-4"
+                        >
+                          {row.id}
+                        </TableCell>
+                        <TableCell
+                          align="center"
+                          className="whitespace-nowrap font-500 text-[14px] leading-4"
+                        >
+                          {row.name}
+                        </TableCell>
+
+                        <TableCell
+                          align="center"
+                          className="whitespace-nowrap font-500 text-[14px] leading-4"
+                        >
+                          {row.companyName}
+                        </TableCell>
+                        <TableCell align="center" className="whitespace-nowrap">
+                          <span
+                            className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
+                          >
+                            {row.status}
+                          </span>
+                        </TableCell>
+
+                        <TableCell
+                          align="center"
+                          className="whitespace-nowrap font-500 text-[14px] leading-4"
+                        >
+                          <ArrowRightCircleIcon />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </>
+                </CommonTable>
               </div>
             </div>
           </Grid>
-
-          {/* <Grid item xs={12} sm={4} md={3}>
-                        <div className="flex items-end justify-between flex-col py-20 px-10 bg-[#FFFFFF] md:h-screen rounded-12 xs:auto sm:auto xs:gap-[30px] ">
-                            <div className="w-full h-[6rem] bg-[#2c334c] rounded-t-xl flex">
-                                <div className="flex items-center justify-start gap-10 px-10">
-                                    <span className="flex items-center justify-center py-5">
-                                        <SupportProfileIcon />
-                                    </span>
-                                    <span className="text-[#FFFFFF]">Client Name</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center w-full h-40 px-3 py-3">
-                                <div className="flex justify-between w-3/4 p-10 rounded-md">
-                                    <span>Write a comment....</span>
-                                    <span>
-                                        <SupportAttachmentIcon />
-                                    </span>
-                                </div>
-                                <span className="">
-                                    <SupportLinkIcon />
-                                </span>
-                            </div>
-                        </div>
-                    </Grid> */}
         </Grid>
       </div>
 
