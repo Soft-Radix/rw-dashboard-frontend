@@ -46,11 +46,8 @@ export default function AgentsList() {
     fetchAgentList();
   }, [fetchAgentList]);
 
-  // useEffect(() => {
-  //   dispatch(addAgent(store.agent));
-  // });
+
   const checkPageNum = (e: any, pageNumber: number) => {
-    // console.log(pageNumber, "test number");
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,

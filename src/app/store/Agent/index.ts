@@ -54,7 +54,6 @@ export const getAgentInfo = createAsyncThunk(
       data: payload,
     });
 
-    console.log(response.data, "response.Id");
     // Return only the data you need to keep it serializable
     return {
       data: response.data,

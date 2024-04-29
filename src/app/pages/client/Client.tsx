@@ -108,13 +108,14 @@ export default function Clients() {
           id="filled-hidden-label-small"
           defaultValue=""
           variant="standard"
-          placeholder="Search"
+          placeholder="Search Client"
           onChange={handleSearchChange}
           sx={{
             pl: 2,
             // border: "1px solid blue",
             backgroundColor: "#F6F6F6",
             borderRadius: "8px",
+            border: "1px solid transparent", // Show border when focused
             "&:focus-within": {
               border: "1px solid blue", // Show border when focused
             },
@@ -138,7 +139,6 @@ export default function Clients() {
           }}
         />
 
-        {/* <input type="text" placeholder="enter></input> */}
         <ManageButton />
       </div>
     );
