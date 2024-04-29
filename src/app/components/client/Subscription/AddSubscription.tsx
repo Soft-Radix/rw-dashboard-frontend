@@ -59,7 +59,7 @@ export default function AddSubscription() {
       email: "",
       phone: "",
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
 
   //custom dropdown
@@ -97,7 +97,7 @@ export default function AddSubscription() {
       <>
         <div className="flex items-center gap-20 mr-20 ">
           <Button
-            className="items-center px-20 rounded-lg text-secondary bg-secondary_bg w-max font-600 "
+            className="items-center px-20 rounded-[.7rem] text-secondary bg-secondary_bg w-max font-600 "
             endIcon={<EditIcon fill="#4F46E5" />}
           >
             Edit Column
@@ -112,7 +112,7 @@ export default function AddSubscription() {
                 <Button
                   variant="text"
                   color="secondary"
-                  className="h-[40px] sm:text-[16px] flex gap-8  leading-none bg-secondary_bg rounded "
+                  className="h-[40px] sm:text-[16px] flex gap-8  leading-none bg-secondary_bg rounded-[.7rem]"
                   aria-label="Lines"
                   endIcon={<DownArrowIcon className="cursor-pointer" />}
                 >
@@ -205,7 +205,7 @@ export default function AddSubscription() {
         <DropdownMenu
           marginTop={"mt-[20px] "}
           button={
-            <div className="relative w-max flex" onClick={handleTexFeeClick}>
+            <div className="relative flex w-max" onClick={handleTexFeeClick}>
               <span className="inline-block pl-5 text-secondary font-600 text-18">
                 {" "}
                 +Add discount fee or tax
@@ -308,7 +308,7 @@ export default function AddSubscription() {
                   </TableCell>
                   <TableCell
                     align="center"
-                    className="whitespace-nowrap font-500 border-1 border-solid"
+                    className="border-solid whitespace-nowrap font-500 border-1"
                   >
                     <InputField
                       name={"name"}
@@ -337,6 +337,7 @@ export default function AddSubscription() {
                       sx={{
                         "&  .MuiInputBase-input": {
                           border: "0.5px solid #9DA0A6",
+                          height: 44
                         },
                       }}
                     />
@@ -355,8 +356,10 @@ export default function AddSubscription() {
                           name="unitDiscount"
                           defaultValue={"percentage"}
                           sx={{
-                            "& .MuiSelect-selectMenu": {
-                              paddingRight: "0px", // Adjust padding for the select menu
+                            height: '50px',
+                            "&.MuiSelect-selectMenu": {
+                              paddingRight: "0px !important", // Adjust padding for the select menu
+
                             },
                           }}
                         >
@@ -391,66 +394,7 @@ export default function AddSubscription() {
                         ></TextField>
                       </div>
                     </div>
-                    {/* <TextField
-                      hiddenLabel
-                      id="filled-hidden-label-small"
-                      defaultValue=""
-                      variant="standard"
-                      size="small"
-                      placeholder="$444.00"
-                      className="bg-bgGrey border-solid border-1 border-[#9DA0A6] "
-                      sx={{
-                        borderRadius: "10px",
-                        pl: "4px",
-                        pr: 2,
-                        pt: 1,
-                        pb: 1,
 
-                        "& .MuiInputBase-input": {
-                          textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                          border: "none", // Hide the border of the input element
-                        },
-                        "& .MuiInput-underline:before": {
-                          borderBottom: "none !important", // Hide the underline (if using underline variant)
-                        },
-                        "& .MuiInput-underline:after": {
-                          borderBottom: "none !important", // Hide the underline (if using underline variant)
-                        },
-                      }}
-                      InputProps={{
-                        className: " max-w-[130px] m-auto",
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SelectField
-                              formik={formik}
-                              name="Billing"
-                              defaultValue={"percentage"}
-                              sx={{
-                                borderRight: "0.5px solid #9DA0A6",
-                                borderRadius: "0px",
-
-                                "& .radioIcon": { display: "none" },
-                                "&.MuiInputBase-root": {
-                                  "& .MuiSelect-select": {
-                                    paddingTop: "6px",
-                                    PaddingBottom: "8px",
-                                  },
-                                },
-                              }}
-                            >
-                              {UnitDiscount.map((item) => (
-                                <StyledMenuItem
-                                  key={item.value}
-                                  value={item.value}
-                                >
-                                  {item.label}
-                                </StyledMenuItem>
-                              ))}
-                            </SelectField>
-                          </InputAdornment>
-                        ),
-                      }}
-                    ></TextField> */}
                   </TableCell>
                   <TableCell
                     align="center"
@@ -459,44 +403,39 @@ export default function AddSubscription() {
                     {row.date}
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap">
-                    {/* <div className="border-[0.5px] border-[#9DA0A6] rounded-8 text-center"> */}
-                    <SelectField
-                      formik={formik}
-                      name="Billing"
-                      defaultValue={"Monthly"}
-                      sx={{
-                        "& .radioIcon": { display: "none" },
-                        "&  .MuiInputBase-input": {
-                          border: "0.5px solid #9DA0A6",
-                          borderRadius: "7px",
-                        },
-                      }}
-                    >
-                      {MonthlyOptions.map((item) => (
-                        <StyledMenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </StyledMenuItem>
-                      ))}
-                    </SelectField>
-                    {/* </div> */}
+                    <div className="w-[120px] truncate md:text-clip " style={{
+                      border: "0.5px solid #9DA0A6",
+                      borderRadius: "7px",
+                    }}>
+                      <SelectField
+                        formik={formik}
+                        name="Billing"
+                        defaultValue={"Monthly"}
+                        sx={{
+                          height: '50px'
+                        }}
+                      >
+                        {MonthlyOptions.map((item) => (
+                          <StyledMenuItem key={item.value} value={item.value}>
+                            {item.label}
+                          </StyledMenuItem>
+                        ))}
+                      </SelectField>
+                    </div>
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap ">
-                    <div className="w-[50px] text-ellipsis overflow-hidden ">
+                    <div className="w-[120px] truncate md:text-clip " style={{
+                      border: "0.5px solid #9DA0A6",
+                      borderRadius: "7px",
+
+                    }}>
                       {/* Assign employees to this Subscriptions */}
                       <SelectField
                         formik={formik}
                         name="billingTerms"
                         defaultValue={"One"}
                         sx={{
-                          "& .radioIcon": { display: "none" },
-                          "&  .MuiInputBase-input": {
-                            border: "0.5px solid #9DA0A6",
-                            borderRadius: "7px",
-                            maxWidth: "80 px", // Limit the width of the input
-                            overflow: "hidden", // Hide overflowing content
-                            textOverflow: "ellipsis", // Display ellipsis for truncated text
-                            whiteSpace: "nowrap",
-                          },
+                          height: '50px'
                         }}
                       >
                         {BillingTermsOptions.map((item) => (

@@ -25,6 +25,9 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   backgroundColor: "#f6f6f6",
   lineHeight: 1.4,
   "&.MuiInputBase-root": {
+    "& .MuiOutlinedInput-input": {
+      paddingRight: '14px !important'
+    },
     "& .MuiOutlinedInput-notchedOutline": {
       borderColor: "transparent",
       border: "none",
@@ -37,14 +40,17 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     },
     "& .MuiSelect-select": {
       padding: "2px 14px 2px 24px",
-      minHeight: "48px",
-      display: "flex",
+      minHeight: "auto",
       alignItems: "center",
-      lineHeight: 1,
+      textOverflow: "ellipsis", // Ensure ellipsis is applied
+      overflow: "hidden",       // Hide overflowing content
+      whiteSpace: "nowrap",     // Ensure no wrapping
+      position: "relative",
+
     },
     "& .MuiSelect-icon": {
       // Conditionally set icon position based on prop
-      left: "0px",
+      left: "2px",
     },
   },
 }));
@@ -100,8 +106,8 @@ function TableSelectField({
           {rest.children}
         </StyledSelect>
         {rest.placeholder &&
-        (!formikValue ||
-          (typeof formikValue === "object" && !formikValue?.length)) ? (
+          (!formikValue ||
+            (typeof formikValue === "object" && !formikValue?.length)) ? (
           <span className="absolute text-para_light text-lg left-16 top-[50%] translate-y-[-50%] pointer-events-none">
             {rest.placeholder}
           </span>
