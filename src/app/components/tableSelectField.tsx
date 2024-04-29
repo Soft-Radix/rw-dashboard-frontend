@@ -76,7 +76,7 @@ function TableSelectField({
   };
 
   return (
-    <div className={`${rest.className} w-max `}>
+    <div className={`${rest.className} `}>
       {label && (
         <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
           {label}

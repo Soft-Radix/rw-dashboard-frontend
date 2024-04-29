@@ -29,15 +29,15 @@ interface TabPanelProps {
 
 export default function Clients() {
   const theme: Theme = useTheme();
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [filters, setfilters] = useState<filterType>({
-    "start": 0,
-    "limit": 10,
-    "search": ""
-  })
-  const clientState = useSelector((store: ClientRootState) => store.client)
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const clientState = useSelector((store: ClientRootState) => store.client);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -63,16 +63,19 @@ export default function Clients() {
   };
 
   const handleCheckboxChange = (rowId: number) => {
-    setSelectedIds((prev) =>
-      prev.includes(rowId)
-        ? prev.filter((id) => id !== rowId) // Deselect
-        : [...prev, rowId] // Select
+    setSelectedIds(
+      (prev) =>
+        prev.includes(rowId)
+          ? prev.filter((id) => id !== rowId) // Deselect
+          : [...prev, rowId] // Select
     );
   };
 
   const handleSelectAll = () => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
-    const allSelected = allRowIds.every((id: number) => selectedIds.includes(id));
+    const allSelected = allRowIds.every((id: number) =>
+      selectedIds.includes(id)
+    );
 
     if (allSelected) {
       setSelectedIds([]); // Deselect all
@@ -81,24 +84,21 @@ export default function Clients() {
     }
   };
 
-
   const deleteClient = async () => {
-    const { payload } = await dispatch(deletClient({ client_ids: selectedIds }))
+    const { payload } = await dispatch(
+      deletClient({ client_ids: selectedIds })
+    );
     if (payload?.data?.status) {
-      setIsOpenDeletedModal(false)
+      setIsOpenDeletedModal(false);
     }
-  }
-  const fetchList = useCallback(
-    () => {
-      dispatch(getClientList(filters))
-    },
-    [filters],
-  )
+  };
+  const fetchList = useCallback(() => {
+    dispatch(getClientList(filters));
+  }, [filters]);
 
   useEffect(() => {
-    fetchList()
-  }, [filters])
-
+    fetchList();
+  }, [filters]);
 
   const ClientTabButton = () => {
     return (
@@ -148,10 +148,16 @@ export default function Clients() {
     {
       id: "all",
       label: "All",
-      content: <ClientTable clientState={clientState}
-        handleSelectAll={handleSelectAll}
-        selectedIds={selectedIds}
-        handleCheckboxChange={handleCheckboxChange} />,
+      content: (
+        <ClientTable
+          clientState={clientState}
+          handleSelectAll={handleSelectAll}
+          selectedIds={selectedIds}
+          handleCheckboxChange={handleCheckboxChange}
+          setfilters={setfilters}
+          filters={filters}
+        />
+      ),
       actionBtn: ClientTabButton,
     },
     {
@@ -179,7 +185,6 @@ export default function Clients() {
       actionBtn: () => null,
     },
   ];
-
 
   return (
     <>
@@ -249,7 +254,7 @@ export default function Clients() {
             </div>
           </DropdownMenu> */}
 
-          {selectedIds?.length > 0 &&
+          {selectedIds?.length > 0 && (
             <Button
               variant="contained"
               className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
@@ -259,7 +264,7 @@ export default function Clients() {
             >
               Delete
             </Button>
-          }
+          )}
           <Button
             variant="outlined"
             color="secondary"
@@ -282,7 +287,9 @@ export default function Clients() {
           </div>
         </div>
       </div>
-      <AddClient isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal}
+      <AddClient
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
         fetchList={fetchList}
       />
       <DeleteClient

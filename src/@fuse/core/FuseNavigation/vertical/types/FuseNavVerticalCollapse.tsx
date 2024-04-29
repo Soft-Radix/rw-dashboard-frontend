@@ -84,6 +84,14 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
     // eslint-disable-next-line
   }, [location, item]);
+  useEffect(() => {
+    if (
+      location.pathname !== "/admin/agents/groups" &&
+      location.pathname !== "/admin/agents/list"
+    ) {   
+      setOpen(false);
+    }
+  }, [location]);
 
   const component = item.url ? NavLinkAdapter : "li";
 

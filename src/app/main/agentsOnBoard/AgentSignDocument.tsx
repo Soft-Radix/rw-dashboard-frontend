@@ -9,11 +9,11 @@ import {
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import signDoc from "public/assets/images/etc/signDocument.png";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { resetPassSchema } from "src/formSchema";
+import signDoc from "public/assets/images/etc/signDocument.png";
 
 type FormType = {
   cnfPassword: string;
@@ -53,17 +53,25 @@ export default function AgentSignDocument() {
       navigate("/sign-in");
     }
   }
-
+  const title = [
+    {
+      description: " Upload Front ID Pic",
+    },
+    {
+      description: " Upload Back ID Pic",
+    },
+  ];
+  //
   return (
-    <div className="flex justify-center items-center flex-col h-screen gap-32 px-28 ">
+    <div className="flex justify-center items-center flex-col h-screen gap-32">
       <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
       <CircleLeft1Icon className=" hidden sm:block absolute bottom-0 left-0 z-[-1]" />
       <CircleLeft2Icon className="hidden sm:block absolute bottom-[28px] left-0 z-[-1]" />
 
       <img src="assets/icons/remote-icon.svg" alt="" />
 
-      <div className="bg-[#fff] sm:min-w-[50%] h-auto sm:py-[2rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md  ">
-        <div className="flex flex-col justify-center gap-40">
+      <div className="bg-[#fff] sm:min-w-[60%] h-auto sm:py-[8rem] py-20 px-20 sm:px-24 flex justify-center rounded-lg shadow-md ">
+        <div className="flex flex-col justify-center gap-40 ">
           <Typography className="text-[48px] text-center font-700 leading-normal">
             Sign Document
             <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
@@ -79,7 +87,7 @@ export default function AgentSignDocument() {
         variant="contained"
         color="secondary"
         size="large"
-        className="text-[18px] font-500 min-w-[196px]"
+        className="text-[18px] font-700 min-w-[196px]"
       >
         Next
       </Button>

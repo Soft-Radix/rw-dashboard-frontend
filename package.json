@@ -70,6 +70,7 @@
     "react-router": "6.21.3",
     "react-router-dom": "6.21.3",
     "react-swipeable": "7.0.1",
+    "react-webcam": "^7.2.0",
     "recharts": "^2.12.2",
     "redux-logger": "4.0.0",
     "reselect": "5.1.0",

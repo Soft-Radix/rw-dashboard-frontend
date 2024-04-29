@@ -8,6 +8,7 @@ import {
   filterType,
   initialStateProps,
 } from "./Interafce";
+import { calculatePageNumber } from "src/utils";
 
 /**
  * API calling
@@ -71,7 +72,8 @@ export const initialState: initialStateProps = {
   list: [],
   agentDetail: {},
   selectedColumn: [],
-  actionStatus: false
+  actionStatus: false,
+  total_records: 0,
 };
 
 /**
@@ -86,7 +88,7 @@ export const agentSlice = createSlice({
       state.errorMsg = "";
     },
     changeFetchStatus: (state) => {
-      state.fetchStatus = 'loading'
+      state.fetchStatus = "loading";
     },
   },
   extraReducers(builder) {
@@ -117,8 +119,13 @@ export const agentSlice = createSlice({
         state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
+        } else {
+          state.list = response?.data?.list || [];
+          state.total_records = calculatePageNumber(
+            response?.data?.total_records,
+            10
+          );
         }
-        state.list = response?.data?.list || [];
       })
       .addCase(getAgentList.rejected, (state, action) => {
         state.status = "idle";
@@ -133,7 +140,7 @@ export const agentSlice = createSlice({
       })
       .addCase(getAgentInfo.rejected, (state) => {
         state.fetchStatus = "idle";
-      })
+      });
   },
 });
 

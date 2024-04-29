@@ -30,10 +30,11 @@ export type initialStateProps = {
   successMsg: string;
   errorMsg: string;
   fetchStatus?: string;
-  agentDetail?: AgentType;
+  agentDetail?: Object;
   list: AgentType[];
   selectedColumn: string[];
-  actionStatus: boolean
+  actionStatus: boolean;
+  total_records: number;
 };
 
 export interface AgentRootState {

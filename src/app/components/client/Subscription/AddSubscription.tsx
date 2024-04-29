@@ -481,28 +481,31 @@ export default function AddSubscription() {
                     {/* </div> */}
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap ">
-                    <SelectField
-                      formik={formik}
-                      name="billingTerms"
-                      defaultValue={"One"}
-                      sx={{
-                        "& .radioIcon": { display: "none" },
-                        "&  .MuiInputBase-input": {
-                          border: "0.5px solid #9DA0A6",
-                          borderRadius: "7px",
-                          maxWidth: "80 px", // Limit the width of the input
-                          overflow: "hidden", // Hide overflowing content
-                          textOverflow: "ellipsis", // Display ellipsis for truncated text
-                          whiteSpace: "nowrap",
-                        },
-                      }}
-                    >
-                      {BillingTermsOptions.map((item) => (
-                        <StyledMenuItem key={item.value} value={item.value}>
-                          {item.label}
-                        </StyledMenuItem>
-                      ))}
-                    </SelectField>
+                    <div className="w-[50px] text-ellipsis overflow-hidden ">
+                      {/* Assign employees to this Subscriptions */}
+                      <SelectField
+                        formik={formik}
+                        name="billingTerms"
+                        defaultValue={"One"}
+                        sx={{
+                          "& .radioIcon": { display: "none" },
+                          "&  .MuiInputBase-input": {
+                            border: "0.5px solid #9DA0A6",
+                            borderRadius: "7px",
+                            maxWidth: "80 px", // Limit the width of the input
+                            overflow: "hidden", // Hide overflowing content
+                            textOverflow: "ellipsis", // Display ellipsis for truncated text
+                            whiteSpace: "nowrap",
+                          },
+                        }}
+                      >
+                        {BillingTermsOptions.map((item) => (
+                          <StyledMenuItem key={item.value} value={item.value}>
+                            {item.label}
+                          </StyledMenuItem>
+                        ))}
+                      </SelectField>
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}

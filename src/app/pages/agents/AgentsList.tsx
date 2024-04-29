@@ -49,6 +49,13 @@ export default function AgentsList() {
   // useEffect(() => {
   //   dispatch(addAgent(store.agent));
   // });
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "test number");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      start: pageNumber - 1,
+    }));
+  };
   return (
     <>
       <TitleBar title="Agents">
@@ -161,7 +168,11 @@ export default function AgentsList() {
           </CommonTable>
 
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={1} />
+            <CommonPagination
+              count={agentState?.total_records}
+              onChange={(e, PageNumber) => checkPageNum(e, PageNumber)}
+              page={filters.start + 1}
+            />
           </div>
         </div>
       </div>
