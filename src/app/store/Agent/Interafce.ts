@@ -1,7 +1,7 @@
 export interface AgentType {
-  first_name: string;
-  last_name: string;
-  email: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
   id?: number;
   role_id?: number;
   country_code?: number;
@@ -30,7 +30,7 @@ export type initialStateProps = {
   successMsg: string;
   errorMsg: string;
   fetchStatus?: string;
-  agentDetail?: Object;
+  agentDetail?: AgentType;
   list: AgentType[];
   selectedColumn: string[];
   actionStatus: boolean;

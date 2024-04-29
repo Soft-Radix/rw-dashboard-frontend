@@ -5,6 +5,7 @@ import SignDocuement from "../clientOnBoard/SignDocuement";
 import AgentSignDocument from "./AgentSignDocument";
 import UploadKyc from "./UploadKyc";
 import PhotoId from "./PhotoId";
+import UploadPage from "./UploadPage";
 // import SignDocuement from "./SignDocuement";
 
 const AgentOnBoardConfig: FuseRouteConfigType = {
@@ -46,6 +47,10 @@ const AgentOnBoardConfig: FuseRouteConfigType = {
     {
       path: "photo-id",
       element: <PhotoId />,
+    },
+    {
+      path: "upload-doc",
+      element: <UploadPage />,
     },
   ],
 };
