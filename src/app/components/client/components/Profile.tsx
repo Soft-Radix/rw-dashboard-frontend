@@ -1,8 +1,6 @@
-import React from 'react'
-import { Button, Box, Grid, Checkbox, Typography, TableCell, Tab, Tabs, TableRow, Theme, IconButton } from "@mui/material";
-import { ArrowRightCircleIcon, EditIcon, LastPayment } from 'public/assets/icons/common';
-import { Link } from 'react-router-dom';
+import { Button, Grid, Typography } from "@mui/material";
 import { ClientType } from 'app/store/Client/Interface';
+import { ArrowRightCircleIcon, EditIcon, LastPayment } from 'public/assets/icons/common';
 
 interface ProfileProps {
     setIsOpenEditModal: (prev: boolean) => void,

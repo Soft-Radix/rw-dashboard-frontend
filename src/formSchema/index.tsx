@@ -77,6 +77,23 @@ const addAgentSchema = Yup.object({
   ...emailField,
 });
 
+const editAgentSchema = Yup.object({
+  first_name: Yup.string()
+    .required("First name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  last_name: Yup.string()
+    .required("Last name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  ...emailField,
+  phone_number: Yup.string()
+    .required("Phone number is required")
+    .matches(/^\+?[1-9]\d{1,14}$/, {
+      message: "Invalid phone number",
+      excludeEmptyString: true,
+    }), // ,
+  address: Yup.string().required("Address is required"),
+});
+
 export {
   loginSchema,
   forgotPasswordSchema,
@@ -84,5 +101,6 @@ export {
   addClientSchema,
   addAgentSchema,
   changePasswordByAdmin,
-  changePasswordByClient
+  changePasswordByClient,
+  editAgentSchema,
 };

@@ -66,8 +66,7 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
-  console.log(checkPermission, "location");
-  // console.log(item, "item");
+
   const [items, setItems] = useState<any>(item);
   // console.log(items, "ghdjh");
   const [open, setOpen] = useState(() => needsToBeOpened(location, item));
@@ -76,7 +75,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
   useEffect(() => {
     if (needsToBeOpened(location, item)) {
-      console.log(item, "itemr");
+      // console.log(item, "itemr");
       if (!open) {
         setOpen(true);
       }
@@ -88,7 +87,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     if (
       location.pathname !== "/admin/agents/groups" &&
       location.pathname !== "/admin/agents/list"
-    ) {   
+    ) {
       setOpen(false);
     }
   }, [location]);

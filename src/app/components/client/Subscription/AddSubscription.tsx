@@ -59,7 +59,7 @@ export default function AddSubscription() {
       email: "",
       phone: "",
     },
-    onSubmit: (values) => { },
+    onSubmit: (values) => {},
   });
 
   //custom dropdown
@@ -337,7 +337,7 @@ export default function AddSubscription() {
                       sx={{
                         "&  .MuiInputBase-input": {
                           border: "0.5px solid #9DA0A6",
-                          height: 44
+                          height: 44,
                         },
                       }}
                     />
@@ -356,10 +356,9 @@ export default function AddSubscription() {
                           name="unitDiscount"
                           defaultValue={"percentage"}
                           sx={{
-                            height: '50px',
+                            height: "50px",
                             "&.MuiSelect-selectMenu": {
                               paddingRight: "0px !important", // Adjust padding for the select menu
-
                             },
                           }}
                         >
@@ -394,7 +393,6 @@ export default function AddSubscription() {
                         ></TextField>
                       </div>
                     </div>
-
                   </TableCell>
                   <TableCell
                     align="center"
@@ -403,16 +401,19 @@ export default function AddSubscription() {
                     {row.date}
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap">
-                    <div className="w-[120px] truncate md:text-clip " style={{
-                      border: "0.5px solid #9DA0A6",
-                      borderRadius: "7px",
-                    }}>
+                    <div
+                      className="w-[120px] truncate md:text-clip "
+                      style={{
+                        border: "0.5px solid #9DA0A6",
+                        borderRadius: "7px",
+                      }}
+                    >
                       <SelectField
                         formik={formik}
                         name="Billing"
                         defaultValue={"Monthly"}
                         sx={{
-                          height: '50px'
+                          height: "50px",
                         }}
                       >
                         {MonthlyOptions.map((item) => (
@@ -424,18 +425,20 @@ export default function AddSubscription() {
                     </div>
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap ">
-                    <div className="w-[120px] truncate md:text-clip " style={{
-                      border: "0.5px solid #9DA0A6",
-                      borderRadius: "7px",
-
-                    }}>
+                    <div
+                      className="w-[120px] truncate md:text-clip "
+                      style={{
+                        border: "0.5px solid #9DA0A6",
+                        borderRadius: "7px",
+                      }}
+                    >
                       {/* Assign employees to this Subscriptions */}
                       <SelectField
                         formik={formik}
                         name="billingTerms"
                         defaultValue={"One"}
                         sx={{
-                          height: '50px'
+                          height: "50px",
                         }}
                       >
                         {BillingTermsOptions.map((item) => (

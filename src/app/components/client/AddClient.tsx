@@ -8,7 +8,6 @@ import { addClientSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 
-
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -61,7 +60,6 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
       onSubmit={formik.handleSubmit}
       disabled={clientState.actionStatus}
     >
-      
       <div className="flex flex-col gap-20">
         <InputField
           formik={formik}

@@ -1,35 +1,41 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { MenuItem, styled, useTheme } from "@mui/material";
 import { useFormik } from "formik";
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import SelectField from "../selectField";
-import { ClientType } from 'app/store/Client/Interface';
+import { ClientType } from "app/store/Client/Interface";
 import { updateProfile } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 
 type profileState = {
-  value: string,
-  label: string
-}
+  value: string;
+  label: string;
+};
 
 type FormType = {
-  first_name: string,
-  last_name: string,
-  email: string,
-  phone_number: number | string,
-  address: string,
-  status: string,
-  company_name: string,
-  country_code: number | string
-}
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: number | string;
+  address: string;
+  status: string;
+  company_name: string;
+  country_code: number | string;
+};
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  clientDetail: ClientType,
-  loading: boolean
+  clientDetail: ClientType;
+  loading: boolean;
 }
 
 export const profileStatus: profileState[] = [
@@ -78,12 +84,12 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
 
     // Append form fields to FormData
     Object.entries(values).forEach(([key, value]) => {
-      formData.append(key, String(value))
+      formData.append(key, String(value));
     });
-    
-    formData.append('client_id', String(clientDetail.id))
+
+    formData.append("client_id", String(clientDetail.id));
     if (selectedImage) {
-      formData.append('files', selectedImage); // Add the selected image to the FormData
+      formData.append("files", selectedImage); // Add the selected image to the FormData
     }
 
     const { payload } = await dispatch(updateProfile({ formData }));
@@ -94,36 +100,36 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
   };
   const formik = useFormik({
     initialValues: {
-      first_name: '',
+      first_name: "",
       last_name: "",
-      status: '',
-      email: '',
+      status: "",
+      email: "",
       phone_number: null,
       company_name: "",
       country_code: "+1",
-      address: ""
+      address: "",
     },
-    onSubmit
+    onSubmit,
   });
 
   // Update initial values after clientDetail changes
   useEffect(() => {
     if (clientDetail) {
       formik.setValues({
-        first_name: clientDetail.first_name || '',
-        last_name: clientDetail.last_name || '',
+        first_name: clientDetail.first_name || "",
+        last_name: clientDetail.last_name || "",
         status: clientDetail.status,
-        email: clientDetail.email || '',
-        phone_number: clientDetail.phone_number || '',
-        company_name: clientDetail.company_name || '',
-        country_code: clientDetail.country_code || '',
-        address: clientDetail.address
+        email: clientDetail.email || "",
+        phone_number: clientDetail.phone_number || "",
+        company_name: clientDetail.company_name || "",
+        country_code: clientDetail.country_code || "",
+        address: clientDetail.address,
       });
     }
   }, [clientDetail]); // Dependency on clientDetail
 
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
-  const [previewUrl, setpreviewUrl] = useState<string>('')
+  const [previewUrl, setpreviewUrl] = useState<string>("");
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
@@ -134,14 +140,13 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     }
   };
 
-
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Edit Profile"
       maxWidth="733"
-      btnTitle={'Save'}
+      btnTitle={"Save"}
       disabled={loading}
       onSubmit={formik.handleSubmit}
     >
