@@ -7,34 +7,27 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
 
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
-  AttachmentUploadIcon,
-  SupportAttachmentIcon,
-  SupportLinkIcon,
-  SupportProfileIcon,
+  AttachmentUploadIcon
 } from "public/assets/icons/supportIcons";
 
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import ListLoading from "@fuse/core/ListLoading";
+import { changeFetchStatus, getAgentInfo } from "app/store/Agent";
+import { AgentRootState } from "app/store/Agent/Interafce";
+import { useAppDispatch } from "app/store/store";
+import {
+  ArrowRightCircleIcon,
+  EditIcon
+} from "public/assets/icons/common";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
 import TitleBar from "src/app/components/TitleBar";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 import ImagesOverlap from "../ImagesOverlap";
-import { useParams } from "react-router";
-import { changeFetchStatus, getAgentInfo } from "app/store/Agent";
-import { useDispatch } from "react-redux";
-import { useAppDispatch } from "app/store/store";
-import { useSelector } from "react-redux";
-import { AgentRootState } from "app/store/Agent/Interafce";
-import ListLoading from "@fuse/core/ListLoading";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
 import CommonTable from "../commonTable";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];

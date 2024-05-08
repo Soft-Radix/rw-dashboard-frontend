@@ -16,83 +16,61 @@ import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import SearchInput from "src/app/components/SearchInput";
+import AddAccountManagerModel from "src/app/components/accountManager/AddAccountmanagerModal";
 
 const rows = [
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Active ",
   },
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Suspended",
   },
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Pending",
   },
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Pending",
   },
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Suspended",
   },
+
   {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
+    id: "#2367055342",
+    fname: "Benjamin",
+    lname: "Benjamin",
+
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
+    status: "Active",
   },
 ];
 
-export default function AgentsGroup() {
+export default function AccountManager() {
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -110,26 +88,33 @@ export default function AgentsGroup() {
   return (
     <>
       <>
-        <TitleBar title="Agents Groups">
+        <TitleBar title="Account Manager">
           <Button
             variant="outlined"
             color="secondary"
-            className="h-[40px] text-[16px] flex gap-8 font-[600]"
+            className="h-[40px] text-[16px] flex gap-8 font-[600] sm:leading-3 leading-0"
             aria-label="Add New Group"
             size="large"
             onClick={() => setIsOpenAddModal(true)}
+            startIcon={<PlusIcon color={theme.palette.secondary.main} />}
           >
-            <PlusIcon color={theme.palette.secondary.main} />
-            Add New Group
+            Add Manager
           </Button>
         </TitleBar>
         <div className="px-28 mb-[3rem]">
           <div className="bg-white rounded-lg shadow-sm">
             <div className="p-[2rem]">
-              <SearchInput name="search" placeholder="Search agents group" />
+              <SearchInput name="search" placeholder="Search agents" />
             </div>
             <CommonTable
-              headings={["ID", "Group Name", "Number of Agents", "Action"]}
+              headings={[
+                "ID",
+                "First Name",
+                "Last Name",
+                "Assigned Client",
+                "Status",
+                ,
+              ]}
             >
               <>
                 {rows.map((row, index) => (
@@ -144,26 +129,43 @@ export default function AgentsGroup() {
                       },
                     }}
                   >
-                    <TableCell scope="row">{row.ticket}</TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.subject}
+                    <TableCell scope="row" className="text-[14px] font-500">
+                      {row.id}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap text-[14px] font-500"
+                    >
+                      {row.fname}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap text-[14px] font-500"
+                    >
+                      {row.lname}
                     </TableCell>
 
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.date}
+                    <TableCell align="center">
+                      <ImagesOverlap images={row.assignedImg} />
                     </TableCell>
-
-                    <TableCell align="left" className="w-[1%]">
-                      <div className="flex gap-20 pe-20">
-                        <span className="p-2 cursor-pointer">
-                          <DeleteIcon />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <Link to="/admin/agents/groups/details">
-                            <EditIcon />
-                          </Link>
-                        </span>
-                      </div>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap text-[14px] font-500"
+                    >
+                      <span
+                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
+                      >
+                        {row.status}
+                      </span>
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
+                    >
+                      <Link to="/admin/acc-manager/detail">
+                        <ArrowRightCircleIcon />
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -174,10 +176,10 @@ export default function AgentsGroup() {
             </div>
           </div>
         </div>
-        <AddGroupModel
+        <AddAccountManagerModel
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
-          isNewAgent={false}
+          isEditing={false}
         />
       </>
     </>

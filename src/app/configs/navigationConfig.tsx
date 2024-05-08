@@ -11,6 +11,7 @@ import {
   BillingNavIcon,
   SettingNavIcon,
   AgentGroupIcon,
+  AccountManagerIcon,
 } from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
@@ -189,6 +190,16 @@ export const adminNavigationConfig: FuseNavItemType[] = [
       },
     ],
   },
+  {
+    id: "accountManager",
+    title: "Account Manager",
+
+    type: "item",
+    icon: "billing",
+    customIcon: <AccountManagerIcon />,
+    url: "admin/acc-manager",
+  },
+
   {
     id: "billings",
     title: "Billings",
