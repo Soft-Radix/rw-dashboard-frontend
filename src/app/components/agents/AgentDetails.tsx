@@ -11,17 +11,14 @@ import { useTheme } from "@mui/styles";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
-  AttachmentUploadIcon
+  AttachmentUploadIcon,
 } from "public/assets/icons/supportIcons";
 
 import ListLoading from "@fuse/core/ListLoading";
 import { changeFetchStatus, getAgentInfo } from "app/store/Agent";
 import { AgentRootState } from "app/store/Agent/Interafce";
 import { useAppDispatch } from "app/store/store";
-import {
-  ArrowRightCircleIcon,
-  EditIcon
-} from "public/assets/icons/common";
+import { ArrowRightCircleIcon, EditIcon } from "public/assets/icons/common";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";

@@ -45,6 +45,7 @@ export const getAgentList = createAsyncThunk(
     };
   }
 );
+
 export const getAgentInfo = createAsyncThunk(
   "agent/information",
   async (payload: agentIDType) => {
@@ -60,6 +61,7 @@ export const getAgentInfo = createAsyncThunk(
     };
   }
 );
+
 /**
  * The initial state of the auth slice.
  */

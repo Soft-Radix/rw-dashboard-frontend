@@ -34,7 +34,7 @@ function AddGroupModel({
 
   const dispatch = useAppDispatch();
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    // console.log(values, "values");
+    console.log(values, "values");
     const { payload } = await dispatch(addAgentGroup(values));
     // console.log(payload, "payload");
     if (payload?.data?.status) {

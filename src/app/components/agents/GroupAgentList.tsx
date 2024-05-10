@@ -26,6 +26,8 @@ import SearchInput from "src/app/components/SearchInput";
 import InputField from "../InputField";
 import { useAppDispatch } from "app/store/store";
 import { changeFetchStatus, getAgentGroupInfo } from "app/store/Agent group";
+import { useSelector } from "react-redux";
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
 
 const rows = [
   {
@@ -79,7 +81,10 @@ export default function GroupAgentsList() {
   const { group_id } = useParams();
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
-
+  const { agentGroupDetail } = useSelector(
+    (store: AgentGroupRootState) => store?.agentGroup
+  );
+  console.log(agentGroupDetail, "girl");
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -87,8 +92,13 @@ export default function GroupAgentsList() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      console.log(values, "value");
+    },
   });
+  // useEffect(()=>{
+  //   formik.setValues()
+  // })
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
@@ -125,7 +135,7 @@ export default function GroupAgentsList() {
                 formik={formik}
                 name="group_name"
                 label=" Group Name"
-                placeholder="Enter Group Name"
+                placeholder={agentGroupDetail.group_name}
               />
               <Button
                 variant="contained"
@@ -148,6 +158,7 @@ export default function GroupAgentsList() {
                 ]}
               >
                 <>
+                  {/* {agentGroupDetail.group_members.map((row, index) => ( */}
                   {rows.map((row, index) => (
                     <TableRow
                       key={index}
