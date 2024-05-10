@@ -8,18 +8,16 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import { useTheme } from "@mui/styles";
 import {
   ArrowRightCircleIcon,
   DownGreenIcon,
   EditIcon,
 } from "public/assets/icons/common";
-import React, { useState } from "react";
+import { useState } from "react";
 import TitleBar from "../TitleBar";
 import CommonTable from "../commonTable";
-import { useTheme } from "@mui/styles";
 import AddAccountManagerModel from "./AddAccountmanagerModal";
-import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
-import { fill } from "lodash";
 
 const rows = [
   {
@@ -41,11 +39,11 @@ const rows = [
     status: "Active",
   },
 ];
-interface svgColor {
-  color: string;
-}
-const ManagerProfile = (props: svgColor) => {
-  const { color } = props;
+// interface svgColor {
+//   color: string;
+// }
+const ManagerProfile = () => {
+  // const { color } = props;
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   // Open menu handler

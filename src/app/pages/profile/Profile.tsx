@@ -5,6 +5,7 @@ import { ArrowRightCircleIcon, EmailIcon } from "public/assets/icons/common";
 import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import TitleBar from "src/app/components/TitleBar";
+import ClientDetail from "src/app/components/client/ClientDetail";
 import EditProfile from "src/app/components/profile/EditProfile";
 import TwoFactorAuth from "src/app/components/profile/TwoFactorAuth";
 

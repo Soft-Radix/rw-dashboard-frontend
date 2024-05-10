@@ -19,6 +19,7 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
   const clientState = useSelector((store: ClientRootState) => store.client);
 
   const onSubmit = async (values: ClientType, { resetForm }) => {
+    console.log(values, "values");
     const { payload } = await dispatch(addClient(values));
     if (payload?.data?.status) {
       resetForm();
