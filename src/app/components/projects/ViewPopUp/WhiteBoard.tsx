@@ -35,7 +35,7 @@ function WhiteBoard({ isOpen, setIsOpen }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Add More List"
       maxWidth="910"
-      customButton={true}
+      // customButton={true}
     >
       <div className="flex gap-12">
         <CommonChip

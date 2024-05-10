@@ -34,8 +34,8 @@ type FormType = {
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  clientDetail: ClientType;
-  loading: boolean;
+  clientDetail?: ClientType;
+  loading?: boolean;
 }
 
 export const profileStatus: profileState[] = [
@@ -93,7 +93,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     }
 
     const { payload } = await dispatch(updateProfile({ formData }));
-    console.log(payload, "pl");
+    // console.log(payload, "pl");
 
     if (payload?.data?.status) {
       setIsOpen(false);

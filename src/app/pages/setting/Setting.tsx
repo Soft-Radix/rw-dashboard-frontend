@@ -166,7 +166,7 @@ export default function Setting() {
             </div>
           </div>
         </div>
-        <AddGroupModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+        {/* <AddGroupModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
       </>
     </>
   );
