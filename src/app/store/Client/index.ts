@@ -166,7 +166,7 @@ export const clientSlice = createSlice({
         state.selectedColumn.push(payload);
       }
 
-      // Sort selectedColumn based on predefined positions
+      // Sort selectedColumn based on predefined positions5
       state.selectedColumn.sort((a, b) => {
         const indexA =
           predefinedItems[a] !== undefined
