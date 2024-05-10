@@ -41,8 +41,8 @@ interface IProps {
 export const profileStatus: profileState[] = [
   { value: "Active", label: "Active" },
   { value: "Suspended", label: "Suspended" },
-  { value: "Paused", label: "Paused" },
-  { value: "On Hold", label: "On hold" },
+  { value: "Cancelled", label: "Cancelled" },
+  { value: "Pending", label: "Pending" },
 ];
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
@@ -93,6 +93,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     }
 
     const { payload } = await dispatch(updateProfile({ formData }));
+    console.log(payload, "pl");
 
     if (payload?.data?.status) {
       setIsOpen(false);
@@ -147,6 +148,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       modalTitle="Edit Profile"
       maxWidth="733"
       btnTitle={"Save"}
+      closeTitle={"Cancel"}
       disabled={loading}
       onSubmit={formik.handleSubmit}
     >

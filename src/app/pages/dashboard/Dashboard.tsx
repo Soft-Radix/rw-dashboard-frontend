@@ -118,7 +118,7 @@ export default function Dashboard() {
     setAnchorEl(null);
     setAnchorEl1(null);
   };
-  console.log(anchorEl1, "anchor");
+  // console.log(anchorEl1, "anchor");
   const checkHandler = (key: string) => {
     setIsChecked((prevState) => ({
       ...prevState,

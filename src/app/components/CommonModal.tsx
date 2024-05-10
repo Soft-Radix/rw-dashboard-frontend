@@ -28,9 +28,10 @@ type ModalType = {
   children: ReactNode;
   maxWidth?: string;
   DeleteModal?: boolean;
-  btnTitle?: string,
-  disabled?: boolean,
-  onSubmit?: () => void
+  btnTitle?: string;
+  closeTitle?: string;
+  disabled?: boolean;
+  onSubmit?: () => void;
 };
 
 export default function CommonModal({
@@ -39,10 +40,11 @@ export default function CommonModal({
   handleToggle,
   children,
   btnTitle,
+  closeTitle,
   DeleteModal = false,
   maxWidth = "387",
   onSubmit,
-  disabled
+  disabled,
 }: ModalType) {
   return (
     <StylesDialog
@@ -95,7 +97,7 @@ export default function CommonModal({
           className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
         >
-          Cancel
+          {closeTitle}
         </Button>
       </div>
     </StylesDialog>

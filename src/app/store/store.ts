@@ -19,6 +19,8 @@ import { createLogger } from "redux-logger";
 import { authSlice } from "./Auth";
 import { clientSlice } from "./Client";
 import { agentSlice } from "./Agent";
+import { agentGroupSlice } from "./Agent group";
+import { accManagerSlice } from "./accountManager";
 
 /**
  * The dynamic middleware instance.
@@ -54,6 +56,8 @@ const staticReducers: ReducersMapObject = {
   auth: authSlice.reducer,
   client: clientSlice.reducer,
   agent: agentSlice.reducer,
+  agentGroup: agentGroupSlice.reducer,
+  accManagerSlice: accManagerSlice.reducer,
 };
 
 /**

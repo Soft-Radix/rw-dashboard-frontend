@@ -1,27 +1,61 @@
+import { InputAdornment } from "@mui/material";
+import { addAgentGroup } from "app/store/Agent group";
+import {
+  AgentGroupRootState,
+  AgentGroupType,
+} from "app/store/Agent group/Interface";
+import { restAll } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction } from "react";
+import { SearchIcon } from "public/assets/icons/topBarIcons";
+import { Dispatch, SetStateAction, useEffect } from "react";
+import { useSelector } from "react-redux";
+import { AgentGroupSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
-import SearchInput from "../SearchInput";
-import { InputAdornment } from "@mui/material";
-import { SearchIcon } from "public/assets/icons/topBarIcons";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isNewAgent: boolean;
+  fetchAgentGroupList?: () => void;
 }
 
-function AddGroupModel({ isOpen, setIsOpen, isNewAgent }: IProps) {
+function AddGroupModel({
+  isOpen,
+  setIsOpen,
+  isNewAgent,
+  fetchAgentGroupList,
+}: IProps) {
+  const agentGroupState = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
+  // console.log(agentGroupState, "as");
+
+  const dispatch = useAppDispatch();
+  const onSubmit = async (values: AgentGroupType, { resetForm }) => {
+    // console.log(values, "values");
+    const { payload } = await dispatch(addAgentGroup(values));
+    // console.log(payload, "payload");
+    if (payload?.data?.status) {
+      resetForm();
+    }
+  };
+  useEffect(() => {
+    if (!!agentGroupState?.successMsg) {
+      dispatch(restAll());
+      setIsOpen((prev) => false);
+    } else if (!!agentGroupState?.errorMsg) {
+      dispatch(restAll());
+    }
+  }, [agentGroupState]);
+
   const formik = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-      role: "",
+      group_name: "",
     },
-    onSubmit: (values) => {},
+    validationSchema: AgentGroupSchema,
+    onSubmit,
   });
 
   return (
@@ -31,6 +65,8 @@ function AddGroupModel({ isOpen, setIsOpen, isNewAgent }: IProps) {
       modalTitle={isNewAgent ? "Add Agent" : "Add Group"}
       maxWidth="733"
       btnTitle="Save"
+      closeTitle="Cancel"
+      onSubmit={formik.handleSubmit}
     >
       <div className="flex flex-col gap-20 mb-20 ">
         {isNewAgent ? (
@@ -53,7 +89,7 @@ function AddGroupModel({ isOpen, setIsOpen, isNewAgent }: IProps) {
         ) : (
           <InputField
             formik={formik}
-            name="groupName"
+            name="group_name"
             label="Group Name"
             placeholder="Enter Group Name"
           />

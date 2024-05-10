@@ -74,7 +74,7 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
       selectedItems: selectedItems, // Include selected items
     };
     resetForm();
-    console.log(formData, "formdta");
+    // console.log(formData, "formdta");
     // const { payload } = await dispatch(formData(values));
     // if (payload?.data?.status) {
     //   fetchAgentList();
@@ -152,6 +152,7 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
       btnTitle={"Add"}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
+      closeTitle={"Cancel"}
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img

@@ -26,6 +26,7 @@ export default function AgentsList() {
   const { agent_id } = useParams();
 
   const agentState = useSelector((store: AgentRootState) => store.agent);
+  // console.log(agentState, "as");
 
   const dispatch = useAppDispatch();
 
@@ -45,7 +46,6 @@ export default function AgentsList() {
   useEffect(() => {
     fetchAgentList();
   }, [fetchAgentList]);
-
 
   const checkPageNum = (e: any, pageNumber: number) => {
     setfilters((prevFilters) => ({

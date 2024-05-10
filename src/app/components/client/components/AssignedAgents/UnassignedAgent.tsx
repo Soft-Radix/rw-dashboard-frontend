@@ -1,17 +1,18 @@
 import { MenuItem, Typography, styled } from "@mui/material";
 import { useFormik } from "formik";
 import { Dispatch, SetStateAction } from "react";
-import CommonModal from "../CommonModal";
+
 import { DeleteIcon } from "public/assets/icons/common";
+import CommonModal from "src/app/components/CommonModal";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  onDelete: () => void;
+
   loading?: boolean;
 }
 
-function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
+function UnassignedAgent({ isOpen, setIsOpen, loading }: IProps) {
   return (
     <>
       <CommonModal
@@ -21,7 +22,6 @@ function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
         maxWidth="310"
         DeleteModal={true}
         disabled={loading}
-        onSubmit={onDelete}
         btnTitle="Yes"
         closeTitle="Cancel"
       >
@@ -30,10 +30,10 @@ function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
             <DeleteIcon className="h-28 w-28 " />
           </div>
           <Typography className="text-[20px] font-600 text-[#111827]">
-            Delete Client
+            Unassigned
           </Typography>
-          <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-            Are you sure you want to delete this client ?
+          <Typography className="text-[14px]  text-[#757982] text-center px-28">
+            Are you sure you want to unassign this agent ?
           </Typography>
         </div>
       </CommonModal>
@@ -41,4 +41,4 @@ function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
   );
 }
 
-export default DeleteClient;
+export default UnassignedAgent;

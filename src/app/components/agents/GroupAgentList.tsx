@@ -14,8 +14,8 @@ import {
   EditIcon,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -24,6 +24,8 @@ import CommonPagination from "src/app/components/pagination";
 import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import SearchInput from "src/app/components/SearchInput";
 import InputField from "../InputField";
+import { useAppDispatch } from "app/store/store";
+import { changeFetchStatus, getAgentGroupInfo } from "app/store/Agent group";
 
 const rows = [
   {
@@ -74,6 +76,10 @@ const rows = [
 ];
 
 export default function GroupAgentsList() {
+  const { group_id } = useParams();
+  // console.log(group_id, "check");
+  const dispatch = useAppDispatch();
+
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -86,7 +92,15 @@ export default function GroupAgentsList() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  // const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  useEffect(() => {
+    if (!group_id) return null;
+    dispatch(getAgentGroupInfo({ group_id }));
+    console.log(group_id, "groupid");
+    return () => {
+      dispatch(changeFetchStatus());
+    };
+  }, []);
 
   return (
     <>
@@ -177,7 +191,12 @@ export default function GroupAgentsList() {
             </div>
           </div>
         </div>
-        <AddGroupModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} isNewAgent={true} />
+        <AddGroupModel
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          isNewAgent={true}
+          // fetchAgentGroupList={fetchAgentGroupList}
+        />
       </>
     </>
   );

@@ -7,7 +7,7 @@ import {
   EditIcon,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
@@ -17,6 +17,13 @@ import CommonPagination from "src/app/components/pagination";
 import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import SearchInput from "src/app/components/SearchInput";
 import AddAccountManagerModel from "src/app/components/accountManager/AddAccountmanagerModal";
+import {
+  AccManagerRootState,
+  filterType,
+} from "app/store/accountManager/Interface";
+import { useAppDispatch } from "app/store/store";
+import { getAccManagerList } from "app/store/accountManager";
+import { useSelector } from "react-redux";
 
 const rows = [
   {
@@ -71,6 +78,11 @@ const rows = [
 ];
 
 export default function AccountManager() {
+  const dispatch = useAppDispatch();
+  const accManagerState = useSelector(
+    (store: AccManagerRootState) => store.accManager
+  );
+  console.log(accManagerState, "managerList");
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -81,9 +93,19 @@ export default function AccountManager() {
     onSubmit: (values) => {},
   });
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const fetchManagerList = useCallback(() => {
+    dispatch(getAccManagerList(filters));
+  }, [filters]);
+  useEffect(() => {
+    fetchManagerList();
+  }, [fetchManagerList]);
 
   return (
     <>

@@ -7,7 +7,7 @@ import {
   EditIcon,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
@@ -16,6 +16,14 @@ import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import SearchInput from "src/app/components/SearchInput";
+import {
+  AgentGroupRootState,
+  filterType,
+} from "app/store/Agent group/Interface";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "app/store/store";
+import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
+import DeleteClient from "src/app/components/client/DeleteClient";
 
 const rows = [
   {
@@ -93,6 +101,12 @@ const rows = [
 ];
 
 export default function AgentsGroup() {
+  const agentGroupState = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
+  // console.log(agentGroupState, "as");
+
+  const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -104,8 +118,35 @@ export default function AgentsGroup() {
   });
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+  const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+
+  const deleteGroup = async (id: any) => {
+    // console.log(id, "id");
+    try {
+      const { payload } = await dispatch(deleteAgentGroup({ group_id: id }));
+      console.log(payload, "payload");
+      if (payload?.data?.status) {
+        setIsOpenDeletedModal(false);
+        // fetchAgentGroupLsssist();
+      }
+    } catch (error) {
+      console.error("Failed to delete agent group:", error);
+    }
+  };
+  const fetchAgentGroupList = useCallback(() => {
+    dispatch(getAgentGroupList(filters));
+  }, [filters]);
+
+  useEffect(() => {
+    fetchAgentGroupList();
+  }, [fetchAgentGroupList]);
 
   return (
     <>
@@ -117,7 +158,9 @@ export default function AgentsGroup() {
             className="h-[40px] text-[16px] flex gap-8 font-[600]"
             aria-label="Add New Group"
             size="large"
-            onClick={() => setIsOpenAddModal(true)}
+            onClick={() => {
+              setIsOpenAddModal(true);
+            }}
           >
             <PlusIcon color={theme.palette.secondary.main} />
             Add New Group
@@ -132,41 +175,52 @@ export default function AgentsGroup() {
               headings={["ID", "Group Name", "Number of Agents", "Action"]}
             >
               <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
-                  >
-                    <TableCell scope="row">{row.ticket}</TableCell>
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.subject}
-                    </TableCell>
+                {agentGroupState.list.map((row, index) => {
+                  // console.log(row, "row");
+                  return (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.group_name}
+                      </TableCell>
 
-                    <TableCell align="left" className="whitespace-nowrap">
-                      {row.date}
-                    </TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.members_count}
+                      </TableCell>
 
-                    <TableCell align="left" className="w-[1%]">
-                      <div className="flex gap-20 pe-20">
-                        <span className="p-2 cursor-pointer">
-                          <DeleteIcon />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <Link to="/admin/agents/groups/details">
-                            <EditIcon />
-                          </Link>
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                      <TableCell align="center" className="w-[1%]">
+                        <div className="flex gap-20 pe-20">
+                          <span
+                            className="p-2 cursor-pointer"
+                            // onClick={deleteGroup}
+                          >
+                            <DeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setIsDeleteId(row.id);
+                              }}
+                            />
+                          </span>
+                          <span className="p-2 cursor-pointer">
+                            <Link to={`/admin/agents/groups/${row.id}`}>
+                              <EditIcon />
+                            </Link>
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
               </>
             </CommonTable>
             <div className="flex justify-end py-14 px-[3rem]">
@@ -178,6 +232,12 @@ export default function AgentsGroup() {
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
           isNewAgent={false}
+          fetchAgentGroupList={fetchAgentGroupList}
+        />
+        <DeleteClient
+          isOpen={isOpenDeletedModal}
+          setIsOpen={setIsOpenDeletedModal}
+          onDelete={() => deleteGroup(deleteId)}
         />
       </>
     </>

@@ -3,13 +3,12 @@ import { ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
 import {
-  ClientType,
+  AgentGroupType,
   initialStateProps,
   filterType,
-  clientIDType,
-  deleteClientType,
-  UpdateProfilePayload,
-  ChangePassword,
+  deleteAgentGroupType,
+  UpdateAgentGroupPayload,
+  AgentGroupIDType,
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -17,11 +16,11 @@ import { calculatePageNumber } from "src/utils";
  * API calling
  */
 
-export const addClient = createAsyncThunk(
-  "client/add",
-  async (payload: ClientType) => {
+export const addAgentGroup = createAsyncThunk(
+  "agent-group/add",
+  async (payload: AgentGroupType) => {
     const response = await ApiHelperFunction({
-      url: "client/add",
+      url: "agent-group/add",
       method: "post",
       data: payload,
     });
@@ -33,11 +32,11 @@ export const addClient = createAsyncThunk(
   }
 );
 
-export const getClientList = createAsyncThunk(
-  "client/list",
+export const getAgentGroupList = createAsyncThunk(
+  "agent-group/list",
   async (payload: filterType) => {
     const response = await ApiHelperFunction({
-      url: "client/list",
+      url: "agent-group/list",
       method: "post",
       data: payload,
     });
@@ -49,11 +48,11 @@ export const getClientList = createAsyncThunk(
   }
 );
 
-export const deletClient = createAsyncThunk(
-  "client/delete",
-  async (payload: deleteClientType) => {
+export const deleteAgentGroup = createAsyncThunk(
+  "agent-group/delete",
+  async (payload: deleteAgentGroupType) => {
     const response = await ApiHelperFunction({
-      url: "client/delete",
+      url: "agent-group/delete",
       method: "post",
       data: payload,
     });
@@ -65,15 +64,14 @@ export const deletClient = createAsyncThunk(
   }
 );
 
-export const getClientInfo = createAsyncThunk(
-  "client/information",
-  async (payload: clientIDType) => {
+export const getAgentGroupInfo = createAsyncThunk(
+  "agent-group/{group_id}",
+  async (payload: AgentGroupIDType) => {
     const response = await ApiHelperFunction({
-      url: `client/detail/${payload?.client_id}`,
+      url: `agent-group/${payload?.group_id}`,
       method: "post",
       data: payload,
     });
-
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -81,38 +79,38 @@ export const getClientInfo = createAsyncThunk(
   }
 );
 
-export const updateProfile = createAsyncThunk(
-  "client/update-profile",
-  async (payload: UpdateProfilePayload) => {
-    const response = await ApiHelperFunction({
-      url: `client/update-profile`,
-      method: "put",
-      data: payload.formData,
-      formData: true,
-    });
+// export const updateGroupName = createAsyncThunk(
+//   "agent-group/edit",
+//   async (payload: UpdateAgentGroupPayload) => {
+//     const response = await ApiHelperFunction({
+//       url: `agent-group/edit`,
+//       method: "put",
+//       data: payload.formData,
+//       formData: true,
+//     });
+//     // console.log(response, "check");
+//     // Return only the data you need to keep it serializable
+//     return {
+//       data: response.data,
+//     };
+//   }
+// );
 
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
+// export const changePassword = createAsyncThunk(
+//   "auth/change-password",
+//   async (payload: ChangePassword) => {
+//     const response = await ApiHelperFunction({
+//       url: `auth/change-password`,
+//       method: "post",
+//       data: payload,
+//     });
 
-export const changePassword = createAsyncThunk(
-  "auth/change-password",
-  async (payload: ChangePassword) => {
-    const response = await ApiHelperFunction({
-      url: `auth/change-password`,
-      method: "post",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
+//     // Return only the data you need to keep it serializable
+//     return {
+//       data: response.data,
+//     };
+//   }
+// );
 
 /**
  * The initial state of the auth slice.
@@ -124,7 +122,7 @@ export const initialState: initialStateProps = {
   successMsg: "",
   errorMsg: "",
   list: [],
-  clientDetail: {},
+  agentGroupDetail: {},
   selectedColumn: [],
   total_records: 0,
 };
@@ -132,8 +130,8 @@ export const initialState: initialStateProps = {
 /**
  * The auth slice.
  */
-export const clientSlice = createSlice({
-  name: "clientSlice",
+export const agentGroupSlice = createSlice({
+  name: "agentGroupSlice",
   initialState,
   reducers: {
     restAll: (state) => {
@@ -182,50 +180,50 @@ export const clientSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(addClient.pending, (state) => {
+      .addCase(addAgentGroup.pending, (state) => {
         state.actionStatus = true;
       })
-      .addCase(addClient.fulfilled, (state, action) => {
+      .addCase(addAgentGroup.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         state.actionStatus = false;
         if (payload?.data?.status) {
           state.successMsg = payload?.data?.message;
+          0;
           toast.success(payload?.data?.message);
         } else {
           state.errorMsg = payload?.data?.message;
           toast.error(payload?.data?.message);
         }
       })
-      .addCase(addClient.rejected, (state, { error }) => {
+      .addCase(addAgentGroup.rejected, (state, { error }) => {
         toast.error(error?.message);
         state.actionStatus = false;
       })
-      .addCase(deletClient.pending, (state) => {
+      .addCase(deleteAgentGroup.pending, (state) => {
         state.actionStatus = true;
       })
-      .addCase(deletClient.fulfilled, (state, action) => {
+      .addCase(deleteAgentGroup.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        const { client_ids } = action.meta?.arg;
-        console.log(client_ids, "idd");
+        const { group_id } = action.meta?.arg;
+        // console.log(group_id, "idd");
         state.actionStatus = false;
         if (payload?.data?.status) {
-          state.list = state.list?.filter(
-            (item) => !client_ids?.includes(item.id)
-          );
+          state.list = state.list.filter((item) => item.id !== group_id);
+
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);
         }
       })
-      .addCase(deletClient.rejected, (state, { error }) => {
+      .addCase(deleteAgentGroup.rejected, (state, { error }) => {
         toast.error(error?.message);
         state.actionStatus = false;
       })
 
-      .addCase(getClientList.pending, (state) => {
+      .addCase(getAgentGroupList.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(getClientList.fulfilled, (state, action) => {
+      .addCase(getAgentGroupList.fulfilled, (state, action) => {
         const response = action.payload?.data;
         state.status = "idle";
         if (!response.status) {
@@ -238,59 +236,60 @@ export const clientSlice = createSlice({
           );
         }
       })
-      .addCase(getClientList.rejected, (state, action) => {
+      .addCase(getAgentGroupList.rejected, (state, action) => {
         state.status = "idle";
       })
-      .addCase(getClientInfo.pending, (state) => {
+      .addCase(getAgentGroupInfo.pending, (state) => {
         state.fetchStatus = "loading";
       })
-      .addCase(getClientInfo.fulfilled, (state, action) => {
-        console.log(action, "action");
+      .addCase(getAgentGroupInfo.fulfilled, (state, action) => {
+        console.log(action.payload?.data, "find");
         const { data } = action.payload?.data;
-        console.log(data, "ggggg");
+        const { message } = action.payload?.data;
+        console.log(message, "checkrrr");
         state.fetchStatus = "idle";
-        state.clientDetail = data;
+        state.agentGroupDetail = data;
       })
-      .addCase(getClientInfo.rejected, (state) => {
+      .addCase(getAgentGroupInfo.rejected, (state) => {
         state.fetchStatus = "idle";
-      })
-
-      .addCase(updateProfile.pending, (state) => {
-        state.actionStatus = true;
-      })
-      .addCase(updateProfile.fulfilled, (state, action) => {
-        const response = action.payload?.data;
-        state.actionStatus = false;
-        if (!response.status) {
-          toast.error(response?.message);
-        } else {
-          state.clientDetail = { ...response?.data };
-          toast.success(response?.message);
-        }
-      })
-      .addCase(updateProfile.rejected, (state, action) => {
-        state.actionStatus = false;
-      })
-
-      .addCase(changePassword.pending, (state) => {
-        state.actionStatus = true;
-      })
-      .addCase(changePassword.fulfilled, (state, action) => {
-        const response = action.payload?.data;
-        state.actionStatus = false;
-        if (!response.status) {
-          toast.error(response?.message);
-        } else {
-          toast.success(response?.message);
-        }
-      })
-      .addCase(changePassword.rejected, (state, action) => {
-        state.actionStatus = false;
       });
+
+    // .addCase(updateGroupName.pending, (state) => {
+    //   state.actionStatus = true;
+    // })
+    // .addCase(updateGroupName.fulfilled, (state, action) => {
+    //   const response = action.payload?.data;
+    //   state.actionStatus = false;
+    //   if (!response.status) {
+    //     toast.error(response?.message);
+    //   } else {
+    //     state.agentGroupDetail = { ...response?.data };
+    //     toast.success(response?.message);
+    //   }
+    // })
+    // .addCase(updateGroupName.rejected, (state, action) => {
+    //   state.actionStatus = false;
+    // });
+
+    //   .addCase(changePassword.pending, (state) => {
+    //     state.actionStatus = true
+    //   })
+    //   .addCase(changePassword.fulfilled, (state, action) => {
+    //     const response = action.payload?.data
+    //     state.actionStatus = false
+    //     if (!response.status) {
+    //       toast.error(response?.message)
+    //     } else {
+    //       toast.success(response?.message)
+    //     }
+    //   })
+    //   .addCase(changePassword.rejected, (state, action) => {
+    //     state.actionStatus = false
+    //   })
   },
 });
 
 export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
-  clientSlice.actions;
+  agentGroupSlice.actions;
 
-export default clientSlice.reducer;
+export default agentGroupSlice.reducer;

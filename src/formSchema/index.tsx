@@ -93,6 +93,27 @@ const editAgentSchema = Yup.object({
     }), // ,
   address: Yup.string().required("Address is required"),
 });
+const AgentGroupSchema = Yup.object({
+  group_name: Yup.string()
+    .required("Group name is required")
+    .matches(/^\S+$/, noSpaceMessage),
+});
+const accManagerSchema = Yup.object({
+  first_name: Yup.string()
+    .required("First name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  last_name: Yup.string()
+    .required("Last name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  ...emailField,
+  phone_number: Yup.string()
+    .required("Phone number is required")
+    .matches(/^\+?[1-9]\d{1,14}$/, {
+      message: "Invalid phone number",
+      excludeEmptyString: true,
+    }), // ,
+  address: Yup.string().required("Address is required"),
+});
 
 export {
   loginSchema,
@@ -103,4 +124,6 @@ export {
   changePasswordByAdmin,
   changePasswordByClient,
   editAgentSchema,
+  AgentGroupSchema,
+  accManagerSchema,
 };

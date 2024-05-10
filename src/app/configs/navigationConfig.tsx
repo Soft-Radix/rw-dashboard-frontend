@@ -181,7 +181,7 @@ export const adminNavigationConfig: FuseNavItemType[] = [
       },
       {
         id: "agentsGroup",
-        title: "AgentsGroup",
+        title: "Agents Group",
         type: "item",
         icon: "material-twotone:compress",
         url: "/admin/agents/groups",

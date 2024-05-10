@@ -178,11 +178,11 @@ export default function SubscriptionDetails() {
 
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm py-[2rem]">
-          <div className="flex items-center justify-between pb-12 px-20">
-            <Typography className="text-[20px] font-600 text-[#0A0F18]">
+          <div className="flex items-center justify-between pb-12 px-20 ">
+            <Typography className="text-[20px] font-600 text-[#0A0F18] w-full">
               Client Information
             </Typography>
-            <div className="flex gap-10 flex-col sm:flex-row">
+            <div className="flex  flex-col sm:flex-row  w-full justify-end gap-20">
               <CancelButtonPage />
               <Button
                 variant="outlined"
@@ -247,7 +247,7 @@ export default function SubscriptionDetails() {
                         </div>
                       </div>
 
-                      <div className="flex items-baseline w-full py-20 gap-14 flex-col">
+                      <div className="flex items-baseline w-full py-20 gap-20 flex-col sm:flex-row">
                         <div className="flex flex-col items-start gap-14">
                           <span className="text-[1.8rem] text-title font-500">
                             Company Name

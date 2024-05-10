@@ -1,3 +1,4 @@
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import {
   ChangeEvent,
@@ -6,16 +7,10 @@ import {
   useEffect,
   useState,
 } from "react";
+import { accManagerSchema, editAgentSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
-import { addAgentSchema, editAgentSchema } from "src/formSchema";
-import { useAppDispatch } from "app/store/store";
 
-import { useSelector } from "react-redux";
-import { addAgent } from "app/store/Agent";
-import { restAll } from "app/store/Agent";
-import { AgentRootState, AgentType } from "app/store/Agent/Interafce";
-import profilePic from "public/assets/images/pages/profile/AgentProfile.png";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import {
   Button,
@@ -27,20 +22,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { UploadDocIcon } from "public/assets/icons/welcome";
-import { AttachmentUploadIcon } from "public/assets/icons/supportIcons";
-import {
-  CrossGreyIcon,
-  CrossIcon,
-  PreviewIcon,
-} from "public/assets/icons/common";
-import ManageButton from "../client/ManageButton";
-import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
+import { restAll } from "app/store/Agent";
+import { AgentRootState, AgentType } from "app/store/Agent/Interafce";
 import { UpArrowBlank } from "public/assets/icons/clienIcon";
-import SearchInput from "../SearchInput";
+import { CrossGreyIcon } from "public/assets/icons/common";
+import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
+import { useSelector } from "react-redux";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
-import { boolean } from "zod";
+import { AccManagerType } from "app/store/accountManager/Interface";
+import { addAccManager } from "app/store/accountManager";
 
 interface IProps {
   isOpen: boolean;
@@ -55,10 +46,10 @@ function AddAccountManagerModel({
   fetchAgentList,
   isEditing,
 }: IProps) {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const dispatch = useAppDispatch();
   const agentState = useSelector((store: AgentRootState) => store.agent);
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
@@ -74,21 +65,14 @@ function AddAccountManagerModel({
     }
   };
 
-  const onSubmit = async (values: AgentType, { resetForm }) => {
-    const formData = {
-      ...formik.values, // Include form values from Formik
-      uploadedFiles: uploadedFiles, // Include uploaded files
-      selectedItems: selectedItems, // Include selected items
-    };
-    resetForm();
-    // console.log(formData, "formdta");
-    // const { payload } = await dispatch(formData(values));
-    // if (payload?.data?.status) {
-    //   fetchAgentList();
-    //   resetForm();
-    // }
-    // console.log("Form values:", values);
+  const onSubmit = async (values: AccManagerType, { resetForm }) => {
+    // console.log(values, "values");
+    const { payload } = await dispatch(addAccManager(values));
+    if (payload?.data?.status) {
+      resetForm();
+    }
   };
+
   const formik = useFormik({
     initialValues: {
       first_name: "",
@@ -97,18 +81,18 @@ function AddAccountManagerModel({
       email: "",
       address: "",
     },
-    validationSchema: editAgentSchema,
+    validationSchema: accManagerSchema,
     onSubmit,
   });
 
-  useEffect(() => {
-    if (!!agentState?.successMsg) {
-      dispatch(restAll());
-      setIsOpen((prev) => false);
-    } else if (!!agentState?.errorMsg) {
-      dispatch(restAll());
-    }
-  }, [agentState]);
+  // useEffect(() => {
+  //   if (!!agentState?.successMsg) {
+  //     dispatch(restAll());
+  //     setIsOpen((prev) => false);
+  //   } else if (!!agentState?.errorMsg) {
+  //     dispatch(restAll());
+  //   }
+  // }, [agentState]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -172,6 +156,7 @@ function AddAccountManagerModel({
       btnTitle={"Save"}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
+      closeTitle="Cancel"
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -232,8 +217,8 @@ function AddAccountManagerModel({
           <InputField
             formik={formik}
             name="email"
-            label="Email Address"
-            placeholder="Enter Email Address"
+            label="Email "
+            placeholder="Enter Email"
           />
         </div>
         <InputField

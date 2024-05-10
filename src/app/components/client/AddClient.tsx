@@ -59,6 +59,7 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
       btnTitle="Save"
       onSubmit={formik.handleSubmit}
       disabled={clientState.actionStatus}
+      closeTitle="Cancel"
     >
       <div className="flex flex-col gap-20">
         <InputField
