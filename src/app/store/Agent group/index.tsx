@@ -79,22 +79,22 @@ export const getAgentGroupInfo = createAsyncThunk(
   }
 );
 
-// export const updateGroupName = createAsyncThunk(
-//   "agent-group/edit",
-//   async (payload: UpdateAgentGroupPayload) => {
-//     const response = await ApiHelperFunction({
-//       url: `agent-group/edit`,
-//       method: "put",
-//       data: payload.formData,
-//       formData: true,
-//     });
-//     // console.log(response, "check");
-//     // Return only the data you need to keep it serializable
-//     return {
-//       data: response.data,
-//     };
-//   }
-// );
+export const updateGroupName = createAsyncThunk(
+  "agent-group/edit",
+  async (payload: UpdateAgentGroupPayload) => {
+    const response = await ApiHelperFunction({
+      url: `agent-group/edit`,
+      method: "put",
+      data: payload.formData,
+      formData: true,
+    });
+    // console.log(response, "check");
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 // export const changePassword = createAsyncThunk(
 //   "auth/change-password",
@@ -243,10 +243,10 @@ export const agentGroupSlice = createSlice({
         state.fetchStatus = "loading";
       })
       .addCase(getAgentGroupInfo.fulfilled, (state, action) => {
-        console.log(action.payload?.data, "find");
+        // console.log(action.payload?.data, "find");
         const { data } = action.payload?.data;
         const { message } = action.payload?.data;
-        console.log(message, "checkrrr");
+        // console.log(message, "checkrrr");
         state.fetchStatus = "idle";
         state.agentGroupDetail = data;
       })
