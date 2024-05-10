@@ -34,6 +34,8 @@ import InProgress from "./InProgress";
 import Completed from "./Completed";
 import TaskListDueData from "./TaskListDueData";
 import Assignee from "./Assignee";
+import Priority from "./Priority";
+import Label from "./Label";
 const rows = [
   {
     title: "Brand logo design",
@@ -74,13 +76,14 @@ const ProjectTaskList = (props: TaskList) => {
   const theme: Theme = useTheme();
   const { customSelectedTab } = props;
 
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState("");
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
+    useState("Priority");
   const [showData, setShowData] = useState(true);
 
   const handleShowTable = () => {
     setShowData(!showData);
   };
-
+  console.log(tableSelectedItemDesign, "find");
   return (
     <>
       {customSelectedTab && (
@@ -131,6 +134,12 @@ const ProjectTaskList = (props: TaskList) => {
                 <>
                   {tableSelectedItemDesign == "Due Date" ? (
                     <TaskListDueData />
+                  ) : tableSelectedItemDesign == "Asignee" ? (
+                    <Assignee />
+                  ) : tableSelectedItemDesign == "Priority" ? (
+                    <Priority />
+                  ) : tableSelectedItemDesign == "Label" ? (
+                    <Label />
                   ) : (
                     <div>
                       <CommonTable

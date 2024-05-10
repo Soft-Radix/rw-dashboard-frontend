@@ -66,21 +66,31 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
-  console.log(item, "item");
-  const [items, setItems] = useState<any>(item);
-  console.log(items, "ghdjh");
-  const [open, setOpen] = useState(() => needsToBeOpened(location, item));
 
+  const [items, setItems] = useState<any>(item);
+  // console.log(items, "ghdjh");
+  const [open, setOpen] = useState(() => needsToBeOpened(location, item));
+  // console.log(open, "open");
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
 
   useEffect(() => {
     if (needsToBeOpened(location, item)) {
+      // console.log(item, "itemr");
       if (!open) {
         setOpen(true);
       }
     }
+
     // eslint-disable-next-line
   }, [location, item]);
+  useEffect(() => {
+    if (
+      location.pathname !== "/admin/agents/groups" &&
+      location.pathname !== "/admin/agents/list"
+    ) {
+      setOpen(false);
+    }
+  }, [location]);
 
   const component = item.url ? NavLinkAdapter : "li";
 
@@ -120,10 +130,10 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     // console.log(newItems, "anw");
     const [removed] = newItems.splice(source.index, 1);
     newItems.splice(destination.index, 0, removed);
-    console.log(newItems, "nw");
+    // console.log(newItems, "nw");
     setItems({ ...items, children: newItems });
   };
-  console.log(items, "newItem");
+  // console.log(items, "newItem");
   return useMemo(
     () => (
       <Root
@@ -131,28 +141,43 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
         itempadding={itempadding}
         sx={item.sx}
       >
-        <div className="bg-[#393F4C]">
+        <div>
           <div>
             <ListItemButton
               component={component}
               className={clsx(
-                "fuse-list-item hover:opacity-100",
-                open ? "opacity-100 bg-[#393F4C] " : "opacity-80  bg-[#111827]"
+                "fuse-list-item hover:opacity-100 py-0",
+
+                open
+                  ? "opacity-100 bg-[#393F4C] "
+                  : "opacity-100  bg-[#393f4c00]"
               )}
               {...itemProps}
             >
-              <div className="flex items-center justify-between w-full  ">
-                <div className="flex items-center gap-10">
+              <div
+                className="flex items-center justify-between w-full "
+                onClick={(ev) => {
+                  ev.preventDefault();
+                  ev.stopPropagation();
+                  setOpen(!open);
+                }}
+              >
+                <div className="flex items-center">
                   {item.icon && (
-                    <FuseSvgIcon
+                    // <FuseSvgIcon
+                    //   className="mr-[0.8rem]"
+                    //   color="action"
+                    // >
+                    //   {item.icon}
+                    // </FuseSvgIcon>
+                    <span
                       className={clsx(
-                        "fuse-list-item-icon shrink-0 ",
+                        "shrink-0 inline-block mr-16",
                         item.iconClass
                       )}
-                      color="action"
                     >
-                      {item.icon}
-                    </FuseSvgIcon>
+                      {item.customIcon}
+                    </span>
                   )}
 
                   <ListItemText
@@ -173,16 +198,11 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
                   <IconButton
                     disableRipple
-                    className="-mx-12 h-20 w-40 p-0 hover:bg-transparent focus:bg-transparent "
-                    onClick={(ev) => {
-                      ev.preventDefault();
-                      ev.stopPropagation();
-                      setOpen(!open);
-                    }}
+                    // className="w-40 h-20 p-0 -mx-12 hover:bg-transparent focus:bg-transparent "
                     size="large"
                   >
                     <ProjectNavIconArrow
-                      className="arrow-icon "
+                      // className="arrow-icon"
                       color="inherit"
                     >
                       {open
@@ -191,52 +211,30 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                     </ProjectNavIconArrow>
                   </IconButton>
                 </div>
-                <div className="flex items-center gap-10">
-                  <ProjectNavIcon className="threeDots-icon" color="inherit" />
-                  <ProjectPlusIcon />
-                </div>
+                {/* {!items?.hideOption &&
+                  <div className="flex items-center gap-10">
+                    <ProjectNavIcon className="threeDots-icon" color="inherit" />
+                    <ProjectPlusIcon />
+                  </div>
+                } */}
               </div>
             </ListItemButton>
           </div>
-          <DragDropContext onDragEnd={handleDragEnd}>
-            <div className="">
-              {items.children && (
-                <Collapse in={open} className="collapse-children ">
-                  <Droppable droppableId="droppable">
-                    {(provided) => (
-                      <div ref={provided.innerRef} {...provided.droppableProps}>
-                        {items.children.map((_item, index) => (
-                          <Draggable
-                            key={_item.id}
-                            draggableId={_item.id}
-                            index={index}
-                          >
-                            {(provided) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                              >
-                                <FuseNavItem
-                                  key={_item.id}
-                                  type={`vertical-${_item.type}`}
-                                  item={_item}
-                                  nestedLevel={nestedLevel + 1}
-                                  onItemClick={onItemClick}
-                                  checkPermission={checkPermission}
-                                />
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                </Collapse>
-              )}
-            </div>
-          </DragDropContext>
+
+          {items.children && (
+            <Collapse in={open} className="collapse-children">
+              {item.children.map((_item) => (
+                <FuseNavItem
+                  key={_item.id}
+                  type={`vertical-${_item.type}`}
+                  item={_item}
+                  nestedLevel={nestedLevel + 1}
+                  onItemClick={onItemClick}
+                  checkPermission={checkPermission}
+                />
+              ))}
+            </Collapse>
+          )}
         </div>
       </Root>
     ),

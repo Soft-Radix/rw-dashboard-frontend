@@ -102,3 +102,69 @@ export const SupportLinkIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+export const AttachmentIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle cx="12" cy="12" r="12" fill="white" fill-opacity="0.36" />
+    <g clip-path="url(#clip0_2_50576)">
+      <path
+        d="M14.6667 6H18.6667V10H17.3334V7.33333H14.6667V6ZM5.33337 6H9.33337V7.33333H6.66671V10H5.33337V6ZM17.3334 16.6667V14H18.6667V18H14.6667V16.6667H17.3334ZM6.66671 16.6667H9.33337V18H5.33337V14H6.66671V16.6667Z"
+        fill="black"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_2_50576">
+        <rect width="16" height="16" fill="white" transform="translate(4 4)" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+export const AttachmentDeleteIcon: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="11.5"
+      fill="white"
+      fill-opacity="0.36"
+      stroke="#F44336"
+    />
+    <path
+      d="M15 8.4H18V9.6H16.8V17.4C16.8 17.5591 16.7368 17.7117 16.6243 17.8243C16.5117 17.9368 16.3591 18 16.2 18H7.8C7.64087 18 7.48826 17.9368 7.37574 17.8243C7.26321 17.7117 7.2 17.5591 7.2 17.4V9.6H6V8.4H9V6.6C9 6.44087 9.06321 6.28826 9.17574 6.17574C9.28826 6.06321 9.44087 6 9.6 6H14.4C14.5591 6 14.7117 6.06321 14.8243 6.17574C14.9368 6.28826 15 6.44087 15 6.6V8.4ZM15.6 9.6H8.4V16.8H15.6V9.6ZM10.2 11.4H11.4V15H10.2V11.4ZM12.6 11.4H13.8V15H12.6V11.4ZM10.2 7.2V8.4H13.8V7.2H10.2Z"
+      fill="#F44336"
+    />
+  </svg>
+);
+export const AttachmentUploadIcon: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="26"
+    height="21"
+    viewBox="0 0 26 21"
+    fill="none"
+    {...props}
+  >
+    <path
+      d="M3.68874 18.4149C4.65131 19.146 5.79166 19.6392 7.00108 19.863V20H8.00108H17.9989H18.9989V19.863C20.2083 19.6392 21.3487 19.146 22.3113 18.4149C23.5191 17.4976 24.3911 16.2473 24.7784 14.8307C25.1663 13.4121 25.042 11.9201 24.429 10.5748C23.8825 9.37549 22.9783 8.35819 21.8391 7.62448C21.4582 5.8173 20.4174 4.19099 18.903 2.99855C17.2576 1.703 15.1585 1 13 1C10.8415 1 8.74238 1.703 7.09702 2.99855C5.5826 4.19099 4.54178 5.81729 4.16091 7.62447C3.02175 8.35819 2.11746 9.37549 1.57099 10.5748C0.958023 11.9201 0.833709 13.4121 1.2216 14.8307C1.60892 16.2473 2.48088 17.4976 3.68874 18.4149ZM13.9998 10.8429H13.0002H12.9998H12.0002H11.2363L13 8.87014L14.7637 10.8429H13.9998Z"
+      stroke="#4F46E5"
+      stroke-width="2"
+    />
+  </svg>
+);

@@ -3,16 +3,14 @@
     thead {
       th {
         white-space: nowrap;
-        
       }
     }
     .th {
-      @apply text-sm text-grey-500;
-     
-
-    }    tbody {
+      @apply text-sm text-[#757982] font-500;
+    }
+    tbody {
       &:last-child td,
-      &:last-child th { 
+      &:last-child th {
         @apply border-none;
       }
       tr {
@@ -50,7 +48,6 @@
       }
     }
   }
- 
 }
 .border-design {
   thead th {
@@ -61,16 +58,14 @@
     @apply text-sm text-grey-500 border border-[#D1D7DB];
   }
 
-  tbody {   
-
+  tbody {
     td {
-     
       @apply py-4 px-6;
     }
 
     &:last-child td,
     &:last-child th {
-      @apply border border-[#D1D7DB]; 
+      @apply border border-[#D1D7DB];
     }
   }
 
@@ -80,7 +75,7 @@
 
   .overlap_imgWrap {
     @apply flex justify-center;
-    
+
     img {
       @apply h-[34px] w-[34px] rounded-full border-2 border-white ml-[-14px] z-0;
     }
@@ -92,7 +87,7 @@
 
   .color_tag {
     @apply inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500;
-    
+
     &.low {
       @apply text-[#4CAF50] bg-[#4CAF502E];
     }
@@ -114,5 +109,3 @@
     }
   }
 }
-
-

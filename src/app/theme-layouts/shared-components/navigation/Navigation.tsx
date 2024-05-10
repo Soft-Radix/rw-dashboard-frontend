@@ -19,7 +19,6 @@ function Navigation(props: NavigationProps) {
   const { className = "", layout = "vertical", dense, active } = props;
 
   const navigation = useSelector(selectNavigation);
-  console.log(navigation, "navigation");
 
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("lg"));
 

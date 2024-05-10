@@ -4,6 +4,15 @@ import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
 import tr from "./navigation-i18n/tr";
 import { ProjectChiildrenIcon } from "public/assets/icons/projectsIcon";
+import {
+  ClientNavIcon,
+  DashBoardIcon,
+  AgentNavIcon,
+  BillingNavIcon,
+  SettingNavIcon,
+  AgentGroupIcon,
+  AccountManagerIcon,
+} from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
@@ -45,6 +54,14 @@ const navigationConfig: FuseNavItemType[] = [
         end: true,
       },
     ],
+  },
+  {
+    id: "client",
+    title: "Client",
+    translate: "client",
+    type: "item",
+    icon: "heroicons-outline:clipboard-check",
+    url: "client",
   },
 
   {
@@ -120,6 +137,86 @@ const navigationConfig: FuseNavItemType[] = [
     type: "item",
     icon: "heroicons-outline:question-mark-circle",
     url: "support",
+  },
+];
+
+export const adminNavigationConfig: FuseNavItemType[] = [
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    translate: "DASHBOARD",
+    type: "item",
+    icon: "dashboard",
+    customIcon: <DashBoardIcon />,
+    url: "admin/dashboard",
+  },
+
+  {
+    id: "clients",
+    title: "Clients",
+    translate: "Clients",
+    type: "item",
+    icon: "dashboard",
+    customIcon: <ClientNavIcon />,
+    url: "admin/client",
+  },
+
+  {
+    id: "agents",
+    title: "Agents",
+    translate: "Agents",
+    type: "collapse",
+    hideOption: true,
+    icon: "agents",
+    customIcon: <AgentNavIcon />,
+    children: [
+      {
+        id: "agents_list",
+        title: "Agents",
+        type: "item",
+        icon: "material-twotone:compress",
+        url: "/admin/agents/list",
+        customIcon: <AgentNavIcon />,
+        end: true,
+      },
+      {
+        id: "agentsGroup",
+        title: "Agents Group",
+        type: "item",
+        icon: "material-twotone:compress",
+        url: "/admin/agents/groups",
+        customIcon: <AgentGroupIcon />,
+        end: true,
+      },
+    ],
+  },
+  {
+    id: "accountManager",
+    title: "Account Manager",
+
+    type: "item",
+    icon: "billing",
+    customIcon: <AccountManagerIcon />,
+    url: "admin/acc-manager",
+  },
+
+  {
+    id: "billings",
+    title: "Billings",
+    translate: "Billings",
+    type: "item",
+    icon: "billing",
+    customIcon: <BillingNavIcon />,
+    url: "admin/billings",
+  },
+  {
+    id: "setting",
+    title: "Setting",
+    translate: "Setting",
+    type: "item",
+    icon: "heroicons-outline:cog",
+    customIcon: <SettingNavIcon />,
+    url: "admin/setting",
   },
 ];
 

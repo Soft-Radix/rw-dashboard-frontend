@@ -20,6 +20,7 @@ import useJwtAuth, { JwtAuth } from './services/jwt/useJwtAuth';
 import { User } from './user';
 import useFirebaseAuth from './services/firebase/useFirebaseAuth';
 import UserModel from './user/models/UserModel';
+import { resetSessionRedirectUrl } from '@fuse/core/FuseAuthorization/sessionRedirectUrl';
 
 /**
  * Initialize Firebase
@@ -37,7 +38,7 @@ export type SignUpPayload = {
 };
 
 type AuthContext = {
-	jwtService?: JwtAuth<User, SignInPayload, SignUpPayload>;
+	jwtService?: JwtAuth<User, SignUpPayload>;
 	firebaseService?: ReturnType<typeof useFirebaseAuth>;
 	signOut?: () => void;
 	updateUser?: (U: PartialDeep<User>) => void;
@@ -126,7 +127,7 @@ function AuthRoute(props: AuthProviderProps) {
 		},
 		onSignedOut: () => {
 			dispatch(resetUser());
-			resetAuthService();
+			// resetAuthService();
 		},
 		onUpdateUser: (user) => {
 			dispatch(updateUser(user));

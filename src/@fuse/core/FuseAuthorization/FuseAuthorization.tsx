@@ -79,8 +79,13 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     }
 
     const { route }: { route: FuseRouteItemType } = matched;
+    console.log(userRole, 'route.auth');
 
-    const userHasPermission = FuseUtils.hasPermission(route.auth, userRole);
+
+    let userHasPermission = FuseUtils.hasPermission(route.auth, userRole);
+    if (route.auth == undefined && userRole == undefined) {
+      return { accessGranted: false };
+    }
 
     const ignoredPaths = [
       "/",
@@ -92,6 +97,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     ];
 
     if (matched && !userHasPermission && !ignoredPaths.includes(pathname)) {
+
       setSessionRedirectUrl(pathname);
     }
 
@@ -113,17 +119,17 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     const redirectUrl = getSessionRedirectUrl() || loginRedirectUrl;
 
     /*
-		User is guest
-		Redirect to Login Page
-		*/
+    User is guest
+    Redirect to Login Page
+    */
     if (!userRole || userRole.length === 0) {
       setTimeout(() => history.push("/sign-in"), 0);
     } else {
       /*
-		  User is member
-		  User must be on unAuthorized page or just logged in
-		  Redirect to dashboard or loginRedirectUrl
-			*/
+      User is member
+      User must be on unAuthorized page or just logged in
+      Redirect to dashboard or loginRedirectUrl
+      */
       setTimeout(() => history.push(redirectUrl), 0);
       resetSessionRedirectUrl();
     }

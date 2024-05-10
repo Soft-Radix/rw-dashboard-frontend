@@ -11,18 +11,16 @@ const Root = styled("div")(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.primary,
   "& ::-webkit-scrollbar-thumb": {
-    boxShadow: `inset 0 0 0 20px ${
-      theme.palette.mode === "light"
-        ? "rgba(0, 0, 0, 0.24)"
-        : "rgba(255, 255, 255, 0.24)"
-    }`,
+    boxShadow: `inset 0 0 0 20px ${theme.palette.mode === "light"
+      ? "rgba(0, 0, 0, 0.24)"
+      : "rgba(255, 255, 255, 0.24)"
+      }`,
   },
   "& ::-webkit-scrollbar-thumb:active": {
-    boxShadow: `inset 0 0 0 20px ${
-      theme.palette.mode === "light"
-        ? "rgba(0, 0, 0, 0.37)"
-        : "rgba(255, 255, 255, 0.37)"
-    }`,
+    boxShadow: `inset 0 0 0 20px ${theme.palette.mode === "light"
+      ? "rgba(0, 0, 0, 0.37)"
+      : "rgba(255, 255, 255, 0.37)"
+      }`,
   },
 }));
 
@@ -53,20 +51,20 @@ function NavbarStyle1Content(props: NavbarStyle1ContentProps) {
         className
       )}
     >
-      <div className="flex h-48 shrink-0 flex-row items-center px-20 md:h-72">
-        <div className="mx-4 flex flex-1">
+      <div className="flex flex-row items-center h-48 px-20 shrink-0 md:h-72">
+        <div className="flex flex-1 mx-4">
           <Logo />
         </div>
 
-        <NavbarToggleButton className="h-40 w-40 p-0" />
+        <NavbarToggleButton className="w-40 h-40 p-0" />
       </div>
 
       <StyledContent
-        className="flex min-h-0 flex-1 flex-col"
+        className="flex flex-col flex-1 min-h-0"
         option={{ suppressScrollX: true, wheelPropagation: false }}
       >
         <Navigation layout="vertical" />
-        <UserNavbarHeader />
+        {/* <UserNavbarHeader /> */}
       </StyledContent>
     </Root>
   );

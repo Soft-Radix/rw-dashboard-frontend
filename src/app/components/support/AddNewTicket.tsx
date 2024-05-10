@@ -77,7 +77,7 @@ function AddNewTicket({ isOpen, setIsOpen }: IProps) {
         </FormLabel>
         <CommonChip
           colorSecondary
-          className="w-1/2 border-1 border-solid"
+          className="w-1/2 border-solid border-1"
           label="Upload Attachment"
           icon={<UploadIcon />}
         />

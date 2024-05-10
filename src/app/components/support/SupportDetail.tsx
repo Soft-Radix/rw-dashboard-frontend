@@ -1,23 +1,9 @@
-import {
-  Button,
-  Checkbox,
-  Container,
-  Grid,
-  TableCell,
-  TableRow,
-  Theme,
-} from "@mui/material";
+import { Button, Grid, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { Box } from "@mui/system";
 import { useFormik } from "formik";
-import FsLightbox from "fslightbox-react";
 
 import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import {
+  AttachmentIcon,
   SupportAttachmentIcon,
   SupportLinkIcon,
   SupportProfileIcon,
@@ -25,84 +11,8 @@ import {
 
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
 import TitleBar from "src/app/components/TitleBar";
-import InputField from "src/app/components/InputField";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
-
-import AddUserModal from "src/app/components/users/AddUser";
-import styled from "styled-components";
-import Paper from "@mui/material/Paper";
-import CustomButton from "src/app/components/custom_button";
-
-const rows = [
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-  },
-];
 
 export default function Support() {
   const [expandedImage, setExpandedImage] = useState(null);
@@ -113,7 +23,7 @@ export default function Support() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    onSubmit: (values) => { },
   });
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -134,7 +44,7 @@ export default function Support() {
           <Button
             variant="outlined"
             color="secondary"
-            className="h-[40px] text-[16px] flex gap-8"
+            className="h-[40px] text-[16px] flex gap-8  leading-5 px-5 sm:px-24"
             aria-label="Add Tasks"
             size="large"
             onClick={() => setIsOpenAddModal(true)}
@@ -145,10 +55,10 @@ export default function Support() {
         </TitleBar>
       </div>
       <div className="px-40 xs:px-10">
-        <Grid container spacing={3} className="sm:px-10  xs:px-10 ">
+        <Grid container spacing={3} className="sm:px-10 xs:px-10 ">
           <Grid item xs={12} sm={8} md={9} className="">
             <div className=" flex flex-col gap-10 py-32 bg-[#FFFFFF] md:h-screen px-32 rounded-12 xs:px-10 xs:h-auto sm:h-auto">
-              <div className="flex gap-8  items-end px-20 ">
+              <div className="flex items-end gap-8 px-20 ">
                 <span className="text-xl text-[#111827] font-bold">
                   1542145611525
                 </span>
@@ -170,46 +80,58 @@ export default function Support() {
                   <div className="text-[14px] text-[#757982]">Status</div>
                   <Button
                     variant="outlined"
-                    className="h-20 rounded-3xl min-h-24 text-[#FF5F15] bg-[#ffe2d5] border-none mt-10"
+                    className="h-20 rounded-3xl  text-[#FF5F15] bg-[#ffe2d5] border-none mt-10 sm:min-h-24 leading-none"
                   >
                     In Progress
                   </Button>
                 </div>
-                <div className="flex flex-col gap-20 items-start  px-20">
+                <div className="flex flex-col items-start gap-20 px-20">
                   <span className="text-[14px] text-[#757982]">Department</span>
                   <span className="text-[#111827] font-400 mb-5">
                     Account Manager
                   </span>
                 </div>
               </div>
-              <div className="flex flex-col gap-9 px-20">
+              <div className="flex flex-col px-20 gap-9">
                 <div className="text-[#111827] font-500 ">Attachment</div>
-                <div className="flex py-5 gap-10 ">
-                  <div>
+                <div className="flex gap-10 py-5 ">
+                  <div
+                    className="relative cursor-pointer "
+                    onClick={() =>
+                      handleImageClick(
+                        "../assets/images/pages/supportDetail/black.png"
+                      )
+                    }
+                  >
                     <img
-                      src="../assets/images/pages/supportDetail/blackAttachment.png"
+                      src="../assets/images/pages/supportDetail/black.png"
                       alt="Black Attachment"
-                      onClick={() =>
-                        handleImageClick(
-                          "../assets/images/pages/supportDetail/blackAttachment.png"
-                        )
-                      }
+                      className="h-[97px] w-[200px] rounded-md sm:h-[130px]"
                     />
+                    <div className="absolute top-5 right-5">
+                      <AttachmentIcon />
+                    </div>
                   </div>
-                  <div>
+                  <div
+                    className="relative cursor-pointer"
+                    onClick={() =>
+                      handleImageClick(
+                        "../assets/images/pages/supportDetail/white.jpeg"
+                      )
+                    }
+                  >
                     <img
-                      src="../assets/images/pages/supportDetail/whiteAttachment.png"
+                      src="../assets/images/pages/supportDetail/white.jpeg"
                       alt="White Attachment"
-                      onClick={() =>
-                        handleImageClick(
-                          "../assets/images/pages/supportDetail/whiteAttachment.png"
-                        )
-                      }
+                      className="h-[97px] w-[200px] rounded-md sm:h-[130px] "
                     />
+                    <div className="absolute top-5 right-5">
+                      <AttachmentIcon />
+                    </div>
                   </div>
                   {expandedImage && (
                     <div
-                      className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-80 z-50"
+                      className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
                       onClick={() => setExpandedImage(null)}
                     >
                       <img
@@ -227,15 +149,15 @@ export default function Support() {
           <Grid item xs={12} sm={4} md={3}>
             <div className="flex items-end justify-between flex-col py-20 px-10 bg-[#FFFFFF] md:h-screen rounded-12 xs:auto sm:auto xs:gap-[30px] ">
               <div className="w-full h-[6rem] bg-[#2c334c] rounded-t-xl flex">
-                <div className="flex justify-start items-center gap-10 px-10">
+                <div className="flex items-center justify-start gap-10 px-10">
                   <span className="flex items-center justify-center py-5">
                     <SupportProfileIcon />
                   </span>
                   <span className="text-[#FFFFFF]">Client Name</span>
                 </div>
               </div>
-              <div className="w-full h-40 flex items-center px-3 py-3">
-                <div className="flex w-3/4 justify-between p-10 rounded-md">
+              <div className="flex items-center w-full h-40 px-3 py-3">
+                <div className="flex justify-between w-3/4 p-10 rounded-md">
                   <span>Write a comment....</span>
                   <span>
                     <SupportAttachmentIcon />
@@ -251,7 +173,7 @@ export default function Support() {
       </div>
 
       <div className="px-28 mb-[3rem]">
-        <div className="shadow-sm bg-white rounded-lg"></div>
+        <div className="bg-white rounded-lg shadow-sm"></div>
         <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
       </div>
     </>

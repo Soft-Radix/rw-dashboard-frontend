@@ -41,7 +41,7 @@ function WhiteBoard({ isOpen, setIsOpen }: IProps) {
         <CommonChip
           label="Whiteboard"
           icon={<WhiteBoardIcon />}
-          className={`${selectedComponent === "whiteboard" ? "border-2 " : ""}`}
+          className={`${selectedComponent === "whiteboard" ? "bg-red-300" : ""}`}
           onClick={() => handleChipClick("whiteboard")}
         />
         <CommonChip

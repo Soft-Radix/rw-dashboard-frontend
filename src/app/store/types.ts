@@ -95,3 +95,18 @@ export type AsyncStateType<T> = {
 	status: 'idle' | 'loading' | 'succeeded' | 'failed';
 	error?: string | null;
 };
+
+
+export interface Pyalod {
+    code?: number | undefined,
+    data: any,
+    message: string,
+    status: number
+}
+export interface ApiResponse {
+    status: number;
+    message: string;
+    code: number;
+    data: any | null; // or more specific type if known
+    meta: any | null
+}

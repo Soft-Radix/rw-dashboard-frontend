@@ -9,6 +9,8 @@ interface CustomButtonProps {
   formik?: FormikProps<unknown>;
   type?: string;
   inputClass?: string;
+  hideTopPadding?: boolean;
+
   // props: TextFieldProps;
 }
 
@@ -19,12 +21,14 @@ function InputField({
   label,
   type = "text",
   inputClass,
+  hideTopPadding,
   ...rest
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
   const handleEyeToggle = () => {
     setIsType(isType === "text" ? "password" : "text");
   };
+
   return (
     <div className={`${rest.className} common-inputField w-full`}>
       {label && (
@@ -59,9 +63,13 @@ function InputField({
           </span>
         )}
       </div>
-      <span className="">
-        {formik?.errors[name ?? ""] && formik?.touched[name ?? ""]}
-      </span>
+      {!hideTopPadding && (
+        <span className="inline-block text-red pt-[5px]">
+          {formik?.errors[name ?? ""] &&
+            formik?.touched[name ?? ""] &&
+            formik?.errors[name ?? ""]}
+        </span>
+      )}
     </div>
   );
 }

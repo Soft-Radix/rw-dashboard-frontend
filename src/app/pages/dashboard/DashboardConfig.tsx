@@ -10,19 +10,22 @@ i18next.addResourceBundle("ar", "dashboardPage", ar);
 
 const Dashboard = lazy(() => import("./Dashboard"));
 
-/**
- * The Dashboard page config.
- */
-const DashboardConfig = {
+const commonSetting = {
   settings: {
     layout: {},
   },
+};
+/**
+ * The Dashboard page config.
+ */
+export const AdminDashboardConfig = {
+  ...commonSetting,
   routes: [
     {
-      path: "dashboard",
+      path: "admin/dashboard",
       element: <Dashboard />,
     },
   ],
 };
 
-export default DashboardConfig;
+// export default DashboardConfig;

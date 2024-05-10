@@ -108,7 +108,7 @@ function NavbarStyle3Content(props: NavbarStyle3ContentProps) {
 				<ThemeProvider theme={contrastTheme}>
 					<div
 						id="fuse-navbar-side-panel"
-						className="flex shrink-0 flex-col items-center"
+						className="flex flex-col items-center shrink-0"
 					>
 						<img
 							className="my-32 w-44"
@@ -117,7 +117,7 @@ function NavbarStyle3Content(props: NavbarStyle3ContentProps) {
 						/>
 
 						<FuseScrollbars
-							className="flex min-h-0 w-full flex-1 justify-center overflow-y-auto overflow-x-hidden"
+							className="flex justify-center flex-1 w-full min-h-0 overflow-x-hidden overflow-y-auto"
 							option={{ suppressScrollX: true, wheelPropagation: false }}
 						>
 							<FuseNavigation

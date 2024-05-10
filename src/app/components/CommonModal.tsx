@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
+import CustomButton from "./custom_button";
 
 const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -22,11 +23,15 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
 
 type ModalType = {
   open?: boolean;
-  handleToggle: () => void;
+  handleToggle: (e: React.FormEvent) => void;
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
-  customButton?: boolean;
+  DeleteModal?: boolean;
+  btnTitle?: string;
+  closeTitle?: string;
+  disabled?: boolean;
+  onSubmit?: () => void;
 };
 
 export default function CommonModal({
@@ -34,8 +39,12 @@ export default function CommonModal({
   open,
   handleToggle,
   children,
-  customButton = false,
+  btnTitle,
+  closeTitle,
+  DeleteModal = false,
   maxWidth = "387",
+  onSubmit,
+  disabled,
 }: ModalType) {
   return (
     <StylesDialog
@@ -47,27 +56,40 @@ export default function CommonModal({
         },
       }}
     >
-      <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
-        <Typography className="text-[16px] font-medium" color="#fff">
-          {modalTitle}
-        </Typography>
-        <IconButton>
-          <CrossIcon
-            className="cursor-pointer"
-            color="#fff"
+      {!DeleteModal ? (
+        <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
+          <Typography className="text-[16px] font-semibold" color="#fff">
+            {modalTitle}
+          </Typography>
+          <IconButton>
+            <CrossIcon
+              className="cursor-pointer"
+              color="#fff"
+              onClick={handleToggle}
+            />
+          </IconButton>
+        </div>
+      ) : (
+        <>
+          <IconButton
+            className="flex items-center justify-end pt-20 pr-20 rounded-none "
             onClick={handleToggle}
-          />
-        </IconButton>
-      </div>
-      <div className="p-20">{children}</div>
+          >
+            <CrossIcon className="cursor-pointer" color="#9DA0A6" />
+          </IconButton>
+        </>
+      )}
+      <div className="p-20 pb-0">{children}</div>
 
-      <div className="flex p-20 pt-10">
+      <div className="flex p-20 pt-20">
         <Button
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
+          onClick={onSubmit}
+          disabled={disabled}
         >
-          {!customButton ? "Save" : "Add List"}
+          {btnTitle}
         </Button>
         <Button
           variant="outlined"
@@ -75,7 +97,7 @@ export default function CommonModal({
           className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
         >
-          Cancel
+          {closeTitle}
         </Button>
       </div>
     </StylesDialog>

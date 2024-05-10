@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import docImage from "public/assets/images/pages/ProjectView/docImage.png";
-const WhiteBoardPage = () => {
+const DocDesign = () => {
   return (
     <div className="px-16">
       <Typography className="py-10 text-[20px] text-[#111827] font-600">
@@ -15,4 +15,4 @@ const WhiteBoardPage = () => {
   );
 };
 
-export default WhiteBoardPage;
+export default DocDesign;

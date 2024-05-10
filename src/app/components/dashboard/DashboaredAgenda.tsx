@@ -107,7 +107,7 @@ const DashboaredAgenda = () => {
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
       <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg ">
+        {/* <div className="shadow-sm bg-white rounded-lg ">
           <div className="flex sm:items-center justify-between sm:pr-20 sm:flex-row flex-col items-start gap-11">
             <div className="flex items-center pb-10 justify-between w-full py-28 sm:py-0 pr-[10px] sm:flex-col sm:items-start ">
               <Typography className="text-[16px] font-600 sm:pt-28 px-20 sm:pb-10 ">
@@ -139,7 +139,7 @@ const DashboaredAgenda = () => {
               startIcon={<PlusIcon color={theme.palette.secondary.main} />}
               onClick={() => setIsOpenAddModal(true)}
             >
-              Add calendar In Integration
+              calendar Integration
             </Button>
           </div>
           <CommonTable headings={["Tasks"]}>
@@ -174,7 +174,7 @@ const DashboaredAgenda = () => {
               ))}
             </>
           </CommonTable>
-        </div>
+        </div> */}
       </Grid>
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
@@ -292,10 +292,10 @@ const DashboaredAgenda = () => {
                     },
                   }}
                 >
-                  <div className="flex items-center w-full  justify-between ">
+                  <div className="flex items-center w-full justify-between ">
                     <TableCell
                       scope="row"
-                      className="flex items-center gap-8   justify-between"
+                      className="flex items-center gap-8 justify-between"
                     >
                       <div className="flex gap-10 items-center">
                         <span className="">

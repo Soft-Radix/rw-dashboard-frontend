@@ -118,7 +118,7 @@ export default function Dashboard() {
     setAnchorEl(null);
     setAnchorEl1(null);
   };
-  console.log(anchorEl1, "anchor");
+  // console.log(anchorEl1, "anchor");
   const checkHandler = (key: string) => {
     setIsChecked((prevState) => ({
       ...prevState,
@@ -127,14 +127,14 @@ export default function Dashboard() {
   };
   return (
     <div>
-      <div className="px-28 py-10 flex items-center justify-between relative  ">
+      <div className="relative flex items-center justify-between py-10 px-28 ">
         <Typography className="text-[18px] py-28 font-bold sm:text-[30px]  ">
           Welcome On Dashboard !
         </Typography>
         <DropdownMenu
           button={
             <div
-              className="flex items-center relative"
+              className="relative flex items-center"
               onClick={handleButtonClick}
             >
               <Button
@@ -203,7 +203,7 @@ export default function Dashboard() {
             </MenuItem>
 
             <div
-              className="flex items-start flex-col justify-start relative "
+              className="relative flex flex-col items-start justify-start "
               onClick={handleProjectList}
             >
               <Button
@@ -275,13 +275,13 @@ export default function Dashboard() {
 
       {isChecked.agents && (
         <div className="px-28 mb-[3rem] ">
-          <div className=" bg-white rounded-lg">
+          <div className="bg-white rounded-lg ">
             <div className="flex items-center justify-between px-24 py-28">
               <Typography className="text-[16px] font-600">
                 Agents Listing
               </Typography>
 
-              <div className="flex sm:mr-20 items-center justify-center sm:gap-32 ">
+              <div className="flex items-center justify-center sm:mr-20 sm:gap-32 ">
                 <Typography className="text-[16px] font-500">
                   No. of Agents Logged in
                 </Typography>
