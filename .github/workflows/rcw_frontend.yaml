@@ -30,7 +30,7 @@ jobs:
           cd rw-dashboard-frontend
           npm install
           npm run build
-          sudo cp -r /home/ubuntu/rw-dashboard-frontend/build /var/www/html
+          sudo cp -r /home/ubuntu/rw-dashboard-frontend/build/* /var/www/html
           rm -rf /home/ubuntu/rw-dashboard-frontend
           '
 
