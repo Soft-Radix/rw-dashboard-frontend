@@ -1,0 +1,36 @@
+name: RCW-Backend deploy on server
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: SSH to Instance
+        env:
+          HOSTNAME: ${{ secrets.RCW_SSH_HOST }}
+          USER_NAME: ${{ secrets.RCW_USER_NAME }}
+        run: |
+          echo "${{ secrets.RCW_SSH_PRIVATEKEY }}" > my-ssh-key.pem
+          chmod 400 my-ssh-key.pem
+          ssh -o StrictHostKeyChecking=no -i my-ssh-key.pem $USER_NAME@${HOSTNAME} '
+          rm -rf rw-dashboard-frontend
+          export NVM_DIR=$HOME/.nvm;
+          source $NVM_DIR/nvm.sh;
+          nvm install 18
+          nvm use 18
+          git clone -b develop https://${{ secrets.RCW_GITHUB_USER }}:${{ secrets.RCW_GITHUB_KEY }}@github.com/Soft-Radix/rw-dashboard-frontend.git  
+          cd rw-dashboard-frontend
+          npm install
+          npm run build
+          sudo cp /home/ubuntu/rw-dashboard-frontend/build /var/www/html
+          rm -rf /home/ubuntu/rw-dashboard-frontend
+          '
+
