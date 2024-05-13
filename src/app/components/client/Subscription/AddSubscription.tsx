@@ -300,10 +300,10 @@ export default function AddSubscription() {
                     },
                   }}
                 >
-                  <TableCell scope="row" className="font-500 ">
+                  <TableCell scope="row" className="font-500 whitespace-nowrap">
                     {row.ticket}
                   </TableCell>
-                  <TableCell align="center" className="font-500">
+                  <TableCell align="center" className="font-500 whitespace-nowrap">
                     {row.department}
                   </TableCell>
                   <TableCell
@@ -325,7 +325,7 @@ export default function AddSubscription() {
                       }}
                     />
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" className="whitespace-nowrap">
                     <InputField
                       name={"name"}
                       placeholder={"$444.00"}
@@ -453,7 +453,7 @@ export default function AddSubscription() {
               ))}
             </>
           </CommonTable>
-          <div className="flex justify-end py-14 px-[3rem] mt-[2rem] w-full  md:w-9/12">
+          {/* <div className="flex justify-end py-14 px-[3rem] mt-[2rem] w-full  md:w-9/12">
             <SelectUser
               formik={formik}
               name="status"
@@ -469,7 +469,7 @@ export default function AddSubscription() {
                 </StyledMenuItem>
               ))}
             </SelectUser>
-          </div>
+          </div> */}
         </div>
         <div className="bg-white rounded-lg shadow-sm py-[2.7rem] mb-[3rem]">
           <h5 className="text-[#0A0F18] text-20 font-500 mb-20 px-[3rem] ">

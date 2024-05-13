@@ -119,8 +119,8 @@ export default function AgentsGroup() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,

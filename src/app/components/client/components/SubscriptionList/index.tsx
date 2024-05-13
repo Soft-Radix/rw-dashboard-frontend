@@ -1,88 +1,83 @@
-import { TableCell, TableRow, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
 import { useState } from "react";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import { ArrowRightCircleIcon } from "public/assets/icons/common";
-import { Link } from "react-router-dom";
+import NoSubscription from "../../../../../../public/assets/icons/no-subscription-img.svg"
 
-const rows = [
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-    {
-        ticket: "1542145611525",
-        subject: "Web page design",
-        status: "Unassigned",
-        department: "Account Manager",
-        date: "Feb 12,2024",
-        assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    },
-];
+// const rows = [
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+//     {
+//         ticket: "1542145611525",
+//         subject: "Web page design",
+//         status: "Unassigned",
+//         department: "Account Manager",
+//         date: "Feb 12,2024",
+//         assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+//     },
+// ];
 
 export default function SubscriptionList() {
     const theme: Theme = useTheme();
@@ -90,8 +85,14 @@ export default function SubscriptionList() {
 
     return (
         <>
-            <div className="mb-[3rem]">
-                <div className="bg-white rounded-lg shadow-sm">
+            <div className="px-[24px] ">
+                <div className="no-subscription-column flex justify-center bg-[#F7F9FB] py-[70px]">
+                    <div className="no-subscription-inner">
+                        <img src={NoSubscription} alt="NoSubscription" className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"/>
+                        <p className="text-center mt-[28px] text-xl font-medium text-[#111827] leading-6">No subscription found !</p>
+                    </div>
+                </div>
+                {/* <div className="bg-white rounded-lg shadow-sm">
                     <CommonTable
                         headings={[
                             "ID",
@@ -159,9 +160,9 @@ export default function SubscriptionList() {
                     <div className="flex justify-end py-14 px-[3rem]">
                         <CommonPagination count={10} />
                     </div>
-                </div>
+                </div> */}
             </div>
-            <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+            {/* <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
         </>
     );
 }
