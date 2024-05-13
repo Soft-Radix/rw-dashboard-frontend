@@ -21,7 +21,7 @@ import {
   AccManagerRootState,
   filterType,
 } from "app/store/accountManager/Interface";
-import { useAppDispatch } from "app/store/store";
+import { RootState, useAppDispatch } from "app/store/store";
 import { getAccManagerList } from "app/store/accountManager";
 import { useSelector } from "react-redux";
 
@@ -80,9 +80,12 @@ const rows = [
 export default function AccountManager() {
   const dispatch = useAppDispatch();
   const accManagerState = useSelector(
-    (store: AccManagerRootState) => store.accManager
+    (state: RootState) => state.accManagerSlice
   );
-  console.log(accManagerState, "managerList");
+  //@ts-ignore
+  console.log("accManage========rttState.", accManagerState?.list?.length > 0);
+  // console.log(accManagerState?.list?.data?.list, "managerList");
+
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -90,7 +93,9 @@ export default function AccountManager() {
       verification: "",
     },
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      // console.log(values, "kk");
+    },
   });
 
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
@@ -105,105 +110,106 @@ export default function AccountManager() {
   }, [filters]);
   useEffect(() => {
     fetchManagerList();
+    // setIsOpenAddModal(false);
   }, [fetchManagerList]);
+  // Include necessary dependencies for useEffect
+
+  // Other component logic
 
   return (
     <>
-      <>
-        <TitleBar title="Account Manager">
-          <Button
-            variant="outlined"
-            color="secondary"
-            className="h-[40px] text-[16px] flex gap-8 font-[600] sm:leading-3 leading-0"
-            aria-label="Add New Group"
-            size="large"
-            onClick={() => setIsOpenAddModal(true)}
-            startIcon={<PlusIcon color={theme.palette.secondary.main} />}
+      <TitleBar title="Account Manager">
+        <Button
+          variant="outlined"
+          color="secondary"
+          className="h-[40px] text-[16px] flex gap-8 font-[600] sm:leading-3 leading-0"
+          aria-label="Add New Group"
+          size="large"
+          onClick={() => setIsOpenAddModal(true)}
+          startIcon={<PlusIcon color={theme.palette.secondary.main} />}
+        >
+          Add Manager
+        </Button>
+      </TitleBar>
+      <div className="px-28 mb-[3rem]">
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="p-[2rem]">
+            <SearchInput name="search" placeholder="Search agents" />
+          </div>
+          <CommonTable
+            headings={["ID", "First Name", "Last Name", "Email", "Status", ,]}
           >
-            Add Manager
-          </Button>
-        </TitleBar>
-        <div className="px-28 mb-[3rem]">
-          <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-[2rem]">
-              <SearchInput name="search" placeholder="Search agents" />
-            </div>
-            <CommonTable
-              headings={[
-                "ID",
-                "First Name",
-                "Last Name",
-                "Assigned Client",
-                "Status",
-                ,
-              ]}
-            >
-              <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
+            {accManagerState?.list?.length > 0 &&
+              accManagerState?.list?.map((row: any, index: number) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell scope="row" className="text-[14px] font-500">
+                    {row.id}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap text-[14px] font-500"
                   >
-                    <TableCell scope="row" className="text-[14px] font-500">
-                      {row.id}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap text-[14px] font-500"
-                    >
-                      {row.fname}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap text-[14px] font-500"
-                    >
-                      {row.lname}
-                    </TableCell>
+                    {row.first_name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap text-[14px] font-500"
+                  >
+                    {row.last_name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap text-[14px] font-500"
+                  >
+                    {row.email}
+                  </TableCell>
 
-                    <TableCell align="center">
-                      <ImagesOverlap images={row.assignedImg} />
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap text-[14px] font-500"
-                    >
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap text-[14px] font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
-                      >
-                        {row.status}
-                      </span>
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
                     >
-                      <Link to="/admin/acc-manager/detail">
+                      {row.status}
+                    </span>
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
+                  >
+                    <div className="flex items-center gap-10">
+                      <DeleteIcon />
+                      <Link to={`/admin/acc-manager/detail/${row.id}`}>
                         <ArrowRightCircleIcon />
                       </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
-            </CommonTable>
-            <div className="flex justify-end py-14 px-[3rem]">
-              <CommonPagination count={10} />
-            </div>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+          </CommonTable>
+          <div className="flex justify-end py-14 px-[3rem]">
+            <CommonPagination count={10} />
           </div>
         </div>
-        <AddAccountManagerModel
-          isOpen={isOpenAddModal}
-          setIsOpen={setIsOpenAddModal}
-          isEditing={false}
-        />
-      </>
+      </div>
+      <AddAccountManagerModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        isEditing={false}
+        fetchManagerList={fetchManagerList}
+      />
     </>
   );
 }

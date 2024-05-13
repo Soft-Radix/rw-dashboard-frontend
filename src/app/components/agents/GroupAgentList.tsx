@@ -84,7 +84,7 @@ export default function GroupAgentsList() {
   const { agentGroupDetail } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
-  console.log(agentGroupDetail, "girl");
+  // console.log(agentGroupDetail, "girl");
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -106,7 +106,7 @@ export default function GroupAgentsList() {
   useEffect(() => {
     if (!group_id) return null;
     dispatch(getAgentGroupInfo({ group_id }));
-    console.log(group_id, "groupid");
+    // console.log(group_id, "groupid");
     return () => {
       dispatch(changeFetchStatus());
     };

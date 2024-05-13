@@ -4,7 +4,12 @@ import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
 
 import { calculatePageNumber } from "src/utils";
-import { AccManagerType, filterType, initialStateProps } from "./Interface";
+import {
+  AccManagerType,
+  accManagerIDType,
+  filterType,
+  initialStateProps,
+} from "./Interface";
 
 /**
  * API calling
@@ -33,7 +38,7 @@ export const getAccManagerList = createAsyncThunk(
       method: "post",
       data: payload,
     });
-    console.log(response.data, "response.data");
+    // console.log(response.data, "response.data");
 
     // Return only the data you need to keep it serializable
     return {
@@ -41,21 +46,22 @@ export const getAccManagerList = createAsyncThunk(
     };
   }
 );
-// export const getAgentInfo = createAsyncThunk(
-//   "agent/information",
-//   async (payload: agentIDType) => {
-//     const response = await ApiHelperFunction({
-//       url: `/agent/detail/${payload?.agent_id}`,
-//       method: "post",
-//       data: payload,
-//     });
+export const getAccManagerInfo = createAsyncThunk(
+  "accountManager/detail/{accountManager_Id}",
+  async (payload: accManagerIDType) => {
+    console.log(payload, "payload");
+    const response = await ApiHelperFunction({
+      url: `/accountManager/detail/${payload?.accountManager_Id}`,
+      method: "post",
+      data: payload,
+    });
 
-//     // Return only the data you need to keep it serializable
-//     return {
-//       data: response.data,
-//     };
-//   }
-// );
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 /**
  * The initial state of the auth slice.
  */
@@ -111,7 +117,6 @@ export const accManagerSlice = createSlice({
       })
       .addCase(getAccManagerList.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        console.log(response, "response");
         state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
@@ -125,18 +130,19 @@ export const accManagerSlice = createSlice({
       })
       .addCase(getAccManagerList.rejected, (state, action) => {
         state.status = "idle";
+      })
+      .addCase(getAccManagerInfo.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
+      .addCase(getAccManagerInfo.fulfilled, (state, action) => {
+        const { data } = action.payload?.data;
+        state.fetchStatus = "idle";
+        state.accManagerDetail = data;
+        console.log(data, "jj");
+      })
+      .addCase(getAccManagerInfo.rejected, (state) => {
+        state.fetchStatus = "idle";
       });
-    //   .addCase(getAgentInfo.pending, (state) => {
-    //     state.fetchStatus = "loading";
-    //   })
-    //   .addCase(getAgentInfo.fulfilled, (state, action) => {
-    //     const { data } = action.payload?.data;
-    //     state.fetchStatus = "idle";
-    //     state.agentDetail = data;
-    //   })
-    //   .addCase(getAgentInfo.rejected, (state) => {
-    //     state.fetchStatus = "idle";
-    //   });
   },
 });
 

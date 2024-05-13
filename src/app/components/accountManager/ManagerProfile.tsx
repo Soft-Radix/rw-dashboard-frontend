@@ -14,10 +14,15 @@ import {
   DownGreenIcon,
   EditIcon,
 } from "public/assets/icons/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TitleBar from "../TitleBar";
 import CommonTable from "../commonTable";
 import AddAccountManagerModel from "./AddAccountmanagerModal";
+import { useParams } from "react-router";
+import { changeFetchStatus, getAccManagerInfo } from "app/store/accountManager";
+import { useAppDispatch } from "app/store/store";
+import { useSelector } from "react-redux";
+import { AccManagerRootState } from "app/store/accountManager/Interface";
 
 const rows = [
   {
@@ -43,6 +48,9 @@ const rows = [
 //   color: string;
 // }
 const ManagerProfile = () => {
+  const { accountManager_Id } = useParams();
+  const dispatch = useAppDispatch();
+
   // const { color } = props;
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
@@ -66,6 +74,14 @@ const ManagerProfile = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
+  useEffect(() => {
+    if (!accountManager_Id) return null;
+    dispatch(getAccManagerInfo({ accountManager_Id }));
+    return () => {
+      dispatch(changeFetchStatus());
+    };
+  }, []);
+
   return (
     <>
       <div className="px-16">

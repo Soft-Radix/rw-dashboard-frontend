@@ -20,7 +20,8 @@ export const AdminAccountManagerConfig = {
       element: <AccountManager />,
     },
     {
-      path: "admin/acc-manager/:id",
+      path: "admin/acc-manager/detail/:accountManager_id",
+
       element: <ManagerProfile />,
     },
   ],

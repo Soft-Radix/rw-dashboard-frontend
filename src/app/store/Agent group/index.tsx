@@ -9,6 +9,7 @@ import {
   deleteAgentGroupType,
   UpdateAgentGroupPayload,
   AgentGroupIDType,
+  searchAgentGroupType,
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -85,8 +86,7 @@ export const updateGroupName = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: `agent-group/edit`,
       method: "put",
-      data: payload.formData,
-      formData: true,
+      data: payload,
     });
     // console.log(response, "check");
     // Return only the data you need to keep it serializable
@@ -96,21 +96,21 @@ export const updateGroupName = createAsyncThunk(
   }
 );
 
-// export const changePassword = createAsyncThunk(
-//   "auth/change-password",
-//   async (payload: ChangePassword) => {
-//     const response = await ApiHelperFunction({
-//       url: `auth/change-password`,
-//       method: "post",
-//       data: payload,
-//     });
+export const searchAgentGroup = createAsyncThunk(
+  "agent-group/addMember",
+  async (payload: searchAgentGroupType) => {
+    const response = await ApiHelperFunction({
+      url: `agent-group/addMember`,
+      method: "post",
+      data: payload,
+    });
 
-//     // Return only the data you need to keep it serializable
-//     return {
-//       data: response.data,
-//     };
-//   }
-// );
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 /**
  * The initial state of the auth slice.
@@ -245,47 +245,48 @@ export const agentGroupSlice = createSlice({
       .addCase(getAgentGroupInfo.fulfilled, (state, action) => {
         // console.log(action.payload?.data, "find");
         const { data } = action.payload?.data;
-        const { message } = action.payload?.data;
+        // const { message } = action.payload?.data;
         // console.log(message, "checkrrr");
         state.fetchStatus = "idle";
         state.agentGroupDetail = data;
       })
       .addCase(getAgentGroupInfo.rejected, (state) => {
         state.fetchStatus = "idle";
+      })
+
+      .addCase(updateGroupName.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(updateGroupName.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          state.agentGroupDetail = { ...response?.data };
+          toast.success(response?.message);
+        }
+      })
+      .addCase(updateGroupName.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+
+      .addCase(searchAgentGroup.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(searchAgentGroup.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        console.log(response);
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          toast.success(response?.message);
+        }
+      })
+      .addCase(searchAgentGroup.rejected, (state, action) => {
+        state.actionStatus = false;
       });
-
-    // .addCase(updateGroupName.pending, (state) => {
-    //   state.actionStatus = true;
-    // })
-    // .addCase(updateGroupName.fulfilled, (state, action) => {
-    //   const response = action.payload?.data;
-    //   state.actionStatus = false;
-    //   if (!response.status) {
-    //     toast.error(response?.message);
-    //   } else {
-    //     state.agentGroupDetail = { ...response?.data };
-    //     toast.success(response?.message);
-    //   }
-    // })
-    // .addCase(updateGroupName.rejected, (state, action) => {
-    //   state.actionStatus = false;
-    // });
-
-    //   .addCase(changePassword.pending, (state) => {
-    //     state.actionStatus = true
-    //   })
-    //   .addCase(changePassword.fulfilled, (state, action) => {
-    //     const response = action.payload?.data
-    //     state.actionStatus = false
-    //     if (!response.status) {
-    //       toast.error(response?.message)
-    //     } else {
-    //       toast.success(response?.message)
-    //     }
-    //   })
-    //   .addCase(changePassword.rejected, (state, action) => {
-    //     state.actionStatus = false
-    //   })
   },
 });
 

@@ -38,9 +38,9 @@ export type initialStateProps = {
 };
 
 export interface AccManagerRootState {
-  accManager: initialStateProps; // Add other slices if needed
+  manager: initialStateProps; // Add other slices if needed
 }
 
-// export interface agentIDType {
-//   agent_id: string;
-// }
+export interface accManagerIDType {
+  accountManager_Id: string;
+}

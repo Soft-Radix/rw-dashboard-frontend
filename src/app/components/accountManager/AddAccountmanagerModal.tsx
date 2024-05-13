@@ -30,34 +30,42 @@ import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { useSelector } from "react-redux";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
-import { AccManagerType } from "app/store/accountManager/Interface";
+import {
+  AccManagerRootState,
+  AccManagerType,
+} from "app/store/accountManager/Interface";
 import { addAccManager } from "app/store/accountManager";
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  fetchAgentList?: () => void;
+  fetchManagerList?: () => void;
   isEditing: boolean;
 }
 const names = ["All", "Rahul", "Manisha", "Elvish", "Abhishek"];
 function AddAccountManagerModel({
   isOpen,
   setIsOpen,
-  fetchAgentList,
+  fetchManagerList,
   isEditing,
 }: IProps) {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
-  const agentState = useSelector((store: AgentRootState) => store.agent);
+  // const agentState = useSelector((store: AgentRootState) => store.agent);
+  const accmanagerState = useSelector(
+    (store: AccManagerRootState) => store.manager
+  );
+  console.log(accmanagerState, "kk");
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    console.log(file, "file");
+    // console.log(file, "file");
     if (file) {
       setSelectedImage(file); // Store the selected file
       const imageUrl = URL.createObjectURL(file); // Create a temporary URL for the uploaded image
@@ -68,6 +76,8 @@ function AddAccountManagerModel({
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
     // console.log(values, "values");
     const { payload } = await dispatch(addAccManager(values));
+    console.log(payload, "payload");
+    setIsOpen(false);
     if (payload?.data?.status) {
       resetForm();
     }
@@ -84,15 +94,17 @@ function AddAccountManagerModel({
     validationSchema: accManagerSchema,
     onSubmit,
   });
+  useEffect(() => {
+    if (!!accmanagerState?.successMsg) {
+      dispatch(restAll());
+      fetchManagerList();
+      setIsOpen(false);
+      formik.resetForm();
+    } else if (!!accmanagerState?.errorMsg) {
+      dispatch(restAll());
+    }
+  }, [accmanagerState]);
 
-  // useEffect(() => {
-  //   if (!!agentState?.successMsg) {
-  //     dispatch(restAll());
-  //     setIsOpen((prev) => false);
-  //   } else if (!!agentState?.errorMsg) {
-  //     dispatch(restAll());
-  //   }
-  // }, [agentState]);
   const handleClose = () => {
     setAnchorEl(null);
   };
