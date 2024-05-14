@@ -1,21 +1,15 @@
+import { Checkbox, Theme } from "@mui/material";
+import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+import { BillingTermsOptions, EmployOptions, StyledMenuItem } from "src/utils";
 import CommonModal from "../../CommonModal";
 import InputField from "../../InputField";
-import {
-  Checkbox,
-  InputAdornment,
-  TableCell,
-  TableRow,
-  Theme,
-  Typography,
-} from "@mui/material";
-import { EmployOptions, StyledMenuItem } from "src/utils";
 import SelectField from "../../selectField";
-import { SearchIcon } from "public/assets/icons/topBarIcons";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import CommonTable from "../../commonTable";
-import { useTheme } from "@mui/styles";
+import NumberInput from "../../NumberInput";
+import DateInput from "../../DateInput";
+import { red } from "@mui/material/colors";
+
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -40,6 +34,8 @@ const list = [
 ];
 
 function LineModal({ isOpen, setIsOpen }: IProps) {
+  const [value, setValue] = React.useState<number | null>(null);
+
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -59,6 +55,7 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
       modalTitle="Add Custom Line Items"
       maxWidth="733"
       btnTitle={"Save"}
+      closeTitle="Cancel"
     >
       <div className="flex flex-col gap-20 mb-20">
         <InputField
@@ -73,27 +70,28 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
           label="Description"
           placeholder="Enter Description"
         />
-        <div className="flex items-center justify-between  py-10 ">
-          <span className="text-[18px] font-500 text-[#111827]">Price</span>
 
-          <span className="text-[18px] font-500 text-[#111827] ">
-            Currency:
-            <span className="font-400"> US Dollar (USD)$</span>
-          </span>
-        </div>
+       
         <InputField
           formik={formik}
           name="unit Price"
           label="Unit Price"
           placeholder="Enter Unit Price"
         />
-
+        <InputField
+          formik={formik}
+          name="Quantity"
+          label="Quantity"
+          placeholder="Enter Quantity"
+        />
         <SelectField
           formik={formik}
           name="status"
           label="Billing Frequency"
           placeholder="Select"
           sx={{
+            border: "0.5px solid #9DA0A6",
+            padding: "0px 12px",
             "& .radioIcon": { display: "none" },
           }}
         >
@@ -103,6 +101,50 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
             </StyledMenuItem>
           ))}
         </SelectField>
+        <SelectField
+          formik={formik}
+          name="terms"
+          label="Billing Terms"
+          placeholder="Fixed number of payments"
+          sx={{
+            border: "0.5px solid #9DA0A6",
+            "& .radioIcon": { display: "none" },
+          }}
+        >
+          {BillingTermsOptions.map((item) => (
+            <StyledMenuItem key={item.value} value={item.value}>
+              {item.label}
+            </StyledMenuItem>
+          ))}
+        </SelectField>
+
+        <NumberInput
+          label="Number of Payments"
+        
+        />
+        <div className="w-full">
+          <div className="flex items-center mb-[2rem]">
+            <Checkbox
+              id="billingDate"
+              name="billingDate"
+              value="billing"
+              sx={{
+                "&.Mui-checked": {
+                  color: "#4f46e5",
+                },
+              }}
+              className="w-[18px] h-[18px] me-[16px] "
+            />
+            <label className="text-[16px] font-medium leading-[20px]">
+              {" "}
+              Delay Billing Start Date
+            </label>
+            <br />
+          </div>
+          <DateInput
+          
+          />
+        </div>
       </div>
     </CommonModal>
   );

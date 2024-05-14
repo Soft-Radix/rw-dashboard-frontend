@@ -9,14 +9,12 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
-import { EditIcon } from "public/assets/icons/common";
 import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import {
   BillingTermsOptions,
-  EmployOptions,
   MonthlyOptions,
   StyledMenuItem,
   UnitDiscount,
@@ -24,10 +22,11 @@ import {
 import DropdownMenu from "../../Dropdown";
 import InputField from "../../InputField";
 import TitleBar from "../../TitleBar";
-import SelectUser from "../../selectField";
 import SelectField from "../../tableSelectField";
 import CustomLineModal from "./CustomLineModal";
 import LineModal from "./LineModal";
+import penIcon from "../../../../../public/assets/icons/subscription-title.svg";
+import { Link } from "react-router-dom";
 
 const rows = [
   {
@@ -37,6 +36,8 @@ const rows = [
     department: "Lorem Ipsum",
     date: "Feb 12,2024",
     assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+    payment: "1",
+    billingDate: "09/05/2024",
   },
   {
     ticket: "Denojs",
@@ -45,8 +46,11 @@ const rows = [
     department: "Lorem Ipsum",
     date: "Feb 12,2024",
     assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
+    payment: "1",
+    billingDate: "09/05/2024",
   },
 ];
+
 
 export default function AddSubscription() {
   const theme: Theme = useTheme();
@@ -96,12 +100,7 @@ export default function AddSubscription() {
     return (
       <>
         <div className="flex items-center gap-20 mr-20 ">
-          <Button
-            className="items-center px-20 rounded-[.7rem] text-secondary bg-secondary_bg w-max font-600 "
-            endIcon={<EditIcon fill="#4F46E5" />}
-          >
-            Edit Column
-          </Button>
+         
           <DropdownMenu
             marginTop={"mt-20"}
             button={
@@ -112,7 +111,7 @@ export default function AddSubscription() {
                 <Button
                   variant="text"
                   color="secondary"
-                  className="h-[40px] sm:text-[16px] flex gap-8  leading-none bg-secondary_bg rounded-[.7rem]"
+                  className="h-[40px] ps-[2rem] sm:text-[16px] flex gap-8  leading-none bg-secondary_bg rounded-[.7rem]"
                   aria-label="Lines"
                   endIcon={<DownArrowIcon className="cursor-pointer" />}
                 >
@@ -123,7 +122,7 @@ export default function AddSubscription() {
             anchorEl={anchorEl1}
             handleClose={handleClose}
           >
-            <div className="w-[375px] pt-1 pb-20 flex flex-col gap-10  ">
+            <div className="  w-[314px] p-4 flex flex-col ">
               <MenuItem
                 className="rounded-lg hover:bg-[#E7E8E9] py-10"
                 onClick={() => setCustomLine(true)}
@@ -205,15 +204,7 @@ export default function AddSubscription() {
         <DropdownMenu
           marginTop={"mt-[20px] "}
           button={
-            <div className="relative flex w-max" onClick={handleTexFeeClick}>
-              <span className="inline-block pl-5 text-secondary font-600 text-18">
-                {" "}
-                +Add discount fee or tax
-              </span>
-              <span className="inline-block ml-10">
-                <DownArrowIcon className="cursor-pointer" />
-              </span>
-            </div>
+            "+Add discount "
           }
           anchorEl={anchorEl2}
           handleClose={handleClose}
@@ -271,13 +262,55 @@ export default function AddSubscription() {
       <TitleBar title="Add Subscriptions" />
       <div className="px-[3rem]">
         <div className="bg-white rounded-lg shadow-sm pb-[2.7rem] mb-[3rem]">
-          <div className="flex items-center justify-between">
-            {selectCurrency()}
+          <div className="flex items-center justify-between py-[14px]">
+            <TextField
+              hiddenLabel
+              className="ml-20 w-[30rem] pe-6"
+              id="filled-hidden-label-small"
+              defaultValue=""
+              variant="standard"
+              placeholder="Add Title Name"
+              sx={{
+                pl: 2,
+                backgroundColor: "#F6F6F6",
+                borderRadius: "8px",
+                border: "1px solid transparent", // Show border when focused
+                "&:focus-within": {
+                  border: "1px solid blue", // Show border when focused
+                },
+                "& .MuiInputBase-input": {
+                  textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                  border: "none", // Hide the border of the input element
+                },
+                "& .MuiInput-underline:before": {
+                  border: "none !important", // Hide the underline (if using underline variant)
+                },
+                "& .MuiInput-underline:after": {
+                  borderBottom: "none !important", // Hide the underline (if using underline variant)
+                },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="start">
+                    <Link to="#">
+                      <img
+                        src={penIcon}
+                        alt="pen-icon"
+                        className="h-[2.5rem] w-[2.5rem]"
+                      />{" "}
+                    </Link>{" "}
+                  </InputAdornment>
+                ),
+              }}
+            
+            />
+           
             {SubButton()}
           </div>
           <CommonTable
             headings={[
               "Name",
+              "",
               "Description",
               "Quantity",
               "Unit Price",
@@ -285,6 +318,8 @@ export default function AddSubscription() {
               "Net Price",
               "Billing Frequency",
               "Billing Terms",
+              "No of Payments",
+              "Delayed Billing Start Date",
             ]}
           >
             <>
@@ -303,7 +338,60 @@ export default function AddSubscription() {
                   <TableCell scope="row" className="font-500 whitespace-nowrap">
                     {row.ticket}
                   </TableCell>
-                  <TableCell align="center" className="font-500 whitespace-nowrap">
+                  <TableCell scope="row" className="font-500 whitespace-nowrap">
+                   
+                    <div
+                      className="border-[0.5px]  h-[30px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10"
+                    >
+                      <div className="flex-1">
+                        <TextField
+                          hiddenLabel
+                          className="ps-[16px]"
+                          id="filled-hidden-label-small"
+                          defaultValue=""
+                          variant="standard"
+                          size="small"
+                          placeholder="Action"
+                          sx={{
+                            width: "60px",
+
+                            "& .MuiInputBase-input": {
+                              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                              border: "none", // Hide the border of the input element
+                            },
+                            "& .MuiInput-underline:before": {
+                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                            },
+                            "& .MuiInput-underline:after": {
+                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                            },
+                          }}
+                        ></TextField>
+                      </div>
+                      <div className="border-r-1 border-solid border-[#9DA0A6] ">
+                        <SelectField
+                          formik={formik}
+                          name="unitDiscount"
+                          defaultValue={"percentage"}
+                          sx={{
+                           
+                            height: "24px",
+                            minHeight : 'unset',
+                            "&.MuiSelect-selectMenu": {
+                              paddingRight: "0px !important", // Adjust padding for the select menu
+                            },
+                          }}
+                        >
+                         
+                        </SelectField>
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="font-500 whitespace-nowrap"
+                  >
                     {row.department}
                   </TableCell>
                   <TableCell
@@ -449,79 +537,84 @@ export default function AddSubscription() {
                       </SelectField>
                     </div>
                   </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.payment}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.billingDate}
+                  </TableCell>
                 </TableRow>
               ))}
             </>
           </CommonTable>
-          {/* <div className="flex justify-end py-14 px-[3rem] mt-[2rem] w-full  md:w-9/12">
-            <SelectUser
-              formik={formik}
-              name="status"
-              label="Assign employees to this Subscriptions"
-              placeholder="Select"
-              sx={{
-                "& .radioIcon": { display: "none" },
-              }}
-            >
-              {EmployOptions.map((item) => (
-                <StyledMenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </StyledMenuItem>
-              ))}
-            </SelectUser>
-          </div> */}
+         
         </div>
-        <div className="bg-white rounded-lg shadow-sm py-[2.7rem] mb-[3rem]">
-          <h5 className="text-[#0A0F18] text-20 font-500 mb-20 px-[3rem] ">
+        <div className="bg-white rounded-lg shadow-sm  mb-[3rem] ">
+          <h5 className="text-[#0A0F18] text-20 font-600 py-20 px-[3rem] ">
             Summary
           </h5>
-          <ul className="flex flex-col text-14 gap-[4rem]">
-            <li className="border-b pb-[2rem] bg-[#F7F9FB] flex flex-col gap-10">
-              <div className="mb-10">
-                <span className="text-para_light  px-[3rem]">
+          <ul className="flex flex-col text-14 gap-[3rem]">
+            <li className="border-b py-[1.5rem]  bg-[#F7F9FB] flex flex-col gap-10 px-[3rem]">
+              <div className="mb-10 flex justify-between">
+                <span className="text-para_light font-500">
                   Subtotal---------------------------------------------------
                 </span>
-                <span className="inline-block ml-20 font-500">$444.00</span>
+                <span className="inline-block ml-20 font-600">$444.00</span>
               </div>
-              <span className="px-[3rem] text-secondary text-[14px] font-500 flex items-center cursor-pointer">
+              <span className=" text-secondary text-[14px] font-500 flex items-center cursor-pointer">
                 {DiscountFee()}
-                {/* +Add discount fee or tax{" "}
-                <span>
-                  {" "}
-                  <DownArrowIcon className="ml-10" />
-                </span> */}
+                
               </span>
             </li>
-            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
-              <span className="text-para_light  px-[3rem]">
+            <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
+              <span className="text-para_light font-500">
                 Due Now--------------------------------------------------
               </span>
-              <span className="inline-block ml-20 font-500">$444.00</span>
+              <span className="inline-block ml-20 font-600">$444.00</span>
             </li>
-            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
-              <span className="text-para_light  px-[3rem]">
+            <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
+              <span className="text-para_light font-500">
                 Future payments------------------------------------------
               </span>
               <div className="inline-block ml-20 text-[#111827) text-[14px] font-300 ">
                 <span className="flex flex-col gap-5">
                   <span>
-                    <span className="font-500">$555.00 / Month </span>
-                    starting 4 days after payment
-                  </span>
-                  <span>
-                    {" "}
-                    <span className="font-500">$555.00 / Month </span>starting 1
-                    month after payment
+                    <span className="font-600">$444.00 / Month </span>
+                    starting 1 month after payment
                   </span>
                 </span>
               </div>
             </li>
-            <li className="border-b pb-[2rem] bg-[#F7F9FB]">
-              <span className="text-[#0A0F18] text-[20px] font-600 px-[3rem]">
+            <li className="border-b pb-[2.5rem] px-[3rem]">
+              <span className="text-[#0A0F18] text-[20px] font-600">
                 Total -
               </span>
             </li>
           </ul>
+        </div>
+        <div className="flex mb-[3rem]">
+          <Button
+            variant="contained"
+            color="secondary"
+            className="w-[156px] h-[48px] text-[18px] opacity-60 leading-5"
+            
+          >
+            Save
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            className="w-[156px] h-[48px] text-[18px] ml-14 opacity-60 leading-5"
+            
+          >
+            Cancel
+          </Button>
         </div>
       </div>
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
