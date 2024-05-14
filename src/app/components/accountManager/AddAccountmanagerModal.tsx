@@ -4,6 +4,7 @@ import {
   ChangeEvent,
   Dispatch,
   SetStateAction,
+  useCallback,
   useEffect,
   useState,
 } from "react";
@@ -30,12 +31,18 @@ import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { useSelector } from "react-redux";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
+
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import {
   AccManagerRootState,
   AccManagerType,
-} from "app/store/accountManager/Interface";
-import { addAccManager } from "app/store/accountManager";
-import { AgentGroupRootState } from "app/store/Agent group/Interface";
+} from "app/store/AccountManager/Interface";
+import {
+  accManagerClientList,
+  addAccManager,
+  assignedAccManagerList,
+} from "app/store/AccountManager";
+import { useParams } from "react-router-dom";
 
 interface IProps {
   isOpen: boolean;
@@ -53,12 +60,17 @@ function AddAccountManagerModel({
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState([]);
+  console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
   // const agentState = useSelector((store: AgentRootState) => store.agent);
   const accmanagerState = useSelector(
-    (store: AccManagerRootState) => store.manager
+    (store: AccManagerRootState) => store.accManagerSlice
   );
-  console.log(accmanagerState, "kk");
+  const { accManagerDetail, accClientList } = useSelector(
+    (store: AccManagerRootState) => store.accManagerSlice
+  );
+  console.log(accManagerDetail, "accManagerDetail");
+
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
@@ -72,12 +84,27 @@ function AddAccountManagerModel({
       setpreviewUrl(imageUrl); // Set the new image
     }
   };
+  const { accountManager_id } = useParams();
+  // console.log(accountManager_id, "ll");
 
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
-    // console.log(values, "values");
+    console.log(values, "values");
     const { payload } = await dispatch(addAccManager(values));
-    console.log(payload, "payload");
+    if (accountManager_id) {
+      const newValue = {
+        ...values,
+        account_manager_id: accountManager_id,
+        client_ids: [selectedItems],
+        unassign_client_ids: [],
+      };
+
+      // await dispatch(assignedAccManagerList(newValue));
+    }
+
+    // console.log(payload, "payload");
     setIsOpen(false);
+    fetchManagerList();
+
     if (payload?.data?.status) {
       resetForm();
     }
@@ -90,6 +117,7 @@ function AddAccountManagerModel({
       phone_number: null,
       email: "",
       address: "",
+      // assignedClients:[]
     },
     validationSchema: accManagerSchema,
     onSubmit,
@@ -97,8 +125,8 @@ function AddAccountManagerModel({
   useEffect(() => {
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
-      fetchManagerList();
       setIsOpen(false);
+
       formik.resetForm();
     } else if (!!accmanagerState?.errorMsg) {
       dispatch(restAll());
@@ -156,6 +184,33 @@ function AddAccountManagerModel({
     setSelectedItems(updatedSelectedItems);
     setSelectAll(false);
   };
+  useEffect(() => {
+    if (accManagerDetail) {
+      formik.setValues({
+        first_name: accManagerDetail.first_name || "",
+        last_name: accManagerDetail.last_name || "",
+        // status: accManagerDetail.status || "",
+        email: accManagerDetail.email || "",
+        phone_number: accManagerDetail.phone_number || "",
+        address: accManagerDetail.address,
+      });
+    }
+  }, [accManagerDetail]);
+
+  const fetchClientList = useCallback(() => {
+    if (!!accountManager_id) {
+      dispatch(accManagerClientList({ accountManger_id: accountManager_id }));
+    } else {
+      dispatch(
+        accManagerClientList({ accountManger_id: accountManager_id, type: 1 })
+      );
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchClientList();
+  }, [fetchClientList]);
+  console.log(accClientList, "accClientttttList");
 
   return (
     <CommonModal
@@ -200,7 +255,7 @@ function AddAccountManagerModel({
             formik={formik}
             name="first_name"
             label="First Name"
-            placeholder="Enter First Name"
+            placeholder="Enter your First Name"
           />
           <InputField
             formik={formik}
@@ -216,15 +271,15 @@ function AddAccountManagerModel({
             label="Phone Number"
             placeholder="Enter Phone Number"
             sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
-                    +1
-                  </span>
-                </InputAdornment>
-              ),
-            }}
+            // InputProps={{
+            //   startAdornment: (
+            //     <InputAdornment position="start">
+            //       <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
+            //         +1
+            //       </span>
+            //     </InputAdornment>
+            //   ),
+            // }}
           />
           <InputField
             formik={formik}
@@ -324,13 +379,13 @@ function AddAccountManagerModel({
               </div>
               {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
               <div className="overflow-y-scroll h-[200px] ">
-                {names.map((name) => (
+                {accClientList?.map((name) => (
                   <MenuItem className="py-10">
                     <div
                       className="flex items-center gap-10  "
                       onClick={() => handleMenuItemClick(name)}
                     >
-                      <Checkbox
+                      {/* <Checkbox
                         checked={
                           name === "All"
                             ? selectAll
@@ -341,8 +396,10 @@ function AddAccountManagerModel({
                         <span>
                           <img src={img1} alt=""></img>
                         </span>
-                      )}
-                      <ListItemText primary={name} />
+                      )} */}
+                      <ListItemText
+                        primary={name.first_name + " " + name.last_name}
+                      />
                     </div>
                   </MenuItem>
                 ))}

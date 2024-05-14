@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -20,9 +20,13 @@ import AddAccountManagerModel from "src/app/components/accountManager/AddAccount
 import {
   AccManagerRootState,
   filterType,
-} from "app/store/accountManager/Interface";
+} from "app/store/AccountManager/Interface";
 import { RootState, useAppDispatch } from "app/store/store";
-import { getAccManagerList } from "app/store/accountManager";
+import {
+  deleteAccManager,
+  getAccManagerInfo,
+  getAccManagerList,
+} from "app/store/AccountManager";
 import { useSelector } from "react-redux";
 
 const rows = [
@@ -78,6 +82,9 @@ const rows = [
 ];
 
 export default function AccountManager() {
+  const accountManager_Id = useParams();
+  console.log(accountManager_Id, "kk");
+
   const dispatch = useAppDispatch();
   const accManagerState = useSelector(
     (state: RootState) => state.accManagerSlice
@@ -110,12 +117,26 @@ export default function AccountManager() {
   }, [filters]);
   useEffect(() => {
     fetchManagerList();
-    // setIsOpenAddModal(false);
+    setIsOpenAddModal(false);
   }, [fetchManagerList]);
   // Include necessary dependencies for useEffect
 
   // Other component logic
-
+  const deleteAccManger = async (id: any) => {
+    // console.log(id, "id");
+    try {
+      const { payload } = await dispatch(
+        deleteAccManager({ accountManger_id: id })
+      );
+      console.log(payload, "payload");
+      // if (payload?.data?.status) {
+      //   setIsOpenDeletedModal(false);
+      //   // fetchAgentGroupLsssist();
+      // }
+    } catch (error) {
+      console.error("Failed to delete agent group:", error);
+    }
+  };
   return (
     <>
       <TitleBar title="Account Manager">
@@ -190,7 +211,7 @@ export default function AccountManager() {
                     className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
                   >
                     <div className="flex items-center gap-10">
-                      <DeleteIcon />
+                      <DeleteIcon onClick={() => deleteAccManger(row.id)} />
                       <Link to={`/admin/acc-manager/detail/${row.id}`}>
                         <ArrowRightCircleIcon />
                       </Link>

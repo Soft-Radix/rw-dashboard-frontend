@@ -18,11 +18,11 @@ import { useEffect, useState } from "react";
 import TitleBar from "../TitleBar";
 import CommonTable from "../commonTable";
 import AddAccountManagerModel from "./AddAccountmanagerModal";
-import { useParams } from "react-router";
-import { changeFetchStatus, getAccManagerInfo } from "app/store/accountManager";
-import { useAppDispatch } from "app/store/store";
+import { useParams } from "react-router-dom";
+import { changeFetchStatus, getAccManagerInfo } from "app/store/AccountManager";
+import { RootState, useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
-import { AccManagerRootState } from "app/store/accountManager/Interface";
+import { AccManagerRootState } from "app/store/AccountManager/Interface";
 
 const rows = [
   {
@@ -48,10 +48,13 @@ const rows = [
 //   color: string;
 // }
 const ManagerProfile = () => {
-  const { accountManager_Id } = useParams();
+  const { accountManager_id } = useParams();
   const dispatch = useAppDispatch();
 
-  // const { color } = props;
+  const { accManagerDetail } = useSelector(
+    (store: AccManagerRootState) => store?.accManagerSlice
+  );
+  // console.log(accManagerDetail, "pp");
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   // Open menu handler
@@ -66,7 +69,6 @@ const ManagerProfile = () => {
 
   // Menu item click handler
   const handleMenuItemClick = (status) => {
-    console.log(`Selected status: ${status}`);
     setSelectedItem(status);
 
     handleClose(); // Close the menu after handling the click
@@ -74,9 +76,10 @@ const ManagerProfile = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
+
   useEffect(() => {
-    if (!accountManager_Id) return null;
-    dispatch(getAccManagerInfo({ accountManager_Id }));
+    if (!accountManager_id) return null;
+    dispatch(getAccManagerInfo({ accountManager_id }));
     return () => {
       dispatch(changeFetchStatus());
     };
@@ -99,8 +102,10 @@ const ManagerProfile = () => {
                 <div className="pt-[20px]">
                   <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">
                     <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                      {/* {agentDetail?.first_name + " " + agentDetail?.last_name} */}
-                      Bernadette Jone
+                      {accManagerDetail?.first_name +
+                        " " +
+                        accManagerDetail?.last_name}
+                      {/* Bernadette Jone */}
                     </span>
                     <Button
                       variant="outlined"
@@ -167,9 +172,8 @@ const ManagerProfile = () => {
                           src="../assets/icons/ri_time-line.svg"
                           className="sm:mr-4"
                         />{" "}
-                        Feb 21,2024
+                        <span>{accManagerDetail?.phone_number || "N/A"}</span>
                       </span>
-                      {/* <span>{agentDetail?.phone_number || "N/A"}</span> */}
                     </div>
                   </div>
 
@@ -185,7 +189,7 @@ const ManagerProfile = () => {
                             className="mr-4"
                           />
                           <span className="text-para_light text-[20px]">
-                            {/* {clientDetail?.email} */} info456@gmail.com
+                            {accManagerDetail?.email || "N/A"}
                           </span>
                         </div>
                       </div>
@@ -202,9 +206,8 @@ const ManagerProfile = () => {
                             />{" "}
                           </span>
                           <span className="text-para_light text-[20px] ">
-                            {/* {clientDetail?.country_code}{" "}
-                             {clientDetail?.phone_number || "N/A"} */}
-                            +1 2513652150
+                            {/* {clientDetail?.country_code}{" "}*/}
+                            {accManagerDetail?.phone_number || "N/A"}
                           </span>
                         </div>
                       </div>
@@ -221,9 +224,7 @@ const ManagerProfile = () => {
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
                         />
-                        {/* {clientDetail?.address ?? */}
-                        "Akshya Nagar 1st Block 1st Cross, Rammurthy,
-                        Bangalore-560016"
+                        {accManagerDetail?.address || "N/A"}
                       </span>
                     </div>
                   </div>

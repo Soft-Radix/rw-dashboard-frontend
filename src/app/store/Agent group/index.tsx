@@ -70,7 +70,7 @@ export const getAgentGroupInfo = createAsyncThunk(
   async (payload: AgentGroupIDType) => {
     const response = await ApiHelperFunction({
       url: `agent-group/${payload?.group_id}`,
-      method: "post",
+      method: "get",
       data: payload,
     });
     // Return only the data you need to keep it serializable
