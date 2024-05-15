@@ -20,7 +20,7 @@ import { authSlice } from "./Auth";
 import { clientSlice } from "./Client";
 import { agentSlice } from "./Agent";
 import { agentGroupSlice } from "./Agent group";
-import { accManagerSlice } from "./accountManager";
+import { accManagerSlice } from "./AccountManager";
 
 /**
  * The dynamic middleware instance.

@@ -33,6 +33,7 @@ function AddGroupModel({
   // console.log(agentGroupState, "as");
 
   const dispatch = useAppDispatch();
+
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
     console.log(values, "values");
     const { payload } = await dispatch(addAgentGroup(values));
@@ -41,6 +42,7 @@ function AddGroupModel({
       resetForm();
     }
   };
+
   useEffect(() => {
     if (!!agentGroupState?.successMsg) {
       dispatch(restAll());
@@ -57,6 +59,7 @@ function AddGroupModel({
     validationSchema: AgentGroupSchema,
     onSubmit,
   });
+  
 
   return (
     <CommonModal

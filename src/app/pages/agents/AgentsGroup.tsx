@@ -147,6 +147,11 @@ export default function AgentsGroup() {
   useEffect(() => {
     fetchAgentGroupList();
   }, [fetchAgentGroupList]);
+  // useEffect(() => {
+  //   if (agentGroupState) {
+  //     setValues: agentGroupState.group_name;
+  //   }
+  // });
 
   return (
     <>

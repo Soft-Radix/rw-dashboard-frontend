@@ -70,7 +70,7 @@ export const getClientInfo = createAsyncThunk(
   async (payload: clientIDType) => {
     const response = await ApiHelperFunction({
       url: `client/detail/${payload?.client_id}`,
-      method: "post",
+      method: "get",
       data: payload,
     });
 

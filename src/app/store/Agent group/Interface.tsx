@@ -46,8 +46,11 @@ export interface deleteAgentGroupType {
 
 // Type for the payload that updateProfile expects
 export interface UpdateAgentGroupPayload {
-  formData: FormData; // The form data object
-}
+  group_id: number | string;
+  group_name: "string";
+  agent_ids: [];
+  delete_agent_ids: [];
+} // The form data object
 
 // export interface ChangePassword {
 //     type: number;
@@ -55,3 +58,8 @@ export interface UpdateAgentGroupPayload {
 //     old_password?: string;
 //     new_password: string;
 // }
+export interface searchAgentGroupType {
+  group_id: number;
+  agent_ids: [];
+  delete_agent_ids: [];
+}
