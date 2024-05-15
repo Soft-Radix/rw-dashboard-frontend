@@ -97,11 +97,13 @@ export const assignedAccManagerList = createAsyncThunk(
 );
 
 export const accManagerClientList = createAsyncThunk(
-  "accountManager/client-list/{account_Manager_id}",
+  "accountManager/client-list",
   async (payload: deleteAccManagerType) => {
     console.log(payload, "payload");
+    const typeParameter =
+      payload.type !== undefined ? `type=${payload.type}` : "type=0";
     const response = await ApiHelperFunction({
-      url: `accountManager/client-list/?account_manager_id=${payload.accountManger_id}type=${payload?.type}`,
+      url: `accountManager/client-list?account_Manager_id=${payload.accountManger_id}&${typeParameter}`,
       method: "get",
       data: payload,
     });

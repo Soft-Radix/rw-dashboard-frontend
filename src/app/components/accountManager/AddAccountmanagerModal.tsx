@@ -36,6 +36,7 @@ import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import {
   AccManagerRootState,
   AccManagerType,
+  assignedClientInfoType,
 } from "app/store/AccountManager/Interface";
 import {
   accManagerClientList,
@@ -141,7 +142,7 @@ function AddAccountManagerModel({
     setIsOpen(true);
   };
 
-  const handleMenuItemClick = (itemName: string) => {
+  const handleMenuItemClick = (itemName: assignedClientInfoType) => {
     if (itemName === "All") {
       // Toggle select all
       const allSelected = !selectAll;
@@ -379,11 +380,11 @@ function AddAccountManagerModel({
               </div>
               {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
               <div className="overflow-y-scroll h-[200px] ">
-                {accClientList?.map((name) => (
+                {accClientList?.map((item: assignedClientInfoType) => (
                   <MenuItem className="py-10">
                     <div
                       className="flex items-center gap-10  "
-                      onClick={() => handleMenuItemClick(name)}
+                      onClick={() => handleMenuItemClick(item)}
                     >
                       {/* <Checkbox
                         checked={
@@ -398,7 +399,7 @@ function AddAccountManagerModel({
                         </span>
                       )} */}
                       <ListItemText
-                        primary={name.first_name + " " + name.last_name}
+                        primary={item.first_name + " " + item.last_name}
                       />
                     </div>
                   </MenuItem>
