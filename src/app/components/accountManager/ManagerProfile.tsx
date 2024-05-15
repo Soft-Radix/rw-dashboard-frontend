@@ -49,6 +49,7 @@ const rows = [
 // }
 const ManagerProfile = () => {
   const { accountManager_id } = useParams();
+  console.log(accountManager_id, "opop");
   const dispatch = useAppDispatch();
 
   const { accManagerDetail } = useSelector(
@@ -79,7 +80,7 @@ const ManagerProfile = () => {
 
   useEffect(() => {
     if (!accountManager_id) return null;
-    dispatch(getAccManagerInfo({ accountManager_id }));
+    dispatch(getAccManagerInfo({ account_manager_id: accountManager_id }));
     return () => {
       dispatch(changeFetchStatus());
     };

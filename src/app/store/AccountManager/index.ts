@@ -53,7 +53,7 @@ export const getAccManagerInfo = createAsyncThunk(
   async (payload: accManagerIDType) => {
     // console.log(payload, "payload");
     const response = await ApiHelperFunction({
-      url: `accountManager/detail/${payload?.accountManager_id}`,
+      url: `accountManager/detail/${payload?.account_manager_id}`,
       method: "get",
       data: payload,
     });
@@ -81,7 +81,7 @@ export const deleteAccManager = createAsyncThunk(
 );
 export const assignedAccManagerList = createAsyncThunk(
   "accountManager/AssignClients",
-  async (payload: accManagerIDType) => {
+  async (payload: assignedClientInfoType) => {
     console.log(payload, "payload");
     const response = await ApiHelperFunction({
       url: "accountManager/AssignClients",
@@ -191,7 +191,7 @@ export const accManagerSlice = createSlice({
         // console.log(data, "datata");
         state.fetchStatus = "idle";
         state.accManagerDetail = data;
-        console.log(state.accManagerDetail, "jj");
+        // console.log(state.accManagerDetail, "jj");
       })
       .addCase(getAccManagerInfo.rejected, (state) => {
         state.fetchStatus = "idle";
@@ -237,10 +237,12 @@ export const accManagerSlice = createSlice({
       })
       .addCase(accManagerClientList.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
-        console.log(data, "datata");
+        let newArray = data;
+        newArray.unshift({ first_name: "All" });
         state.fetchStatus = "idle";
-        state.accClientList = data;
-        console.log(state.accManagerDetail, "jj");
+
+        state.accClientList = newArray;
+        // console.log(state.accManagerDetail, "jj");
       })
       .addCase(accManagerClientList.rejected, (state) => {
         state.fetchStatus = "idle";
