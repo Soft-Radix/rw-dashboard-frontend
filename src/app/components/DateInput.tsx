@@ -6,9 +6,7 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 
 import DatePicker from "@mui/lab/DatePicker";
-import { TextField } from "material-ui";
-import { DateField } from "@mui/x-date-pickers/DateField";
-import { InputAdornment } from "@mui/material";
+import { TextField, InputAdornment } from "@mui/material";
 
 const calenderIcon = (
   <svg
@@ -52,7 +50,7 @@ export default function DateInput() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-         <label className="inline-block text-[16px] font-medium leading-[20px] mb-[7px]">Billing Start Date ( Date of first payment )</label>
+      <label className="inline-block text-[16px] font-medium leading-[20px] mb-[7px]">Billing Start Date ( Date of first payment )</label>
       <Box
         sx={{
           width: "100%",
@@ -61,34 +59,33 @@ export default function DateInput() {
           position: "relative",
         }}
       >
-       
-        <DateField
+        <TextField
           fullWidth
           variant="outlined"
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">{calenderIcon}</InputAdornment>
+              <InputAdornment position="start" className="me-[12px]">{calenderIcon}</InputAdornment>
             ),
           }}
+          placeholder="Add Date"
+          // label="Your Placeholder Text" // Set the label as your placeholder text
           sx={{
             background: "#f6f6f6",
-            ":focus": {
-              outline: "none",
-            },
-            ":hover": {
-              outline: "none",
-            },
+            
+            fontSize : '16px',
+            borderRadius: "7px", // Border radius for the input
+              '& .MuiOutlinedInput-notchedOutline': {
+                border: 'none', // Remove the outer border
+              },
+              '&:hover .MuiOutlinedInput-notchedOutline': {
+                border: 'none', // Remove the outer border on hover
+              },
+              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                border: 'none', // Remove the outer border when focused
+              },
           }}
         />
-
-        {cleared && (
-          <Alert
-            sx={{ position: "absolute", bottom: 0, right: 0 }}
-            severity="success"
-          >
-            Field cleared!
-          </Alert>
-        )}
+      
       </Box>
     </LocalizationProvider>
   );

@@ -54,7 +54,7 @@ export const MonthlyOptions: SelectProp[] = [
   { value: "Quarterly", label: "Quarterly" },
   { value: "Semi", label: "Semi annually" },
   { value: "Add weekly and bi-weekly", label: "Annually" },
-  { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+  // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const EmployOptions: SelectProp[] = [
   { value: "One", label: "One time" },
@@ -62,12 +62,17 @@ export const EmployOptions: SelectProp[] = [
   { value: "Quarterly", label: "Quarterly" },
   { value: "Semi", label: "Semi annually" },
   { value: "Add weekly and bi-weekly", label: "Annually" },
-  { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+  // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const UnitDiscount: SelectProp[] = [
   { value: "percentage", label: "%" },
-  { value: "Doller", label: "$" },
+  { value: "USD", label: "USD" },
 ];
+export const Action: SelectProp[] = [
+  { value: "Edit", label: "Edit" },
+  { value: "Doller", label: "Doller" },
+];
+
 export const BillingTermsOptions: SelectProp[] = [
   { value: "One", label: "Fixed number of payments" },
   { value: "two", label: "Automatically renew until cancelled" },

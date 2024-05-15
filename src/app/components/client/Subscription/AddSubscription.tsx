@@ -2,6 +2,7 @@ import {
   Button,
   InputAdornment,
   MenuItem,
+  Select,
   TableCell,
   TableRow,
   TextField,
@@ -14,6 +15,7 @@ import { useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import {
+  Action,
   BillingTermsOptions,
   MonthlyOptions,
   StyledMenuItem,
@@ -27,6 +29,8 @@ import CustomLineModal from "./CustomLineModal";
 import LineModal from "./LineModal";
 import penIcon from "../../../../../public/assets/icons/subscription-title.svg";
 import { Link } from "react-router-dom";
+import { DeleteIcon } from "public/assets/icons/common";
+import DeleteModal from "./DeleteModal";
 
 const rows = [
   {
@@ -38,6 +42,7 @@ const rows = [
     assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
     payment: "1",
     billingDate: "09/05/2024",
+    price: "$444.00",
   },
   {
     ticket: "Denojs",
@@ -48,9 +53,9 @@ const rows = [
     assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
     payment: "1",
     billingDate: "09/05/2024",
+    price: "$444.00",
   },
 ];
-
 
 export default function AddSubscription() {
   const theme: Theme = useTheme();
@@ -73,6 +78,7 @@ export default function AddSubscription() {
   const [selectedOption, setSelectedOption] = useState("");
   const [customLine, setCustomLine] = useState(false);
   const [isLineModal, setIsLineModal] = useState(false);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -100,7 +106,6 @@ export default function AddSubscription() {
     return (
       <>
         <div className="flex items-center gap-20 mr-20 ">
-         
           <DropdownMenu
             marginTop={"mt-20"}
             button={
@@ -122,7 +127,7 @@ export default function AddSubscription() {
             anchorEl={anchorEl1}
             handleClose={handleClose}
           >
-            <div className="  w-[314px] p-4 flex flex-col ">
+            <div className="  w-[314px] p-4 flex flex-col flex-end">
               <MenuItem
                 className="rounded-lg hover:bg-[#E7E8E9] py-10"
                 onClick={() => setCustomLine(true)}
@@ -203,9 +208,7 @@ export default function AddSubscription() {
       <>
         <DropdownMenu
           marginTop={"mt-[20px] "}
-          button={
-            "+Add discount "
-          }
+          button={"+Add discount "}
           anchorEl={anchorEl2}
           handleClose={handleClose}
         >
@@ -261,11 +264,11 @@ export default function AddSubscription() {
     <>
       <TitleBar title="Add Subscriptions" />
       <div className="px-[3rem]">
-        <div className="bg-white rounded-lg shadow-sm pb-[2.7rem] mb-[3rem]">
+        <div className="bg-white rounded-lg shadow-sm pb-[2.7rem] mb-[3rem] ">
           <div className="flex items-center justify-between py-[14px]">
             <TextField
               hiddenLabel
-              className="ml-20 w-[30rem] pe-6"
+              className="ml-20 justify-center w-[30rem] pe-6"
               id="filled-hidden-label-small"
               defaultValue=""
               variant="standard"
@@ -274,7 +277,8 @@ export default function AddSubscription() {
                 pl: 2,
                 backgroundColor: "#F6F6F6",
                 borderRadius: "8px",
-                border: "1px solid transparent", // Show border when focused
+                minHeight: "48px",
+                border: "0.5px solid #9DA0A6", // Show border when focused
                 "&:focus-within": {
                   border: "1px solid blue", // Show border when focused
                 },
@@ -302,9 +306,8 @@ export default function AddSubscription() {
                   </InputAdornment>
                 ),
               }}
-            
             />
-           
+
             {SubButton()}
           </div>
           <CommonTable
@@ -339,53 +342,48 @@ export default function AddSubscription() {
                     {row.ticket}
                   </TableCell>
                   <TableCell scope="row" className="font-500 whitespace-nowrap">
-                   
                     <div
-                      className="border-[0.5px]  h-[30px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                      className="rounded-[7px] flex bg-bgGrey items-center
                      justify-center gap-10"
                     >
-                      <div className="flex-1">
-                        <TextField
-                          hiddenLabel
-                          className="ps-[16px]"
-                          id="filled-hidden-label-small"
-                          defaultValue=""
-                          variant="standard"
-                          size="small"
-                          placeholder="Action"
-                          sx={{
-                            width: "60px",
-
-                            "& .MuiInputBase-input": {
-                              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                              border: "none", // Hide the border of the input element
+                     
+                      <Select
+                        // formik={formik}
+                        name="unitDiscount"
+                        defaultValue={""}
+                        sx={{
+                          height: "30px",
+                          minWidth: 100,
+                          minHeight: "0px !important",
+                          "&.MuiSelect-selectMenu": {
+                            paddingRight: "0px !important", // Adjust padding for the select menu
+                          },
+                          "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root":
+                            {
+                              paddingBottom: "0px",
+                              padding: "4px",
                             },
-                            "& .MuiInput-underline:before": {
-                              borderBottom: "none !important", // Hide the underline (if using underline variant)
-                            },
-                            "& .MuiInput-underline:after": {
-                              borderBottom: "none !important", // Hide the underline (if using underline variant)
-                            },
-                          }}
-                        ></TextField>
-                      </div>
-                      <div className="border-r-1 border-solid border-[#9DA0A6] ">
-                        <SelectField
-                          formik={formik}
-                          name="unitDiscount"
-                          defaultValue={"percentage"}
-                          sx={{
-                           
-                            height: "24px",
-                            minHeight : 'unset',
-                            "&.MuiSelect-selectMenu": {
-                              paddingRight: "0px !important", // Adjust padding for the select menu
-                            },
+                          "& .MuiSelect-select": {
+                            minHeight: "0rem !important",
+                          },
+                        }}
+                        displayEmpty
+                        inputProps={{ "aria-label": "Without label" }}
+                      >
+                        <MenuItem
+                          value=""
+                          style={{
+                            display: "none",
                           }}
                         >
-                         
-                        </SelectField>
-                      </div>
+                          Action
+                        </MenuItem>
+                        {Action.map((item) => (
+                          <StyledMenuItem key={item.value} value={item.value}>
+                            {item.label}
+                          </StyledMenuItem>
+                        ))}
+                      </Select>
                     </div>
                   </TableCell>
                   <TableCell
@@ -404,11 +402,16 @@ export default function AddSubscription() {
                       className="m-auto common-inputField w-max"
                       inputProps={{
                         className: "ps-[1rem] max-w-[90px] m-auto ",
+                        placeholderTextColor: "#111827 !important",
                       }}
                       hideTopPadding={true}
                       sx={{
-                        "&  .MuiInputBase-input": {
+                        "& .MuiInputBase-input": {
                           border: "0.5px solid #9DA0A6",
+                          "::placeholder": {
+                            color: "#111827 !important", // Set placeholder color
+                            opacity: 1,
+                          },
                         },
                       }}
                     />
@@ -416,7 +419,7 @@ export default function AddSubscription() {
                   <TableCell align="center" className="whitespace-nowrap">
                     <InputField
                       name={"name"}
-                      placeholder={"$444.00"}
+                      placeholder={"$00.00"}
                       className="m-auto common-inputField w-max"
                       inputProps={{
                         className: "ps-[1rem] max-w-[90px] m-auto ",
@@ -426,6 +429,10 @@ export default function AddSubscription() {
                         "&  .MuiInputBase-input": {
                           border: "0.5px solid #9DA0A6",
                           height: 44,
+                          "::placeholder": {
+                            color: "#111827 !important", // Set placeholder color
+                            opacity: 1,
+                          },
                         },
                       }}
                     />
@@ -435,18 +442,31 @@ export default function AddSubscription() {
                     className="cursor-pointer whitespace-nowrap font-500 "
                   >
                     <div
-                      className="border-[0.5px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                      className=" min-h-[48px] border-[0.5px] border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
                      justify-center gap-10"
                     >
-                      <div className="border-r-1 border-solid border-[#9DA0A6] ">
-                        <SelectField
-                          formik={formik}
+                      <div className="unit_discount">
+                        <Select
+                          // formik={formik}
                           name="unitDiscount"
                           defaultValue={"percentage"}
+                          
                           sx={{
-                            height: "50px",
+                            height: "46px",
+                            "& .MuiInputBase-root": {
+                              borderRadius: 60,
+                              
+                              minHeight: "0px !important",
+                            },
                             "&.MuiSelect-selectMenu": {
                               paddingRight: "0px !important", // Adjust padding for the select menu
+                              border: "none",
+                              borderRadius: "0",
+                             
+                            },
+                            "& .MuiSelect-select": {
+                              minHeight: "0rem !important",
+                             
                             },
                           }}
                         >
@@ -455,7 +475,7 @@ export default function AddSubscription() {
                               {item.label}
                             </StyledMenuItem>
                           ))}
-                        </SelectField>
+                        </Select>
                       </div>
                       <div className="flex-1">
                         <TextField
@@ -464,12 +484,20 @@ export default function AddSubscription() {
                           defaultValue=""
                           variant="standard"
                           size="small"
-                          placeholder="$444.00"
+                          placeholder="%444.00"
                           sx={{
-                            width: "60px",
+                            width: "80px",
+                            
+
                             "& .MuiInputBase-input": {
                               textDecoration: "none", // Example: Remove text decoration (not typically used for input)
                               border: "none", // Hide the border of the input element
+                              padding: 0,
+                              paddingTop: 0,
+                              "::placeholder": {
+                                color: "#111827 !important", // Set placeholder color
+                                opacity: 1,
+                              },
                             },
                             "& .MuiInput-underline:before": {
                               borderBottom: "none !important", // Hide the underline (if using underline variant)
@@ -486,7 +514,7 @@ export default function AddSubscription() {
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.date}
+                    {row.price}
                   </TableCell>
                   <TableCell align="center" className="whitespace-nowrap">
                     <div
@@ -501,11 +529,17 @@ export default function AddSubscription() {
                         name="Billing"
                         defaultValue={"Monthly"}
                         sx={{
-                          height: "50px",
+                          height: "46px",
                         }}
                       >
                         {MonthlyOptions.map((item) => (
-                          <StyledMenuItem key={item.value} value={item.value}>
+                          <StyledMenuItem
+                            key={item.value}
+                            value={item.value}
+                            sx={{
+                              minWidth: "207px",
+                            }}
+                          >
                             {item.label}
                           </StyledMenuItem>
                         ))}
@@ -526,7 +560,7 @@ export default function AddSubscription() {
                         name="billingTerms"
                         defaultValue={"One"}
                         sx={{
-                          height: "50px",
+                          height: "46px",
                         }}
                       >
                         {BillingTermsOptions.map((item) => (
@@ -553,37 +587,158 @@ export default function AddSubscription() {
               ))}
             </>
           </CommonTable>
-         
         </div>
         <div className="bg-white rounded-lg shadow-sm  mb-[3rem] ">
           <h5 className="text-[#0A0F18] text-20 font-600 py-20 px-[3rem] ">
             Summary
           </h5>
           <ul className="flex flex-col text-14 gap-[3rem]">
-            <li className="border-b py-[1.5rem]  bg-[#F7F9FB] flex flex-col gap-10 px-[3rem]">
+            <li className="border-b pt-[1.5rem] pb-[2rem]  bg-[#F7F9FB] flex flex-col gap-10 px-[3rem]">
               <div className="mb-10 flex justify-between">
-                <span className="text-para_light font-500">
-                  Subtotal---------------------------------------------------
-                </span>
+                <span className="text-para_light font-500">Subtotal</span>
                 <span className="inline-block ml-20 font-600">$444.00</span>
               </div>
-              <span className=" text-secondary text-[14px] font-500 flex items-center cursor-pointer">
+              {/*  without discount start */}
+              {/* <span className=" text-secondary text-[14px] font-500 flex items-center cursor-pointer">
                 {DiscountFee()}
-                
-              </span>
+              </span> */}
+              {/* without discount end */}
+
+              {/* with discount start */}
+              <div className="flex justify-between items-center">
+                <div className="flex">
+                  <TextField
+                    hiddenLabel
+                    className="me-20 justify-center w-[30rem] pe-6"
+                    id="filled-hidden-label-small"
+                    defaultValue=""
+                    variant="standard"
+                    placeholder="XYZ Name"
+                    sx={{
+                      pl: 2,
+                      backgroundColor: "#F6F6F6",
+                      borderRadius: "8px",
+                      minHeight: "48px",
+                      border: "0.5px solid #9DA0A6", // Show border when focused
+                      height: "48px",
+
+                      "&:focus-within": {
+                        border: "1px solid blue", // Show border when focused
+                      },
+                      "& .MuiInputBase-input": {
+                        textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                        border: "none", // Hide the border of the input element
+                        padding: "0px",
+                        paddingTop: "0px",
+                      },
+                      "& .MuiInput-underline:before": {
+                        border: "none !important", // Hide the underline (if using underline variant)
+                      },
+                      "& .MuiInput-underline:after": {
+                        borderBottom: "none !important", // Hide the underline (if using underline variant)
+                      },
+                    }}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="start">
+                          <Link to="#">
+                            <img
+                              src={penIcon}
+                              alt="pen-icon"
+                              className="h-[2.5rem] w-[2.5rem]"
+                            />{" "}
+                          </Link>{" "}
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                  <div
+                    className="border-[0.5px] w-max border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10"
+                  >
+                    <div className="border-r-1 border-solid border-[#9DA0A6] ">
+                      <SelectField
+                        formik={formik}
+                        name="unitDiscount"
+                        defaultValue={"percentage"}
+                        sx={{
+                          height: "46px",
+                          "&.MuiSelect-selectMenu": {
+                            paddingRight: "0px !important", // Adjust padding for the select menu
+                          },
+                        }}
+                      >
+                        {UnitDiscount.map((item) => (
+                          <StyledMenuItem key={item.value} value={item.value}>
+                            {item.label}
+                          </StyledMenuItem>
+                        ))}
+                      </SelectField>
+                    </div>
+                    <div className="flex-1">
+                      <TextField
+                        hiddenLabel
+                        id="filled-hidden-label-small"
+                        defaultValue=""
+                        variant="standard"
+                        size="small"
+                        placeholder="%10"
+                        sx={{
+                          width: "60px",
+                          paddingBottom: "0px",
+                          display: "flex",
+                          alignItems: "center",
+                          "& .MuiInputBase-input": {
+                            textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                            border: "none",
+                            paddingBottom: "0px", // Hide the border of the input element
+                            "::placeholder": {
+                              color: "#111827 !important", // Set placeholder color
+                              opacity: 1,
+                            },
+                          },
+                          "& .MuiInput-underline:before": {
+                            borderBottom: "none !important", // Hide the underline (if using underline variant)
+                          },
+                          "& .MuiInput-underline:after": {
+                            borderBottom: "none !important", // Hide the underline (if using underline variant)
+                          },
+                        }}
+                      ></TextField>
+                    </div>
+                  </div>
+                </div>
+                <p className="flex items-center text-base font-semibold leading-5 text-[#757982] ">
+                  -$0.00
+                  <Link to={"#"} className="ms-10">
+                    <DeleteIcon
+                      className="w-[16px]"
+                      onClick={() => {
+                        setIsOpenDeletedModal(true);
+                      }}
+                    />
+                  </Link>
+                </p>
+              </div>
+
+              {/*  {/* with discount end */}
             </li>
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
-              <span className="text-para_light font-500">
-                Due Now--------------------------------------------------
-              </span>
+              <span className="text-para_light font-500">Due Now</span>
               <span className="inline-block ml-20 font-600">$444.00</span>
             </li>
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
-              <span className="text-para_light font-500">
-                Future payments------------------------------------------
-              </span>
+              <span className="text-para_light font-500">Future payments</span>
               <div className="inline-block ml-20 text-[#111827) text-[14px] font-300 ">
                 <span className="flex flex-col gap-5">
+                  <span>
+                    <span className="font-600">$444.00 / Month </span>
+                    starting 1 month after payment
+                  </span>
+                  <span>
+                    <span className="font-600">$444.00 / Month </span>
+                    starting 1 month after payment
+                  </span>
                   <span>
                     <span className="font-600">$444.00 / Month </span>
                     starting 1 month after payment
@@ -591,10 +746,11 @@ export default function AddSubscription() {
                 </span>
               </div>
             </li>
-            <li className="border-b pb-[2.5rem] px-[3rem]">
+            <li className="border-b pb-[2.5rem] px-[3rem] flex justify-between">
               <span className="text-[#0A0F18] text-[20px] font-600">
                 Total -
               </span>
+              <span className="inline-block ml-20 font-600">$444.00</span>
             </li>
           </ul>
         </div>
@@ -602,16 +758,14 @@ export default function AddSubscription() {
           <Button
             variant="contained"
             color="secondary"
-            className="w-[156px] h-[48px] text-[18px] opacity-60 leading-5"
-            
+            className="w-[156px] h-[48px] text-[18px] leading-5"
           >
             Save
           </Button>
           <Button
             variant="outlined"
             color="secondary"
-            className="w-[156px] h-[48px] text-[18px] ml-14 opacity-60 leading-5"
-            
+            className="w-[156px] h-[48px] text-[18px] ml-14  leading-5"
           >
             Cancel
           </Button>
@@ -620,6 +774,12 @@ export default function AddSubscription() {
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
       <CustomLineModal isOpen={customLine} setIsOpen={setCustomLine} />
       <LineModal isOpen={isLineModal} setIsOpen={setIsLineModal} />
+      <DeleteModal
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        title="Delete Line Item"
+        description="Are you sure you want to delete this line item ?"
+      />
     </>
   );
 }

@@ -93,6 +93,10 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
             border: "0.5px solid #9DA0A6",
             padding: "0px 12px",
             "& .radioIcon": { display: "none" },
+            "&:focus": {
+              border: "none !important", // Remove border on focus
+              outline: "none", // Remove outline on focus
+            },
           }}
         >
           {EmployOptions.map((item) => (
@@ -136,7 +140,7 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
               className="w-[18px] h-[18px] me-[16px] "
             />
             <label className="text-[16px] font-medium leading-[20px]">
-              {" "}
+              
               Delay Billing Start Date
             </label>
             <br />

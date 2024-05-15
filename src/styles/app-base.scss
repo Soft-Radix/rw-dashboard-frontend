@@ -293,6 +293,42 @@ input:-webkit-autofill:active {
 }
 
 //  ---------
-.muiltr-ifakpp-MuiPaper-root-MuiPopover-paper-MuiMenu-paper{
+.muiltr-ifakpp-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   margin-top: 1rem !important;
+}
+.muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root {
+  padding: 4px;
+  min-width: 150px;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 12px 17px;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root.Mui-focusVisible,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root.Mui-focusVisible {
+  border-radius: 6px;
+  background-color: #e7e8e9;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root:hover,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root:hover {
+  border-radius: 6px;
+  background-color: #e7e8e9;
+}
+.MuiButtonBase-root:hover {
+  // background-color: transparent !important; /* Make sure to override with !important */
+}
+.common-inputField input {
+  min-height: 46px;
+}
+.common-inputField input::placeholder {
+  color: #111827;
+}
+
+.unit_discount .MuiInputBase-root {
+  border-radius: 0% !important;
+  border: none !important;
+  border-color: transparent !important;
 }
