@@ -95,6 +95,21 @@ export const updateGroupName = createAsyncThunk(
     };
   }
 );
+export const addAgentInagentGroup = createAsyncThunk(
+  "agent/list",
+  async (payload: filterType) => {
+    const response = await ApiHelperFunction({
+      url: `agent/list`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 export const searchAgentGroup = createAsyncThunk(
   "agent-group/addMember",
@@ -122,6 +137,7 @@ export const initialState: initialStateProps = {
   successMsg: "",
   errorMsg: "",
   list: [],
+  searchAgentList: [],
   agentGroupDetail: {},
   selectedColumn: [],
   total_records: 0,
@@ -264,6 +280,7 @@ export const agentGroupSlice = createSlice({
           toast.error(response?.message);
         } else {
           state.agentGroupDetail = { ...response?.data };
+
           toast.success(response?.message);
         }
       })
@@ -276,7 +293,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(searchAgentGroup.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        console.log(response);
+        // console.log(response, "find");
         state.actionStatus = false;
         if (!response.status) {
           toast.error(response?.message);
@@ -285,6 +302,27 @@ export const agentGroupSlice = createSlice({
         }
       })
       .addCase(searchAgentGroup.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+
+      .addCase(addAgentInagentGroup.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(addAgentInagentGroup.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        // console.log(response, "findttt");
+        const { data } = action.payload?.data;
+        // console.log(data, "dgftdfdf");
+        state.searchAgentList = data.list;
+        // console.log(state.searchAgentList, "serch");
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          toast.success(response?.message);
+        }
+      })
+      .addCase(addAgentInagentGroup.rejected, (state, action) => {
         state.actionStatus = false;
       });
   },

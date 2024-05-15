@@ -68,11 +68,15 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
   };
 
   const onSubmit = async (values: AgentType, { resetForm }) => {
-    const formData = {
-      ...formik.values, // Include form values from Formik
-      uploadedFiles: uploadedFiles, // Include uploaded files
-      selectedItems: selectedItems, // Include selected items
-    };
+    console.log(values, "values");
+    const { phone_number, address, ...restValue } = values;
+    const { payload } = await dispatch(addAgent(restValue));
+
+    // const formData = {
+    //   ...formik.values, // Include form values from Formik
+    //   uploadedFiles: uploadedFiles, // Include uploaded files
+    //   selectedItems: selectedItems, // Include selected items
+    // };
     resetForm();
     // console.log(formData, "formdta");
     // const { payload } = await dispatch(formData(values));
@@ -97,6 +101,7 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
   useEffect(() => {
     if (!!agentState?.successMsg) {
       dispatch(restAll());
+      fetchAgentList();
       setIsOpen((prev) => false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
@@ -200,15 +205,6 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
             label="Phone Number"
             placeholder="Enter Phone Number"
             sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
-                    +1
-                  </span>
-                </InputAdornment>
-              ),
-            }}
           />
           <InputField
             formik={formik}

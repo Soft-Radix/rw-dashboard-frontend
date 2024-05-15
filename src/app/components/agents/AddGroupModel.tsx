@@ -1,5 +1,5 @@
 import { InputAdornment } from "@mui/material";
-import { addAgentGroup } from "app/store/Agent group";
+import { addAgentGroup, addAgentInagentGroup } from "app/store/Agent group";
 import {
   AgentGroupRootState,
   AgentGroupType,
@@ -8,11 +8,13 @@ import { restAll } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { AgentGroupSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
+import { debounce } from "lodash";
+import { filterType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -30,22 +32,33 @@ function AddGroupModel({
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  // console.log(agentGroupState, "as");
+  const { searchAgentList } = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
+  console.log(searchAgentList, "as");
 
   const dispatch = useAppDispatch();
+  // const {searchAgentList}=useSelector(store:roo)
 
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    console.log(values, "values");
+    // console.log(values, "valuesnew");
     const { payload } = await dispatch(addAgentGroup(values));
+
     // console.log(payload, "payload");
     if (payload?.data?.status) {
       resetForm();
     }
   };
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
 
   useEffect(() => {
     if (!!agentGroupState?.successMsg) {
       dispatch(restAll());
+      fetchAgentGroupList;
       setIsOpen((prev) => false);
     } else if (!!agentGroupState?.errorMsg) {
       dispatch(restAll());
@@ -59,7 +72,22 @@ function AddGroupModel({
     validationSchema: AgentGroupSchema,
     onSubmit,
   });
-  
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
+  // console.log(filterMenu, "ggg");
+  useEffect(() => {
+    dispatch(addAgentInagentGroup(filterMenu));
+  }, [filterMenu]);
 
   return (
     <CommonModal
@@ -77,6 +105,7 @@ function AddGroupModel({
             formik={formik}
             name="groupName"
             label="Agent"
+            onChange={handleSearchChange}
             placeholder="Search Agent with Name or ID"
             sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
             InputProps={{

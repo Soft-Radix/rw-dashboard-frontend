@@ -1,4 +1,5 @@
 export interface AgentGroupType {
+  group_id?: number;
   group_name?: string;
   id?: number;
   deleted_at?: string;
@@ -32,6 +33,7 @@ export type initialStateProps = {
   total_records: number;
   selectedColumn: string[];
   actionStatus: boolean;
+  searchAgentList: [];
 };
 export interface AgentGroupRootState {
   agentGroup: initialStateProps; // Add other slices if needed
@@ -46,10 +48,10 @@ export interface deleteAgentGroupType {
 
 // Type for the payload that updateProfile expects
 export interface UpdateAgentGroupPayload {
-  group_id: number | string;
-  group_name: "string";
-  agent_ids: [];
-  delete_agent_ids: [];
+  group_id?: number | string;
+  group_name?: string;
+  agent_ids?: [];
+  delete_agent_ids?: [];
 } // The form data object
 
 // export interface ChangePassword {

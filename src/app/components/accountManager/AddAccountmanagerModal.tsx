@@ -44,6 +44,7 @@ import {
   assignedAccManagerList,
 } from "app/store/AccountManager";
 import { useParams } from "react-router-dom";
+import { ClientType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -51,7 +52,7 @@ interface IProps {
   fetchManagerList?: () => void;
   isEditing: boolean;
 }
-const names = ["All", "Rahul", "Manisha", "Elvish", "Abhishek"];
+
 function AddAccountManagerModel({
   isOpen,
   setIsOpen,
@@ -60,7 +61,7 @@ function AddAccountManagerModel({
 }: IProps) {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<any>([]);
   console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
   // const agentState = useSelector((store: AgentRootState) => store.agent);
@@ -90,16 +91,20 @@ function AddAccountManagerModel({
 
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
     console.log(values, "values");
-    const { payload } = await dispatch(addAccManager(values));
+
+    let payload;
     if (accountManager_id) {
+      const { email, ...remainingValues } = values;
       const newValue = {
-        ...values,
+        ...remainingValues,
         account_manager_id: accountManager_id,
-        client_ids: [selectedItems],
+        client_ids: selectedItems,
         unassign_client_ids: [],
       };
 
-      // await dispatch(assignedAccManagerList(newValue));
+      await dispatch(assignedAccManagerList(newValue));
+    } else {
+      payload = await dispatch(addAccManager(values));
     }
 
     // console.log(payload, "payload");
@@ -142,23 +147,38 @@ function AddAccountManagerModel({
     setIsOpen(true);
   };
 
-  const handleMenuItemClick = (itemName: assignedClientInfoType) => {
-    if (itemName === "All") {
+  const handleMenuItemClick = (data: ClientType) => {
+    if (data.userName === "All") {
       // Toggle select all
       const allSelected = !selectAll;
       setSelectAll(allSelected);
-      setSelectedItems(
-        allSelected ? names.filter((name) => name !== "All") : []
-      );
+      let newArray = [];
+      let res = allSelected
+        ? accClientList.forEach((name: ClientType) => {
+            if (name.userName !== "All") {
+              newArray.push(name.id);
+            }
+          })
+        : [];
+
+      setSelectedItems(newArray);
+      // setSelectedItems(
+      //   allSelected
+      //     ? accClientList.filter((name: ClientType) =>
+      //         name.first_name !== "All" ? name.id : ""
+      //       )
+      //     : []
+      // );
     } else {
       // Toggle the selected state of the clicked item
-      const updatedSelectedItems = selectedItems.includes(itemName)
-        ? selectedItems.filter((item) => item !== itemName)
-        : [...selectedItems, itemName];
+      const updatedSelectedItems = selectedItems.includes(data.id)
+        ? selectedItems.filter((item) => item !== data.id)
+        : [...selectedItems, data.id];
       setSelectedItems(updatedSelectedItems);
       // Check if all items are selected
 
-      const allSelected = updatedSelectedItems.length === names.length - 1;
+      const allSelected =
+        updatedSelectedItems.length === accClientList.length - 1;
       setSelectAll(allSelected);
     }
   };
@@ -282,11 +302,13 @@ function AddAccountManagerModel({
             //   ),
             // }}
           />
+
           <InputField
             formik={formik}
             name="email"
             label="Email "
             placeholder="Enter Email"
+            disabled={isEditing}
           />
         </div>
         <InputField
@@ -380,30 +402,34 @@ function AddAccountManagerModel({
               </div>
               {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
               <div className="overflow-y-scroll h-[200px] ">
-                {accClientList?.map((item: assignedClientInfoType) => (
-                  <MenuItem className="py-10">
-                    <div
-                      className="flex items-center gap-10  "
-                      onClick={() => handleMenuItemClick(item)}
-                    >
-                      {/* <Checkbox
-                        checked={
-                          name === "All"
-                            ? selectAll
-                            : selectedItems.includes(name)
-                        }
-                      />
-                      {name !== "All" && (
-                        <span>
-                          <img src={img1} alt=""></img>
-                        </span>
-                      )} */}
-                      <ListItemText
-                        primary={item.first_name + " " + item.last_name}
-                      />
-                    </div>
-                  </MenuItem>
-                ))}
+                {accClientList?.map((item: ClientType) => {
+                  console.log(item, "itemmmm"); // Wrap the console.log within curly braces
+                  return (
+                    // Return the JSX component inside curly braces
+                    <MenuItem className="py-10" key={item.id}>
+                      {" "}
+                      {/* Added key prop */}
+                      <div
+                        className="flex items-center gap-10  "
+                        onClick={() => handleMenuItemClick(item)}
+                      >
+                        <Checkbox
+                          checked={
+                            item.userName === "All Client"
+                              ? selectAll
+                              : selectedItems.includes(item.id)
+                          }
+                        />
+                        {item.userName !== "All" && (
+                          <span>
+                            <img src={img1} alt=""></img>
+                          </span>
+                        )}
+                        <ListItemText primary={item.userName} />
+                      </div>
+                    </MenuItem>
+                  );
+                })}
               </div>
             </Menu>
           </div>

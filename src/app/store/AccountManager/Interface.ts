@@ -47,7 +47,7 @@ export interface AccManagerRootState {
 }
 
 export interface accManagerIDType {
-  accountManager_id: string;
+  account_manager_id: string;
 }
 export interface deleteAccManagerType {
   accountManger_id: string | number;
@@ -55,11 +55,11 @@ export interface deleteAccManagerType {
 }
 
 export interface assignedClientInfoType {
-  first_name: string;
-  last_name: string;
-  phone_number: string;
-  address: string;
-  account_manager_id: number;
-  client_ids: [];
-  unassign_client_ids: [];
+  first_name?: string;
+  last_name?: string;
+  phone_number?: number | string;
+  address?: string;
+  account_manager_id: string | number;
+  client_ids?: any;
+  unassign_client_ids?: any;
 }
