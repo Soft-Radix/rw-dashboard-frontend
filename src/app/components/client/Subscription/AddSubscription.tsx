@@ -274,14 +274,12 @@ export default function AddSubscription() {
   ) => {
     event.stopPropagation();
     const { value, name } = event.target;
-
     if (
       name == "billing_frequency" ||
       name == "billingTerms" ||
       name == "no_of_payments" ||
       name == "billing_start_date"
     ) {
-      // Update the entire list array with the same value for the specified property
       setList((prevList) => {
         return prevList.map((item, i) => {
           return {
@@ -325,7 +323,6 @@ export default function AddSubscription() {
     // If discount is 0 or undefined, return the original price
     return price;
   };
-  console.log("==kss==", list);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
