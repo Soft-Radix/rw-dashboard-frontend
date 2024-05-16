@@ -48,9 +48,9 @@ function CommonTable({
                 className={`th ${index === 0 ? "pl-20" : ""}`}
                 key={index}
                 align={
-                  headings.length - 1 === index || index === 0
-                    ? "left"
-                    : "center"
+                  headings.length  === index || index === 0
+                    ? "left" 
+                    :  "center"
                 }
                 onClick={() => {
                   if (typeof onSort == "function") {

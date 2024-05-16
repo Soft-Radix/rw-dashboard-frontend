@@ -35,7 +35,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
       },
     },
     "& .MuiSelect-select": {
-      padding: "2px 14px",
+      padding: "0px 14px",
       minHeight: "48px",
       display: "flex",
       alignItems: "center",
@@ -86,7 +86,7 @@ function SelectField({
           MenuProps={{
             sx: {
               "& .MuiList-root": {
-                paddingBottom: "2rem",
+                // paddingBottom: "2rem",
               },
             },
           }}

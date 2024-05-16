@@ -20,48 +20,38 @@ interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
 }
-const lists = [
+
+const tableTiltles = ["Name", "Description", "Unit Price"];
+
+const rows = [
   {
-    name: "Full time virtual professional - business analyst",
-    price: "$5.99",
+    name: "Bernad",
+    price: "$100",
     isChecked: false,
+    description: "Lorem Ipsum",
   },
   {
-    name: "Full time virtual professional - business analyst",
-    price: "$5.99",
+    name: "Bernad",
+    price: "$100",
     isChecked: false,
+    description: "Lorem Ipsum",
   },
   {
-    name: "Full time virtual professional - business analysts",
-    price: "$5.99",
+    name: "Bernads",
+    price: "$100",
     isChecked: false,
+    description: "Lorem Ipsum",
   },
   {
-    name: "Full time virtual professional - business analyst",
-    price: "$5.99",
+    name: "Bernad",
+    price: "$100",
     isChecked: false,
+    description: "Lorem Ipsum",
   },
 ];
 
 function CustomLineModal({ isOpen, setIsOpen }: IProps) {
-  const [list, setList] = useState(lists);
-  const theme: Theme = useTheme();
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-      role: "",
-    },
-    onSubmit: (values) => {},
-  });
-
-  const handleCheckboxChange = (index) => {
-    const newList = [...list];
-    newList[index].isChecked = !newList[index].isChecked;
-    setList(newList);
-  };
+  const [list, setList] = useState(rows);
 
   return (
     <CommonModal
@@ -69,70 +59,38 @@ function CustomLineModal({ isOpen, setIsOpen }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Add Line Items"
       maxWidth="733"
-      btnTitle={"Save"}
+      btnTitle={"Add"}
+      closeTitle="Close"
     >
-      <div className="flex flex-col gap-20 mb-20">
-        <Typography className="text-[16px] font-500 text-[#111827]">
-          Create Date
-        </Typography>
-        <DatePicker
-          label="Select"
-          sx={{
-            background: "#F6F6F6",
-            borderRadius: "7px",
-            "& .MuiInputBase-root": {
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: "none",
-              },
-            },
-          }}
-        />
-
-        <InputField
-          formik={formik}
-          name="select"
-          placeholder="Search the product library by name"
-          sx={{
-            background: "#F6F6F6",
-
-            borderRadius: "7px",
-          }}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon className="p-3 ml-10" />
-              </InputAdornment>
-            ),
-          }}
-        />
-        <Typography className="text-[16px] font-500 text-[#111827]">
-          Views
-        </Typography>
-        <div className="bg-[#F6F6F6] rounded-8 ">
-          <div className="flex items-center justify-between px-20 py-10  border-b-1 border-solid border-[#E7E8E9]">
-            <span className="text-[16px] font-500 text-[#111827]">Name</span>
-
-            <span className="text-[16px] font-500 text-[#111827] pr-20">
-              Price
-            </span>
-          </div>
-          <ul className="list-none  px-20 py-10 cursor-pointer ">
-            {list.map((item, index) => (
-              <li
-                key={index}
-                className="flex items-center justify-between text-[16px] font-400"
-                onClick={() => handleCheckboxChange(index)}
-              >
-                <div className="py-10">
-                  {" "}
-                  <Checkbox checked={item.isChecked} />
-                  {item.name}
+      <div className="flex flex-col gap-20 mb-20 border-1 border-[#D9D9D9] rounded-[10px] overflow-hidden">
+        <CommonTable headings={["Name", "Description", "Unit Price"]}>
+          {rows.map((row, index) => (
+            <TableRow
+              key={index}
+              // sx={{
+              //     "& td": {
+              //         borderBottom: "1px solid #EDF2F6",
+              //         paddingTop: "12px",
+              //         paddingBottom: "12px",
+              //         color: theme.palette.primary.main,
+              //     },
+              // }}
+            >
+              <TableCell scope="row" className="font-500">
+                <div className="py-2">
+                  <Checkbox />
+                  {row.name}
                 </div>
-                <div className="pr-20">{item.price}</div>
-              </li>
-            ))}
-          </ul>
-        </div>
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                {row.description}
+              </TableCell>
+              <TableCell align="center" className="whitespace-nowrap font-500">
+                {row.price}
+              </TableCell>
+            </TableRow>
+          ))}
+        </CommonTable>
       </div>
     </CommonModal>
   );
