@@ -274,6 +274,7 @@ export default function AddSubscription() {
   ) => {
     event.stopPropagation();
     const { value, name } = event.target;
+
     if (
       name == "billing_frequency" ||
       name == "billingTerms" ||
