@@ -96,7 +96,7 @@ export const sortList = (column: string, isAsc: boolean, list: any) => {
 };
 
 /**
- * Calculates the page number for a given item index.
+ * Calculates the page number for a given item indexs.
  * @param itemIndex - The zero-based index of the item.
  * @param itemsPerPage - The number of items displayed on each page.
  * @returns The one-based page number where the item resides.
