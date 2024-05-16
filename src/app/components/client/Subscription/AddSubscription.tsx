@@ -67,6 +67,7 @@ export default function AddSubscription() {
       role: "",
       email: "",
       phone: "",
+      billing_frequency: "",
     },
     onSubmit: (values) => {},
   });
@@ -76,8 +77,11 @@ export default function AddSubscription() {
   const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
   const [anchorEl2, setAnchorEl2] = useState<HTMLElement | null>(null);
   const [selectedOption, setSelectedOption] = useState("");
+
   const [customLine, setCustomLine] = useState(false);
   const [isLineModal, setIsLineModal] = useState(false);
+  const [list, setList] = useState<any[]>([]);
+  const [UnitDiscountMode, setUnitDiscontMode] = useState<any[]>([]);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const handleClose = () => {
@@ -260,6 +264,67 @@ export default function AddSubscription() {
       </>
     );
   };
+
+  const handleListFromChild = (arg: any[]) => {
+    setList(arg);
+  };
+
+  const handleChange = (index: number) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    event.stopPropagation();
+    const { value, name } = event.target;
+    if (
+      name == "billing_frequency" ||
+      name == "billingTerms" ||
+      name == "no_of_payments" ||
+      name == "billing_start_date"
+    ) {
+      // Update the entire list array with the same value for the specified property
+      setList((prevList) => {
+        return prevList.map((item, i) => {
+          return {
+            ...item,
+            [name]: value,
+          };
+        });
+      });
+    } else {
+      setList((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index][name] = value;
+
+        // Calculate net price and update the net_price key in the list array
+        const netPrice = handleNetPrice(
+          updatedList[index].unit_discount,
+          updatedList[index].unit_discount_type,
+          updatedList[index].unit_price,
+          index
+        );
+        updatedList[index].net_price = netPrice
+          ? netPrice
+          : updatedList[index].unit_price;
+
+        return updatedList;
+      });
+    }
+  };
+
+  const handleNetPrice = (discount: any, mode: any, price: any, index: any) => {
+    if (discount && discount > 0) {
+      if (mode == undefined || mode == 0 || mode == "1") {
+        const netPrice = price - (price * discount) / 100;
+        return netPrice.toFixed(2);
+      } else if (mode == "2") {
+        const netPrice = price - discount;
+        return netPrice.toFixed(2);
+      }
+    }
+    handleChange(index);
+    // If discount is 0 or undefined, return the original price
+    return price;
+  };
+  console.log("==kss==", list);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -326,265 +391,417 @@ export default function AddSubscription() {
             ]}
           >
             <>
-              {rows.map((row, index) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "& td": {
-                      borderBottom: "1px solid #EDF2F6",
-                      paddingTop: "12px",
-                      paddingBottom: "12px",
-                      color: theme.palette.primary.main,
-                    },
-                  }}
-                >
-                  <TableCell scope="row" className="font-500 whitespace-nowrap">
-                    {row.ticket}
-                  </TableCell>
-                  <TableCell scope="row" className="font-500 whitespace-nowrap">
-                    <div
-                      className="rounded-[7px] flex bg-bgGrey items-center
-                     justify-center gap-10"
+              {list &&
+                list.map((row, index) => (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "& td": {
+                        borderBottom: "1px solid #EDF2F6",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    <TableCell
+                      scope="row"
+                      className="font-500 whitespace-nowrap"
                     >
-                     
-                      <Select
-                        // formik={formik}
-                        name="unitDiscount"
-                        defaultValue={""}
-                        sx={{
-                          height: "30px",
-                          minWidth: 100,
-                          minHeight: "0px !important",
-                          "&.MuiSelect-selectMenu": {
-                            paddingRight: "0px !important", // Adjust padding for the select menu
-                          },
-                          "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root":
-                            {
-                              paddingBottom: "0px",
-                              padding: "4px",
-                            },
-                          "& .MuiSelect-select": {
-                            minHeight: "0rem !important",
-                          },
-                        }}
-                        displayEmpty
-                        inputProps={{ "aria-label": "Without label" }}
+                      {row.name}
+                    </TableCell>
+                    <TableCell
+                      scope="row"
+                      className="font-500 whitespace-nowrap"
+                    >
+                      <div
+                        className="rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10"
                       >
-                        <MenuItem
-                          value=""
-                          style={{
-                            display: "none",
-                          }}
-                        >
-                          Action
-                        </MenuItem>
-                        {Action.map((item) => (
-                          <StyledMenuItem key={item.value} value={item.value}>
-                            {item.label}
-                          </StyledMenuItem>
-                        ))}
-                      </Select>
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="font-500 whitespace-nowrap"
-                  >
-                    {row.department}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="border-solid whitespace-nowrap font-500 border-1"
-                  >
-                    <InputField
-                      name={"name"}
-                      placeholder={"1"}
-                      className="m-auto common-inputField w-max"
-                      inputProps={{
-                        className: "ps-[1rem] max-w-[90px] m-auto ",
-                        placeholderTextColor: "#111827 !important",
-                      }}
-                      hideTopPadding={true}
-                      sx={{
-                        "& .MuiInputBase-input": {
-                          border: "0.5px solid #9DA0A6",
-                          "::placeholder": {
-                            color: "#111827 !important", // Set placeholder color
-                            opacity: 1,
-                          },
-                        },
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    <InputField
-                      name={"name"}
-                      placeholder={"$00.00"}
-                      className="m-auto common-inputField w-max"
-                      inputProps={{
-                        className: "ps-[1rem] max-w-[90px] m-auto ",
-                      }}
-                      hideTopPadding={true}
-                      sx={{
-                        "&  .MuiInputBase-input": {
-                          border: "0.5px solid #9DA0A6",
-                          height: 44,
-                          "::placeholder": {
-                            color: "#111827 !important", // Set placeholder color
-                            opacity: 1,
-                          },
-                        },
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="cursor-pointer whitespace-nowrap font-500 "
-                  >
-                    <div
-                      className=" min-h-[48px] border-[0.5px] border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
-                     justify-center gap-10"
-                    >
-                      <div className="unit_discount">
                         <Select
                           // formik={formik}
                           name="unitDiscount"
-                          defaultValue={"percentage"}
-                          
+                          defaultValue={""}
                           sx={{
-                            height: "46px",
-                            "& .MuiInputBase-root": {
-                              borderRadius: 60,
-                              
-                              minHeight: "0px !important",
-                            },
+                            height: "30px",
+                            minWidth: 100,
+                            minHeight: "0px !important",
                             "&.MuiSelect-selectMenu": {
                               paddingRight: "0px !important", // Adjust padding for the select menu
-                              border: "none",
-                              borderRadius: "0",
-                             
+                            },
+                            "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root": {
+                              paddingBottom: "0px",
+                              padding: "4px",
                             },
                             "& .MuiSelect-select": {
                               minHeight: "0rem !important",
-                             
                             },
                           }}
+                          displayEmpty
+                          inputProps={{ "aria-label": "Without label" }}
                         >
-                          {UnitDiscount.map((item) => (
+                          <MenuItem
+                            value=""
+                            style={{
+                              display: "none",
+                            }}
+                          >
+                            Action
+                          </MenuItem>
+                          {Action.map((item) => (
                             <StyledMenuItem key={item.value} value={item.value}>
                               {item.label}
                             </StyledMenuItem>
                           ))}
                         </Select>
                       </div>
-                      <div className="flex-1">
-                        <TextField
-                          hiddenLabel
-                          id="filled-hidden-label-small"
-                          defaultValue=""
-                          variant="standard"
-                          size="small"
-                          placeholder="%444.00"
-                          sx={{
-                            width: "80px",
-                            
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="font-500 whitespace-nowrap"
+                    >
+                      {row.description}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="border-solid whitespace-nowrap font-500 border-1"
+                    >
+                      <InputField
+                        name={"quantity"}
+                        placeholder={"1"}
+                        className="m-auto common-inputField w-max"
+                        inputProps={{
+                          className: "ps-[1rem] max-w-[90px] m-auto ",
+                          placeholderTextColor: "#111827 !important",
+                        }}
+                        hideTopPadding={true}
+                        value={
+                          row.quantity != 0 ||
+                          row.quantity != "" ||
+                          row.quantity != null
+                            ? row.quantity
+                            : ""
+                        }
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          handleChange(index)(event);
+                        }}
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            border: "0.5px solid #9DA0A6",
+                            "::placeholder": {
+                              color: "#111827 !important", // Set placeholder color
+                              opacity: 1,
+                            },
+                          },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      <InputField
+                        name={"unit_price"}
+                        placeholder={"$00.00"}
+                        // value={row.unit_price}
+                        value={
+                          row.unit_price != 0 ||
+                          row.unit_price != "" ||
+                          row.unit_price != null
+                            ? row.unit_price
+                            : ""
+                        }
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          handleChange(index)(event);
+                        }}
+                        className="m-auto common-inputField w-max"
+                        inputProps={{
+                          className: "ps-[1rem] max-w-[90px] m-auto ",
+                        }}
+                        hideTopPadding={true}
+                        sx={{
+                          "&  .MuiInputBase-input": {
+                            border: "0.5px solid #9DA0A6",
+                            height: 44,
+                            "::placeholder": {
+                              color: "#111827 !important", // Set placeholder color
+                              opacity: 1,
+                            },
+                          },
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="cursor-pointer whitespace-nowrap font-500 "
+                    >
+                      <div
+                        className=" min-h-[48px] border-[0.5px] border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10"
+                      >
+                        <div className="unit_discount">
+                          <Select
+                            // formik={formik}
+                            name="unit_discount_type"
+                            defaultValue={"1"}
+                            value={
+                              row.unit_discount_type != 0 ||
+                              row.unit_discount_type != ""
+                                ? row.unit_discount_type
+                                : "1"
+                            }
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              handleChange(index)(event);
+                            }}
+                            // onChange={(e) =>
+                            //   handleChangeUnitMode(index, e.target.value)
+                            // }
+                            sx={{
+                              height: "46px",
+                              "& .MuiInputBase-root": {
+                                borderRadius: 60,
 
-                            "& .MuiInputBase-input": {
-                              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                              border: "none", // Hide the border of the input element
-                              padding: 0,
-                              paddingTop: 0,
+                                minHeight: "0px !important",
+                              },
+                              "&.MuiSelect-selectMenu": {
+                                paddingRight: "0px !important", // Adjust padding for the select menu
+                                border: "none",
+                                borderRadius: "0",
+                              },
+                              "& .MuiSelect-select": {
+                                minHeight: "0rem !important",
+                              },
+                            }}
+                          >
+                            {UnitDiscount.map((item) => (
+                              <StyledMenuItem
+                                key={item.value}
+                                value={item.value}
+                              >
+                                {item.label}
+                              </StyledMenuItem>
+                            ))}
+                          </Select>
+                        </div>
+                        <div className="flex-1">
+                          <TextField
+                            hiddenLabel
+                            id="filled-hidden-label-small"
+                            defaultValue=""
+                            name="unit_discount"
+                            variant="standard"
+                            size="small"
+                            placeholder="%444.00"
+                            value={
+                              row.unit_discount != 0 || row.unit_discount != ""
+                                ? row.unit_discount
+                                : ""
+                            }
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              handleChange(index)(event);
+                            }}
+                            sx={{
+                              width: "80px",
+
+                              "& .MuiInputBase-input": {
+                                textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                                border: "none", // Hide the border of the input element
+                                padding: 0,
+                                paddingTop: 0,
+                                "::placeholder": {
+                                  color: "#111827 !important", // Set placeholder color
+                                  opacity: 1,
+                                },
+                              },
+                              "& .MuiInput-underline:before": {
+                                borderBottom: "none !important", // Hide the underline (if using underline variant)
+                              },
+                              "& .MuiInput-underline:after": {
+                                borderBottom: "none !important", // Hide the underline (if using underline variant)
+                              },
+                            }}
+                          ></TextField>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
+                      {/* Render the result of handleNetPrice */}
+                      {handleNetPrice(
+                        row.unit_discount,
+
+                        row.unit_discount_type,
+                        row.unit_price,
+                        index
+                      )}
+                    </TableCell>
+
+                    <TableCell align="center" className="whitespace-nowrap">
+                      <div
+                        className="w-[120px] truncate md:text-clip "
+                        style={{
+                          border: "0.5px solid #9DA0A6",
+                          borderRadius: "7px",
+                        }}
+                      >
+                        <SelectField
+                          formik={formik}
+                          name="billing_frequency"
+                          defaultValue={"2"}
+                          sx={{
+                            height: "46px",
+                          }}
+                          value={
+                            row.billing_frequency != 0
+                              ? row.billing_frequency
+                              : "2"
+                          }
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                        >
+                          {MonthlyOptions.map((item) => (
+                            <StyledMenuItem
+                              key={item.value}
+                              value={item.value}
+                              sx={{
+                                minWidth: "207px",
+                              }}
+                            >
+                              {item.label}
+                            </StyledMenuItem>
+                          ))}
+                        </SelectField>
+                      </div>
+                    </TableCell>
+
+                    <TableCell align="center" className="whitespace-nowrap ">
+                      <div
+                        className="w-[120px] truncate md:text-clip "
+                        style={{
+                          border: "0.5px solid #9DA0A6",
+                          borderRadius: "7px",
+                        }}
+                      >
+                        {/* Assign employees to this Subscriptions */}
+                        <SelectField
+                          formik={formik}
+                          name="billingTerms"
+                          defaultValue={"1"}
+                          value={row.billingTerms != 0 ? row.billingTerms : "1"}
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                          sx={{
+                            height: "46px",
+                          }}
+                        >
+                          {BillingTermsOptions.map((item) => (
+                            <StyledMenuItem key={item.value} value={item.value}>
+                              {item.label}
+                            </StyledMenuItem>
+                          ))}
+                        </SelectField>
+                      </div>
+                    </TableCell>
+
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
+                    >
+                      {row.billingTerms == 1 ? (
+                        <InputField
+                          name={"no_of_payments"}
+                          placeholder={""}
+                          // value={row.unit_price}
+                          value={
+                            row.no_of_payments != 0 ||
+                            row.no_of_payments != "" ||
+                            row.no_of_payments != null
+                              ? row.no_of_payments
+                              : ""
+                          }
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                          className="m-auto common-inputField w-max"
+                          inputProps={{
+                            className: "ps-[1rem] max-w-[90px] m-auto ",
+                          }}
+                          hideTopPadding={true}
+                          sx={{
+                            "&  .MuiInputBase-input": {
+                              border: "0.5px solid #9DA0A6",
+                              height: 44,
                               "::placeholder": {
                                 color: "#111827 !important", // Set placeholder color
                                 opacity: 1,
                               },
                             },
-                            "& .MuiInput-underline:before": {
-                              borderBottom: "none !important", // Hide the underline (if using underline variant)
-                            },
-                            "& .MuiInput-underline:after": {
-                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                          }}
+                        />
+                      ) : (
+                        <InputField
+                          name={"no_of_payments"}
+                          placeholder={"0"}
+                          // value={row.unit_price}
+                          value={0}
+                          className="m-auto common-inputField w-max"
+                          inputProps={{
+                            className: "ps-[1rem] max-w-[90px] m-auto ",
+                          }}
+                          hideTopPadding={true}
+                          sx={{
+                            "&  .MuiInputBase-input": {
+                              border: "0.5px solid #9DA0A6",
+                              height: 44,
+                              "::placeholder": {
+                                color: "#111827 !important", // Set placeholder color
+                                opacity: 1,
+                              },
                             },
                           }}
-                        ></TextField>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {row.price}
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap">
-                    <div
-                      className="w-[120px] truncate md:text-clip "
-                      style={{
-                        border: "0.5px solid #9DA0A6",
-                        borderRadius: "7px",
-                      }}
+                        />
+                      )}
+                    </TableCell>
+                    <TableCell
+                      align="center"
+                      className="whitespace-nowrap font-500"
                     >
-                      <SelectField
-                        formik={formik}
-                        name="Billing"
-                        defaultValue={"Monthly"}
-                        sx={{
-                          height: "46px",
+                      <input
+                        type="date"
+                        name="billing_start_date"
+                        min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
+                        // disabled={row.billing_start_date ? false : true} // Disable the input if billing_start_date does not exist
+                        value={
+                          row.billing_start_date != 0 ||
+                          row.billing_start_date != "" ||
+                          row.billing_start_date != null
+                            ? row.billing_start_date
+                            : ""
+                        }
+                        onChange={(
+                          event: React.ChangeEvent<HTMLInputElement>
+                        ) => {
+                          handleChange(index)(event);
                         }}
-                      >
-                        {MonthlyOptions.map((item) => (
-                          <StyledMenuItem
-                            key={item.value}
-                            value={item.value}
-                            sx={{
-                              minWidth: "207px",
-                            }}
-                          >
-                            {item.label}
-                          </StyledMenuItem>
-                        ))}
-                      </SelectField>
-                    </div>
-                  </TableCell>
-                  <TableCell align="center" className="whitespace-nowrap ">
-                    <div
-                      className="w-[120px] truncate md:text-clip "
-                      style={{
-                        border: "0.5px solid #9DA0A6",
-                        borderRadius: "7px",
-                      }}
-                    >
-                      {/* Assign employees to this Subscriptions */}
-                      <SelectField
-                        formik={formik}
-                        name="billingTerms"
-                        defaultValue={"One"}
-                        sx={{
-                          height: "46px",
-                        }}
-                      >
-                        {BillingTermsOptions.map((item) => (
-                          <StyledMenuItem key={item.value} value={item.value}>
-                            {item.label}
-                          </StyledMenuItem>
-                        ))}
-                      </SelectField>
-                    </div>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {row.payment}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {row.billingDate}
-                  </TableCell>
-                </TableRow>
-              ))}
+                      />
+                    </TableCell>
+                  </TableRow>
+                ))}
             </>
           </CommonTable>
         </div>
@@ -597,6 +814,15 @@ export default function AddSubscription() {
               <div className="mb-10 flex justify-between">
                 <span className="text-para_light font-500">Subtotal</span>
                 <span className="inline-block ml-20 font-600">$444.00</span>
+              </div>
+
+              <div className="mb-10 flex justify-between">
+                <span className="text-para_light font-500">
+                  Recurring line item discount
+                </span>
+                <span className="inline-block ml-20 font-600 text-para_light">
+                  $4.00 / month
+                </span>
               </div>
               {/*  without discount start */}
               {/* <span className=" text-secondary text-[14px] font-500 flex items-center cursor-pointer">
@@ -720,6 +946,9 @@ export default function AddSubscription() {
                   </Link>
                 </p>
               </div>
+              <p color="secondary" className="text-[#4f46e5] font-500">
+                +Add discount
+              </p>
 
               {/*  {/* with discount end */}
             </li>
@@ -772,7 +1001,13 @@ export default function AddSubscription() {
         </div>
       </div>
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
-      <CustomLineModal isOpen={customLine} setIsOpen={setCustomLine} />
+
+      <CustomLineModal
+        isOpen={customLine}
+        setIsOpen={setCustomLine}
+        handleList={handleListFromChild}
+      />
+
       <LineModal isOpen={isLineModal} setIsOpen={setIsLineModal} />
       <DeleteModal
         isOpen={isOpenDeletedModal}

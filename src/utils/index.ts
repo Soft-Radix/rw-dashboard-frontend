@@ -49,11 +49,11 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const MonthlyOptions: SelectProp[] = [
-  { value: "One", label: "One time" },
-  { value: "Monthly", label: "Monthly" },
-  { value: "Quarterly", label: "Quarterly" },
-  { value: "Semi", label: "Semi annually" },
-  { value: "Add weekly and bi-weekly", label: "Annually" },
+  { value: "1", label: "One time" },
+  { value: "2", label: "Monthly" },
+  { value: "3", label: "Quarterly" },
+  { value: "4", label: "Semi annually" },
+  { value: "5", label: "Annually" },
   // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const EmployOptions: SelectProp[] = [
@@ -65,8 +65,8 @@ export const EmployOptions: SelectProp[] = [
   // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const UnitDiscount: SelectProp[] = [
-  { value: "percentage", label: "%" },
-  { value: "USD", label: "USD" },
+  { value: "1", label: "%" },
+  { value: "2", label: "USD" },
 ];
 export const Action: SelectProp[] = [
   { value: "Edit", label: "Edit" },
@@ -74,8 +74,8 @@ export const Action: SelectProp[] = [
 ];
 
 export const BillingTermsOptions: SelectProp[] = [
-  { value: "One", label: "Fixed number of payments" },
-  { value: "two", label: "Automatically renew until cancelled" },
+  { value: "1", label: "Fixed number of payments" },
+  { value: "2", label: "Automatically renew until cancelled" },
 ];
 
 const columnKey = {

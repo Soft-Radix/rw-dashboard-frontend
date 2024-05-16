@@ -3,6 +3,7 @@ import { ApiResponse } from "app/store/types";
 import toast from "react-hot-toast";
 import ApiHelperFunction from "src/api";
 import {
+  SubscriptionList,
   ClientType,
   initialStateProps,
   filterType,
@@ -10,6 +11,7 @@ import {
   deleteClientType,
   UpdateProfilePayload,
   ChangePassword,
+ 
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -103,6 +105,24 @@ export const changePassword = createAsyncThunk(
   async (payload: ChangePassword) => {
     const response = await ApiHelperFunction({
       url: `auth/change-password`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+// --------------subscription------
+
+export const subscriptionList = createAsyncThunk(
+  "product/list",
+  async (payload: SubscriptionList) => {
+    const response = await ApiHelperFunction({
+      url: `product/list`,
       method: "post",
       data: payload,
     });

@@ -38,6 +38,7 @@ function InputField({
       )}
       <div className={`input_wrap ${inputClass}`}>
         <TextField
+          name={name}
           type={isType}
           onChange={(e) => formik.setFieldValue(name, e.target.value)}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
