@@ -70,4 +70,47 @@ export interface SubscriptionList {
   search: string;
 }
 
+export interface AddLineItem {
+  name: string;
+  description: string;
+  unit_price: number;
+  quantity: number;
+  billing_frequency: number;
+  billing_terms: number;
+  no_of_payments: number;
+  is_delay_in_billing: number;
+  billing_start_date: string;
+}
+
+export interface AddSubscriptionList {
+  client_id: string;
+  title: string;
+  one_time_discount_name: string;
+  one_time_discount_type: string;
+  one_time_discount: number;
+  subtotal: number;
+  total_price: number;
+  subscription_data: {
+    id: number;
+    user_id: number;
+    name: string;
+    description: string;
+    unit_price: number;
+    type: number;
+    quantity: number | null;
+    billing_frequency: number;
+    billing_terms: number;
+    no_of_payments: number | null;
+    is_delay_in_billing: number;
+    billing_start_date: Date | null;
+    stripe_price_id: string | null;
+    deleted_at: Date | null;
+    createdAt: Date;
+    updatedAt: Date;
+    unit_discount_type: number;
+    unit_discount: number;
+    net_price: number;
+  }[];
+}
+
 

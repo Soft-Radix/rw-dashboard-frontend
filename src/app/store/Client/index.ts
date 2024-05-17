@@ -11,7 +11,8 @@ import {
   deleteClientType,
   UpdateProfilePayload,
   ChangePassword,
- 
+  AddSubscriptionList,
+  AddLineItem
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -133,6 +134,39 @@ export const subscriptionList = createAsyncThunk(
     };
   }
 );
+
+export const addsubscription = createAsyncThunk(
+  "client/add-subscription",
+  async (payload: AddSubscriptionList) => {
+    const response = await ApiHelperFunction({
+      url: `client/add-subscription`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const addLineItem = createAsyncThunk(
+  "line-item/add",
+  async (payload: AddLineItem ) => {
+    const response = await ApiHelperFunction({
+      url: `line-item/add`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 
 /**
  * The initial state of the auth slice.

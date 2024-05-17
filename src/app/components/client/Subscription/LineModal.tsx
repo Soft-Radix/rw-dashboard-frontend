@@ -1,4 +1,4 @@
-import { Checkbox, Theme } from "@mui/material";
+import { Checkbox, FormHelperText, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
 import React, { Dispatch, SetStateAction } from "react";
@@ -9,11 +9,28 @@ import SelectField from "../../selectField";
 import NumberInput from "../../NumberInput";
 import DateInput from "../../DateInput";
 import { red } from "@mui/material/colors";
+import * as Yup from "yup";
+import { addLineItem } from "app/store/Client";
+import { useDispatch } from "react-redux";
+import { useAppDispatch } from "app/store/store";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  handleList: (list: any[]) => void;
 }
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  description: Yup.string().required("Description is required"),
+  unit_price: Yup.number().required("Unit Price is required"),
+  quantity: Yup.number().required("Quantity is required"),
+  billing_frequency: Yup.string().required("Billing Frequency is required"),
+  billing_terms: Yup.string().required("Billing Terms are required"),
+  no_of_payments: Yup.number().required("Number of Payments is required"),
+  billing_start_date: Yup.date().nullable(),
+});
+
 const list = [
   {
     name: "Full time virtual professional - business analyst",
@@ -33,20 +50,55 @@ const list = [
   },
 ];
 
-function LineModal({ isOpen, setIsOpen }: IProps) {
+function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
   const [value, setValue] = React.useState<number | null>(null);
-
+  const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
       name: "",
-      email: "",
-      password: "",
-      confirm_password: "",
-      role: "",
+      description: "",
+      unit_price: 0,
+      quantity: 0,
+      billing_frequency: "",
+      billing_terms: "",
+      no_of_payments: 0,
+      billing_start_date: null,
+      is_delay_in_billing: 0,
     },
+    validationSchema,
     onSubmit: (values) => {},
   });
+  // const handleSave = () => {
+  //   formik.handleSubmit();
+  //   console.log("=========formik.values===", formik.values);
+  // };
+
+  const fetchData = async () => {
+    try {
+      //@ts-ignore
+      const res = await dispatch(addLineItem(formik.values));
+      // setList(res?.payload?.data?.data?.list);
+      setIsOpen((prev) => !prev);
+      handleList([res?.payload?.data?.data]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleSave = () => {
+    formik.submitForm().then(() => {
+      if (formik.isValid) {
+        fetchData();
+      }
+    });
+  };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // Update is_delay_in_billing based on checkbox status
+    const isChecked = event.target.checked;
+    formik.setFieldValue("is_delay_in_billing", isChecked ? 1 : 0);
+  };
 
   return (
     <CommonModal
@@ -56,6 +108,7 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
       maxWidth="733"
       btnTitle={"Save"}
       closeTitle="Cancel"
+      onSubmit={handleSave}
     >
       <div className="flex flex-col gap-20 mb-20">
         <InputField
@@ -64,6 +117,7 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
           label=" Name"
           placeholder="Enter Name"
         />
+
         <InputField
           formik={formik}
           name="description"
@@ -71,22 +125,23 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
           placeholder="Enter Description"
         />
 
-       
         <InputField
           formik={formik}
-          name="unit Price"
+          name="unit_price"
           label="Unit Price"
           placeholder="Enter Unit Price"
         />
+
         <InputField
           formik={formik}
-          name="Quantity"
+          name="quantity"
           label="Quantity"
           placeholder="Enter Quantity"
         />
+
         <SelectField
           formik={formik}
-          name="status"
+          name="billing_frequency"
           label="Billing Frequency"
           placeholder="Select"
           sx={{
@@ -99,15 +154,17 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
             },
           }}
         >
+          quantity
           {EmployOptions.map((item) => (
             <StyledMenuItem key={item.value} value={item.value}>
               {item.label}
             </StyledMenuItem>
           ))}
         </SelectField>
+
         <SelectField
           formik={formik}
-          name="terms"
+          name="billing_terms"
           label="Billing Terms"
           placeholder="Fixed number of payments"
           sx={{
@@ -122,32 +179,38 @@ function LineModal({ isOpen, setIsOpen }: IProps) {
           ))}
         </SelectField>
 
-        <NumberInput
-          label="Number of Payments"
-        
-        />
+        <NumberInput label="Number of Payments" />
         <div className="w-full">
           <div className="flex items-center mb-[2rem]">
             <Checkbox
-              id="billingDate"
+              id="billing_start_date"
               name="billingDate"
               value="billing"
+              onChange={handleCheckboxChange}
+              checked={formik.values.is_delay_in_billing === 1}
               sx={{
                 "&.Mui-checked": {
                   color: "#4f46e5",
                 },
               }}
-              className="w-[18px] h-[18px] me-[16px] "
+              className="w-[18px] h-[18px] me-[16px]"
             />
             <label className="text-[16px] font-medium leading-[20px]">
-              
               Delay Billing Start Date
             </label>
             <br />
           </div>
-          <DateInput
-          
+          <input
+            type="date"
+            id="billing_start_date"
+            name="billing_start_date"
+            min={new Date().toISOString().split("T")[0]}
+            value={formik.values.billing_start_date || ""}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
           />
+          {/* <DateInput /> */}
         </div>
       </div>
     </CommonModal>

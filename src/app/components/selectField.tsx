@@ -103,6 +103,11 @@ function SelectField({
         ) : null}
       </div>
       <span className="">{formik?.errors[name] && formik?.touched[name]}</span>
+      <span className="inline-block text-red pt-[5px]">
+        {formik?.errors[name ?? ""] &&
+          formik?.touched[name ?? ""] &&
+          formik?.errors[name ?? ""]}
+      </span>
     </div>
   );
 }

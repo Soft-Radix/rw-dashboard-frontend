@@ -23,20 +23,12 @@ const CustomNumberInput = React.forwardRef(function CustomNumberInput(
       slotProps={{
         incrementButton: {
           children: (
-            <img
-              src={arrowDown}
-              alt="arrow"
-              className="w-[10px] max-w-none"
-            />
+            <img src={arrowDown} alt="arrow" className="w-[10px] max-w-none" />
           ),
         },
         decrementButton: {
           children: (
-            <img
-              src={arrowUp}
-              alt="arrow"
-              className="w-[10px] max-w-none"
-            />
+            <img src={arrowUp} alt="arrow" className="w-[10px] max-w-none" />
           ),
         },
       }}
@@ -52,7 +44,7 @@ export default function NumberInput({ label }) {
       <label className=" inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
         {label}
       </label>
-      <CustomNumberInput aria-label="Demo number input" placeholder="1" />
+      <CustomNumberInput aria-label="Demo number input" placeholder="0" />
     </div>
   );
 }
