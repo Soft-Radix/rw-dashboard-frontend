@@ -27,6 +27,7 @@ import InputField from "../InputField";
 import { useAppDispatch } from "app/store/store";
 import {
   changeFetchStatus,
+  deleteAgentMemberGroup,
   getAgentGroupInfo,
   updateGroupName,
 } from "app/store/Agent group";
@@ -37,6 +38,7 @@ import {
   AgentGroupType,
   UpdateAgentGroupPayload,
 } from "app/store/Agent group/Interface";
+import DeleteClient from "../client/DeleteClient";
 
 const rows = [
   {
@@ -87,6 +89,9 @@ const rows = [
 ];
 
 export default function GroupAgentsList() {
+  const [deleteId, setIsDeleteId] = useState<number>(null);
+
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const { group_id } = useParams();
   const navigate = useNavigate();
   // console.log(group_id, "check");
@@ -94,7 +99,7 @@ export default function GroupAgentsList() {
   const { agentGroupDetail } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
-  // console.log(agentGroupDetail, "girl");
+  console.log(agentGroupDetail.group_members, "girl");
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
     const newData: UpdateAgentGroupPayload = {
       ...values,
@@ -104,6 +109,7 @@ export default function GroupAgentsList() {
     };
 
     const { payload } = await dispatch(updateGroupName(newData));
+
     // console.log(payload, "chPayload");
     if (payload?.data?.message) {
       navigate("/admin/agents/groups");
@@ -112,7 +118,21 @@ export default function GroupAgentsList() {
     // console.log(newData, "values");
   };
   const theme: Theme = useTheme();
-
+  const deleteGroup = async (id: any) => {
+    // console.log(id, "id");
+    try {
+      const { payload } = await dispatch(
+        deleteAgentMemberGroup({ member_id: id })
+      );
+      console.log(payload, "payload");
+      if (payload?.data?.status) {
+        setIsOpenDeletedModal(false);
+        // fetchAgentGroupLsssist();
+      }
+    } catch (error) {
+      console.error("Failed to delete agent group:", error);
+    }
+  };
   const formik = useFormik({
     initialValues: {
       group_name: "",
@@ -188,8 +208,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               <>
-                {/* {agentGroupDetail.group_members.map((row, index) => ( */}
-                {rows.map((row, index) => (
+                {agentGroupDetail?.group_members?.map((row: any, index) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -203,22 +222,25 @@ export default function GroupAgentsList() {
                   >
                     <TableCell scope="row">{row.id}</TableCell>
                     <TableCell align="center" className="whitespace-nowrap">
-                      {row.firstName}
+                      {row.first_name}
                     </TableCell>
 
                     <TableCell align="center" className="whitespace-nowrap">
-                      {row.lastName}
+                      {row.last_name}
                     </TableCell>
 
                     <TableCell scope="row" className="w-[15%]">
                       <div className="flex gap-20 pe-20">
                         <span className="p-2 cursor-pointer">
-                          <DeleteIcon />
+                          <DeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setIsDeleteId(row.id);
+                            }}
+                          />
                         </span>
                         <span className="p-2 cursor-pointer">
-                          <Link to="/admin/agents/groups/details">
-                            Go to Agent Page
-                          </Link>
+                          <Link to="/admin/dashboard">Go to Agent Page</Link>
                         </span>
                       </div>
                     </TableCell>
@@ -237,6 +259,11 @@ export default function GroupAgentsList() {
         setIsOpen={setIsOpenAddModal}
         isNewAgent={true}
         // fetchAgentGroupList={fetchAgentGroupList}
+      />
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        onDelete={() => deleteGroup(deleteId)}
       />
     </>
   );

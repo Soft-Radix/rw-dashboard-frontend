@@ -42,6 +42,8 @@ import {
   accManagerClientList,
   addAccManager,
   assignedAccManagerList,
+  getAccManagerList,
+  updateAccManagerList,
 } from "app/store/AccountManager";
 import { useParams } from "react-router-dom";
 import { ClientType } from "app/store/Client/Interface";
@@ -52,6 +54,13 @@ interface IProps {
   fetchManagerList?: () => void;
   isEditing: boolean;
 }
+type FormType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: number | string;
+  address: string;
+};
 
 function AddAccountManagerModel({
   isOpen,
@@ -62,7 +71,7 @@ function AddAccountManagerModel({
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState<any>([]);
-  console.log([selectedItems], "items");
+  // console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
   // const agentState = useSelector((store: AgentRootState) => store.agent);
   const accmanagerState = useSelector(
@@ -71,7 +80,7 @@ function AddAccountManagerModel({
   const { accManagerDetail, accClientList } = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
-  console.log(accManagerDetail, "accManagerDetail");
+  // console.log(accManagerDetail, "accManagerDetail");
 
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
@@ -90,23 +99,42 @@ function AddAccountManagerModel({
   // console.log(accountManager_id, "ll");
 
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
-    console.log(values, "values");
-
+    const formData = new FormData();
     let payload;
     if (accountManager_id) {
-      const { email, ...remainingValues } = values;
-      const newValue = {
-        ...remainingValues,
-        account_manager_id: accountManager_id,
-        client_ids: selectedItems,
-        unassign_client_ids: [],
-      };
+      formData.append("account_manager_id", accountManager_id);
+      formData.append("first_name", values.first_name);
+      formData.append("last_name", values.last_name);
+      formData.append("phone_number", String(values.phone_number));
+      formData.append("address", values.address);
 
-      await dispatch(assignedAccManagerList(newValue));
+      // Dispatch action to update account manager
+
+      if (selectedImage) {
+        formData.append("files", selectedImage);
+      }
+
+      payload = await dispatch(
+        updateAccManagerList({
+          formData,
+          account_manager_id: accountManager_id,
+        })
+      );
     } else {
-      payload = await dispatch(addAccManager(values));
-    }
+      formData.append("first_name", values.first_name);
+      formData.append("last_name", values.last_name);
+      formData.append("phone_number", String(values.phone_number)); // Convert number to string
+      formData.append("email", values.email);
+      formData.append("address", values.address);
 
+      if (selectedImage) {
+        formData.append("files", selectedImage);
+      }
+      // uploadedFiles.forEach((file, index) => {
+      //   formData.append(`files`, file);
+      // });
+      await dispatch(addAccManager({ formData }));
+    }
     // console.log(payload, "payload");
     setIsOpen(false);
     fetchManagerList();
@@ -123,7 +151,6 @@ function AddAccountManagerModel({
       phone_number: null,
       email: "",
       address: "",
-      // assignedClients:[]
     },
     validationSchema: accManagerSchema,
     onSubmit,
@@ -218,20 +245,18 @@ function AddAccountManagerModel({
     }
   }, [accManagerDetail]);
 
-  const fetchClientList = useCallback(() => {
-    if (!!accountManager_id) {
-      dispatch(accManagerClientList({ accountManger_id: accountManager_id }));
-    } else {
-      dispatch(
-        accManagerClientList({ accountManger_id: accountManager_id, type: 1 })
-      );
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchClientList();
-  }, [fetchClientList]);
   console.log(accClientList, "accClientttttList");
+  useEffect(() => {
+    if (accManagerDetail) {
+      formik.setValues({
+        first_name: accManagerDetail.first_name || "",
+        last_name: accManagerDetail.last_name || "",
+        email: accManagerDetail.email || "",
+        phone_number: accManagerDetail.phone_number || "",
+        address: accManagerDetail.address,
+      });
+    }
+  }, [accManagerDetail]);
 
   return (
     <CommonModal
@@ -292,15 +317,6 @@ function AddAccountManagerModel({
             label="Phone Number"
             placeholder="Enter Phone Number"
             sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
-            // InputProps={{
-            //   startAdornment: (
-            //     <InputAdornment position="start">
-            //       <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
-            //         +1
-            //       </span>
-            //     </InputAdornment>
-            //   ),
-            // }}
           />
 
           <InputField
@@ -317,123 +333,6 @@ function AddAccountManagerModel({
           label="Address"
           placeholder="Enter Address"
         />
-        <div className="flex gap-20 sm:flex-row flex-col">
-          <div className="">
-            {" "}
-            <Typography className="text-[16px] font-500 text-[#111827] pb-10 text-left">
-              Assign Clients
-            </Typography>
-            <Button
-              onClick={handleClick}
-              variant="contained"
-              className="bg-[#F6F6F6] sm:min-w-[320px] min-h-[48px] rounded-[8px] flex items-center justify-between text-[16px] font-400 text-[#757982] w-full "
-              sx={{ border: anchorEl ? "1px solid #4F46E5" : "none" }}
-            >
-              {selectedItems.length > 0 ? (
-                selectedItems.map((item, index) => (
-                  <div key={index} className="flex items-center gap-5">
-                    <span>
-                      <img src={img1} alt="" />
-                    </span>
-                    <ListItemText primary={item} />
-                    <div
-                      className="bg-[#FFFFFF] rounded-full border-solid border-1 cursor-pointer  "
-                      onClick={(event) => handleRemoveClient(item, event)}
-                    >
-                      <CrossGreyIcon className="h-20 w-20 p-5" />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <span>Select Clients</span>
-              )}
-              <span>{!anchorEl ? <DownArrowBlank /> : <UpArrowBlank />}</span>
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              MenuListProps={{
-                sx: {
-                  // Example: Set max height of the menu container
-                  width: 300,
-                  // maxHeight: "250px",
-                  // overflowY: "auto",
-                  "& ul": {
-                    padding: 1, // Example: Remove padding from the ul element inside Paper
-                    listStyle: "none", // Example: Remove default list styles
-                    overflowY: "auto",
-                  },
-                },
-              }}
-            >
-              <div className="flex w-full border-b-1 mb-[15px]">
-                <TextField
-                  hiddenLabel
-                  id="filled-hidden-label-small"
-                  defaultValue=""
-                  variant="standard"
-                  placeholder="Search Assignee"
-                  sx={{
-                    pl: 2,
-                    pr: 2,
-                    pt: 1,
-                    pb: 1,
-
-                    "& .MuiInputBase-input": {
-                      textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                      border: "none", // Hide the border of the input element
-                    },
-                    "& .MuiInput-underline:before": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                    "& .MuiInput-underline:after": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-              {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
-              <div className="overflow-y-scroll h-[200px] ">
-                {accClientList?.map((item: ClientType) => {
-                  console.log(item, "itemmmm"); // Wrap the console.log within curly braces
-                  return (
-                    // Return the JSX component inside curly braces
-                    <MenuItem className="py-10" key={item.id}>
-                      {" "}
-                      {/* Added key prop */}
-                      <div
-                        className="flex items-center gap-10  "
-                        onClick={() => handleMenuItemClick(item)}
-                      >
-                        <Checkbox
-                          checked={
-                            item.userName === "All Client"
-                              ? selectAll
-                              : selectedItems.includes(item.id)
-                          }
-                        />
-                        {item.userName !== "All" && (
-                          <span>
-                            <img src={img1} alt=""></img>
-                          </span>
-                        )}
-                        <ListItemText primary={item.userName} />
-                      </div>
-                    </MenuItem>
-                  );
-                })}
-              </div>
-            </Menu>
-          </div>
-        </div>
       </div>
     </CommonModal>
   );

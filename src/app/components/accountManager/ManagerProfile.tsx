@@ -23,6 +23,7 @@ import { changeFetchStatus, getAccManagerInfo } from "app/store/AccountManager";
 import { RootState, useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
+import ListLoading from "@fuse/core/ListLoading";
 
 const rows = [
   {
@@ -49,10 +50,10 @@ const rows = [
 // }
 const ManagerProfile = () => {
   const { accountManager_id } = useParams();
-  console.log(accountManager_id, "opop");
+  // console.log(accountManager_id, "opop");
   const dispatch = useAppDispatch();
 
-  const { accManagerDetail } = useSelector(
+  const { accManagerDetail, fetchStatus } = useSelector(
     (store: AccManagerRootState) => store?.accManagerSlice
   );
   // console.log(accManagerDetail, "pp");
@@ -86,6 +87,10 @@ const ManagerProfile = () => {
     };
   }, []);
 
+  if (fetchStatus === "loading") {
+    return <ListLoading />;
+  }
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <>
       <div className="px-16">
@@ -98,7 +103,8 @@ const ManagerProfile = () => {
             <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
               <div className="flex gap-40 flex-wrap">
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
-                  <img src="../assets/images/pages/agent/luis_.jpg" />
+                  <img src={urlForImage + accManagerDetail.user_image}></img>
+                  // <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
                 <div className="pt-[20px]">
                   <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">
@@ -241,66 +247,6 @@ const ManagerProfile = () => {
                   <EditIcon fill="#4F46E5" />
                 </Button>
               </div>
-            </div>
-
-            <div className="border-1 border-[#EDF2F6] rounded-6 pt-20 mt-10 shadow-sm">
-              <Typography className="text-[20px] font-600 pl-20 py-10 ">
-                Assigned Clients
-              </Typography>
-              <CommonTable
-                headings={["Id", "Name", "Company Name", "Status", " "]}
-              >
-                <>
-                  {rows.map((row, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "& td": {
-                          borderBottom: "1px solid #EDF2F6",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      <TableCell
-                        scope="row"
-                        className="font-500 text-[14px] leading-4"
-                      >
-                        {row.id}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        className="whitespace-nowrap font-500 text-[14px] leading-4"
-                      >
-                        {row.name}
-                      </TableCell>
-
-                      <TableCell
-                        align="center"
-                        className="whitespace-nowrap font-500 text-[14px] leading-4"
-                      >
-                        {row.companyName}
-                      </TableCell>
-                      <TableCell align="center" className="whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
-                        >
-                          {row.status}
-                        </span>
-                      </TableCell>
-
-                      <TableCell
-                        align="center"
-                        className="whitespace-nowrap font-500 text-[14px] leading-4"
-                      >
-                        <ArrowRightCircleIcon />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              </CommonTable>
             </div>
           </div>
         </Grid>

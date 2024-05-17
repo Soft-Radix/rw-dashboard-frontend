@@ -21,10 +21,10 @@ import { addAgent, getAgentInfo, getAgentList } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import moment from "moment";
 import ListLoading from "@fuse/core/ListLoading";
+import SearchInput from "src/app/components/SearchInput";
+import { debounce } from "lodash";
 
 export default function AgentsList() {
-  const { agent_id } = useParams();
-
   const agentState = useSelector((store: AgentRootState) => store.agent);
   // console.log(agentState, "as");
 
@@ -48,10 +48,24 @@ export default function AgentsList() {
   }, [fetchAgentList]);
 
   const checkPageNum = (e: any, pageNumber: number) => {
+    console.log(pageNumber, "rr");
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,
     }));
+  };
+  // Debounce function to delay executing the search
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
   };
   return (
     <>
@@ -72,6 +86,13 @@ export default function AgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="h-24" />
+          <div className="p-[2rem]">
+            <SearchInput
+              name="search"
+              placeholder="Search Agents"
+              onChange={handleSearchChange}
+            />
+          </div>
 
           <CommonTable
             headings={[
@@ -178,6 +199,7 @@ export default function AgentsList() {
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
         fetchAgentList={fetchAgentList}
+        isEditing={false}
       />
     </>
   );

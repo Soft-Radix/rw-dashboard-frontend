@@ -23,7 +23,8 @@ export const addAccManager = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: "accountManager/add",
       method: "post",
-      data: payload,
+      data: payload.formData,
+      formData: true,
     });
 
     // Return only the data you need to keep it serializable
@@ -114,6 +115,24 @@ export const accManagerClientList = createAsyncThunk(
     };
   }
 );
+export const updateAccManagerList = createAsyncThunk(
+  "accountManager/update",
+  async (payload: assignedClientInfoType) => {
+    console.log(payload, "payload");
+    const response = await ApiHelperFunction({
+      url: "/accountManager/update",
+      method: "put",
+      data: payload.formData,
+      formData: true,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */
@@ -201,9 +220,9 @@ export const accManagerSlice = createSlice({
       })
       .addCase(deleteAccManager.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        console.log(payload, "payload");
+        // console.log(payload, "payload");
         const { accountManger_id } = action.meta?.arg;
-        console.log(accountManger_id, "idd");
+        // console.log(accountManger_id, "idd");
         state.actionStatus = false;
         if (payload?.data?.status) {
           state.list = state.list.filter(
@@ -220,32 +239,52 @@ export const accManagerSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(assignedAccManagerList.pending, (state) => {
-        state.actionStatus = false;
-
+        // state.actionStatus = false;
+        // state.fetchStatus = "loading";
         // Reset error to null on success
       })
       .addCase(assignedAccManagerList.fulfilled, (state, action) => {
+        state.fetchStatus = "idle";
         // console.log(action.payload.data, "klklk");
       })
       .addCase(assignedAccManagerList.rejected, (state, error) => {
+        // state.fetchStatus = "idle";
         // toast.error(error?.message);
         console.log(error, "error");
-        state.actionStatus = false;
+        // state.actionStatus = false;
       })
       .addCase(accManagerClientList.pending, (state) => {
-        state.fetchStatus = "loading";
+        state.status = "loading";
       })
       .addCase(accManagerClientList.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
         let newArray = data;
         newArray.unshift({ first_name: "All" });
-        state.fetchStatus = "idle";
+        state.status = "idle";
 
         state.accClientList = newArray;
         // console.log(state.accManagerDetail, "jj");
       })
       .addCase(accManagerClientList.rejected, (state) => {
-        state.fetchStatus = "idle";
+        state.status = "idle";
+      })
+      .addCase(updateAccManagerList.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(updateAccManagerList.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          console.log(action.payload.data, "action.payload");
+          // state.accManagerDetail = { ...response?.data };
+          // console.log(state.agentDetail, "ghgh");
+          toast.success(response?.message);
+        }
+      })
+      .addCase(updateAccManagerList.rejected, (state, action) => {
+        state.actionStatus = false;
       });
   },
 });

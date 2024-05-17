@@ -126,7 +126,12 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-
+  const checkPageNum = (e: any, pageNumber: number) => {
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      start: pageNumber - 1,
+    }));
+  };
   const deleteGroup = async (id: any) => {
     // console.log(id, "id");
     try {
@@ -229,7 +234,13 @@ export default function AgentsGroup() {
               </>
             </CommonTable>
             <div className="flex justify-end py-14 px-[3rem]">
-              <CommonPagination count={10} />
+              <CommonPagination
+                count={agentGroupState?.total_records}
+                page={filters.start + 1}
+                onChange={(event, pageNumber) =>
+                  checkPageNum(event, pageNumber)
+                }
+              />
             </div>
           </div>
         </div>
