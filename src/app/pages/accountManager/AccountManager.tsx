@@ -29,6 +29,7 @@ import {
 } from "app/store/AccountManager";
 import { useSelector } from "react-redux";
 import { debounce } from "lodash";
+import DeleteClient from "src/app/components/client/DeleteClient";
 
 const rows = [
   {
@@ -120,6 +121,7 @@ export default function AccountManager() {
 
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [deleteId, setIsDeleteId] = useState<number>(null);
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -133,23 +135,29 @@ export default function AccountManager() {
     setIsOpenAddModal(false);
   }, [fetchManagerList]);
   // Include necessary dependencies for useEffect
-
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   // Other component logic
+  const checkPageNum = (e: any, pageNumber: number) => {
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      start: pageNumber - 1,
+    }));
+  };
   const deleteAccManger = async (id: any) => {
     // console.log(id, "id");
     try {
       const { payload } = await dispatch(
         deleteAccManager({ accountManger_id: id })
       );
-      console.log(payload, "payload");
-      // if (payload?.data?.status) {
-      //   setIsOpenDeletedModal(false);
-      //   // fetchAgentGroupLsssist();
-      // }
+      if (payload?.data?.status) {
+        setIsOpenDeletedModal(false);
+        // fetchAgentGroupLsssist();
+      }
     } catch (error) {
       console.error("Failed to delete agent group:", error);
     }
   };
+
   return (
     <>
       <TitleBar title="Account Manager">
@@ -228,7 +236,13 @@ export default function AccountManager() {
                     className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
                   >
                     <div className="flex items-center gap-10">
-                      <DeleteIcon onClick={() => deleteAccManger(row.id)} />
+                      <DeleteIcon
+                        onClick={() => {
+                          setIsOpenDeletedModal(true);
+                          setIsDeleteId(row.id);
+                        }}
+                      />
+                      {/* <DeleteIcon onClick={() => deleteAccManger(row.id)} /> */}
                       <Link to={`/admin/acc-manager/detail/${row.id}`}>
                         <ArrowRightCircleIcon />
                       </Link>
@@ -238,7 +252,11 @@ export default function AccountManager() {
               ))}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+            <CommonPagination
+              count={accManagerState?.total_records}
+              page={filters.start + 1}
+              onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
+            />
           </div>
         </div>
       </div>
@@ -247,6 +265,11 @@ export default function AccountManager() {
         setIsOpen={setIsOpenAddModal}
         isEditing={false}
         fetchManagerList={fetchManagerList}
+      />
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        onDelete={() => deleteAccManger(deleteId)}
       />
     </>
   );

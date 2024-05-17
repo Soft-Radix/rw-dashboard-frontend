@@ -110,6 +110,21 @@ export const addAgentInagentGroup = createAsyncThunk(
     };
   }
 );
+export const deleteAgentMemberGroup = createAsyncThunk(
+  "agent-group-member/delete",
+  async (payload: deleteAgentGroupType) => {
+    const response = await ApiHelperFunction({
+      url: "agent-group-member/delete",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 export const searchAgentGroup = createAsyncThunk(
   "agent-group/addMember",
@@ -141,6 +156,7 @@ export const initialState: initialStateProps = {
   agentGroupDetail: {},
   selectedColumn: [],
   total_records: 0,
+  addagentList: [],
 };
 
 /**
@@ -292,16 +308,18 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = true;
       })
       .addCase(searchAgentGroup.fulfilled, (state, action) => {
-        const response = action.payload?.data;
-        // console.log(response, "find");
+        const payload = action.payload as ApiResponse; // Assert type
         state.actionStatus = false;
-        if (!response.status) {
-          toast.error(response?.message);
+        if (payload?.data?.status) {
+          state.successMsg = payload?.data?.message;
+          toast.success(payload?.data?.message);
         } else {
-          toast.success(response?.message);
+          state.errorMsg = payload?.data?.message;
+          toast.error(payload?.data?.message);
         }
       })
-      .addCase(searchAgentGroup.rejected, (state, action) => {
+      .addCase(searchAgentGroup.rejected, (state, { error }) => {
+        toast.error(error?.message);
         state.actionStatus = false;
       })
 
@@ -323,6 +341,26 @@ export const agentGroupSlice = createSlice({
         }
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+      .addCase(deleteAgentMemberGroup.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(deleteAgentMemberGroup.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        const { member_id } = action.meta?.arg;
+        // console.log(group_id, "idd");
+        state.actionStatus = false;
+        if (payload?.data?.status) {
+          state.list = state.list.filter((item) => item.id !== member_id);
+
+          toast.success(payload?.data?.message);
+        } else {
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(deleteAgentMemberGroup.rejected, (state, { error }) => {
+        toast.error(error?.message);
         state.actionStatus = false;
       });
   },

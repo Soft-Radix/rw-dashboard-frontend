@@ -23,7 +23,8 @@ export const addAccManager = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: "accountManager/add",
       method: "post",
-      data: payload,
+      data: payload.formData,
+      formData: true,
     });
 
     // Return only the data you need to keep it serializable
@@ -114,6 +115,24 @@ export const accManagerClientList = createAsyncThunk(
     };
   }
 );
+export const updateAccManagerList = createAsyncThunk(
+  "accountManager/update",
+  async (payload: assignedClientInfoType) => {
+    console.log(payload, "payload");
+    const response = await ApiHelperFunction({
+      url: "/accountManager/update",
+      method: "put",
+      data: payload.formData,
+      formData: true,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */
@@ -248,6 +267,24 @@ export const accManagerSlice = createSlice({
       })
       .addCase(accManagerClientList.rejected, (state) => {
         state.status = "idle";
+      })
+      .addCase(updateAccManagerList.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(updateAccManagerList.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          console.log(action.payload.data, "action.payload");
+          // state.accManagerDetail = { ...response?.data };
+          // console.log(state.agentDetail, "ghgh");
+          toast.success(response?.message);
+        }
+      })
+      .addCase(updateAccManagerList.rejected, (state, action) => {
+        state.actionStatus = false;
       });
   },
 });

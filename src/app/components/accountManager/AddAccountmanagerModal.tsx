@@ -42,6 +42,8 @@ import {
   accManagerClientList,
   addAccManager,
   assignedAccManagerList,
+  getAccManagerList,
+  updateAccManagerList,
 } from "app/store/AccountManager";
 import { useParams } from "react-router-dom";
 import { ClientType } from "app/store/Client/Interface";
@@ -52,6 +54,13 @@ interface IProps {
   fetchManagerList?: () => void;
   isEditing: boolean;
 }
+type FormType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: number | string;
+  address: string;
+};
 
 function AddAccountManagerModel({
   isOpen,
@@ -90,25 +99,45 @@ function AddAccountManagerModel({
   // console.log(accountManager_id, "ll");
 
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
-    // console.log(values, "values");
-
+    const formData = new FormData();
     let payload;
     if (accountManager_id) {
-      const { email, ...remainingValues } = values;
-      const newValue = {
-        ...remainingValues,
-        account_manager_id: accountManager_id,
-        client_ids: selectedItems,
-        unassign_client_ids: [],
-      };
+      formData.append("account_manager_id", accountManager_id);
+      formData.append("first_name", values.first_name);
+      formData.append("last_name", values.last_name);
+      formData.append("phone_number", String(values.phone_number));
+      formData.append("address", values.address);
 
-      await dispatch(assignedAccManagerList(newValue));
+      // Dispatch action to update account manager
+
+      if (selectedImage) {
+        formData.append("files", selectedImage);
+      }
+
+      payload = await dispatch(
+        updateAccManagerList({
+          formData,
+          account_manager_id: accountManager_id,
+        })
+      );
     } else {
-      payload = await dispatch(addAccManager(values));
+      formData.append("first_name", values.first_name);
+      formData.append("last_name", values.last_name);
+      formData.append("phone_number", String(values.phone_number)); // Convert number to string
+      formData.append("email", values.email);
+      formData.append("address", values.address);
+
+      if (selectedImage) {
+        formData.append("files", selectedImage);
+      }
+      // uploadedFiles.forEach((file, index) => {
+      //   formData.append(`files`, file);
+      // });
+      await dispatch(addAccManager({ formData }));
     }
     // console.log(payload, "payload");
     setIsOpen(false);
-    // fetchManagerList();
+    fetchManagerList();
 
     if (payload?.data?.status) {
       resetForm();
@@ -122,7 +151,6 @@ function AddAccountManagerModel({
       phone_number: null,
       email: "",
       address: "",
-      // assignedClients:[]
     },
     validationSchema: accManagerSchema,
     onSubmit,
@@ -217,20 +245,18 @@ function AddAccountManagerModel({
     }
   }, [accManagerDetail]);
 
-  const fetchClientList = useCallback(() => {
-    if (!!accountManager_id) {
-      dispatch(accManagerClientList({ accountManger_id: accountManager_id }));
-    } else {
-      dispatch(
-        accManagerClientList({ accountManger_id: accountManager_id, type: 1 })
-      );
-    }
-  }, []);
-
+  console.log(accClientList, "accClientttttList");
   useEffect(() => {
-    fetchClientList();
-  }, [fetchClientList]);
-  // console.log(accClientList, "accClientttttList");
+    if (accManagerDetail) {
+      formik.setValues({
+        first_name: accManagerDetail.first_name || "",
+        last_name: accManagerDetail.last_name || "",
+        email: accManagerDetail.email || "",
+        phone_number: accManagerDetail.phone_number || "",
+        address: accManagerDetail.address,
+      });
+    }
+  }, [accManagerDetail]);
 
   return (
     <CommonModal
@@ -291,15 +317,6 @@ function AddAccountManagerModel({
             label="Phone Number"
             placeholder="Enter Phone Number"
             sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
-            // InputProps={{
-            //   startAdornment: (
-            //     <InputAdornment position="start">
-            //       <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
-            //         +1
-            //       </span>
-            //     </InputAdornment>
-            //   ),
-            // }}
           />
 
           <InputField

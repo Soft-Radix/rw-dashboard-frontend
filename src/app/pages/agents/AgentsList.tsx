@@ -25,8 +25,6 @@ import SearchInput from "src/app/components/SearchInput";
 import { debounce } from "lodash";
 
 export default function AgentsList() {
-  const { agent_id } = useParams();
-
   const agentState = useSelector((store: AgentRootState) => store.agent);
   // console.log(agentState, "as");
 
@@ -50,6 +48,7 @@ export default function AgentsList() {
   }, [fetchAgentList]);
 
   const checkPageNum = (e: any, pageNumber: number) => {
+    console.log(pageNumber, "rr");
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,

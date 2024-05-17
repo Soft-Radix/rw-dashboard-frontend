@@ -34,6 +34,7 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   searchAgentList: [];
+  addagentList: [];
 };
 export interface AgentGroupRootState {
   agentGroup: initialStateProps; // Add other slices if needed
@@ -43,7 +44,8 @@ export interface AgentGroupIDType {
   group_id: string;
 }
 export interface deleteAgentGroupType {
-  group_id: number;
+  group_id?: number;
+  member_id?: number;
 }
 
 // Type for the payload that updateProfile expects
@@ -61,7 +63,7 @@ export interface UpdateAgentGroupPayload {
 //     new_password: string;
 // }
 export interface searchAgentGroupType {
-  group_id: number;
-  agent_ids: [];
+  group_id: number | string;
+  agent_ids: number[];
   delete_agent_ids: [];
 }

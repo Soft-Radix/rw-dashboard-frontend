@@ -232,6 +232,7 @@ export const clientSlice = createSlice({
           toast.error(response?.message);
         } else {
           state.list = response?.data?.list || [];
+
           state.total_records = calculatePageNumber(
             response?.data?.total_records,
             10
@@ -245,9 +246,9 @@ export const clientSlice = createSlice({
         state.fetchStatus = "loading";
       })
       .addCase(getClientInfo.fulfilled, (state, action) => {
-        console.log(action, "action");
+        // console.log(action, "action");
         const { data } = action.payload?.data;
-        console.log(data, "ggggg");
+        // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.clientDetail = data;
       })

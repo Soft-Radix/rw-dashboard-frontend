@@ -180,6 +180,7 @@ export const agentSlice = createSlice({
             response?.data?.total_records,
             10
           );
+          console.log(state.total_records, "fdf");
         }
       })
       .addCase(getAgentList.rejected, (state, action) => {
@@ -207,7 +208,7 @@ export const agentSlice = createSlice({
         } else {
           // console.log(response, "response");
           state.agentDetail = { ...response?.data };
-          console.log(state.agentDetail, "ghgh");
+          // console.log(state.agentDetail, "ghgh");
           toast.success(response?.message);
         }
       })
