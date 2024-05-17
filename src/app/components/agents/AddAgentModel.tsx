@@ -1,3 +1,4 @@
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import {
   ChangeEvent,
@@ -6,85 +7,125 @@ import {
   useEffect,
   useState,
 } from "react";
+import { editAgentSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
-import { addAgentSchema, editAgentSchema } from "src/formSchema";
-import { useAppDispatch } from "app/store/store";
 
-import { useSelector } from "react-redux";
-import { addAgent } from "app/store/Agent";
-import { restAll } from "app/store/Agent";
-import { AgentRootState, AgentType } from "app/store/Agent/Interafce";
-import profilePic from "public/assets/images/pages/profile/AgentProfile.png";
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
+import { Typography } from "@mui/material";
 import {
-  Button,
-  Checkbox,
-  InputAdornment,
-  ListItemText,
-  Menu,
-  MenuItem,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { UploadDocIcon } from "public/assets/icons/welcome";
+  addAgent,
+  getAgentInfo,
+  restAll,
+  updateAgentProfile,
+} from "app/store/Agent";
+import { AgentRootState } from "app/store/Agent/Interafce";
+import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
 import { AttachmentUploadIcon } from "public/assets/icons/supportIcons";
-import {
-  CrossGreyIcon,
-  CrossIcon,
-  PreviewIcon,
-} from "public/assets/icons/common";
-import ManageButton from "../client/ManageButton";
-import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
-import { UpArrowBlank } from "public/assets/icons/clienIcon";
-import SearchInput from "../SearchInput";
-import { SearchIcon } from "public/assets/icons/topBarIcons";
-import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   fetchAgentList?: () => void;
+  isEditing: boolean;
 }
+
+type FormType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: number | string;
+  address: string;
+};
+
 const names = ["All", "Rahul", "Manisha", "Elvish", "Abhishek"];
-function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
+function AddAgentModel({
+  isOpen,
+  setIsOpen,
+  fetchAgentList,
+  isEditing,
+}: IProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const agentState = useSelector((store: AgentRootState) => store.agent);
+  const { agentDetail } = useSelector((store: AgentRootState) => store.agent);
+  // console.log(agentDetail, "kklkfldkf");
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files[0];
-    console.log(file, "file");
+    // console.log(file, "file");
     if (file) {
       setSelectedImage(file); // Store the selected file
       const imageUrl = URL.createObjectURL(file); // Create a temporary URL for the uploaded image
       setpreviewUrl(imageUrl); // Set the new image
     }
   };
+  const { agent_id } = useParams();
+  // console.log(agent_id, "iddd");
+  
+  const onSubmit = async (values: FormType, { resetForm }) => {
+    try {
+      if (agent_id) {
+        const { email, ...restData } = values;
+        const newData: any = {
+          data: restData,
+          agent_id: agent_id,
+        };
 
-  const onSubmit = async (values: AgentType, { resetForm }) => {
-    console.log(values, "values");
-    const { phone_number, address, ...restValue } = values;
-    const { payload } = await dispatch(addAgent(restValue));
+        // Dispatch action to update agent profile
+        const { payload } = await dispatch(updateAgentProfile(newData));
+        if (payload?.data?.message) {
+          setIsOpen(false);
+        }
+      } else {
+        const formData = new FormData();
 
-    // const formData = {
-    //   ...formik.values, // Include form values from Formik
-    //   uploadedFiles: uploadedFiles, // Include uploaded files
-    //   selectedItems: selectedItems, // Include selected items
-    // };
-    resetForm();
-    // console.log(formData, "formdta");
-    // const { payload } = await dispatch(formData(values));
-    // if (payload?.data?.status) {
-    //   fetchAgentList();
-    //   resetForm();
-    // }
-    // console.log("Form values:", values);
+        // Append form values to FormData
+        formData.append("first_name", values.first_name);
+        formData.append("last_name", values.last_name);
+        formData.append("phone_number", String(values.phone_number)); // Convert number to string
+        formData.append("email", values.email);
+        formData.append("address", values.address);
+
+        // Append uploaded image (if exists)
+        if (selectedImage) {
+          formData.append("profile_picture", selectedImage);
+        }
+
+        // Append uploaded files
+        uploadedFiles.forEach((file, index) => {
+          formData.append(`files`, file);
+        });
+
+        // Dispatch action to add new agent
+        const resultAction = await dispatch(addAgent({ formData }));
+
+        // Access the response data if needed
+        const responseData = resultAction.payload?.data;
+
+        // Reset form after successful submission
+        resetForm();
+
+        // Optionally fetch updated agent list
+        if (fetchAgentList) {
+          fetchAgentList();
+        }
+
+        // Close the modal
+        setIsOpen(false);
+      }
+    } catch (error) {
+      // Handle error if dispatch or API call fails
+      console.error("Error submitting form:", error);
+      // You can add specific error handling logic here
+    }
   };
   const formik = useFormik({
     initialValues: {
@@ -98,15 +139,15 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
     onSubmit,
   });
 
-  useEffect(() => {
-    if (!!agentState?.successMsg) {
-      dispatch(restAll());
-      fetchAgentList();
-      setIsOpen((prev) => false);
-    } else if (!!agentState?.errorMsg) {
-      dispatch(restAll());
-    }
-  }, [agentState]);
+  // useEffect(() => {
+  //   if (!!agentState?.successMsg) {
+  //     dispatch(restAll());
+  //     fetchAgentList();
+  //     setIsOpen((prev) => false);
+  //   } else if (!!agentState?.errorMsg) {
+  //     dispatch(restAll());
+  //   }
+  // }, [agentState]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -147,14 +188,25 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
       setUploadedFiles([...uploadedFiles, ...newFiles]);
     }
   };
+  useEffect(() => {
+    if (agentDetail) {
+      formik.setValues({
+        first_name: agentDetail.first_name || "",
+        last_name: agentDetail.last_name || "",
+        email: agentDetail.email || "",
+        phone_number: agentDetail.phone_number || "",
+        address: agentDetail.address,
+      });
+    }
+  }, [agentDetail]);
 
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
-      modalTitle="Edit Profile"
+      handleToggle={() => setIsOpen((prev) => false)}
+      modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"
-      btnTitle={"Add"}
+      btnTitle={"Save"}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
       closeTitle={"Cancel"}
@@ -211,6 +263,7 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
             name="email"
             label="Email Address"
             placeholder="Enter Email Address"
+            disabled={isEditing}
           />
         </div>
         <InputField
@@ -219,8 +272,9 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
           label="Address"
           placeholder="Enter Address"
         />
-        <div className="flex gap-20 sm:flex-row flex-col">
-          <div className="flex-1 ">
+        {/* <div className="flex gap-20 sm:flex-row flex-col"> */}
+        {!isEditing && ( // Use logical NOT operator ! to conditionally render if !isEditing is true
+          <div className="flex-1 w-[50%]">
             <Typography className="text-[16px] font-500 text-[#111827] pb-10">
               Attachments
             </Typography>
@@ -240,18 +294,17 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
               </span>
             </div>
             {uploadedFiles.map((file, index) => (
-              <div className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer">
-                <div
-                  key={index}
-                  className="bg-F6F6F6 mb-10 px-10 rounded-6 min-h-48 flex items-center justify-between cursor-pointer"
-                >
+              <div
+                key={index}
+                className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
+              >
+                <div className="bg-F6F6F6 mb-10 px-10 rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
                   <span className="mr-4">
                     <PreviewIcon />
                   </span>
                   <span className="text-[16px] text-[#4F46E5] py-5">
                     {file.name}
                   </span>
-
                   <span onClick={() => handleRemoveFile(file)}>
                     <CrossGreyIcon />
                   </span>
@@ -259,101 +312,10 @@ function AddAgentModel({ isOpen, setIsOpen, fetchAgentList }: IProps) {
               </div>
             ))}
           </div>
-          <div className="flex-1">
-            {" "}
-            <Typography className="text-[16px] font-500 text-[#111827] pb-10 text-left">
-              Assign Clients
-            </Typography>
-            <Button
-              onClick={handleClick}
-              variant="contained"
-              className="bg-[#F6F6F6] sm:min-w-[320px] min-h-[48px] rounded-[8px] flex items-center justify-between text-[16px] font-400 text-[#757982] w-full "
-              sx={{ border: isOpen ? "1px solid #4F46E5" : "none" }}
-            >
-              Select Clients
-              <span>{!isOpen ? <DownArrowBlank /> : <UpArrowBlank />}</span>
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              MenuListProps={{
-                sx: {
-                  // Example: Set max height of the menu container
-                  width: 300,
-                  // maxHeight: "250px",
-                  // overflowY: "auto",
-                  "& ul": {
-                    padding: 1, // Example: Remove padding from the ul element inside Paper
-                    listStyle: "none", // Example: Remove default list styles
-                    overflowY: "auto",
-                  },
-                },
-              }}
-            >
-              <div className="flex w-full border-b-1 mb-[15px]">
-                <TextField
-                  hiddenLabel
-                  id="filled-hidden-label-small"
-                  defaultValue=""
-                  variant="standard"
-                  placeholder="Search Assignee"
-                  sx={{
-                    pl: 2,
-                    pr: 2,
-                    pt: 1,
-                    pb: 1,
-
-                    "& .MuiInputBase-input": {
-                      textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                      border: "none", // Hide the border of the input element
-                    },
-                    "& .MuiInput-underline:before": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                    "& .MuiInput-underline:after": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-              {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
-              <div className="overflow-y-scroll h-[200px] ">
-                {names.map((name) => (
-                  <MenuItem className="py-10">
-                    <div
-                      className="flex items-center gap-10  "
-                      onClick={() => handleMenuItemClick(name)}
-                    >
-                      <Checkbox
-                        checked={
-                          name === "All"
-                            ? selectAll
-                            : selectedItems.includes(name)
-                        }
-                      />
-                      {name !== "All" && (
-                        <span>
-                          <img src={img1} alt=""></img>
-                        </span>
-                      )}
-                      <ListItemText primary={name} />
-                      {/* <span>Hello</span> */}
-                    </div>
-                  </MenuItem>
-                ))}
-              </div>
-            </Menu>
-          </div>
-        </div>
+        )}
       </div>
+
+      {/* </div> */}
     </CommonModal>
   );
 }

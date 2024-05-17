@@ -62,7 +62,7 @@ function AddAccountManagerModel({
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState<any>([]);
-  console.log([selectedItems], "items");
+  // console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
   // const agentState = useSelector((store: AgentRootState) => store.agent);
   const accmanagerState = useSelector(
@@ -71,7 +71,7 @@ function AddAccountManagerModel({
   const { accManagerDetail, accClientList } = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
-  console.log(accManagerDetail, "accManagerDetail");
+  // console.log(accManagerDetail, "accManagerDetail");
 
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
@@ -90,7 +90,7 @@ function AddAccountManagerModel({
   // console.log(accountManager_id, "ll");
 
   const onSubmit = async (values: AccManagerType, { resetForm }) => {
-    console.log(values, "values");
+    // console.log(values, "values");
 
     let payload;
     if (accountManager_id) {
@@ -106,10 +106,9 @@ function AddAccountManagerModel({
     } else {
       payload = await dispatch(addAccManager(values));
     }
-
     // console.log(payload, "payload");
     setIsOpen(false);
-    fetchManagerList();
+    // fetchManagerList();
 
     if (payload?.data?.status) {
       resetForm();
@@ -231,7 +230,7 @@ function AddAccountManagerModel({
   useEffect(() => {
     fetchClientList();
   }, [fetchClientList]);
-  console.log(accClientList, "accClientttttList");
+  // console.log(accClientList, "accClientttttList");
 
   return (
     <CommonModal
@@ -317,123 +316,6 @@ function AddAccountManagerModel({
           label="Address"
           placeholder="Enter Address"
         />
-        <div className="flex gap-20 sm:flex-row flex-col">
-          <div className="">
-            {" "}
-            <Typography className="text-[16px] font-500 text-[#111827] pb-10 text-left">
-              Assign Clients
-            </Typography>
-            <Button
-              onClick={handleClick}
-              variant="contained"
-              className="bg-[#F6F6F6] sm:min-w-[320px] min-h-[48px] rounded-[8px] flex items-center justify-between text-[16px] font-400 text-[#757982] w-full "
-              sx={{ border: anchorEl ? "1px solid #4F46E5" : "none" }}
-            >
-              {selectedItems.length > 0 ? (
-                selectedItems.map((item, index) => (
-                  <div key={index} className="flex items-center gap-5">
-                    <span>
-                      <img src={img1} alt="" />
-                    </span>
-                    <ListItemText primary={item} />
-                    <div
-                      className="bg-[#FFFFFF] rounded-full border-solid border-1 cursor-pointer  "
-                      onClick={(event) => handleRemoveClient(item, event)}
-                    >
-                      <CrossGreyIcon className="h-20 w-20 p-5" />
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <span>Select Clients</span>
-              )}
-              <span>{!anchorEl ? <DownArrowBlank /> : <UpArrowBlank />}</span>
-            </Button>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              MenuListProps={{
-                sx: {
-                  // Example: Set max height of the menu container
-                  width: 300,
-                  // maxHeight: "250px",
-                  // overflowY: "auto",
-                  "& ul": {
-                    padding: 1, // Example: Remove padding from the ul element inside Paper
-                    listStyle: "none", // Example: Remove default list styles
-                    overflowY: "auto",
-                  },
-                },
-              }}
-            >
-              <div className="flex w-full border-b-1 mb-[15px]">
-                <TextField
-                  hiddenLabel
-                  id="filled-hidden-label-small"
-                  defaultValue=""
-                  variant="standard"
-                  placeholder="Search Assignee"
-                  sx={{
-                    pl: 2,
-                    pr: 2,
-                    pt: 1,
-                    pb: 1,
-
-                    "& .MuiInputBase-input": {
-                      textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                      border: "none", // Hide the border of the input element
-                    },
-                    "& .MuiInput-underline:before": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                    "& .MuiInput-underline:after": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-              {/* <SearchInput name="Assignee" placeholder="Search Assignee" /> */}
-              <div className="overflow-y-scroll h-[200px] ">
-                {accClientList?.map((item: ClientType) => {
-                  console.log(item, "itemmmm"); // Wrap the console.log within curly braces
-                  return (
-                    // Return the JSX component inside curly braces
-                    <MenuItem className="py-10" key={item.id}>
-                      {" "}
-                      {/* Added key prop */}
-                      <div
-                        className="flex items-center gap-10  "
-                        onClick={() => handleMenuItemClick(item)}
-                      >
-                        <Checkbox
-                          checked={
-                            item.userName === "All Client"
-                              ? selectAll
-                              : selectedItems.includes(item.id)
-                          }
-                        />
-                        {item.userName !== "All" && (
-                          <span>
-                            <img src={img1} alt=""></img>
-                          </span>
-                        )}
-                        <ListItemText primary={item.userName} />
-                      </div>
-                    </MenuItem>
-                  );
-                })}
-              </div>
-            </Menu>
-          </div>
-        </div>
       </div>
     </CommonModal>
   );

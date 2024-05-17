@@ -5,8 +5,10 @@ import ApiHelperFunction from "src/api";
 import {
   AgentType,
   agentIDType,
+  deleteDocument,
   filterType,
   initialStateProps,
+  uploadData,
 } from "./Interafce";
 import { calculatePageNumber } from "src/utils";
 
@@ -20,8 +22,10 @@ export const addAgent = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: "agent/add",
       method: "post",
-      data: payload,
+      data: payload.formData,
+      formData: true,
     });
+    // console.log(response, "checkk");
 
     // Return only the data you need to keep it serializable
     return {
@@ -51,6 +55,56 @@ export const getAgentInfo = createAsyncThunk(
   async (payload: agentIDType) => {
     const response = await ApiHelperFunction({
       url: `/agent/detail/${payload?.agent_id}`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const updateAgentProfile = createAsyncThunk(
+  "agent/edit/{agent_id}",
+  async (payload: agentIDType, { dispatch }) => {
+    const response = await ApiHelperFunction({
+      url: `/agent/edit/${payload?.agent_id}`,
+      method: "put",
+      data: payload.data,
+    });
+    if (response) {
+      dispatch(getAgentInfo(payload));
+    }
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const uploadAttachment = createAsyncThunk(
+  "agent/upload-attachments",
+  async (payload: uploadData) => {
+    const response = await ApiHelperFunction({
+      url: `/agent/upload-attachments`,
+      method: "post",
+      data: payload,
+      formData: true,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const deleteAttachment = createAsyncThunk(
+  "agent/delete-attachment",
+  async (payload: deleteDocument) => {
+    const response = await ApiHelperFunction({
+      url: "agent/delete-attachment",
       method: "post",
       data: payload,
     });
@@ -141,6 +195,65 @@ export const agentSlice = createSlice({
       })
       .addCase(getAgentInfo.rejected, (state) => {
         state.fetchStatus = "idle";
+      })
+      .addCase(updateAgentProfile.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(updateAgentProfile.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          // console.log(response, "response");
+          state.agentDetail = { ...response?.data };
+          console.log(state.agentDetail, "ghgh");
+          toast.success(response?.message);
+        }
+      })
+      .addCase(updateAgentProfile.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+      .addCase(uploadAttachment.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(uploadAttachment.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          console.log(response, "response");
+          // state.agentDetail = { ...response?.data };
+          // console.log(state.agentDetail, "ghgh");
+          toast.success(response?.message);
+        }
+      })
+      .addCase(uploadAttachment.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+      .addCase(deleteAttachment.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(deleteAttachment.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        console.log(payload, "payload");
+        // const { attachment_id } = action.meta?.arg;
+        // console.log(accountManger_id, "idd");
+        state.actionStatus = false;
+        // if (payload?.data?.status) {
+        //   state.list = state.list.filter(
+        //     // (item) => item.id !== accountManger_id
+        //   );
+
+        toast.success(payload?.data?.message);
+        // } else {
+        //   toast.error(payload?.data?.message);
+        // }
+      })
+      .addCase(deleteAttachment.rejected, (state, { error }) => {
+        toast.error(error?.message);
+        state.actionStatus = false;
       });
   },
 });

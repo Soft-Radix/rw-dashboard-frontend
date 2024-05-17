@@ -87,6 +87,7 @@ const editAgentSchema = Yup.object({
   ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
+    .max(10, "Phone number cannot exceed 10 digits")
     .matches(/^\+?[1-9]\d{1,14}$/, {
       message: "Invalid phone number",
       excludeEmptyString: true,

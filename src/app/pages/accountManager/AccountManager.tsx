@@ -28,6 +28,7 @@ import {
   getAccManagerList,
 } from "app/store/AccountManager";
 import { useSelector } from "react-redux";
+import { debounce } from "lodash";
 
 const rows = [
   {
@@ -104,6 +105,18 @@ export default function AccountManager() {
       // console.log(values, "kk");
     },
   });
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
 
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -155,7 +168,11 @@ export default function AccountManager() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="p-[2rem]">
-            <SearchInput name="search" placeholder="Search agents" />
+            <SearchInput
+              name="search"
+              placeholder="Search agents"
+              onChange={(e) => handleSearchChange(e)}
+            />
           </div>
           <CommonTable
             headings={["ID", "First Name", "Last Name", "Email", "Status", ,]}
