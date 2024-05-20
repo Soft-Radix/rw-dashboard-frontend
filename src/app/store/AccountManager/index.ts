@@ -162,6 +162,9 @@ export const accManagerSlice = createSlice({
     changeFetchStatus: (state) => {
       state.fetchStatus = "loading";
     },
+    resetFormManagrData: (state) => {
+      state.accManagerDetail = {};
+    },
   },
   extraReducers(builder) {
     builder
@@ -289,6 +292,7 @@ export const accManagerSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus } = accManagerSlice.actions;
+export const { restAll, changeFetchStatus, resetFormManagrData } =
+  accManagerSlice.actions;
 
 export default accManagerSlice.reducer;

@@ -173,7 +173,7 @@ function AddAccountManagerModel({
     setAnchorEl(event.currentTarget);
     setIsOpen(true);
   };
-
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const handleMenuItemClick = (data: ClientType) => {
     if (data.userName === "All") {
       // Toggle select all
@@ -242,9 +242,9 @@ function AddAccountManagerModel({
         phone_number: accManagerDetail.phone_number || "",
         address: accManagerDetail.address,
       });
-      // if (accManagerDetail.user_image) {
-      //   setpreviewUrl(urlForImage + agentDetail.user_image);
-      // }
+      if (accManagerDetail.user_image) {
+        setpreviewUrl(urlForImage + accManagerDetail.user_image);
+      }
     }
   }, [accManagerDetail]);
 
@@ -258,8 +258,14 @@ function AddAccountManagerModel({
         phone_number: accManagerDetail.phone_number || "",
         address: accManagerDetail.address,
       });
+      if (accManagerDetail.user_image) {
+        setpreviewUrl(urlForImage + accManagerDetail.user_image);
+      }
+      if (!isOpen) {
+        setpreviewUrl(previewUrl);
+      }
     }
-  }, [accManagerDetail]);
+  }, [accManagerDetail, isOpen]);
 
   return (
     <CommonModal
