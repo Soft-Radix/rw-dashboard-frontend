@@ -163,7 +163,7 @@ export default function AgentsList() {
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
                       >
-                        {row.status || "N/A"}
+                        {row.status || "Active"}
                       </span>
                     </TableCell>
                     <TableCell align="left" className="w-[1%] font-500">
