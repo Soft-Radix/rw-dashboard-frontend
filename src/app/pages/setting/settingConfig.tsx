@@ -18,4 +18,15 @@ const SettingConfig = {
   ],
 };
 
+export const clientSettingConfig = {
+  settings: {
+    layout: {},
+  },
+  routes: [
+    {
+      path: "/settings",
+      element: <Setting />,
+    },
+  ],
+};
 export default SettingConfig;

@@ -21,6 +21,10 @@ const ProjectsConfig = {
       path: "projects",
       element: <Projects />,
     },
+    {
+      path: "projects/p",
+      element: <Projects />,
+    },
   ],
 };
 

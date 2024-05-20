@@ -1,9 +1,5 @@
 import { FuseNavItemType } from "@fuse/core/FuseNavigation/types/FuseNavItemType";
 import i18next from "i18next";
-import ar from "./navigation-i18n/ar";
-import en from "./navigation-i18n/en";
-import tr from "./navigation-i18n/tr";
-import { ProjectChiildrenIcon } from "public/assets/icons/projectsIcon";
 import {
   ClientNavIcon,
   DashBoardIcon,
@@ -12,7 +8,20 @@ import {
   SettingNavIcon,
   AgentGroupIcon,
   AccountManagerIcon,
+  ProjectIcon,
+  TaskIcon,
+  ChatBoardIcon,
+  SharedFileIcon,
+  PasswordManagerIcon,
+  UserIcon,
+  SettingIcon,
+  BillingIcon,
+  SupportIcon,
+  MyAgentIcon,
 } from "public/assets/icons/navabarIcon";
+import ar from "./navigation-i18n/ar";
+import en from "./navigation-i18n/en";
+import tr from "./navigation-i18n/tr";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
@@ -28,6 +37,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "DASHBOARD",
     type: "item",
     icon: "heroicons-outline:template",
+    customIcon: <DashBoardIcon />,
     url: "dashboard",
   },
   {
@@ -36,6 +46,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "Projects",
     type: "collapse",
     icon: "heroicons-outline:list",
+    customIcon: <ProjectIcon />,
     children: [
       {
         id: "project-1",
@@ -55,14 +66,14 @@ const navigationConfig: FuseNavItemType[] = [
       },
     ],
   },
-  {
-    id: "client",
-    title: "Client",
-    translate: "client",
-    type: "item",
-    icon: "heroicons-outline:clipboard-check",
-    url: "client",
-  },
+  // {
+  //   id: "client",
+  //   title: "Client",
+  //   translate: "client",
+  //   type: "item",
+  //   icon: "heroicons-outline:clipboard-check",
+  //   url: "client",
+  // },
 
   {
     id: "task",
@@ -70,6 +81,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "TASK",
     type: "item",
     icon: "heroicons-outline:clipboard-check",
+    customIcon: <TaskIcon />,
     url: "tasks",
   },
 
@@ -79,6 +91,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "CHAT_BOARD",
     type: "item",
     icon: "heroicons-outline:chat-alt-2",
+    customIcon: <ChatBoardIcon />,
     url: "chat-board",
   },
   {
@@ -87,6 +100,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "SHARED_FILES",
     type: "item",
     icon: "heroicons-outline:external-link",
+    customIcon: <SharedFileIcon />,
     url: "shared-files",
   },
   {
@@ -95,6 +109,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "PASSWORD_MANAGER",
     type: "item",
     icon: "heroicons-outline:lock-closed",
+    customIcon: <PasswordManagerIcon />,
     url: "password-manager",
   },
   {
@@ -103,6 +118,8 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "MY_AGENTS",
     type: "item",
     icon: "heroicons-outline:user-group",
+    customIcon: <MyAgentIcon />,
+
     url: "my-agents",
   },
 
@@ -112,6 +129,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "USERS",
     type: "item",
     icon: "heroicons-outline:users",
+    customIcon: <UserIcon />,
     url: "users",
   },
   {
@@ -120,6 +138,7 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "SETTINGS",
     type: "item",
     icon: "heroicons-outline:cog",
+    customIcon: <SettingIcon />,
     url: "settings",
   },
   {
@@ -128,6 +147,8 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "BILLINGS",
     type: "item",
     icon: "heroicons-outline:cash",
+    customIcon: <BillingIcon />,
+
     url: "billings",
   },
   {
@@ -136,6 +157,8 @@ const navigationConfig: FuseNavItemType[] = [
     translate: "SUPPORT",
     type: "item",
     icon: "heroicons-outline:question-mark-circle",
+    customIcon: <SupportIcon />,
+
     url: "support",
   },
 ];
