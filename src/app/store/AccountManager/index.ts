@@ -277,9 +277,9 @@ export const accManagerSlice = createSlice({
         if (!response.status) {
           toast.error(response?.message);
         } else {
-          console.log(action.payload.data, "action.payload");
-          // state.accManagerDetail = { ...response?.data };
-          // console.log(state.agentDetail, "ghgh");
+          // console.log(action.payload.data, "action.payload");
+          state.accManagerDetail = { ...response?.data };
+          console.log(state.accManagerDetail, "accManagerDetail");
           toast.success(response?.message);
         }
       })

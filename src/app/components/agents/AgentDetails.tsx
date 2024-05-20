@@ -21,6 +21,7 @@ import {
   changeFetchStatus,
   deleteAttachment,
   getAgentInfo,
+  resetFormData,
   uploadAttachment,
 } from "app/store/Agent";
 import { AgentRootState } from "app/store/Agent/Interafce";
@@ -38,6 +39,7 @@ import AddNewTicket from "src/app/components/support/AddNewTicket";
 import ImagesOverlap from "../ImagesOverlap";
 import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
+import moment from "moment";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 const rows = [
@@ -60,6 +62,7 @@ const rows = [
     status: "Active",
   },
 ];
+// const resetForm
 
 export default function AgentDetails() {
   const theme: Theme = useTheme();
@@ -86,7 +89,9 @@ export default function AgentDetails() {
     if (!agent_id) return null;
     dispatch(getAgentInfo({ agent_id }));
     return () => {
+      dispatch(resetFormData());
       dispatch(changeFetchStatus());
+      
     };
   }, []);
 
@@ -109,29 +114,24 @@ export default function AgentDetails() {
     handleClose(); // Close the menu after handling the click
   };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const formData: any = new FormData();
+    const files = e.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      setUploadedFiles(fileArray);
+      // console.log(object);
 
-    // Append agent_id to formData
-    formData.append("agent_id", agent_id);
-    const file: any = e.target.files[0];
-    // console.log(file, "ggg");
-    if (file) {
-      setUploadedFiles(file); // Store the selected file
+      const formData: any = new FormData();
+      formData.append("agent_id", agent_id);
+
+      fileArray.forEach((file, index) => {
+        formData.append(`files`, file);
+      });
+
+      // Dispatch the uploadAttachment action with formData
+      dispatch(uploadAttachment(formData));
     }
-    // Append each uploaded file to formData
-    if (file) {
-      formData.append(`files`, file); // Append files with unique key names (e.g., file_0, file_1, ...)
-    }
-
-    // Dispatch uploadAttachment action with formData
-
-    // if (payload?.data?.status) {
-    // dispatch(getAgentInfo({ agent_id }));
-    // }
   };
-  // console.log(uploadedFiles, "file");
-  // const urlforimage = process.env.VITE_API_BASE_IMAGE_URL;
-  // console.log(urlforimage, "img");
+  // console.log(uploadedFiles, "fghughdu");
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   // console.log(urlForImage, "img");
 
@@ -142,6 +142,7 @@ export default function AgentDetails() {
       dispatch(getAgentInfo({ agent_id }));
     }
   };
+
   return (
     <>
       <div className="px-16">
@@ -154,7 +155,14 @@ export default function AgentDetails() {
               <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
                 <div className="flex gap-40 flex-wrap">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
-                    <img src="../assets/images/pages/agent/luis_.jpg" />
+                    {/* <img src="../assets/images/pages/agent/luis_.jpg" /> */}
+                    <img
+                      src={
+                        agentDetail?.user_image
+                          ? urlForImage + agentDetail.user_image
+                          : "../assets/images/pages/agent/luis_.jpg"
+                      }
+                    ></img>
                   </div>
                   <div className="pt-[20px]">
                     <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">
@@ -221,7 +229,7 @@ export default function AgentDetails() {
                       <div className="flex">
                         <img src="../assets/icons/group.svg" className="mr-4" />
 
-                        <span>#2367055342</span>
+                        <span>{agentDetail?.id || "N/A"}</span>
                       </div>
                       <div className="flex sm:px-20">
                         <span className="flex">
@@ -229,7 +237,11 @@ export default function AgentDetails() {
                             src="../assets/icons/ri_time-line.svg"
                             className="sm:mr-4"
                           />{" "}
-                          <span>{agentDetail?.phone_number || "N/A"}</span>
+                          {agentDetail?.created_at
+                            ? moment(agentDetail.created_at).format(
+                                "MMMM Do, YYYY"
+                              )
+                            : "N/A"}
                         </span>
                       </div>
                     </div>
@@ -339,7 +351,7 @@ export default function AgentDetails() {
                       />
                     </div>
                   )} */}
-                  <div
+                  <label
                     className=" cursor-pointer border-[0.5px] border-[#4F46E5] rounded-8 bg-[#EDEDFC] flex 
                    flex-col items-center sm:h-[97px] w-[200px] justify-center sm:py-64 py-36"
                     onClick={() => handleUploadFile}
@@ -377,7 +389,7 @@ export default function AgentDetails() {
                         </div>
                       </div>
                     ))} */}
-                  </div>
+                  </label>
                 </div>
               </div>
             </div>

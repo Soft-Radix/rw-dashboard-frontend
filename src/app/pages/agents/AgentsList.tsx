@@ -39,16 +39,8 @@ export default function AgentsList() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
 
-  const fetchAgentList = useCallback(() => {
-    dispatch(getAgentList(filters));
-  }, [filters]);
-
-  useEffect(() => {
-    fetchAgentList();
-  }, [fetchAgentList]);
-
   const checkPageNum = (e: any, pageNumber: number) => {
-    console.log(pageNumber, "rr");
+    // console.log(pageNumber, "rr");
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,
@@ -67,6 +59,14 @@ export default function AgentsList() {
     const { value } = event.target;
     debouncedSearch(value);
   };
+  const fetchAgentList = useCallback(() => {
+    dispatch(getAgentList(filters));
+    // console.log(filters, "filters");
+  }, [filters]);
+
+  useEffect(() => {
+    fetchAgentList();
+  }, [filters]);
   return (
     <>
       <TitleBar title="Agents">
@@ -101,7 +101,7 @@ export default function AgentsList() {
               "Last Name",
               "Start Date",
               "Last Login",
-              "Assigned Clients",
+
               "Status",
               "",
             ]}
@@ -155,10 +155,6 @@ export default function AgentsList() {
                       {moment(row.updated_at).format("MMMM Do, YYYY")}
                     </TableCell>
 
-                    <TableCell align="center" className="font-500">
-                      {row.role_id}
-                      {/* <ImagesOverlap images={row.user_image} /> */}
-                    </TableCell>
                     <TableCell
                       align="center"
                       className="whitespace-nowrap font-500"

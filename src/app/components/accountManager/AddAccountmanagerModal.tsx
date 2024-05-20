@@ -242,6 +242,9 @@ function AddAccountManagerModel({
         phone_number: accManagerDetail.phone_number || "",
         address: accManagerDetail.address,
       });
+      // if (accManagerDetail.user_image) {
+      //   setpreviewUrl(urlForImage + agentDetail.user_image);
+      // }
     }
   }, [accManagerDetail]);
 

@@ -52,7 +52,9 @@ function AddAgentModel({
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const agentState = useSelector((store: AgentRootState) => store.agent);
-  const { agentDetail } = useSelector((store: AgentRootState) => store.agent);
+  const { agentDetail, actionStatus } = useSelector(
+    (store: AgentRootState) => store.agent
+  );
   // console.log(agentDetail, "kklkfldkf");
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
@@ -74,49 +76,47 @@ function AddAgentModel({
     try {
       if (agent_id) {
         const { email, ...restData } = values;
-        const newData: any = {
-          data: restData,
-          agent_id: agent_id,
-        };
-
-        // Dispatch action to update agent profile
-        const { payload } = await dispatch(updateAgentProfile(newData));
+        const formData: any = new FormData();
+        Object.entries(restData).forEach(([key, value]) => {
+          formData.append(key, String(value));
+        });
+        formData.append("agent_id", agent_id);
+        if (selectedImage) {
+          formData.append("profile_picture", selectedImage);
+        }
+        const { payload } = await dispatch(updateAgentProfile(formData));
         if (payload?.data?.message) {
           setIsOpen(false);
         }
       } else {
-        const formData = new FormData();
+        const formData: any = new FormData();
+        Object.entries(values).forEach(([key, value]) => {
+          formData.append(key, String(value));
+        });
 
-        // Append form values to FormData
-        formData.append("first_name", values.first_name);
-        formData.append("last_name", values.last_name);
-        formData.append("phone_number", String(values.phone_number)); // Convert number to string
-        formData.append("email", values.email);
-        formData.append("address", values.address);
-
-        // Append uploaded image (if exists)
         if (selectedImage) {
           formData.append("profile_picture", selectedImage);
         }
+        // let selectFiles: any = [];
+        if (uploadedFiles.length > 0) {
+          uploadedFiles.forEach((file) => {
+            formData.append("files", file);
+          });
+        }
 
-        // Append uploaded files
-        uploadedFiles.forEach((file, index) => {
-          formData.append(`files`, file);
-        });
-
-        // Dispatch action to add new agent
         const resultAction = await dispatch(addAgent({ formData }));
 
         // Access the response data if needed
         const responseData = resultAction.payload?.data;
-
+        // console.log(responseData, "data");
         // Reset form after successful submission
+
         resetForm();
 
         // Optionally fetch updated agent list
-        if (fetchAgentList) {
-          fetchAgentList();
-        }
+        // if (fetchAgentList) {
+        //   fetchAgentList();
+        // }
 
         // Close the modal
         setIsOpen(false);
@@ -139,15 +139,15 @@ function AddAgentModel({
     onSubmit,
   });
 
-  // useEffect(() => {
-  //   if (!!agentState?.successMsg) {
-  //     dispatch(restAll());
-  //     fetchAgentList();
-  //     setIsOpen((prev) => false);
-  //   } else if (!!agentState?.errorMsg) {
-  //     dispatch(restAll());
-  //   }
-  // }, [agentState]);
+  useEffect(() => {
+    if (!!agentState?.successMsg) {
+      dispatch(restAll());
+      // fetchAgentList();
+      setIsOpen((prev) => false);
+    } else if (!!agentState?.errorMsg) {
+      dispatch(restAll());
+    }
+  }, [agentState]);
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -188,6 +188,7 @@ function AddAgentModel({
       setUploadedFiles([...uploadedFiles, ...newFiles]);
     }
   };
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   useEffect(() => {
     if (agentDetail) {
       formik.setValues({
@@ -197,7 +198,16 @@ function AddAgentModel({
         phone_number: agentDetail.phone_number || "",
         address: agentDetail.address,
       });
+
+      if (agentDetail.user_image) {
+        setpreviewUrl(urlForImage + agentDetail.user_image);
+      }
+      if (!isOpen) {
+        setpreviewUrl(previewUrl);
+      }
     }
+
+    // setSelectedImage(agentDetail.user_image);
   }, [agentDetail]);
 
   return (
@@ -207,6 +217,7 @@ function AddAgentModel({
       modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"
       btnTitle={"Save"}
+      disabled={agentState.actionStatus}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
       closeTitle={"Cancel"}
@@ -278,13 +289,19 @@ function AddAgentModel({
             <Typography className="text-[16px] font-500 text-[#111827] pb-10">
               Attachments
             </Typography>
-            <div className="bg-[#EDEDFC] px-20 mb-10 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer">
+            <label
+              htmlFor="attachment"
+              className="bg-[#EDEDFC] px-20 mb-10 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
+            justify-between cursor-pointer"
+              // onClick={() => handleUploadFile()}
+            >
               <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
                 Upload File
                 <input
                   type="file"
                   style={{ display: "none" }}
-                  multiple
+                  multiple={true}
+                  id="attachment"
                   accept=".pdf,.png,.jpg,.jpeg"
                   onChange={handleUploadFile}
                 />
@@ -292,7 +309,7 @@ function AddAgentModel({
               <span>
                 <AttachmentUploadIcon />
               </span>
-            </div>
+            </label>
             {uploadedFiles.map((file, index) => (
               <div
                 key={index}

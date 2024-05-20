@@ -336,8 +336,6 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = false;
         if (!response.status) {
           toast.error(response?.message);
-        } else {
-          toast.success(response?.message);
         }
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
