@@ -16,7 +16,7 @@ export interface AgentType {
   userName?: string;
   agent_id?: any;
   formData?: FormData;
-  attachments?: [];
+  attachments?: any[];
 }
 
 export interface filterType {
@@ -50,6 +50,7 @@ export interface agentIDType {
 }
 
 export interface uploadData {
+  agent_id: string;
   formData: FormData;
 }
 

@@ -67,16 +67,14 @@ export const getAgentInfo = createAsyncThunk(
 );
 export const updateAgentProfile = createAsyncThunk(
   "agent/edit/{agent_id}",
-  async (payload: agentIDType, { dispatch }) => {
+  async (payload: uploadData, { dispatch }) => {
     const response = await ApiHelperFunction({
-      url: `/agent/edit/${payload?.agent_id}`,
+      url: `/agent/edit`,
       method: "put",
-      data: payload.data,
+      data: payload,
+      formData: true,
     });
-    if (response) {
-      dispatch(getAgentInfo(payload));
-    }
-    // Return only the data you need to keep it serializable
+
     return {
       data: response.data,
     };
@@ -180,7 +178,7 @@ export const agentSlice = createSlice({
             response?.data?.total_records,
             10
           );
-          console.log(state.total_records, "fdf");
+          // console.log(state.total_records, "fdf");
         }
       })
       .addCase(getAgentList.rejected, (state, action) => {
@@ -208,7 +206,7 @@ export const agentSlice = createSlice({
         } else {
           // console.log(response, "response");
           state.agentDetail = { ...response?.data };
-          // console.log(state.agentDetail, "ghgh");
+          // console.log(state.agentDetail, "ghfdfdfgh");
           toast.success(response?.message);
         }
       })
@@ -220,13 +218,22 @@ export const agentSlice = createSlice({
       })
       .addCase(uploadAttachment.fulfilled, (state, action) => {
         const response = action.payload?.data;
+
         state.actionStatus = false;
         if (!response.status) {
           toast.error(response?.message);
+          console.log(response, "responsed");
         } else {
-          console.log(response, "response");
-          // state.agentDetail = { ...response?.data };
-          // console.log(state.agentDetail, "ghgh");
+          let contactArray = state.agentDetail.attachments.concat(
+            response.data
+          );
+          state.agentDetail.attachments = contactArray;
+
+          // state.agentDetail.attachments = state.agentDetail.attachments.concat(
+          //   response.data
+          // );
+          // state.agentDetail = ;
+          console.log(state.agentDetail.attachments, "ghgh");
           toast.success(response?.message);
         }
       })
@@ -238,7 +245,7 @@ export const agentSlice = createSlice({
       })
       .addCase(deleteAttachment.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        console.log(payload, "payload");
+        // console.log(payload, "payload");
         // const { attachment_id } = action.meta?.arg;
         // console.log(accountManger_id, "idd");
         state.actionStatus = false;
