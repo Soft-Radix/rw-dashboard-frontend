@@ -329,7 +329,11 @@ export default function SubscriptionDetails() {
       </div>
       <ItemTable />
       <SubLogTable />
-      <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddAgentModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        isEditing={false}
+      />
     </>
   );
 }

@@ -524,7 +524,11 @@ export default function AddSubscription() {
           </ul>
         </div>
       </div>
-      <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddAgentModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        isEditing={false}
+      />
       <CustomLineModal isOpen={customLine} setIsOpen={setCustomLine} />
       <LineModal isOpen={isLineModal} setIsOpen={setIsLineModal} />
     </>
