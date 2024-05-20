@@ -1,5 +1,9 @@
-import { InputAdornment } from "@mui/material";
-import { addAgentGroup, addAgentInagentGroup } from "app/store/Agent group";
+import { Checkbox, InputAdornment } from "@mui/material";
+import {
+  addAgentGroup,
+  addAgentInagentGroup,
+  searchAgentGroup,
+} from "app/store/Agent group";
 import {
   AgentGroupRootState,
   AgentGroupType,
@@ -15,6 +19,8 @@ import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import { debounce } from "lodash";
 import { filterType } from "app/store/Client/Interface";
+import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
+import { useParams } from "react-router";
 
 interface IProps {
   isOpen: boolean;
@@ -32,26 +38,52 @@ function AddGroupModel({
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  const { searchAgentList } = useSelector(
+  const { searchAgentList, addagentList } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  console.log(searchAgentList, "as");
+  // console.log(addagentList, "pp");
+  const [checked, setChecked] = useState(false);
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [searchText, setSearchText] = useState("");
+  // console.log(agentGroupState, "ggfsd");
+  const { group_id } = useParams();
+  // console.log(id, "asss");
 
   const dispatch = useAppDispatch();
   // const {searchAgentList}=useSelector(store:roo)
 
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    // console.log(values, "valuesnew");
-    const { payload } = await dispatch(addAgentGroup(values));
+    console.log(values, "valauuuu");
 
+    const { payload } = await dispatch(addAgentGroup(values));
     // console.log(payload, "payload");
+
     if (payload?.data?.status) {
       resetForm();
     }
   };
+
+  const handleAddmember = async () => {
+    await dispatch(
+      searchAgentGroup({
+        group_id: group_id,
+        agent_ids: checkedItems,
+        delete_agent_ids: [],
+      })
+    );
+    // Handle the case when there is an id (e.g., updating an existing group)
+  };
+
+  const handleCheckboxChange = (id: number) => {
+    setCheckedItems((prevState) =>
+      prevState.includes(id)
+        ? prevState.filter((item) => item !== id)
+        : [...prevState, id]
+    );
+  };
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
 
@@ -88,7 +120,7 @@ function AddGroupModel({
   useEffect(() => {
     dispatch(addAgentInagentGroup(filterMenu));
   }, [filterMenu]);
-
+  // console.log(checkedItems, "hhh");
   return (
     <CommonModal
       open={isOpen}
@@ -97,27 +129,44 @@ function AddGroupModel({
       maxWidth="733"
       btnTitle="Save"
       closeTitle="Cancel"
-      onSubmit={formik.handleSubmit}
+      onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
     >
-      <div className="flex flex-col gap-20 mb-20 ">
+      <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (
-          <InputField
-            formik={formik}
-            name="groupName"
-            label="Agent"
-            onChange={handleSearchChange}
-            placeholder="Search Agent with Name or ID"
-            sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
-                    <SearchIcon />
-                  </span>
-                </InputAdornment>
-              ),
-            }}
-          />
+          <>
+            <InputField
+              formik={formik}
+              name="groupName"
+              label="Agent"
+              onChange={handleSearchChange}
+              placeholder="Search Agent with Name or ID"
+              sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <span className="text-[16px] font-600 text-[#111827] bg-[#F6F6F6] pl-10">
+                      <SearchIcon />
+                    </span>
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <div className=" max-h-[100px] w-1/3 overflow-y-auto shadow-sm cursor-pointer">
+              {searchAgentList.map((item: any) => (
+                <div
+                  className="flex items-center gap-10 px-20 w-1/3"
+                  key={item.id}
+                  onClick={() => handleCheckboxChange(item.id)}
+                >
+                  <Checkbox
+                    checked={checkedItems.includes(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)}
+                  />
+                  <span className="">{item.first_name}</span>
+                </div>
+              ))}
+            </div>
+          </>
         ) : (
           <InputField
             formik={formik}

@@ -1,4 +1,4 @@
-name: RCW-Backend deploy on server
+name: RCW-frontend deploy on server
 
 on:
   push:
@@ -13,6 +13,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Create a build
+        env:
+          CI: false
+        run: npm run build
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/rcw-frontend .
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/rcw-frontend
+
       - name: SSH to Instance
         env:
           HOSTNAME: ${{ secrets.RCW_SSH_HOST }}
@@ -21,16 +46,17 @@ jobs:
           echo "${{ secrets.RCW_SSH_PRIVATEKEY }}" > my-ssh-key.pem
           chmod 400 my-ssh-key.pem
           ssh -o StrictHostKeyChecking=no -i my-ssh-key.pem $USER_NAME@${HOSTNAME} '
-          rm -rf rw-dashboard-frontend
-          export NVM_DIR=$HOME/.nvm;
-          source $NVM_DIR/nvm.sh;
-          nvm install 18
-          nvm use 18
-          git clone -b develop https://${{ secrets.RCW_GITHUB_USER }}:${{ secrets.RCW_GITHUB_KEY }}@github.com/Soft-Radix/rw-dashboard-frontend.git  
-          cd rw-dashboard-frontend
-          npm install
-          npm run build
-          sudo cp -r /home/ubuntu/rw-dashboard-frontend/build/* /var/www/html
-          rm -rf /home/ubuntu/rw-dashboard-frontend
+          sudo docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/rcw-frontend
+          echo "deleting existing container if any"
+          bash /home/ubuntu/scripts/frontend.bash
+          UNIQUE_ID=$(date +%s)
+          CONTAINER_NAME="rcw-frontend-${UNIQUE_ID}"
+          echo "Starting Docker container..."
+          sudo docker run -d --name $CONTAINER_NAME -p 81:80 ${{ secrets.DOCKER_USERNAME }}/rcw-frontend
+          echo "Docker container started......."
+          echo "Deleting old image and container"
+          sudo docker system prune -a --force
+          echo "Deleted"
           '
 

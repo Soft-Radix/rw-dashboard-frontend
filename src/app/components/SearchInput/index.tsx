@@ -5,8 +5,9 @@ import { SearchIcon } from "public/assets/icons/topBarIcons";
 interface IProps {
   name: string;
   placeholder: string;
+  onChange?: any;
 }
-function SearchInput({ name, placeholder }: IProps) {
+function SearchInput({ name, placeholder, onChange }: IProps) {
   return (
     <div className="relative w-full mb-3 sm:mb-0 sm:w-max ">
       <InputField
@@ -16,6 +17,7 @@ function SearchInput({ name, placeholder }: IProps) {
         inputProps={{
           className: "ps-[4rem] w-full sm:w-[227px] ",
         }}
+        onChange={onChange}
       />
       <SearchIcon
         width={18}

@@ -14,7 +14,9 @@ export interface AgentType {
   created_at?: string;
   updated_at?: string;
   userName?: string;
-  client_id?: [];
+  agent_id?: any;
+  formData?: FormData;
+  attachments?: [];
 }
 
 export interface filterType {
@@ -44,4 +46,13 @@ export interface AgentRootState {
 
 export interface agentIDType {
   agent_id: string;
+  data?: any;
+}
+
+export interface uploadData {
+  formData: FormData;
+}
+
+export interface deleteDocument {
+  attachment_id: number;
 }

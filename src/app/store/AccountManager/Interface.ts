@@ -18,6 +18,7 @@ export interface AccManagerType {
   assigned_clients_count?: number;
   assigned_clients?: [];
   account_manager_id?: number;
+  formData?: FormData;
 }
 
 export interface filterType {
@@ -62,4 +63,6 @@ export interface assignedClientInfoType {
   account_manager_id: string | number;
   client_ids?: any;
   unassign_client_ids?: any;
+  files?: any;
+  formData?: FormData;
 }

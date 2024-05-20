@@ -155,7 +155,11 @@ export default function AssignedAccountManager() {
           </div>
         </div>
       </div>
-      <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddAgentModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        isEditing={false}
+      />
     </>
   );
 }

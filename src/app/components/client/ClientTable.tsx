@@ -150,7 +150,7 @@ function ClientTable({
         <div className="flex justify-end py-14 px-[3rem]">
           <CommonPagination
             count={clientState?.total_records}
-            page={filters.sort + 1}
+            page={filters.start + 1}
             onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
           />
         </div>

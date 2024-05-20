@@ -1,6 +1,8 @@
 import {
   Button,
   Grid,
+  Menu,
+  MenuItem,
   TableCell,
   TableRow,
   Theme,
@@ -15,10 +17,19 @@ import {
 } from "public/assets/icons/supportIcons";
 
 import ListLoading from "@fuse/core/ListLoading";
-import { changeFetchStatus, getAgentInfo } from "app/store/Agent";
+import {
+  changeFetchStatus,
+  deleteAttachment,
+  getAgentInfo,
+  uploadAttachment,
+} from "app/store/Agent";
 import { AgentRootState } from "app/store/Agent/Interafce";
 import { useAppDispatch } from "app/store/store";
-import { ArrowRightCircleIcon, EditIcon } from "public/assets/icons/common";
+import {
+  ArrowRightCircleIcon,
+  DownGreenIcon,
+  EditIcon,
+} from "public/assets/icons/common";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
@@ -26,6 +37,7 @@ import TitleBar from "src/app/components/TitleBar";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 import ImagesOverlap from "../ImagesOverlap";
 import CommonTable from "../commonTable";
+import AddAgentModel from "./AddAgentModel";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 const rows = [
@@ -56,9 +68,11 @@ export default function AgentDetails() {
   const { agentDetail, fetchStatus } = useSelector(
     (store: AgentRootState) => store?.agent
   );
-  // console.log(agentDetail, "agent");
-
+  // console.log(agentDetail.attachments, "agent");
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [expandedImage, setExpandedImage] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
+  const [selectedItem, setSelectedItem] = useState("Active");
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const handleImageClick = (imageUrl) => {
@@ -79,7 +93,55 @@ export default function AgentDetails() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
+  };
 
+  // Close menu handler
+  const handleClose = () => {
+    setAnchorEl(null); // Reset anchor element to hide the menu
+  };
+
+  // Menu item click handler
+  const handleMenuItemClick = (status) => {
+    setSelectedItem(status);
+
+    handleClose(); // Close the menu after handling the click
+  };
+  const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const formData: any = new FormData();
+
+    // Append agent_id to formData
+    formData.append("agent_id", agent_id);
+    const file: any = e.target.files[0];
+    // console.log(file, "ggg");
+    if (file) {
+      setUploadedFiles(file); // Store the selected file
+    }
+    // Append each uploaded file to formData
+    if (file) {
+      formData.append(`files`, file); // Append files with unique key names (e.g., file_0, file_1, ...)
+    }
+
+    // Dispatch uploadAttachment action with formData
+
+    // if (payload?.data?.status) {
+    // dispatch(getAgentInfo({ agent_id }));
+    // }
+  };
+  // console.log(uploadedFiles, "file");
+  // const urlforimage = process.env.VITE_API_BASE_IMAGE_URL;
+  // console.log(urlforimage, "img");
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+  // console.log(urlForImage, "img");
+
+  const handleDeleteAttachment = async (id: number) => {
+    const { payload } = await dispatch(deleteAttachment({ attachment_id: id }));
+    // console.log(payload, "kklkkkl");
+    if (payload?.data?.status) {
+      dispatch(getAgentInfo({ agent_id }));
+    }
+  };
   return (
     <>
       <div className="px-16">
@@ -89,22 +151,71 @@ export default function AgentDetails() {
         <Grid container spacing={3} className="sm:px-10 xs:px-10 ">
           <Grid item xs={12} sm={12} md={9} className="">
             <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
-              <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[2rem] flex-col sm:flex-row">
-                <div className="flex gap-20 flex-wrap">
+              <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
+                <div className="flex gap-40 flex-wrap">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                     <img src="../assets/images/pages/agent/luis_.jpg" />
                   </div>
-                  <div className="">
-                    <div className="flex items-center gap-[7rem] mb-10">
+                  <div className="pt-[20px]">
+                    <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">
                       <span className="text-[24px] text-[#111827] font-semibold inline-block">
                         {agentDetail?.first_name + " " + agentDetail?.last_name}
+                        {/* Bernadette Jone */}
                       </span>
                       <Button
                         variant="outlined"
-                        className="h-20 rounded-3xl  text-[#FF5F15] bg-[#ffe2d5] border-none sm:min-h-24 leading-none"
+                        className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
+                          selectedItem === "Active"
+                            ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
+                            : selectedItem === "Cancelled"
+                              ? "text-[#F44336] bg-[#F443362E]"
+                              : selectedItem == "Pending"
+                                ? "text-[#FF5F15] bg-[#ffe2d5]"
+                                : "text-[#F0B402]  bg-[#FFEEBB]"
+                        }`}
+                        endIcon={
+                          <DownGreenIcon
+                            color={
+                              selectedItem === "Active"
+                                ? "#4CAF50"
+                                : selectedItem === "Cancelled"
+                                  ? "#F44336"
+                                  : selectedItem == "Pending"
+                                    ? "#FF5F15"
+                                    : "#F0B402"
+                            }
+                          />
+                        }
+                        onClick={handleClick}
                       >
-                        {agentDetail?.status || "N/A"}
+                        {/* {agentDetail?.status || "N/A"} */}
+                        {selectedItem}
                       </Button>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose} // Close the menu when clicking outside or selecting an item
+                      >
+                        {/* Define menu items */}
+                        <MenuItem onClick={() => handleMenuItemClick("Active")}>
+                          Active
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleMenuItemClick("Suspended")}
+                        >
+                          Suspended
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleMenuItemClick("Pending")}
+                        >
+                          Pending
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleMenuItemClick("Cancelled")}
+                        >
+                          Cancelled
+                        </MenuItem>
+                      </Menu>
                     </div>
                     <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                       <div className="flex">
@@ -112,92 +223,111 @@ export default function AgentDetails() {
 
                         <span>#2367055342</span>
                       </div>
-                      <div className="flex smpx-20">
-                        <span>
+                      <div className="flex sm:px-20">
+                        <span className="flex">
                           <img
                             src="../assets/icons/ri_time-line.svg"
                             className="sm:mr-4"
                           />{" "}
+                          <span>{agentDetail?.phone_number || "N/A"}</span>
                         </span>
-                        <span>{agentDetail?.phone_number || "N/A"}</span>
                       </div>
                     </div>
 
                     <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
+                      <div className="flex pr-10 gap-32 sm:flex-row flex-col">
+                        <div className="flex flex-col gap-5">
+                          <span className="text-[#111827] text-[18px] font-500">
+                            Email Address
+                          </span>
+                          <div className="flex">
+                            <img
+                              src="../assets/icons/ic_outline-email.svg"
+                              className="mr-4"
+                            />
+                            <span className="text-para_light text-[20px]">
+                              {agentDetail?.email || "N/A"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* <div className="flex pr-10 gap-32 "> */}
+                        <div className="flex flex-col gap-5">
+                          <span className="text-[#111827] text-[18px] font-500">
+                            Phone Number
+                          </span>
+                          <div className="flex items-center ">
+                            <span>
+                              <img
+                                src="../assets/icons/ph_phone.svg"
+                                className="mr-4"
+                              />{" "}
+                            </span>
+                            <span className="text-para_light text-[20px] ">
+                              {/* {clientDetail?.country_code}{" "}*/}
+                              {agentDetail?.phone_number || "N/A"}
+                            </span>
+                          </div>
+                        </div>
+                        {/* </div> */}
+                      </div>
+                    </div>
+                    <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 ">
                       <div className="flex flex-col pr-10 gap-7 ">
                         <span className="text-[1.8rem] text-title font-500 w-max">
-                          Assigned Clients
-                        </span>
-                        <div className="pl-14">
-                          <ImagesOverlap images={images} alignLeft={true} />
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-start w-8/12 gap-7">
-                        <span className="text-[1.8rem] text-title font-500">
                           Address
                         </span>
-                        <span className=" text-[#757982]  text-[2rem] font-400 mb-5 flex ">
+                        <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
                           <img
                             src="../assets/icons/loaction.svg"
                             className="mr-4"
                           />
                           {agentDetail?.address || "N/A"}
-                          {/* Akshya Nagar 1st Block 1st Cross, Rammurthy,
-                        Bangalore-560016 */}
                         </span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <Button className="cursor-pointer flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center ">
-                  Edit
-                  <EditIcon fill="#4F46E5" />
-                </Button>
+                <div>
+                  <Button
+                    className="cursor-pointer flex rounded-full py-[1rem] px-[2rem] text-secondary
+                  bg-secondary_bg w-max gap-[10px] text-lg font-600 items-center "
+                    onClick={() => setIsOpenAddModal(true)}
+                  >
+                    <span>Edit</span>
+                    <EditIcon fill="#4F46E5" />
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-col px-20 my-[2rem] gap-9">
                 <div className="text-2xl text-title font-600">Attachment</div>
                 <div className="flex gap-10 py-5 flex-wrap">
-                  <div
-                    className="relative cursor-pointer "
-                    onClick={() =>
-                      handleImageClick(
-                        "../assets/images/pages/supportDetail/black.png"
-                      )
-                    }
-                  >
-                    <img
-                      src="../assets/images/pages/supportDetail/black.png"
-                      alt="Black Attachment"
-                      className=" w-[200px] rounded-md sm:h-[130px]"
-                    />
-                    <div className="absolute top-7 left-7">
-                      <AttachmentIcon />
+                  {agentDetail?.attachments?.map((item: any) => (
+                    <div
+                      className="relative cursor-pointer "
+                      onClick={() =>
+                        handleImageClick(
+                          "../assets/images/pages/supportDetail/black.png"
+                        )
+                      }
+                    >
+                      <img
+                        src={urlForImage + item.file}
+                        alt="Black Attachment"
+                        className=" w-[200px] rounded-md sm:h-[130px]"
+                      />
+                      <div className="absolute top-7 left-7">
+                        <AttachmentIcon />
+                      </div>
+                      <div
+                        className="absolute top-7 right-7"
+                        onClick={() => handleDeleteAttachment(item.id)}
+                      >
+                        <AttachmentDeleteIcon />
+                      </div>
                     </div>
-                    <div className="absolute top-7 right-7">
-                      <AttachmentDeleteIcon />
-                    </div>
-                  </div>
-                  <div
-                    className="relative cursor-pointer"
-                    onClick={() =>
-                      handleImageClick(
-                        "../assets/images/pages/supportDetail/white.jpeg"
-                      )
-                    }
-                  >
-                    <img
-                      src="../assets/images/pages/supportDetail/white.jpeg"
-                      alt="White Attachment"
-                      className=" w-[200px] rounded-md sm:h-[130px] "
-                    />
-                    <div className="absolute top-7 left-7">
-                      <AttachmentIcon />
-                    </div>
-                    <div className="absolute top-7 right-7">
-                      <AttachmentDeleteIcon />
-                    </div>
-                  </div>
-                  {expandedImage && (
+                  ))}
+
+                  {/* {expandedImage && (
                     <div
                       className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
                       onClick={() => setExpandedImage(null)}
@@ -208,78 +338,47 @@ export default function AgentDetails() {
                         className="max-w-full max-h-full"
                       />
                     </div>
-                  )}
+                  )} */}
                   <div
                     className=" cursor-pointer border-[0.5px] border-[#4F46E5] rounded-8 bg-[#EDEDFC] flex 
-                  flex-col items-center sm:h-[97px] w-[200px] justify-center sm:py-64 py-36"
+                   flex-col items-center sm:h-[97px] w-[200px] justify-center sm:py-64 py-36"
+                    onClick={() => handleUploadFile}
                   >
-                    <div>
-                      <AttachmentUploadIcon />
-                    </div>
-                    <Typography className="text-[16px] text-[#4F46E5]">
+                    {/* <div className="bg-[#EDEDFC] px-20 mb-10 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"> */}
+                    <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
                       Upload File
-                    </Typography>
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple
+                        accept=".pdf,.png,.jpg,.jpeg"
+                        onChange={handleUploadFile}
+                      />
+                    </label>
+                    <span>
+                      <AttachmentUploadIcon />
+                    </span>
+                    {/* </div> */}
+                    {/* {uploadedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
+                      >
+                        <div className="bg-F6F6F6 mb-10 px-10 rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
+                          <span className="mr-4">
+                            <PreviewIcon />
+                          </span>
+                          <span className="text-[16px] text-[#4F46E5] py-5">
+                            {file.name}
+                          </span>
+                          <span onClick={() => handleRemoveFile(file)}>
+                            <CrossGreyIcon />
+                          </span>
+                        </div>
+                      </div>
+                    ))} */}
                   </div>
                 </div>
-              </div>
-              <div className="border-1 border-[#EDF2F6] rounded-6 py-20 mt-10">
-                <Typography className="text-[20px] font-600 pl-20 py-10 ">
-                  Assigned Clients
-                </Typography>
-                <CommonTable
-                  headings={["Id", "Name", "Company Name", "Status", " "]}
-                >
-                  <>
-                    {rows.map((row, index) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          "& td": {
-                            borderBottom: "1px solid #EDF2F6",
-                            paddingTop: "12px",
-                            paddingBottom: "12px",
-                            color: theme.palette.primary.main,
-                          },
-                        }}
-                      >
-                        <TableCell
-                          scope="row"
-                          className="font-500 text-[14px] leading-4"
-                        >
-                          {row.id}
-                        </TableCell>
-                        <TableCell
-                          align="center"
-                          className="whitespace-nowrap font-500 text-[14px] leading-4"
-                        >
-                          {row.name}
-                        </TableCell>
-
-                        <TableCell
-                          align="center"
-                          className="whitespace-nowrap font-500 text-[14px] leading-4"
-                        >
-                          {row.companyName}
-                        </TableCell>
-                        <TableCell align="center" className="whitespace-nowrap">
-                          <span
-                            className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
-                          >
-                            {row.status}
-                          </span>
-                        </TableCell>
-
-                        <TableCell
-                          align="center"
-                          className="whitespace-nowrap font-500 text-[14px] leading-4"
-                        >
-                          <ArrowRightCircleIcon />
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </>
-                </CommonTable>
               </div>
             </div>
           </Grid>
@@ -288,7 +387,11 @@ export default function AgentDetails() {
 
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm"></div>
-        <AddNewTicket isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+        <AddAgentModel
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          isEditing={true}
+        />
       </div>
     </>
   );
