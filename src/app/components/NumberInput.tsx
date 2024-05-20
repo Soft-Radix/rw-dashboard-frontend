@@ -12,6 +12,7 @@ const CustomNumberInput = React.forwardRef(function CustomNumberInput(
   props: NumberInputProps,
   ref: React.ForwardedRef<HTMLDivElement>
 ) {
+  const { onChange } = props;
   return (
     <BaseNumberInput
       slots={{
@@ -32,19 +33,66 @@ const CustomNumberInput = React.forwardRef(function CustomNumberInput(
           ),
         },
       }}
-      {...props}
+      // {...props}
       ref={ref}
     />
   );
 });
 
-export default function NumberInput({ label }) {
+export default function NumberInput({
+  label,
+  formik,
+  name,
+  disable = false,
+  value,
+}) {
   return (
     <div>
       <label className=" inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
         {label}
       </label>
-      <CustomNumberInput aria-label="Demo number input" placeholder="0" />
+      {/* <CustomNumberInput
+        aria-label="Demo number input"
+        placeholder="0"
+        onChange={onChange}
+      /> */}
+      <BaseNumberInput
+        slots={{
+          root: StyledInputRoot,
+          input: StyledInputElement,
+          incrementButton: StyledButton,
+          decrementButton: StyledButton,
+        }}
+        slotProps={{
+          incrementButton: {
+            children: (
+              <img
+                src={arrowDown}
+                alt="arrow"
+                className="w-[10px] max-w-none"
+              />
+            ),
+          },
+          decrementButton: {
+            children: (
+              <img src={arrowUp} alt="arrow" className="w-[10px] max-w-none" />
+            ),
+          },
+        }}
+        disabled={disable}
+        placeholder="0"
+        value={value}
+        onChange={(e: any) =>
+          formik ? formik.setFieldValue(name, e.target.value) : null
+        }
+        // {...props}
+        // ref={ref}
+      />
+      <span className="inline-block text-red pt-[5px]">
+        {formik?.errors[name ?? ""] &&
+          formik?.touched[name ?? ""] &&
+          formik?.errors[name ?? ""]}
+      </span>
     </div>
   );
 }

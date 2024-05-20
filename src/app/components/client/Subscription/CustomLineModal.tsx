@@ -81,7 +81,7 @@ function CustomLineModal({ isOpen, setIsOpen, handleList }: IProps) {
     >
       <div className="flex flex-col gap-20 mb-20 border-1 border-[#D9D9D9] rounded-[10px] overflow-hidden">
         <CommonTable headings={["Name", "Description", "Unit Price"]}>
-          {list.map((row, index) => (
+          {list?.map((row, index) => (
             <TableRow
               key={index}
               // sx={{

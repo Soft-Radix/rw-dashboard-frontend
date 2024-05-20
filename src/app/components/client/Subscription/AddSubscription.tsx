@@ -37,34 +37,17 @@ import { addsubscription } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
 
-const rows = [
-  {
-    ticket: "Denojs",
-    subject: "Web page design",
-    status: "Unassigned",
-    department: "Lorem Ipsum",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    payment: "1",
-    billingDate: "09/05/2024",
-    price: "$444.00",
-  },
-  {
-    ticket: "Denojs",
-    subject: "Web page design",
-    status: "Unassigned",
-    department: "Lorem Ipsum",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "male-02.jpg", "female-02.jpg"],
-    payment: "1",
-    billingDate: "09/05/2024",
-    price: "$444.00",
-  },
-];
-
-const validationSchema = Yup.object({
-  title: Yup.string().required("Title is required"),
-});
+const validationSchema = Yup.array().of(
+  Yup.object().shape({
+    title: Yup.string().required("Title is required"),
+    unit_price: Yup.number()
+      .required("Unit Price is required")
+      .min(0.01, "Unit Price must be greater than 0"),
+    quantity: Yup.number()
+      .required("Quantity is required")
+      .min(1, "Quantity must be greater than 0"),
+  })
+);
 
 export default function AddSubscription() {
   const dispatch = useAppDispatch();
@@ -72,9 +55,13 @@ export default function AddSubscription() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const client_id = localStorage.getItem("client_id");
   const formik = useFormik({
-    initialValues: {
-      title: "",
-    },
+    initialValues: [
+      {
+        title: "",
+        unit_price: "",
+        quantity: "",
+      },
+    ],
     validationSchema,
     onSubmit: (values) => {},
   });
@@ -105,6 +92,9 @@ export default function AddSubscription() {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [recurringShow, setRecurringShow] = useState(false);
   const [error, setError] = useState("");
+  const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
+  const [quantityError, setQuantityError] = useState<string[]>([]);
+  const [paymentError, setPaymentError] = useState("");
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -287,49 +277,121 @@ export default function AddSubscription() {
     );
   };
 
-  const handleListFromChild = (arg: any[]) => {
+  // const handleListFromChild = (arg: any[]) => {
+  //   const extractedData = arg?.map((item) => ({
+  //     ...item,
+  //     net_price: item.unit_price,
+  //   }));
+  //   const data = [...list];
+  //   data?.forEach((item, index) => {
+  //     data[index]["billing_frequency"] = extractedData[0]["billing_frequency"];
+  //     data[index]["billingTerms"] = extractedData[0]["billingTerms"];
+  //     data[index]["no_of_payments"] = extractedData[0]["no_of_payments"];
+  //     data[index]["billing_start_date"] =
+  //       extractedData[0]["billing_start_date"];
+  //   });
+  //   console.log("=====data===", extractedData);
+  //   setList((prevList) => [...prevList, ...extractedData]);
+
+  //   setList((prevList) => {
+  //     return prevList.map((item, i) => {
+  //       return {
+  //         ...item,
+  //       };
+  //     });
+  //   });
+  //   let sum = 0;
+  //   extractedData.map((item, i) => {
+  //     sum += Number(item.net_price);
+  //     setDetails({ ...details, subtotal: sum });
+  //   });
+  // };
+
+  const handleListFromChild = (arg) => {
+    if (!arg || !arg.length) return;
+
+    // Extract data and ensure all billing_frequency values are the same
+    const billingFrequency = arg[0].billing_frequency;
+    const billingTerms = arg[0].billing_terms;
+    const noOfPayments = arg[0].no_of_payments;
+    const billingStartDate = arg[0].billing_start_date;
     const extractedData = arg?.map((item) => ({
       ...item,
       net_price: item.unit_price,
+      billing_frequency: billingFrequency,
+      billing_terms: billingTerms,
+      no_of_payments: noOfPayments,
+      billing_start_date: billingStartDate,
     }));
-    const data = [...list];
-    data?.forEach((item, index) => {
-      data[index]["billing_frequency"] = extractedData[0]["billing_frequency"];
-      data[index]["billingTerms"] = extractedData[0]["billingTerms"];
-      data[index]["no_of_payments"] = extractedData[0]["no_of_payments"];
-      data[index]["billing_start_date"] =
-        extractedData[0]["billing_start_date"];
-    });
 
-    setList((prevList) => [...prevList, ...extractedData]);
-
+    // Update the existing list with new extracted data
     setList((prevList) => {
-      return prevList.map((item, i) => {
-        return {
-          ...item,
-        };
-      });
+      const updatedList = prevList
+        ? prevList?.map((item) => ({
+            ...item,
+            billing_frequency: billingFrequency,
+            billing_terms: billingTerms,
+            no_of_payments: noOfPayments,
+            billing_start_date: billingStartDate,
+          }))
+        : [];
+
+      // Combine the updated list with the new extracted data
+      return [...updatedList, ...extractedData];
     });
+
+    // Compute the new subtotal
     let sum = 0;
-    extractedData.map((item, i) => {
+    extractedData.forEach((item) => {
       sum += Number(item.net_price);
-      setDetails({ ...details, subtotal: sum });
     });
+
+    setDetails((prevDetails) => ({
+      ...prevDetails,
+      subtotal: sum,
+    }));
+
+    console.log("Updated extracted data:", extractedData);
   };
 
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
     event.stopPropagation();
+    var mode = "";
+    var payment = null;
+    const newErrors = list?.map((item, i) => {
+      mode = item["billing_terms"]; // Assign value to mode
+      payment = item["no_of_payments"];
+      if (item.unit_price <= 0) {
+        return "Please add a unit price";
+      }
+      return "";
+    });
+    setUnitPriceError(newErrors);
+    const newQuantityErrors = list?.map((item, i) => {
+      if (item.quantity <= 0) {
+        return "Please add a Quantity"; // Populate the error message if unit price is 0
+      }
+      return ""; // Otherwise, set the error message to an empty string
+    });
+    setQuantityError(newQuantityErrors);
+
+    if (mode != "2" && (payment <= 0 || payment == null)) {
+      setPaymentError("Please Enter Payment greater than 0");
+    } else {
+      setPaymentError("");
+    }
+
     const { value, name } = event.target;
     if (
       name == "billing_frequency" ||
-      name == "billingTerms" ||
+      name == "billing_terms" ||
       name == "no_of_payments" ||
       name == "billing_start_date"
     ) {
       setList((prevList) => {
-        return prevList.map((item, i) => {
+        return prevList?.map((item, i) => {
           return {
             ...item,
             [name]: value,
@@ -340,7 +402,6 @@ export default function AddSubscription() {
       setList((prevList) => {
         const updatedList = [...prevList];
         updatedList[index][name] = value;
-
         // Calculate net price and update the net_price key in the list array
         const netPrice = handleNetPrice(
           updatedList[index].unit_discount,
@@ -356,6 +417,33 @@ export default function AddSubscription() {
       });
     }
   };
+
+  useEffect(() => {
+    var mode = "";
+    var payment = null;
+    const newErrors = list?.map((item, i) => {
+      mode = item["billing_terms"]; // Assign value to mode
+      payment = item["no_of_payments"];
+      if (item.unit_price <= 0) {
+        return "Please add a unit price";
+      }
+      return "";
+    });
+    setUnitPriceError(newErrors);
+    const newQuantityErrors = list?.map((item, i) => {
+      if (item.quantity <= 0) {
+        return "Please add a Quantity"; // Populate the error message if unit price is 0
+      }
+      return ""; // Otherwise, set the error message to an empty string
+    });
+    setQuantityError(newQuantityErrors);
+
+    if (mode != "2" && (payment <= 0 || payment == null)) {
+      setPaymentError("Please Enter Payment greater than 0");
+    } else {
+      setPaymentError("");
+    }
+  }, [list]);
 
   const handleSubTotal = () => {
     let sum = 0;
@@ -419,18 +507,49 @@ export default function AddSubscription() {
   };
 
   const handleSave = () => {
-    if (details.title != "") {
-      const extractedData = list.map((item) => ({
+    let mode = "";
+    let payment = null;
+    const newErrors = list?.map((item, i) => {
+      mode = item["billing_terms"]; // Assign value to mode
+      payment = item["no_of_payments"];
+      if (item.unit_price <= 0) {
+        (mode = item[0].billing_terms), (payment = item[0].no_of_payments);
+        return "Please add a unit price"; // Populate the error message if unit price is 0
+      }
+      return ""; // Otherwise, set the error message to an empty string
+    });
+    if (mode != "2" && (payment <= 0 || payment == null)) {
+      setPaymentError("Please Enter Payment greater than 0");
+    } else {
+      setPaymentError("");
+    }
+
+    setUnitPriceError(newErrors);
+    const newQuantityErrors = list?.map((item, i) => {
+      if (item.quantity <= 0) {
+        return "Please add a Quantity"; // Populate the error message if unit price is 0
+      }
+      return ""; // Otherwise, set the error message to an empty string
+    });
+    setQuantityError(newQuantityErrors);
+
+    if (
+      details.title != "" &&
+      newErrors.every((error) => error == "") &&
+      paymentError == "" &&
+      newQuantityErrors.every((error) => error == "")
+    ) {
+      const extractedData = list?.map((item) => ({
         product_id: item.id,
         unit_price: item.unit_price,
-        unit_discount_type: item.unit_discount_type,
+        unit_discount_type: item.unit_discount_type || 1,
         unit_discount: item.unit_discount,
         net_price: item.net_price,
         quantity: item.quantity || 1,
         billing_frequency: item.billing_frequency || "2",
         billing_terms: item.billing_terms || 1,
         no_of_payments: item.no_of_payments || 1,
-        is_delay_in_billing: item.is_delay_in_billing,
+        is_delay_in_billing: item.is_delay_in_billing || 0,
         billing_start_date: item.billing_start_date || "",
       }));
       const fetchData = async () => {
@@ -443,23 +562,32 @@ export default function AddSubscription() {
           };
           //@ts-ignore
           const res = await dispatch(addsubscription(payload));
-          setList(res?.payload?.data?.data?.list);
+          // setList(res?.payload?.data?.data?.list);
+          setList([]);
+          setDetails({
+            title: "",
+            one_time_discount_name: "",
+            one_time_discount_type: 0,
+            one_time_discount: 0,
+            subtotal: 0,
+          });
         } catch (error) {
           console.error("Error fetching data:", error);
         }
       };
-
       fetchData();
-    } else {
+    }
+    if (details.title == "") {
       setError("Title is required");
     }
   };
   const uniqueList = [];
   const seenIds = new Set();
 
-  list.forEach((item) => {
+  list?.forEach((item) => {
     if (!seenIds.has(item.id)) {
       uniqueList.push(item);
+
       seenIds.add(item.id);
     }
   });
@@ -528,6 +656,7 @@ export default function AddSubscription() {
               "Unit Discount",
               "Net Price",
               "Billing Frequency",
+
               "Billing Terms",
               "No of Payments",
               "Delayed Billing Start Date",
@@ -535,7 +664,7 @@ export default function AddSubscription() {
           >
             <>
               {uniqueList &&
-                uniqueList.map((row, index) => (
+                uniqueList?.map((row, index) => (
                   <TableRow
                     key={row.id}
                     sx={{
@@ -591,7 +720,7 @@ export default function AddSubscription() {
                           >
                             Action
                           </MenuItem>
-                          {Action.map((item) => (
+                          {Action?.map((item) => (
                             <StyledMenuItem key={item.value} value={item.value}>
                               {item.label}
                             </StyledMenuItem>
@@ -612,6 +741,7 @@ export default function AddSubscription() {
                       <InputField
                         name={"quantity"}
                         type="number"
+                        formik={formik}
                         placeholder={"0"}
                         className="m-auto common-inputField w-max"
                         inputProps={{
@@ -641,12 +771,18 @@ export default function AddSubscription() {
                           },
                         }}
                       />
+                      {quantityError[index] && (
+                        <span style={{ color: "red" }}>
+                          {quantityError[index]}
+                        </span>
+                      )}
                     </TableCell>
                     <TableCell align="center" className="whitespace-nowrap">
                       <InputField
                         name={"unit_price"}
                         type="number"
                         placeholder={"$00.00"}
+                        formik={formik[index]}
                         // value={row.unit_price}
                         value={
                           row.unit_price != 0 ||
@@ -676,7 +812,13 @@ export default function AddSubscription() {
                           },
                         }}
                       />
+                      {unitPriceError[index] && (
+                        <span style={{ color: "red" }}>
+                          {unitPriceError[index]}
+                        </span>
+                      )}
                     </TableCell>
+
                     <TableCell
                       align="center"
                       className="cursor-pointer whitespace-nowrap font-500 "
@@ -721,7 +863,7 @@ export default function AddSubscription() {
                               },
                             }}
                           >
-                            {UnitDiscount.map((item) => (
+                            {UnitDiscount?.map((item) => (
                               <StyledMenuItem
                                 key={item.value}
                                 value={item.value}
@@ -745,6 +887,9 @@ export default function AddSubscription() {
                                 ? row.unit_discount
                                 : ""
                             }
+                            inputProps={{
+                              min: 0, // Set the minimum value here
+                            }}
                             onChange={(
                               event: React.ChangeEvent<HTMLInputElement>
                             ) => {
@@ -814,7 +959,7 @@ export default function AddSubscription() {
                             handleChange(index)(event);
                           }}
                         >
-                          {MonthlyOptions.map((item) => (
+                          {MonthlyOptions?.map((item) => (
                             <StyledMenuItem
                               key={item.value}
                               value={item.value}
@@ -840,9 +985,11 @@ export default function AddSubscription() {
                         {/* Assign employees to this Subscriptions */}
                         <SelectField
                           formik={formik}
-                          name="billingTerms"
+                          name="billing_terms"
                           defaultValue={"1"}
-                          value={row.billingTerms != 0 ? row.billingTerms : "1"}
+                          value={
+                            row.billing_terms != 0 ? row.billing_terms : "1"
+                          }
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
@@ -852,7 +999,7 @@ export default function AddSubscription() {
                             height: "46px",
                           }}
                         >
-                          {BillingTermsOptions.map((item) => (
+                          {BillingTermsOptions?.map((item) => (
                             <StyledMenuItem key={item.value} value={item.value}>
                               {item.label}
                             </StyledMenuItem>
@@ -865,48 +1012,54 @@ export default function AddSubscription() {
                       align="center"
                       className="whitespace-nowrap font-500"
                     >
-                      {row.billingTerms == 1 ||
-                      row.billingTerms == 0 ||
-                      row.billingTerms == null ||
-                      row.billingTerms == "" ? (
-                        <InputField
-                          name={"no_of_payments"}
-                          placeholder={"0"}
-                          type="number"
-                          // value={row.unit_price}
-                          value={
-                            row.no_of_payments != 0 ||
-                            row.no_of_payments != "" ||
-                            row.no_of_payments != null
-                              ? row.no_of_payments
-                              : ""
-                          }
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            handleChange(index)(event);
-                          }}
-                          className="m-auto common-inputField w-max"
-                          inputProps={{
-                            className: "ps-[1rem] max-w-[90px] m-auto ",
-                          }}
-                          hideTopPadding={true}
-                          sx={{
-                            "&  .MuiInputBase-input": {
-                              border: "0.5px solid #9DA0A6",
-                              height: 44,
-                              "::placeholder": {
-                                color: "#111827 !important", // Set placeholder color
-                                opacity: 1,
+                      {row.billing_terms == 1 ||
+                      row.billing_terms == 0 ||
+                      row.billing_terms == null ||
+                      row.billing_terms == "" ? (
+                        <>
+                          <InputField
+                            name={"no_of_payments"}
+                            placeholder={"0"}
+                            type="number"
+                            // value={row.unit_price}
+                            value={
+                              row.no_of_payments != 0 ||
+                              row.no_of_payments != "" ||
+                              row.no_of_payments != null
+                                ? row.no_of_payments
+                                : ""
+                            }
+                            onChange={(
+                              event: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              handleChange(index)(event);
+                            }}
+                            className="m-auto common-inputField w-max"
+                            inputProps={{
+                              className: "ps-[1rem] max-w-[90px] m-auto ",
+                            }}
+                            hideTopPadding={true}
+                            sx={{
+                              "&  .MuiInputBase-input": {
+                                border: "0.5px solid #9DA0A6",
+                                height: 44,
+                                "::placeholder": {
+                                  color: "#111827 !important", // Set placeholder color
+                                  opacity: 1,
+                                },
                               },
-                            },
-                          }}
-                        />
+                            }}
+                          />
+                          {paymentError && (
+                            <span style={{ color: "red" }}>{paymentError}</span>
+                          )}
+                        </>
                       ) : (
                         <InputField
                           name={"no_of_payments"}
                           placeholder={"0"}
                           type="number"
+                          disabled={true}
                           // value={row.unit_price}
                           value={0}
                           className="m-auto common-inputField w-max"
@@ -1052,7 +1205,7 @@ export default function AddSubscription() {
                               },
                             }}
                           >
-                            {UnitDiscount.map((item) => (
+                            {UnitDiscount?.map((item) => (
                               <StyledMenuItem
                                 key={item.value}
                                 value={item.value}
