@@ -5,7 +5,10 @@ import ListLoading from "@fuse/core/ListLoading";
 import { changeFetchStatus, getClientInfo } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { DownArrowIconWhite, PlusIcon } from "public/assets/icons/dashboardIcons";
+import {
+  DownArrowIconWhite,
+  PlusIcon,
+} from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
@@ -36,14 +39,18 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const location: Location = useLocation();
   const { clientDetail, actionStatus, fetchStatus } = useSelector(
     (store: ClientRootState) => store?.client
   );
   const { role } = useSelector((store: any) => store?.user);
   const { client_id } = useParams();
+  if (client_id) {
+    localStorage.setItem("client_id", client_id);
+  }
   const navigate: NavigateFunction = useNavigate();
   const queryParams = new URLSearchParams(location.search);
 
@@ -187,9 +194,9 @@ export default function ClientDetail() {
         )}
       </TitleBar>
       <div className="px-28 mb-[3rem]">
-        <div className="bg-white rounded-lg shadow-sm py-[2rem]">
+        <div className="bg-white rounded-lg shadow-sm">
           <CommonTab tabs={tabs} />
-          <div className="h-24" />
+          {/* <div className="h-24" /> */}
         </div>
       </div>
 

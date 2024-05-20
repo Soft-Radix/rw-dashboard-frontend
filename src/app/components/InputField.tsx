@@ -16,12 +16,14 @@ interface CustomButtonProps {
 
 function InputField({
   // className,
+  disabled = false,
   name,
   formik,
   label,
   type = "text",
   inputClass,
   hideTopPadding,
+
   ...rest
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
@@ -38,7 +40,12 @@ function InputField({
       )}
       <div className={`input_wrap ${inputClass}`}>
         <TextField
+          name={name}
           type={isType}
+          disabled={disabled}
+          inputProps={{
+            min: 0,
+          }}
           onChange={(e) => formik.setFieldValue(name, e.target.value)}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={formik?.values[name ?? ""]}
