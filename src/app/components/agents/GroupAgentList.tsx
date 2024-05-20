@@ -99,7 +99,7 @@ export default function GroupAgentsList() {
   const { agentGroupDetail } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
-  console.log(agentGroupDetail.group_members, "girl");
+  // console.log(agentGroupDetail.group_members, "girl");
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
     const newData: UpdateAgentGroupPayload = {
       ...values,
