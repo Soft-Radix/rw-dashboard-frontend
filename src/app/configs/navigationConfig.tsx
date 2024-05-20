@@ -12,6 +12,7 @@ import {
   SettingNavIcon,
   AgentGroupIcon,
   AccountManagerIcon,
+  ManageProductIcon,
 } from "public/assets/icons/navabarIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
@@ -160,6 +161,15 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     customIcon: <ClientNavIcon />,
     url: "admin/client",
   },
+  {
+    id: "products", 
+    title: "Manage Products",
+    type: "item",
+    icon: "dashboard",
+    customIcon: <ManageProductIcon />,
+    url: "admin/manage-products",
+  },
+
 
   {
     id: "agents",
