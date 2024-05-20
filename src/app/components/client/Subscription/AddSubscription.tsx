@@ -14,6 +14,7 @@ import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
+import toast from "react-hot-toast";
 import {
   Action,
   BillingTermsOptions,
@@ -27,6 +28,12 @@ import TitleBar from "../../TitleBar";
 import SelectField from "../../tableSelectField";
 import CustomLineModal from "./CustomLineModal";
 import LineModal from "./LineModal";
+import {
+  NavigateFunction,
+  useLocation,
+  Location,
+  useNavigate,
+} from "react-router-dom";
 import penIcon from "../../../../../public/assets/icons/subscription-title.svg";
 import { Link } from "react-router-dom";
 import { DeleteIcon } from "public/assets/icons/common";
@@ -95,7 +102,8 @@ export default function AddSubscription() {
   const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
   const [quantityError, setQuantityError] = useState<string[]>([]);
   const [paymentError, setPaymentError] = useState("");
-
+  const location: Location = useLocation();
+  const navigate: NavigateFunction = useNavigate();
   const handleClose = () => {
     setAnchorEl(null);
     setAnchorEl1(null);
@@ -569,6 +577,9 @@ export default function AddSubscription() {
           //@ts-ignore
           const res = await dispatch(addsubscription(payload));
           // setList(res?.payload?.data?.data?.list);
+          toast.success(res?.payload?.data?.message);
+
+          navigate(`/admin/client/detail/${client_id}?type=subscription`);
           setList([]);
           setDetails({
             title: "",
@@ -727,7 +738,11 @@ export default function AddSubscription() {
                             Action
                           </MenuItem>
                           {Action?.map((item) => (
-                            <StyledMenuItem key={item.value} value={item.value}>
+                            <StyledMenuItem
+                              key={item.value}
+                              value={item.value}
+                              onClick={() => setIsLineModal(true)}
+                            >
                               {item.label}
                             </StyledMenuItem>
                           ))}

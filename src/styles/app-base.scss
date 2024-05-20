@@ -20,12 +20,7 @@
 
 html {
   font-size: 62.5%;
-  font-family:
-    "Inter",
-    Roboto,
-    Helvetica Neue,
-    Arial,
-    sans-serif;
+  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #121212;
 }
 
@@ -331,4 +326,27 @@ input:-webkit-autofill:active {
   border-radius: 0% !important;
   border: none !important;
   border-color: transparent !important;
+}
+
+.Review {
+  color: #f0b402;
+  background-color: #ffeebb;
+}
+
+.Progress {
+  color: #f44336;
+  background-color: #f443362e;
+}
+.Pause {
+  color: #4c87af;
+  background-color: #4ca8af2e;
+}
+
+.Completed {
+  color: #4caf50;
+  background-color: #4caf502e;
+}
+.cancelled {
+  color: #af4c4c;
+  background-color: #af4c4c2e;
 }

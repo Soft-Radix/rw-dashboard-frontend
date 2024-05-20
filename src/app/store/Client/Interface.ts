@@ -29,6 +29,10 @@ export interface deleteClientType {
   client_ids: number[];
 }
 
+export interface ProductDelete {
+  product_id:number|string
+}
+
 /**
  * The type definition for the initial state of the auth slice.
  */
@@ -70,6 +74,24 @@ export interface SubscriptionList {
   search: string;
 }
 
+export interface ProductAdd {
+  name: string,
+  description: string,
+  unit_price: number
+}
+
+export interface ProductUpdate{
+  product_id:number|string,
+  name: string,
+  description: string,
+  unit_price: number
+}
+export interface SubscriptionListItem{
+  client_id?: number | string;
+  start: number;
+  limit: number;
+  search: string;
+}
 export interface AddLineItem {
   name: string;
   description: string;
