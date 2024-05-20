@@ -19,7 +19,11 @@ import TitleBar from "../TitleBar";
 import CommonTable from "../commonTable";
 import AddAccountManagerModel from "./AddAccountmanagerModal";
 import { useParams } from "react-router-dom";
-import { changeFetchStatus, getAccManagerInfo } from "app/store/AccountManager";
+import {
+  changeFetchStatus,
+  getAccManagerInfo,
+  resetFormManagrData,
+} from "app/store/AccountManager";
 import { RootState, useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
@@ -83,6 +87,7 @@ const ManagerProfile = () => {
     if (!accountManager_id) return null;
     dispatch(getAccManagerInfo({ account_manager_id: accountManager_id }));
     return () => {
+      dispatch(resetFormManagrData());
       dispatch(changeFetchStatus());
     };
   }, []);
@@ -91,6 +96,7 @@ const ManagerProfile = () => {
     return <ListLoading />;
   }
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
   return (
     <>
       <div className="px-16">

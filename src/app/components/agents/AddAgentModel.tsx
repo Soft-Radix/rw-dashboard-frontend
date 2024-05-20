@@ -206,9 +206,7 @@ function AddAgentModel({
         setpreviewUrl(previewUrl);
       }
     }
-
-    // setSelectedImage(agentDetail.user_image);
-  }, [agentDetail]);
+  }, [agentDetail, isOpen]);
 
   return (
     <CommonModal
