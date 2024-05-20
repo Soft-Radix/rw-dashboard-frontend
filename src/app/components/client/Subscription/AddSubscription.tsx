@@ -146,7 +146,10 @@ export default function AddSubscription() {
             <div className="  w-[314px] p-4 flex flex-col flex-end">
               <MenuItem
                 className="rounded-lg hover:bg-[#E7E8E9] py-10"
-                onClick={() => setCustomLine(true)}
+                onClick={() => {
+                  setCustomLine(true);
+                  handleClose();
+                }}
               >
                 <label
                   htmlFor="agents"
@@ -164,7 +167,10 @@ export default function AddSubscription() {
 
               <MenuItem
                 className="rounded-lg hover:bg-[#E7E8E9] py-10"
-                onClick={() => setIsLineModal(true)}
+                onClick={() => {
+                  setIsLineModal(true);
+                  handleClose();
+                }}
               >
                 <label
                   htmlFor="activity"
@@ -1316,6 +1322,7 @@ export default function AddSubscription() {
             color="secondary"
             className="w-[156px] h-[48px] text-[18px] leading-5"
             onClick={() => handleSave()}
+            disabled={list.length == 0 ? true : false}
           >
             Save
           </Button>

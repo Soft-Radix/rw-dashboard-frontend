@@ -36,7 +36,7 @@ const validationSchema = Yup.object({
     .nullable()
     .when("billing_frequency", {
       is: (value) => {
-        return value != 2;
+        return value == 2;
       },
       then: (Schema) =>
         Yup.number()
