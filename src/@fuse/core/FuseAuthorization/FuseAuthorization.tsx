@@ -133,13 +133,6 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     const { userRole, loginRedirectUrl = "/" } = this.props;
     const redirectUrl = getSessionRedirectUrl() || loginRedirectUrl;
 
-    console.log(
-      "Redirecting - User Role:",
-      userRole,
-      "Redirect URL:",
-      redirectUrl
-    );
-
     if (!userRole || userRole.length === 0) {
       setTimeout(() => history.push("/sign-in"), 0);
     } else {
