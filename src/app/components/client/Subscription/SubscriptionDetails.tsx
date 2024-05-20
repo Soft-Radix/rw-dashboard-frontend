@@ -22,8 +22,8 @@ import {
 } from "public/assets/icons/common";
 import { DownArrowIcon, PlusIcon } from "public/assets/icons/dashboardIcons";
 import { DownArrowwhite, Timericon } from "public/assets/icons/subscription";
-import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -45,81 +45,8 @@ import PaymentSubscriptio from "./PaymentSubscriptio";
 import ItemTable from "./ItemTable";
 import SubLogTable from "./SubLogTable";
 import CancelButtonPage from "./CancelButtonPage";
-
-const rows = [
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-];
+import { changeFetchStatus, subscriptionDetails } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -157,6 +84,8 @@ function a11yProps(index: number) {
 
 export default function SubscriptionDetails() {
   const theme: Theme = useTheme();
+  const { subscription_id } = useParams();
+  const dispatch = useAppDispatch();
   const formik = useFormik({
     initialValues: {
       role: "",
@@ -168,8 +97,41 @@ export default function SubscriptionDetails() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [value, setValue] = useState(0);
+  const [rows, setRows] = useState([]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+  useEffect(() => {
+    if (!subscription_id) return null;
+
+    const fetchData = async () => {
+      try {
+        const payload = {
+          client_id: subscription_id,
+        };
+        //@ts-ignore
+        const res = await dispatch(subscriptionDetails(payload));
+        // setList(res?.payload?.data?.data?.list);
+        setRows(res?.payload?.data?.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const StatusMapping = (status) => {
+    if (status == 0) {
+      return "Review";
+    } else if (status == 1) {
+      return "Progress";
+    } else if (status == 2) {
+      return "Pause";
+    } else if (status == 3) {
+      return "Completed";
+    } else if (status == 4) {
+      return "cancelled";
+    }
   };
 
   return (
@@ -213,13 +175,18 @@ export default function SubscriptionDetails() {
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                          Alexandra
+                          {rows?.userName}
                         </span>
                         <Button
                           variant="outlined"
-                          className="h-20 rounded-3xl  text-[#FF5F15] bg-[#ffe2d5] border-none sm:min-h-24 leading-none"
+                          className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
+                            rows?.status
+                          )}`}
                         >
-                          In Progress
+                          {/* {`${
+                            rows.status == 0 || rows.status == 1 ? "In " : ""
+                          }${StatusMapping(rows.status)}`} */}
+                          kkjkj
                         </Button>
                       </div>
                       <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-8 ">
@@ -227,7 +194,7 @@ export default function SubscriptionDetails() {
                           <span>
                             <Timericon />
                           </span>
-                          <span>Feb 21,2024</span>
+                          <span>{rows.subscription_start_date}</span>
                         </div>
                         <div className="flex">
                           <img

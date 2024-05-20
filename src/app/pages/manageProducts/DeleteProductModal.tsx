@@ -6,7 +6,7 @@ import CommonModal from "src/app/components/CommonModal";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  onDelete ?: () => void;
+  onDelete?: () => void;
   loading?: boolean;
 }
 
@@ -29,10 +29,10 @@ function DeleteProduct({ isOpen, setIsOpen, onDelete, loading }: IProps) {
             <DeleteIcon className="h-28 w-28 " />
           </div>
           <Typography className="text-[20px] font-600 text-[#111827]">
-          Delete Product
+            Delete Product
           </Typography>
           <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-          Are you sure you want to delete this product ?
+            Are you sure you want to delete this product ?
           </Typography>
         </div>
       </CommonModal>

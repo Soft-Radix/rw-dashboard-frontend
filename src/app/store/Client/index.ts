@@ -12,7 +12,12 @@ import {
   UpdateProfilePayload,
   ChangePassword,
   AddSubscriptionList,
-  AddLineItem
+  AddLineItem,
+  SubscriptionListItem,
+  ProductAdd,
+  ProductDelete,
+  ProductUpdate
+
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -167,7 +172,118 @@ export const addLineItem = createAsyncThunk(
   }
 );
 
+export const subscriptionListItem = createAsyncThunk(
+  "client/subscription-list",
+  async (payload: SubscriptionListItem ) => {
+    const response = await ApiHelperFunction({
+      url: `client/subscription-list`,
+      method: "post",
+      data: payload,
+    });
 
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const subscriptionDetails = createAsyncThunk(
+  "client/information",
+  async (payload: clientIDType) => {
+    const response = await ApiHelperFunction({
+      url: `client/subscription-detail/${payload?.client_id}`,
+      method: "get",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+// ----*-------product-list-----
+
+export const productAdd = createAsyncThunk(
+  "product/add",
+  async (payload: ProductAdd ) => {
+    const response = await ApiHelperFunction({
+      url: `/product/add`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+
+export const productUpdate = createAsyncThunk(
+  "product/update",
+  async (payload: ProductUpdate ) => {
+    const response = await ApiHelperFunction({
+      url: `/product/update`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const productList = createAsyncThunk(
+  "product/list",
+  async (payload: SubscriptionList ) => {
+    const response = await ApiHelperFunction({
+      url: `/product/list`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const productDelete = createAsyncThunk(
+  "product/delete",
+  async (payload: ProductDelete ) => {
+    const response = await ApiHelperFunction({
+      url: `/product/delete`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const productDetails = createAsyncThunk(
+  "/product/detail/",
+  async (payload: ProductDelete) => {
+    const response = await ApiHelperFunction({
+      url: `/product/detail//${payload?.product_id}`,
+      method: "get",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 /**
  * The initial state of the auth slice.
  */

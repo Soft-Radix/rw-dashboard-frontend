@@ -1,45 +1,102 @@
 import { TableCell, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import NoSubscription from "../../../../../../public/assets/icons/no-subscription-img.svg";
 import CommonTable from "src/app/components/commonTable";
 import { TableRow } from "@mui/material";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { ArrowRightCircleIcon } from "public/assets/icons/common";
 import CommonPagination from "src/app/components/pagination";
 import dotImg from "../../../../../../public/assets/icons/dots.svg";
 import LongMenu from "../../Subscription/Dropdown";
+import toast from "react-hot-toast";
+import { subscriptionListItem } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 
-const rows = [
-  {
-    id: "#2367055342",
-    status: "In Review",
-    title: "Basic",
-    date: "Feb 12,2024",
-    assignedImg: dotImg,
-  },
-  {
-    id: "1542145611525",
-    status: "Completed",
-    title: "Basic",
-    date: "Feb 12,2024",
-    assignedImg: dotImg,
-  },
-  {
-    id: "#2367055342",
-    // title: "Basic",
-    status: "In Progress",
-    title: "Basic",
-    date: "Feb 12,2024",
-    assignedImg: dotImg,
-  },
-];
+// const rows = [
+//   {
+//     id: "#2367055342",
+//     status: "In Review",
+//     title: "Basic",
+//     date: "Feb 12,2024",
+//     assignedImg: dotImg,
+//   },
+//   {
+//     id: "1542145611525",
+//     status: "Completed",
+//     title: "Basic",
+//     date: "Feb 12,2024",
+//     assignedImg: dotImg,
+//   },
+//   {
+//     id: "#2367055342",
+//     // title: "Basic",
+//     status: "In Progress",
+//     title: "Basic",
+//     date: "Feb 12,2024",
+//     assignedImg: dotImg,
+//   },
+// ];
 
 export default function SubscriptionList() {
   const theme: Theme = useTheme();
+  const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [rows, setRows] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const { client_id } = useParams();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const payload = {
+          client_id: client_id,
+          start: 0,
+          limit: 10,
+          search: "",
+        };
+        //@ts-ignore
+        const res = await dispatch(subscriptionListItem(payload));
+        setRows(res?.payload?.data?.data?.list);
+        // toast.success(res?.payload?.data?.message);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const totalPageCount = Math.ceil(rows.length / itemsPerPage);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    // Handle any additional logic when the page changes, e.g., fetching data
+  };
+
+  const currentRows = rows.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const StatusMapping = (status) => {
+    if (status == 0) {
+      return "Review";
+    } else if (status == 1) {
+      return "Progress";
+    } else if (status == 2) {
+      return "Pause";
+    } else if (status == 3) {
+      return "Completed";
+    } else if (status == 4) {
+      return "cancelled";
+    }
+  };
 
   return (
     <>
@@ -57,7 +114,7 @@ export default function SubscriptionList() {
       <div className="bg-white rounded-lg shadow-sm">
         <CommonTable headings={["ID", "Title", "Start Date", "Status", "", ""]}>
           <>
-            {rows.map((row, index) => (
+            {currentRows?.map((row, index) => (
               <TableRow
                 key={index}
                 // sx={{
@@ -79,21 +136,17 @@ export default function SubscriptionList() {
                   align="center"
                   className="whitespace-nowrap font-500"
                 >
-                  {row.date}
+                  {row.subscription_start_date}
                 </TableCell>
 
                 <TableCell align="center" className="whitespace-nowrap">
                   <span
                     className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${
-                        row.status === "Completed"
-                          ? "text-[#4CAF50] bg-[#4CAF502E]"
-                          : row.status === "In Progress"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : "text-[#F0B402] bg-[#FFEEBB]"
-                      }`}
+                      ${StatusMapping(row.status)}`}
                   >
-                    {row.status}
+                    {`${
+                      row.status == 0 || row.status == 1 ? "In " : ""
+                    }${StatusMapping(row.status)}`}
                   </span>
                 </TableCell>
 
@@ -110,7 +163,8 @@ export default function SubscriptionList() {
                 <TableCell align="left" className="w-[1%]">
                   <div className="flex gap-20 pe-20">
                     <span className="p-2 cursor-pointer">
-                      <Link to="/admin/client/subscription-detail">
+                      {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
+                      <Link to="#">
                         <ArrowRightCircleIcon />
                       </Link>
                     </span>
@@ -121,7 +175,11 @@ export default function SubscriptionList() {
           </>
         </CommonTable>
         <div className="flex justify-end py-14 px-[3rem]">
-          <CommonPagination count={10} />
+          <CommonPagination
+            count={totalPageCount}
+            currentPage={currentPage}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
       {/* <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}

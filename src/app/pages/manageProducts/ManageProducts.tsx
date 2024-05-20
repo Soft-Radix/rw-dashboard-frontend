@@ -2,13 +2,16 @@ import { Button, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { DeleteIcon, EditIcon } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
-
+import { useAppDispatch } from "app/store/store";
+import { productDelete, productList } from "app/store/Client";
+import { map } from "lodash";
+import toast from "react-hot-toast";
 
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
@@ -16,8 +19,42 @@ export default function ManageProducts() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [list, setList] = useState<any[]>([]);
+  const [id, setId] = useState();
   const theme: Theme = useTheme();
+  const dispatch = useAppDispatch();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const payload = {
+        start: 0,
+        limit: 10,
+        search: "",
+      };
+      try {
+        //@ts-ignore
+        const res = await dispatch(productList(payload));
+        setList(res?.payload?.data?.data?.list);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [dispatch]);
+
+  const onDelete = async () => {
+    try {
+      const payload = {
+        product_id: id,
+      };
+      //@ts-ignore
+      const res = await dispatch(productDelete(payload));
+      // setList(res?.payload?.data?.data?.list);
+      toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   return (
     <div>
       <TitleBar title="Manage Products" minHeight="min-h-[80px]">
@@ -39,30 +76,56 @@ export default function ManageProducts() {
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
             <>
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell scope="row">Jone Doe</TableCell>
-                <TableCell align="center" className="whitespace-nowrap">
-                  Lorem Ipsum
-                </TableCell>
-
-                <TableCell align="center" className="whitespace-nowrap">
-                  $100
-                </TableCell>
-
-                <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span
-                      className="p-2 cursor-pointer"
+              {list?.map((item, index) => {
+                return (
+                  <>
+                    <TableRow
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
                     >
+                      <TableCell scope="row">{item.name}</TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {item.description}
+                      </TableCell>
+
+                      <TableCell align="center" className="whitespace-nowrap">
+                        ${item.unit_price}
+                      </TableCell>
+                      <TableCell align="center" className="w-[1%]">
+                        <div className="flex gap-20 pe-20">
+                          <span className="p-2 cursor-pointer">
+                            <DeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setId(item.id);
+                              }}
+                            />
+                          </span>
+                          <span className="p-2 cursor-pointer">
+                            <EditIcon
+                              onClick={() => {
+                                setId(item.id);
+                                setIsOpenAddModal(true);
+                                setIsEditing(true);
+                              }}
+                            />
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  </>
+                );
+              })}
+
+              {/* <TableCell align="center" className="w-[1%]">
+                  <div className="flex gap-20 pe-20">
+                    <span className="p-2 cursor-pointer">
                       <DeleteIcon
                         onClick={() => {
                           setIsOpenDeletedModal(true);
@@ -73,7 +136,7 @@ export default function ManageProducts() {
                       <EditIcon
                         onClick={() => {
                           setIsOpenAddModal(true);
-                          setIsEditing(true)
+                          setIsEditing(true);
                         }}
                       />
                     </span>
@@ -113,23 +176,27 @@ export default function ManageProducts() {
                     </span>
                   </div>
                 </TableCell>
-              </TableRow>
+              </TableRow> */}
             </>
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+            {/* <CommonPagination count={10} /> */}
           </div>
         </div>
       </div>
-      <AddProduct
-        isOpen={isOpenAddModal}
-        setIsOpen={setIsOpenAddModal}
-         isEditing={isEditing}
-         setIsEditing={setIsEditing}
-      />
+      {isOpenAddModal && (
+        <AddProduct
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          isEditing={isEditing}
+          setIsEditing={setIsEditing}
+          id={id}
+        />
+      )}
       <DeleteProduct
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
+        onDelete={onDelete}
       />
     </div>
   );
