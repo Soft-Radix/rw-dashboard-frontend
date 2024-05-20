@@ -1,4 +1,3 @@
-import i18next from "i18next";
 import { lazy } from "react";
 
 const Client = lazy(() => import("./Client"));

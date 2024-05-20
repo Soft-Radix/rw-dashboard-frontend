@@ -1,3 +1,4 @@
+import { MenuItem, styled } from "@mui/material";
 import { MenuItem, styled, useTheme } from "@mui/material";
 import { fontWeight, lineHeight } from "@mui/system";
 
@@ -61,7 +62,7 @@ export const EmployOptions: SelectProp[] = [
   { value: "2", label: "Monthly" },
   { value: "3", label: "Quarterly" },
   { value: "4", label: "Semi annually" },
-  { value:"5", label: "Annually" },
+  { value: "5", label: "Annually" },
   // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const UnitDiscount: SelectProp[] = [

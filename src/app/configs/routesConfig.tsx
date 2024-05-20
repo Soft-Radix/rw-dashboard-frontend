@@ -13,7 +13,10 @@ import ResetPasswordConfig from "../main/reset-password/ResetPasswordConfig";
 import SetPasswordConfig from "../main/set-password/SetPasswordConfig";
 import OtpVerificationConfig from "../main/otp-verification/OtpVerificationConfig";
 import AddProjectConfig from "../main/add-project/AddProjectConfig";
-import { AdminDashboardConfig } from "../pages/dashboard/DashboardConfig";
+import {
+  AdminDashboardConfig,
+  ClientDashboardConfig,
+} from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
 import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
@@ -26,7 +29,9 @@ import SupportConfig from "../pages/support/supportConfig";
 import ProjectsConfig from "../pages/projects/ProjectsConfig";
 import ClientConfig from "../pages/client/clientConfig";
 import AdminAgentsConfig from "../pages/agents/agentsListConfig";
-import SettingConfig from "../pages/setting/settingConfig";
+import SettingConfig, {
+  clientSettingConfig,
+} from "../pages/setting/settingConfig";
 import ClientOnBoardConfig from "../main/clientOnBoard/ClientOnBoardConfig";
 import AgentOnBoardConfig from "../main/agentsOnBoard/AgentOnBoardConfig";
 import { AdminAccountManagerConfig } from "../pages/accountManager/accountConfig";
@@ -66,6 +71,29 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   ManageProductsConfig
 ];
 
+const clientRouteConfigs: FuseRouteConfigsType = [
+  ClientDashboardConfig,
+  ProjectsConfig,
+  TasksConfig,
+  SignOutConfig,
+  SignInConfig,
+  SignUpConfig,
+  ForgotPasswordConfig,
+  ResetPasswordConfig,
+  SetPasswordConfig,
+  OtpVerificationConfig,
+  ClientConfig,
+  AdminAgentsConfig,
+  UsersConfig,
+  SettingConfig,
+  ClientOnBoardConfig,
+  PasswordManagerConfig,
+  SharedFilesConfig,
+  clientSettingConfig,
+  BillingConfig,
+  SupportConfig,
+];
+
 /**
  * The routes of the Admin application.
  */
@@ -87,8 +115,13 @@ export const adminRoutes: FuseRoutesType = [
  */
 export const clientRoutes: FuseRoutesType = [
   ...FuseUtils.generateRoutesFromConfigs(
-    adminRouteConfigs,
+    clientRouteConfigs,
     settingsConfig.defaultAuth
   ),
+  {
+    path: "/",
+    element: <Navigate to="/dashboard" />,
+    auth: settingsConfig.defaultAuth,
+  },
   ...commonRoutes,
 ];
