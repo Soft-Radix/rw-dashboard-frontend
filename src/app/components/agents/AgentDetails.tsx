@@ -21,6 +21,7 @@ import {
   changeFetchStatus,
   deleteAttachment,
   getAgentInfo,
+  resetFormData,
   uploadAttachment,
 } from "app/store/Agent";
 import { AgentRootState } from "app/store/Agent/Interafce";
@@ -61,6 +62,7 @@ const rows = [
     status: "Active",
   },
 ];
+// const resetForm
 
 export default function AgentDetails() {
   const theme: Theme = useTheme();
@@ -87,7 +89,9 @@ export default function AgentDetails() {
     if (!agent_id) return null;
     dispatch(getAgentInfo({ agent_id }));
     return () => {
+      dispatch(resetFormData());
       dispatch(changeFetchStatus());
+      
     };
   }, []);
 
@@ -267,7 +271,7 @@ export default function AgentDetails() {
                             <span>
                               <img
                                 src="../assets/icons/ph_phone.svg"
-                                className="mr-4"getAgentInfo
+                                className="mr-4"
                               />{" "}
                             </span>
                             <span className="text-para_light text-[20px] ">

@@ -103,7 +103,13 @@ const ManagerProfile = () => {
             <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
               <div className="flex gap-40 flex-wrap">
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
-                  <img src={urlForImage + accManagerDetail.user_image}></img>
+                  <img
+                    src={
+                      accManagerDetail.user_image
+                        ? urlForImage + accManagerDetail.user_image
+                        : "../assets/images/pages/agent/luis_.jpg"
+                    }
+                  ></img>
                   // <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
                 <div className="pt-[20px]">

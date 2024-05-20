@@ -38,6 +38,7 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   total_records: number;
+  resetFormData?: any;
 };
 
 export interface AgentRootState {

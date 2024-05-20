@@ -11,6 +11,7 @@ import {
   uploadData,
 } from "./Interafce";
 import { calculatePageNumber } from "src/utils";
+import AgentDetails from "src/app/components/agents/AgentDetails";
 
 /**
  * API calling
@@ -127,6 +128,7 @@ export const initialState: initialStateProps = {
   selectedColumn: [],
   actionStatus: false,
   total_records: 0,
+  resetFormData: {},
 };
 
 /**
@@ -142,6 +144,9 @@ export const agentSlice = createSlice({
     },
     changeFetchStatus: (state) => {
       state.fetchStatus = "loading";
+    },
+    resetFormData: (state) => {
+      state.agentDetail = {};
     },
   },
   extraReducers(builder) {
@@ -266,6 +271,6 @@ export const agentSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus } = agentSlice.actions;
+export const { restAll, changeFetchStatus, resetFormData } = agentSlice.actions;
 
 export default agentSlice.reducer;
