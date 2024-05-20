@@ -19,7 +19,11 @@ import TitleBar from "../TitleBar";
 import CommonTable from "../commonTable";
 import AddAccountManagerModel from "./AddAccountmanagerModal";
 import { useParams } from "react-router-dom";
-import { changeFetchStatus, getAccManagerInfo } from "app/store/AccountManager";
+import {
+  changeFetchStatus,
+  getAccManagerInfo,
+  resetFormManagrData,
+} from "app/store/AccountManager";
 import { RootState, useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
@@ -83,6 +87,7 @@ const ManagerProfile = () => {
     if (!accountManager_id) return null;
     dispatch(getAccManagerInfo({ account_manager_id: accountManager_id }));
     return () => {
+      dispatch(resetFormManagrData());
       dispatch(changeFetchStatus());
     };
   }, []);
@@ -91,6 +96,7 @@ const ManagerProfile = () => {
     return <ListLoading />;
   }
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
   return (
     <>
       <div className="px-16">
@@ -103,7 +109,13 @@ const ManagerProfile = () => {
             <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
               <div className="flex gap-40 flex-wrap">
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
-                  <img src={urlForImage + accManagerDetail.user_image}></img>
+                  <img
+                    src={
+                      accManagerDetail.user_image
+                        ? urlForImage + accManagerDetail.user_image
+                        : "../assets/images/pages/agent/luis_.jpg"
+                    }
+                  ></img>
                   // <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
                 <div className="pt-[20px]">

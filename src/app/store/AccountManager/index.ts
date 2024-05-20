@@ -162,6 +162,9 @@ export const accManagerSlice = createSlice({
     changeFetchStatus: (state) => {
       state.fetchStatus = "loading";
     },
+    resetFormManagrData: (state) => {
+      state.accManagerDetail = {};
+    },
   },
   extraReducers(builder) {
     builder
@@ -277,9 +280,9 @@ export const accManagerSlice = createSlice({
         if (!response.status) {
           toast.error(response?.message);
         } else {
-          console.log(action.payload.data, "action.payload");
-          // state.accManagerDetail = { ...response?.data };
-          // console.log(state.agentDetail, "ghgh");
+          // console.log(action.payload.data, "action.payload");
+          state.accManagerDetail = { ...response?.data };
+          console.log(state.accManagerDetail, "accManagerDetail");
           toast.success(response?.message);
         }
       })
@@ -289,6 +292,7 @@ export const accManagerSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus } = accManagerSlice.actions;
+export const { restAll, changeFetchStatus, resetFormManagrData } =
+  accManagerSlice.actions;
 
 export default accManagerSlice.reducer;

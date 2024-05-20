@@ -67,8 +67,19 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
+<<<<<<< HEAD
   const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
     props;
+=======
+  const {
+    config,
+    onSignedIn,
+    onSignedOut,
+    onSignedUp,
+    onError,
+    onUpdateUser,
+  } = props;
+>>>>>>> 51cc5fb237ccc00eac7cedb305b69bb5cad15710
   const dispatch = useAppDispatch();
 
   // Merge default config with the one from the props
@@ -92,7 +103,10 @@ const useJwtAuth = <User, SignUpPayload>(
   const resetSession = useCallback(() => {
     localStorage.removeItem(authConfig.tokenStorageKey);
     delete axios.defaults.headers.common.Authorization;
+<<<<<<< HEAD
     localStorage.removeItem("userDetail");
+=======
+>>>>>>> 51cc5fb237ccc00eac7cedb305b69bb5cad15710
   }, []);
 
   /**
@@ -217,6 +231,7 @@ const useJwtAuth = <User, SignUpPayload>(
     let response = await dispatch(
       logIn({ email: credentials?.email, password: credentials?.password })
     );
+<<<<<<< HEAD
     if (response?.payload?.status) {
       const userData = response?.payload.data?.user;
       const accessToken = response?.payload.data?.access_token;
@@ -348,6 +363,140 @@ const useJwtAuth = <User, SignUpPayload>(
     }
   }, [isAuthenticated]);
 
+=======
+
+    if (response?.payload?.status) {
+      const userData = response?.payload.data?.user;
+      const accessToken = response?.payload.data?.access_token;
+      handleSignInSuccess(userData, accessToken);
+    }
+    return response;
+  };
+
+  /**
+   * Sign up
+   */
+  const signUp = useCallback((data: SignUpPayload) => {
+    const response = axios.post(authConfig.signUpUrl, data);
+
+    response.then(
+      (res: AxiosResponse<{ user: User; access_token: string }>) => {
+        const userData = res?.data?.user;
+        const accessToken = res?.data?.access_token;
+
+        handleSignUpSuccess(userData, accessToken);
+
+        return userData;
+      },
+      (error) => {
+        const axiosError = error as AxiosError;
+
+        handleSignUpFailure(axiosError);
+
+        return axiosError;
+      }
+    );
+
+    return response;
+  }, []);
+
+  /**
+   * Sign out
+   */
+  const signOut = useCallback(() => {
+    resetSession();
+
+    setIsAuthenticated(false);
+    setUser(null);
+
+    onSignedOut();
+  }, []);
+
+  /**
+   * Update user
+   */
+  const updateUser = useCallback(async (userData: PartialDeep<User>) => {
+    try {
+      const response: AxiosResponse<User, PartialDeep<User>> = await axios.put(
+        authConfig.updateUserUrl,
+        userData
+      );
+
+      const updatedUserData = response?.data;
+
+      onUpdateUser(updatedUserData);
+
+      return null;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      handleError(axiosError);
+      return axiosError;
+    }
+  }, []);
+
+  /**
+   * Refresh access token
+   */
+  const refreshToken = async () => {
+    setIsLoading(true);
+
+    console.log("accessToken4544", "accessToken4544");
+
+    try {
+      const response: AxiosResponse<string> = await axios.post(
+        authConfig.tokenRefreshUrl
+      );
+
+      const accessToken = response?.headers?.["New-Access-Token"] as string;
+
+      if (accessToken) {
+        setSession(accessToken);
+
+        return accessToken;
+      }
+      return null;
+    } catch (error) {
+      const axiosError = error as AxiosError;
+
+      handleError(axiosError);
+      return axiosError;
+    }
+  };
+
+  /**
+   * if a successful response contains a new Authorization header,
+   * updates the access token from it.
+   *
+   */
+  useEffect(() => {
+    if (authConfig.updateTokenFromHeader && isAuthenticated) {
+      axios.interceptors.response.use(
+        (response) => {
+          const newAccessToken = response?.headers?.[
+            "New-Access-Token"
+          ] as string;
+
+          if (newAccessToken) {
+            setSession(newAccessToken);
+          }
+          return response;
+        },
+        (error) => {
+          const axiosError = error as AxiosError;
+
+          if (axiosError?.response?.status === 401) {
+            signOut();
+            // eslint-disable-next-line no-console
+            console.warn("Unauthorized request. User was signed out.");
+          }
+          return Promise.reject(axiosError);
+        }
+      );
+    }
+  }, [isAuthenticated]);
+
+>>>>>>> 51cc5fb237ccc00eac7cedb305b69bb5cad15710
   return {
     user,
     isAuthenticated,

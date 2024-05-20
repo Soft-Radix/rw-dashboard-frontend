@@ -35,6 +35,7 @@ import SettingConfig, {
 import ClientOnBoardConfig from "../main/clientOnBoard/ClientOnBoardConfig";
 import AgentOnBoardConfig from "../main/agentsOnBoard/AgentOnBoardConfig";
 import { AdminAccountManagerConfig } from "../pages/accountManager/accountConfig";
+import ManageProductsConfig from "../pages/manageProducts/manageProductConfig";
 
 const commonRoutes = [
   {
@@ -67,6 +68,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   ClientOnBoardConfig,
   AgentOnBoardConfig,
   AdminAccountManagerConfig,
+  ManageProductsConfig
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [

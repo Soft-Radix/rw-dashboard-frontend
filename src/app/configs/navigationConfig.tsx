@@ -8,16 +8,7 @@ import {
   SettingNavIcon,
   AgentGroupIcon,
   AccountManagerIcon,
-  ProjectIcon,
-  TaskIcon,
-  ChatBoardIcon,
-  SharedFileIcon,
-  PasswordManagerIcon,
-  UserIcon,
-  SettingIcon,
-  BillingIcon,
-  SupportIcon,
-  MyAgentIcon,
+  ManageProductIcon,
 } from "public/assets/icons/navabarIcon";
 import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
@@ -182,6 +173,14 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     icon: "dashboard",
     customIcon: <ClientNavIcon />,
     url: "admin/client",
+  },
+  {
+    id: "products",
+    title: "Manage Products",
+    type: "item",
+    icon: "dashboard",
+    customIcon: <ManageProductIcon />,
+    url: "admin/manage-products",
   },
 
   {

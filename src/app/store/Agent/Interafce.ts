@@ -16,7 +16,7 @@ export interface AgentType {
   userName?: string;
   agent_id?: any;
   formData?: FormData;
-  attachments?: [];
+  attachments?: any[];
 }
 
 export interface filterType {
@@ -38,6 +38,7 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   total_records: number;
+  resetFormData?: any;
 };
 
 export interface AgentRootState {
@@ -50,6 +51,7 @@ export interface agentIDType {
 }
 
 export interface uploadData {
+  agent_id: string;
   formData: FormData;
 }
 

@@ -1,4 +1,6 @@
 import { MenuItem, styled } from "@mui/material";
+import { MenuItem, styled, useTheme } from "@mui/material";
+import { fontWeight, lineHeight } from "@mui/system";
 
 type SelectProp = {
   value: string;
@@ -23,6 +25,8 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     height: "16px",
     aspectRatio: 1,
     borderRadius: "50%",
+    fontWeight: 500,
+    lineHeight: "20px",
     position: "relative",
   },
   "&.Mui-selected": {
@@ -46,28 +50,33 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const MonthlyOptions: SelectProp[] = [
-  { value: "One", label: "One time" },
-  { value: "Monthly", label: "Monthly" },
-  { value: "Quarterly", label: "Quarterly" },
-  { value: "Semi", label: "Semi annually" },
-  { value: "Add weekly and bi-weekly", label: "Annually" },
-  { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+  { value: "1", label: "One time" },
+  { value: "2", label: "Monthly" },
+  { value: "3", label: "Quarterly" },
+  { value: "4", label: "Semi annually" },
+  { value: "5", label: "Annually" },
+  // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const EmployOptions: SelectProp[] = [
-  { value: "One", label: "One time" },
-  { value: "Monthly", label: "Monthly" },
-  { value: "Quarterly", label: "Quarterly" },
-  { value: "Semi", label: "Semi annually" },
-  { value: "Add weekly and bi-weekly", label: "Annually" },
-  { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
+  { value: "1", label: "One time" },
+  { value: "2", label: "Monthly" },
+  { value: "3", label: "Quarterly" },
+  { value: "4", label: "Semi annually" },
+  { value: "5", label: "Annually" },
+  // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
 export const UnitDiscount: SelectProp[] = [
-  { value: "percentage", label: "%" },
-  { value: "Doller", label: "$" },
+  { value: "1", label: "%" },
+  { value: "2", label: "USD" },
 ];
+export const Action: SelectProp[] = [
+  { value: "Edit", label: "Edit" },
+  { value: "Doller", label: "Doller" },
+];
+
 export const BillingTermsOptions: SelectProp[] = [
-  { value: "One", label: "Fixed number of payments" },
-  { value: "two", label: "Automatically renew until cancelled" },
+  { value: "1", label: "Fixed number of payments" },
+  { value: "2", label: "Automatically renew until cancelled" },
 ];
 
 const columnKey = {
@@ -88,7 +97,7 @@ export const sortList = (column: string, isAsc: boolean, list: any) => {
 };
 
 /**
- * Calculates the page number for a given item index.
+ * Calculates the page number for a given item indexs.
  * @param itemIndex - The zero-based index of the item.
  * @param itemsPerPage - The number of items displayed on each page.
  * @returns The one-based page number where the item resides.
