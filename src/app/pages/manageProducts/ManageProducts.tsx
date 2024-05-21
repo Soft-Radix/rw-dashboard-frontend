@@ -1,17 +1,15 @@
 import { Button, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
+// import { productDelete, productList } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 import { DeleteIcon, EditIcon } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
 import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
-import { useAppDispatch } from "app/store/store";
-import { productDelete, productList } from "app/store/Client";
-import { map } from "lodash";
-import toast from "react-hot-toast";
 
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);

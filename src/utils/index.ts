@@ -1,6 +1,4 @@
 import { MenuItem, styled } from "@mui/material";
-import { MenuItem, styled, useTheme } from "@mui/material";
-import { fontWeight, lineHeight } from "@mui/system";
 
 type SelectProp = {
   value: string;
