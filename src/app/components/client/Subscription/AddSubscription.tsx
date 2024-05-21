@@ -103,6 +103,7 @@ export default function AddSubscription() {
   const [quantityError, setQuantityError] = useState<string[]>([]);
   const [paymentError, setPaymentError] = useState("");
   const location: Location = useLocation();
+  const [id, setId] = useState();
   const navigate: NavigateFunction = useNavigate();
   const handleClose = () => {
     setAnchorEl(null);
@@ -508,8 +509,10 @@ export default function AddSubscription() {
     }
     setDetails({ ...details, [name]: value });
   };
-
   const onDelete = () => {
+    const updatedList = list.filter((item) => item.id != id);
+    setList(updatedList);
+    setId(null);
     setIsOpenDeletedModal(false);
     setRecurringShow(false);
     setDetails({
@@ -601,13 +604,15 @@ export default function AddSubscription() {
   const uniqueList = [];
   const seenIds = new Set();
 
-  list?.forEach((item) => {
+  // Iterate through the list in reverse order
+  for (let i = list.length - 1; i >= 0; i--) {
+    const item = list[i];
     if (!seenIds.has(item.id)) {
       uniqueList.push(item);
-
       seenIds.add(item.id);
     }
-  });
+  }
+
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -741,7 +746,10 @@ export default function AddSubscription() {
                           <StyledMenuItem
                             // key={item.value}
                             value={"Edit"}
-                            onClick={() => setIsLineModal(true)}
+                            onClick={() => {
+                              setIsLineModal(true);
+                              setId(row.id);
+                            }}
                           >
                             {/* {item.label} */}
                             Edit
@@ -749,7 +757,10 @@ export default function AddSubscription() {
                           <StyledMenuItem
                             // key={item.value}
                             value={"Delete"}
-                            onClick={() => setIsOpenDeletedModal(true)}
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setId(row.id);
+                            }}
                           >
                             {/* {item.label} */}
                             Delete
@@ -1371,11 +1382,16 @@ export default function AddSubscription() {
         handleList={handleListFromChild}
       />
 
-      <LineModal
-        isOpen={isLineModal}
-        setIsOpen={setIsLineModal}
-        handleList={handleListFromChild}
-      />
+      {isLineModal && (
+        <LineModal
+          isOpen={isLineModal}
+          setIsOpen={setIsLineModal}
+          handleList={handleListFromChild}
+          setId={setId}
+          // fetchUpdateData={fetchUpdateData}
+          id={id}
+        />
+      )}
       <DeleteModal
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
