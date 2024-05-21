@@ -67,14 +67,8 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
-  const {
-    config,
-    onSignedIn,
-    onSignedOut,
-    onSignedUp,
-    onError,
-    onUpdateUser,
-  } = props;
+  const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
+    props;
   const dispatch = useAppDispatch();
 
   // Merge default config with the one from the props
@@ -98,6 +92,7 @@ const useJwtAuth = <User, SignUpPayload>(
   const resetSession = useCallback(() => {
     localStorage.removeItem(authConfig.tokenStorageKey);
     delete axios.defaults.headers.common.Authorization;
+    localStorage.removeItem("userDetail");
   }, []);
 
   /**
@@ -222,7 +217,6 @@ const useJwtAuth = <User, SignUpPayload>(
     let response = await dispatch(
       logIn({ email: credentials?.email, password: credentials?.password })
     );
-
     if (response?.payload?.status) {
       const userData = response?.payload.data?.user;
       const accessToken = response?.payload.data?.access_token;

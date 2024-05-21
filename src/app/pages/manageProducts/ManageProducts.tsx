@@ -160,7 +160,12 @@ export default function ManageProducts() {
 
               {/* <TableCell align="center" className="w-[1%]">
                   <div className="flex gap-20 pe-20">
-                    
+                    <span className="p-2 cursor-pointer">
+                      <DeleteIcon
+                        onClick={() => {
+                          setIsOpenDeletedModal(true);
+                        }}
+                      />
                     </span>
                     <span className="p-2 cursor-pointer">
                       <EditIcon
