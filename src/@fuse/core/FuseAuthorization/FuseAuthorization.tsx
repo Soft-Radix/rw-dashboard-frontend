@@ -118,6 +118,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       "/sign-out",
       "/logout",
       "/404",
+      "/verification",
     ];
 
     console.log(

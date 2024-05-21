@@ -43,8 +43,9 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const location: Location = useLocation();
   const { clientDetail, actionStatus, fetchStatus } = useSelector(
     (store: ClientRootState) => store?.client
@@ -77,7 +78,7 @@ export default function ClientDetail() {
     dispatch(
       addAssignAgents({
         client_id: client_id,
-        agent_ids:[]
+        agent_ids: [],
       })
     );
   };
@@ -187,7 +188,6 @@ export default function ClientDetail() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-
   return (
     <>
       <TitleBar title="Clients" minHeight="min-h-[80px]">
