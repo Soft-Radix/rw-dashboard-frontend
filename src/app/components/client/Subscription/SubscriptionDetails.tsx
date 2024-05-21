@@ -175,13 +175,13 @@ export default function SubscriptionDetails() {
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                          {rows?.userName}
+                          {/* {rows?.userName} */}
                         </span>
                         <Button
                           variant="outlined"
-                          className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
-                            rows?.status
-                          )}`}
+                          // className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
+                          //   rows?.status
+                          // )}`}
                         >
                           {/* {`${
                             rows.status == 0 || rows.status == 1 ? "In " : ""
@@ -194,7 +194,7 @@ export default function SubscriptionDetails() {
                           <span>
                             <Timericon />
                           </span>
-                          <span>{rows.subscription_start_date}</span>
+                          {/* <span>{rows.subscription_start_date}</span> */}
                         </div>
                         <div className="flex">
                           <img
