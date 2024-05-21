@@ -1,12 +1,9 @@
-import * as React from "react";
-import { DemoItem } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import Box from "@mui/material/Box";
-import Alert from "@mui/material/Alert";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import * as React from "react";
 
-import DatePicker from "@mui/lab/DatePicker";
-import { TextField, InputAdornment } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 
 const calenderIcon = (
   <svg
@@ -50,8 +47,9 @@ export default function DateInput() {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-     
-      <label className="inline-block text-[16px] font-medium leading-[20px] mb-[7px]">Billing Start Date ( Date of first payment )</label>
+      <label className="inline-block text-[16px] font-medium leading-[20px] mb-[7px]">
+        Billing Start Date ( Date of first payment )
+      </label>
       <Box
         sx={{
           width: "100%",
@@ -65,28 +63,29 @@ export default function DateInput() {
           variant="outlined"
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start" className="me-[12px]">{calenderIcon}</InputAdornment>
+              <InputAdornment position="start" className="me-[12px]">
+                {calenderIcon}
+              </InputAdornment>
             ),
           }}
           placeholder="Add Date"
           // label="Your Placeholder Text" // Set the label as your placeholder text
           sx={{
             background: "#f6f6f6",
-            
-            fontSize : '16px',
+
+            fontSize: "16px",
             borderRadius: "7px", // Border radius for the input
-              '& .MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Remove the outer border
-              },
-              '&:hover .MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Remove the outer border on hover
-              },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-                border: 'none', // Remove the outer border when focused
-              },
+            "& .MuiOutlinedInput-notchedOutline": {
+              border: "none", // Remove the outer border
+            },
+            "&:hover .MuiOutlinedInput-notchedOutline": {
+              border: "none", // Remove the outer border on hover
+            },
+            "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+              border: "none", // Remove the outer border when focused
+            },
           }}
         />
-      
       </Box>
     </LocalizationProvider>
   );

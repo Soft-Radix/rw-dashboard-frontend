@@ -17,6 +17,7 @@ export interface ClientType {
   created_at?: string;
   updated_at?: string;
   userName?: string;
+  agent_ids?: number[];
 }
 
 export interface filterType {
@@ -66,7 +67,6 @@ export interface ChangePassword {
   old_password?: string;
   new_password: string;
 }
-
 
 export interface SubscriptionList {
   start: number;
@@ -134,5 +134,3 @@ export interface AddSubscriptionList {
     net_price: number;
   }[];
 }
-
-

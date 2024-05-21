@@ -5,6 +5,7 @@ interface IProps extends PaginationProps {
   onPageChange?: (event: React.ChangeEvent<unknown>, page: number) => void;
   currentPage?: number;
   count?: number;
+  onChange?: any;
 }
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({

@@ -2,7 +2,11 @@ import { Button, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 
 import ListLoading from "@fuse/core/ListLoading";
-import { changeFetchStatus, getClientInfo } from "app/store/Client";
+import {
+  addAssignAgents,
+  changeFetchStatus,
+  getClientInfo,
+} from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import {
@@ -39,9 +43,8 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   const location: Location = useLocation();
   const { clientDetail, actionStatus, fetchStatus } = useSelector(
     (store: ClientRootState) => store?.client
@@ -69,6 +72,16 @@ export default function ClientDetail() {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
+
+  const handleAddnewAgents = () => {
+    dispatch(
+      addAssignAgents({
+        client_id: client_id,
+        agent_ids:[]
+      })
+    );
+  };
+
   const CustomDropDown = (): JSX.Element => {
     return (
       <>
@@ -111,6 +124,7 @@ export default function ClientDetail() {
                 variant="contained"
                 color="secondary"
                 className="w-[156px] h-[48px] text-[18px]"
+                onClick={handleAddnewAgents}
               >
                 Assign
               </Button>

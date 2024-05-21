@@ -10,6 +10,7 @@ import {
   AccountManagerIcon,
   ManageProductIcon,
   ProjectIcon,
+  TaskIcon,
   ChatBoardIcon,
   SharedFileIcon,
   PasswordManagerIcon,
@@ -18,7 +19,6 @@ import {
   SettingIcon,
   BillingIcon,
   SupportIcon,
-  TaskIcon,
 } from "public/assets/icons/navabarIcon";
 import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";

@@ -159,7 +159,7 @@ function AddAccountManagerModel({
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
       setIsOpen(false);
-
+      // fetchManagerList();
       formik.resetForm();
     } else if (!!accmanagerState?.errorMsg) {
       dispatch(restAll());
