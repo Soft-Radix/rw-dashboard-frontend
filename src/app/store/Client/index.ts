@@ -205,10 +205,10 @@ export const subscriptionDetails = createAsyncThunk(
 
 
 export const subscriptionUpdateDetails = createAsyncThunk(
-  "/product/detail/",
+  "client/subscription-detail",
   async (payload: ProductDelete) => {
     const response = await ApiHelperFunction({
-      url: `/product/detail/${payload?.product_id}`,
+      url: `client/subscription-detail/${payload?.product_id}`,
       method: "get",
       data: payload,
     });

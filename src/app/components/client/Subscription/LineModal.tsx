@@ -13,6 +13,7 @@ import * as Yup from "yup";
 import { addLineItem } from "app/store/Client";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "app/store/store";
+import toast from "react-hot-toast";
 
 interface IProps {
   isOpen: boolean;
@@ -86,6 +87,19 @@ function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
       setIsOpen((prev) => !prev);
       handleList([res?.payload?.data?.data]);
       formik.resetForm();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchUpdateData = async (payload: any) => {
+    try {
+      //@ts-ignore
+      const res = await dispatch(productUpdate(payload));
+      // setList(res?.payload?.data?.data?.list);
+      console.log("=====res==", res?.payload?.data);
+      toast.success(res?.payload?.data?.message);
+      setIsOpen((prev) => !prev);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
