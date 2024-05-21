@@ -19,14 +19,32 @@ import {
   SettingIcon,
   BillingIcon,
   SupportIcon,
+  SubProjectIcon,
 } from "public/assets/icons/navabarIcon";
 import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
 import tr from "./navigation-i18n/tr";
+import { getLocalStorage } from "src/utils";
+import { ProjectNavIcon } from "public/assets/icons/projectsIcon";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
 i18next.addResourceBundle("ar", "navigation", ar);
+
+const getProjectNavItems = () => {
+  const userDetail = getLocalStorage("userDetail");
+
+  return userDetail.projects?.map((project) => ({
+    id: project.id,
+    title: project.name,
+    type: "item",
+    icon: "material-twotone:compress",
+    customIcon: <SubProjectIcon />,
+    // url: "projects",
+    end: true,
+    isProject: true,
+  }));
+};
 
 /**
  * The navigationConfig object is an array of navigation items for the Fuse application.
@@ -48,33 +66,8 @@ const navigationConfig: FuseNavItemType[] = [
     type: "collapse",
     icon: "heroicons-outline:list",
     customIcon: <ProjectIcon />,
-    children: [
-      {
-        id: "project-1",
-        title: "Project1",
-        type: "item",
-        icon: "material-twotone:compress",
-        url: "/projects",
-        end: true,
-      },
-      {
-        id: "project-2",
-        title: "Project2",
-        type: "item",
-        icon: "material-twotone:compress",
-        url: "/projects/p",
-        end: true,
-      },
-    ],
+    children: getProjectNavItems(),
   },
-  // {
-  //   id: "client",
-  //   title: "Client",
-  //   translate: "client",
-  //   type: "item",
-  //   icon: "heroicons-outline:clipboard-check",
-  //   url: "client",
-  // },
 
   {
     id: "task",

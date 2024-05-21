@@ -20,7 +20,12 @@
 
 html {
   font-size: 62.5%;
-  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
+  font-family:
+    "Inter",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
   background-color: #121212;
 }
 
@@ -349,4 +354,11 @@ input:-webkit-autofill:active {
 .cancelled {
   color: #af4c4c;
   background-color: #af4c4c2e;
+}
+.common-inputField .input_wrap .MuiInputBase-input {
+  color: black !important;
+}
+.muiltr-m96d3a-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: none !important;
+  -webkit-text-fill-color: inherit !important;
 }
