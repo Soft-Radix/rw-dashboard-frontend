@@ -101,7 +101,7 @@ export const setPassword = createAsyncThunk(
 export const initialState: initialStateProps = {
   status: "idle",
   email: "",
-  navigation: [],
+  // navigation: [],
 };
 
 /**

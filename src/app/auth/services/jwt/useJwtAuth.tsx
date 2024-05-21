@@ -6,6 +6,7 @@ import { PartialDeep } from "type-fest";
 import { useAppDispatch } from "app/store/store";
 import { logIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
+import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
 
 const defaultAuthConfig = {
   tokenStorageKey: "jwt_access_token",
@@ -219,8 +220,10 @@ const useJwtAuth = <User, SignUpPayload>(
     );
     if (response?.payload?.status) {
       const userData = response?.payload.data?.user;
+      dispatch(setInitialState(userData));
       const accessToken = response?.payload.data?.access_token;
       handleSignInSuccess(userData, accessToken);
+      window.location.reload();
     }
     return response;
   };

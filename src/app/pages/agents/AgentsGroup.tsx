@@ -126,7 +126,7 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-  const checkPageNum = (e?: any, pageNumber: number) => {
+  const checkPageNum = (e: any, pageNumber: number) => {
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,

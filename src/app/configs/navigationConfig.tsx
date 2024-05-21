@@ -40,8 +40,9 @@ const getProjectNavItems = () => {
     type: "item",
     icon: "material-twotone:compress",
     customIcon: <SubProjectIcon />,
-    url: `/projects/${project.id}`,
+    // url: "projects",
     end: true,
+    isProject: true,
   }));
 };
 

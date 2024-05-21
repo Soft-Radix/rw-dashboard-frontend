@@ -2,13 +2,21 @@ import NavLinkAdapter from "@fuse/core/NavLinkAdapter";
 import { alpha, styled } from "@mui/material/styles";
 import ListItemText from "@mui/material/ListItemText";
 import clsx from "clsx";
-import { useMemo } from "react";
-import { ListItemButton, ListItemButtonProps } from "@mui/material";
+import { useMemo, useState } from "react";
+import {
+  Button,
+  ListItemButton,
+  ListItemButtonProps,
+  Popover,
+  Typography,
+} from "@mui/material";
 import FuseNavBadge from "../../FuseNavBadge";
 import FuseSvgIcon from "../../../FuseSvgIcon";
 import { FuseNavItemComponentProps } from "../../FuseNavItem";
 import { ProjectNavIcon } from "public/assets/icons/projectsIcon";
 import { getLocalStorage } from "src/utils";
+import LongMenu from "../../../../../../src/app/components/Dropdown";
+import dotImg from "../../../../../../public/assets/icons/dots.svg";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -54,6 +62,18 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
  * FuseNavVerticalItem is a React component used to render FuseNavItem as part of the Fuse navigational component.
  */
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   const userDetail = getLocalStorage("userDetail");
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
 
@@ -112,15 +132,26 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
               "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate",
           }}
         />
-        {item.badge && <FuseNavBadge badge={item.badge} />}
-        {userDetail?.role === "admin" ? (
-          ""
-        ) : (
-          <span onClick={() => alert("hh")}>
-            {" "}
-            <ProjectNavIcon className="threeDots-icon" color="inherit" />
-          </span>
+        {item?.isProject && (
+          <>
+            <Button aria-describedby={id} onClick={handleClick}>
+              <ProjectNavIcon className="threeDots-icon" color="inherit" />
+            </Button>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
+              }}
+            >
+              <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+            </Popover>
+          </>
         )}
+        {item.badge && <FuseNavBadge badge={item.badge} />}
       </Root>
     ),
     [item, itempadding, onItemClick]
