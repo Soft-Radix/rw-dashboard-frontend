@@ -28,4 +28,17 @@ export const AdminDashboardConfig = {
   ],
 };
 
+/**
+ * The Dashboard page config.
+ */
+export const ClientDashboardConfig = {
+  ...commonSetting,
+  routes: [
+    {
+      path: "/dashboard",
+      element: <Dashboard />,
+    },
+  ],
+};
+
 // export default DashboardConfig;

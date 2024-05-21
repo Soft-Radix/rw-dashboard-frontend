@@ -45,23 +45,32 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
   }
 
   componentDidMount() {
-    const { accessGranted } = this.state;
-
-    if (!accessGranted) {
+    console.log(
+      "Component Did Mount - Access Granted:",
+      this.state.accessGranted
+    );
+    if (!this.state.accessGranted) {
       this.redirectRoute();
     }
   }
 
   shouldComponentUpdate(nextProps: FuseAuthorizationProps, nextState: State) {
     const { accessGranted } = this.state;
-
+    console.log(
+      "Should Component Update - Access Granted:",
+      accessGranted,
+      "Next Access Granted:",
+      nextState.accessGranted
+    );
     return nextState.accessGranted !== accessGranted;
   }
 
   componentDidUpdate() {
-    const { accessGranted } = this.state;
-
-    if (!accessGranted) {
+    console.log(
+      "Component Did Update - Access Granted:",
+      this.state.accessGranted
+    );
+    if (!this.state.accessGranted) {
       this.redirectRoute();
     }
   }
@@ -72,17 +81,21 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     const matchedRoutes = matchRoutes(state.routes, pathname);
     const matched = matchedRoutes ? matchedRoutes[0] : false;
 
+    console.log("Matched Routes:", matchedRoutes);
+
     const isGuest = isUserGuest(userRole);
+    console.log("Is User Guest:", isGuest);
 
     if (!matched) {
       return { accessGranted: true };
     }
 
     const { route }: { route: FuseRouteItemType } = matched;
-    console.log(userRole, 'route.auth');
-
+    console.log("User Role:", userRole, "Route Auth:", route.auth);
 
     let userHasPermission = FuseUtils.hasPermission(route.auth, userRole);
+    console.log("User Has Permission:", userHasPermission);
+
     if (route.auth == undefined && userRole == undefined) {
       return { accessGranted: false };
     }
@@ -96,15 +109,17 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       "/404",
     ];
 
-    if (matched && !userHasPermission && !ignoredPaths.includes(pathname)) {
+    console.log(
+      "Ignored Paths:",
+      ignoredPaths.includes(pathname),
+      "Pathname:",
+      pathname
+    );
 
+    if (matched && !userHasPermission && !ignoredPaths.includes(pathname)) {
       setSessionRedirectUrl(pathname);
     }
 
-    /**
-     * If user is member but don't have permission to view the route
-     * redirected to main route '/'
-     */
     if (!userHasPermission && !isGuest && !ignoredPaths.includes(pathname)) {
       setSessionRedirectUrl("/");
     }
@@ -118,18 +133,9 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     const { userRole, loginRedirectUrl = "/" } = this.props;
     const redirectUrl = getSessionRedirectUrl() || loginRedirectUrl;
 
-    /*
-    User is guest
-    Redirect to Login Page
-    */
     if (!userRole || userRole.length === 0) {
       setTimeout(() => history.push("/sign-in"), 0);
     } else {
-      /*
-      User is member
-      User must be on unAuthorized page or just logged in
-      Redirect to dashboard or loginRedirectUrl
-      */
       setTimeout(() => history.push(redirectUrl), 0);
       resetSessionRedirectUrl();
     }
