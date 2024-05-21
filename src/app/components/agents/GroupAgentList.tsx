@@ -250,7 +250,7 @@ export default function GroupAgentsList() {
             </CommonTable>
           </>
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
+            {/* <CommonPagination count={10} /> */}
           </div>
         </div>
       </div>
