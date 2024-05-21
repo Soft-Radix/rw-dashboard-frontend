@@ -1,6 +1,6 @@
 import { Button, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-// import { productDelete, productList } from "app/store/Client";
+import { productDelete, productList } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { DeleteIcon, EditIcon } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
