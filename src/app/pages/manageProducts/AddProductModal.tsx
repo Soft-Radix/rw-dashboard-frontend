@@ -13,8 +13,10 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsEditing: Dispatch<SetStateAction<boolean>>;
   fetchList?: () => void;
+  fetchUpdateData?: (any) => void;
+  setId?: Dispatch<SetStateAction<number | null>>;
   isEditing?: boolean;
-  id: number | null;
+  id?: number | null;
 }
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -29,6 +31,8 @@ function AddProduct({
   fetchList,
   isEditing,
   setIsEditing,
+  fetchUpdateData,
+  setId,
   id,
 }: IProps) {
   const formik = useFormik({
@@ -41,6 +45,9 @@ function AddProduct({
     onSubmit: (values) => {
       if (id) {
         fetchUpdateData({ ...formik.values, product_id: id });
+        setIsOpen((prev) => !prev);
+        setIsEditing(false);
+        setId(null);
       } else {
         fetchData(formik.values);
       }
@@ -56,30 +63,31 @@ function AddProduct({
       toast.success(res?.payload?.data?.message);
       setIsOpen((prev) => !prev);
       setIsEditing(false);
+      setId(null);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const fetchUpdateData = async (payload: any) => {
-    try {
-      //@ts-ignore
-      const res = await dispatch(productUpdate(payload));
-      // setList(res?.payload?.data?.data?.list);
-      toast.success(res?.payload?.data?.message);
-      setIsOpen((prev) => !prev);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // const fetchUpdateData = async (payload: any) => {
+  //   try {
+  //     //@ts-ignore
+  //     const res = await dispatch(productUpdate(payload));
+  //     // setList(res?.payload?.data?.data?.list);
+  //     toast.success(res?.payload?.data?.message);
+  //     setIsOpen((prev) => !prev);
+  //     setIsEditing(false);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   const handleSave = () => {
     formik.handleSubmit();
   };
 
   useEffect(() => {
-    if (!id) return null;
+    if (!id) return;
 
     const fetchDataDEtails = async () => {
       try {
@@ -110,6 +118,7 @@ function AddProduct({
       handleToggle={() => {
         setIsOpen((prev) => !prev);
         setIsEditing(false);
+        setId(null);
       }}
       modalTitle={isEditing == true ? "Edit Product" : "Add Product"}
       maxWidth="730"

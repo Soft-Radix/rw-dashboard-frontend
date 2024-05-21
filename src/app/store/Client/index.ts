@@ -205,10 +205,10 @@ export const subscriptionDetails = createAsyncThunk(
 
 
 export const subscriptionUpdateDetails = createAsyncThunk(
-  "client/subscription-detail",
+  "/product/detail/",
   async (payload: ProductDelete) => {
     const response = await ApiHelperFunction({
-      url: `client/subscription-detail/${payload?.product_id}`,
+      url: `/product/detail/${payload?.product_id}`,
       method: "get",
       data: payload,
     });
@@ -219,6 +219,8 @@ export const subscriptionUpdateDetails = createAsyncThunk(
     };
   }
 );
+
+
 
 // ----*-------product-list-----
 

@@ -1,6 +1,6 @@
 import { Button, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { productDelete, productList } from "app/store/Client";
+import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { DeleteIcon, EditIcon } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
@@ -22,37 +22,55 @@ export default function ManageProducts() {
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const payload = {
-        start: 0,
-        limit: 10,
-        search: "",
-      };
-      try {
-        //@ts-ignore
-        const res = await dispatch(productList(payload));
-        setList(res?.payload?.data?.data?.list);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
+  const fetchData = async () => {
+    const payload = {
+      start: 0,
+      limit: 10,
+      search: "",
     };
+    try {
+      //@ts-ignore
+      const res = await dispatch(productList(payload));
+      setList(res?.payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [dispatch]);
 
   const onDelete = async () => {
+    setId(null);
     try {
       const payload = {
         product_id: id,
       };
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
+      fetchData();
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
+
+  const fetchUpdateData = async (payload: any) => {
+    setId(null);
+    try {
+      //@ts-ignore
+      const res = await dispatch(productUpdate(payload));
+      // setList(res?.payload?.data?.data?.list);
+      setId(null);
+      fetchData();
+      toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <div>
       <TitleBar title="Manage Products" minHeight="min-h-[80px]">
@@ -183,6 +201,8 @@ export default function ManageProducts() {
           setIsOpen={setIsOpenAddModal}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
+          fetchUpdateData={fetchUpdateData}
+          setId={setId}
           id={id}
         />
       )}
