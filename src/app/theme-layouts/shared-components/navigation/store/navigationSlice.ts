@@ -22,7 +22,7 @@ import navigationConfig, {
   adminNavigationConfig,
 } from "app/configs/navigationConfig";
 import { selectCurrentLanguageId } from "app/store/i18nSlice";
-import { getLocalStorage, getLocalStorage } from "src/utils";
+import { getLocalStorage } from "src/utils";
 
 type AppRootStateType = RootStateType<[navigationSliceType, userSliceType]>;
 

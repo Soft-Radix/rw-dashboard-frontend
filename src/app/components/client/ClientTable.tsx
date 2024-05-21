@@ -1,7 +1,7 @@
 import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { ArrowRightCircleIcon } from "public/assets/icons/common";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
@@ -131,7 +131,11 @@ function ClientTable({
                   >
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-                    ${row.status === "Enabled" ? "text-[#4CAF50] bg-[#4CAF502E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                    ${
+                      row.status === "Enabled"
+                        ? "text-[#4CAF50] bg-[#4CAF502E]"
+                        : "text-[#F44336] bg-[#F443362E]"
+                    }`}
                     >
                       {row.status || "N/A"}
                     </span>
@@ -152,6 +156,13 @@ function ClientTable({
             count={clientState?.total_records}
             page={filters.start + 1}
             onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
+            onPageChange={function (
+              event: ChangeEvent<unknown>,
+              page: number
+            ): void {
+              throw new Error("Function not implemented.");
+            }}
+            currentPage={0}
           />
         </div>
       </div>

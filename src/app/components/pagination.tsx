@@ -2,9 +2,9 @@ import { Pagination, PaginationProps, styled } from "@mui/material";
 import React from "react";
 
 interface IProps extends PaginationProps {
-  onPageChange: (event: React.ChangeEvent<unknown>, page: number) => void;
-  currentPage: number;
-  count: number;
+  onPageChange?: (event: React.ChangeEvent<unknown>, page: number) => void;
+  currentPage?: number;
+  count?: number;
 }
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({
