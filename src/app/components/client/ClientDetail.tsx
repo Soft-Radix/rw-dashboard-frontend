@@ -416,7 +416,6 @@ export default function ClientDetail() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-
   return (
     <>
       <TitleBar title="Clients" minHeight="min-h-[80px]">

@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, SetStateAction, useState } from "react";
 import {
   NavigateFunction,
   useLocation,
@@ -18,9 +18,10 @@ interface Tab {
 
 interface TabProps {
   tabs: Tab[];
+  setActive?: React.Dispatch<SetStateAction<number | string>>;
 }
 
-const TabComponent: React.FC<TabProps> = ({ tabs }) => {
+const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
   const location: Location = useLocation();
   const navigate: NavigateFunction = useNavigate();
   const queryParams = new URLSearchParams(location.search);

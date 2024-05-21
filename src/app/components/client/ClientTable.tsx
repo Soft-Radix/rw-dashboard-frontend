@@ -1,7 +1,7 @@
 import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { ArrowRightCircleIcon } from "public/assets/icons/common";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
@@ -19,6 +19,7 @@ function ClientTable({
   handleCheckboxChange,
   setfilters,
   filters,
+
 }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
