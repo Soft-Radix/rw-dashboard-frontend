@@ -1,7 +1,7 @@
 import { Checkbox, FormHelperText, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { BillingTermsOptions, EmployOptions, StyledMenuItem } from "src/utils";
 import CommonModal from "../../CommonModal";
 import InputField from "../../InputField";
@@ -10,14 +10,21 @@ import NumberInput from "../../NumberInput";
 import DateInput from "../../DateInput";
 import { red } from "@mui/material/colors";
 import * as Yup from "yup";
-import { addLineItem } from "app/store/Client";
+import {
+  addLineItem,
+  productUpdate,
+  subscriptionUpdateDetails,
+} from "app/store/Client";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "app/store/store";
+import toast from "react-hot-toast";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setId?: Dispatch<SetStateAction<number | null>>;
   handleList: (list: any[]) => void;
+  id?: number | null;
 }
 
 const validationSchema = Yup.object({
@@ -36,7 +43,7 @@ const validationSchema = Yup.object({
     .nullable()
     .when("billing_frequency", {
       is: (value) => {
-        return value == 2;
+        return value != 2;
       },
       then: (Schema) =>
         Yup.number()
@@ -56,7 +63,7 @@ const validationSchema = Yup.object({
     }),
 });
 
-function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
+function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const [value, setValue] = React.useState<number | null>(null);
   const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
@@ -74,14 +81,18 @@ function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
     },
     validationSchema,
     onSubmit: (values) => {
-      fetchData();
+      if (id) {
+        fetchUpdateData({ ...formik.values, product_id: id });
+      } else {
+        fetchData(formik.values);
+      }
     },
   });
 
-  const fetchData = async () => {
+  const fetchData = async (payload: any) => {
     try {
       //@ts-ignore
-      const res = await dispatch(addLineItem(formik.values));
+      const res = await dispatch(addLineItem(payload));
       // setList(res?.payload?.data?.data?.list);
       setIsOpen((prev) => !prev);
       handleList([res?.payload?.data?.data]);
@@ -91,12 +102,22 @@ function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
     }
   };
 
+  const fetchUpdateData = async (payload: any) => {
+    try {
+      //@ts-ignore
+      const res = await dispatch(productUpdate(payload));
+      // setList(res?.payload?.data?.data?.list);
+      setId(null);
+      handleList([res?.payload?.data?.data]);
+      // fetchData();
+      toast.success(res?.payload?.data?.message);
+      setIsOpen((prev) => !prev);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleSave = () => {
-    // formik.submitForm().then(() => {
-    //   if (formik.isValid) {
-    //     fetchData();
-    //   }
-    // });
     formik.handleSubmit();
   };
 
@@ -106,12 +127,44 @@ function LineModal({ isOpen, setIsOpen, handleList }: IProps) {
     formik.setFieldValue("is_delay_in_billing", isChecked ? 1 : 0);
   };
 
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchDataDEtails = async () => {
+      try {
+        const payload = {
+          product_id: id,
+        };
+        //@ts-ignore
+        const res = await dispatch(subscriptionUpdateDetails(payload));
+        const data = res?.payload?.data?.data;
+        if (data) {
+          formik.setValues({
+            name: data.name,
+            description: data.description,
+            unit_price: data.unit_price,
+            quantity: data.quantity,
+            billing_frequency: data.billing_frequency,
+            billing_terms: data.billing_terms,
+            no_of_payments: data.no_of_payments,
+            billing_start_date: data.billing_start_date,
+            is_delay_in_billing: data.is_delay_in_billing,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchDataDEtails();
+  }, [dispatch]);
+
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
         setIsOpen((prev) => !prev);
         formik.resetForm();
+        setId(null);
       }}
       modalTitle="Add Custom Line Items"
       maxWidth="733"
