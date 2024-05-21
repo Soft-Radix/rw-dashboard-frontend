@@ -32,6 +32,9 @@ type ModalType = {
   closeTitle?: string;
   disabled?: boolean;
   onSubmit?: () => void;
+  bgColor?: string;
+  headerBgColor?: string;
+  titleColor?: string;
 };
 
 export default function CommonModal({
@@ -45,6 +48,9 @@ export default function CommonModal({
   maxWidth = "387",
   onSubmit,
   disabled,
+  bgColor,
+  headerBgColor,
+  titleColor,
 }: ModalType) {
   return (
     <StylesDialog
@@ -54,11 +60,18 @@ export default function CommonModal({
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
         },
+        ".muiltr-5gnc0a-MuiPaper-root-MuiDialog-paper": {
+          backgroundColor: bgColor || "initial",
+        },
       }}
     >
       {!DeleteModal ? (
-        <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
-          <Typography className="text-[16px] font-semibold" color="#fff">
+        <div
+          className={`p-16 flex justify-between w-full items-center ${headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"} `}
+        >
+          <Typography
+            className={`text-[16px] font-semibold" ${titleColor ? "text-black" : "text-white"}`}
+          >
             {modalTitle}
           </Typography>
           <IconButton>
@@ -70,14 +83,12 @@ export default function CommonModal({
           </IconButton>
         </div>
       ) : (
-        <>
-          <IconButton
-            className="flex items-center justify-end pt-20 pr-20 rounded-none "
-            onClick={handleToggle}
-          >
-            <CrossIcon className="cursor-pointer" color="#9DA0A6" />
-          </IconButton>
-        </>
+        <IconButton
+          className="flex items-center justify-end pt-20 pr-20 rounded-none "
+          onClick={handleToggle}
+        >
+          <CrossIcon className="cursor-pointer" color="#9DA0A6" />
+        </IconButton>
       )}
       <div className="p-20 pb-0">{children}</div>
 

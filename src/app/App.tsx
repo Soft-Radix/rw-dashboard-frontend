@@ -11,7 +11,12 @@ import { selectMainTheme } from "@fuse/core/FuseSettings/store/fuseSettingsSlice
 import MockAdapterProvider from "@mock-api/MockAdapterProvider";
 import withAppProviders from "./withAppProviders";
 import { AuthRouteProvider } from "./auth/AuthRouteProvider";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "./store/store";
+import { getLocalStorage } from "src/utils";
+import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
 
 // import axios from 'axios';
 /**
@@ -38,6 +43,12 @@ const emotionCacheOptions = {
  * The main App component.
  */
 function App() {
+  const dispatch = useDispatch<AppDispatch>();
+  useEffect(() => {
+    const userDetail = getLocalStorage("userDetail");
+    dispatch(setInitialState(userDetail));
+    console.log("userDetail?.role", userDetail?.role);
+  }, []);
   /**
    * The language direction from the Redux store.
    */

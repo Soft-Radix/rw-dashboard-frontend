@@ -21,7 +21,7 @@ export default function ForgotPassword() {
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   //* initialise useformik hook
   const formik = useFormik({
@@ -30,16 +30,18 @@ export default function ForgotPassword() {
     },
     validationSchema: forgotPasswordSchema,
     // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => { onSubmit(values) },
+    onSubmit: (values) => {
+      onSubmit(values);
+    },
   });
 
   async function onSubmit(formData: FormType) {
     const { email } = formData;
-    setIsLoading(true)
-    let { payload } = await dispatch(forgotPassword({ email }))
-    setIsLoading(false)
+    setIsLoading(true);
+    let { payload } = await dispatch(forgotPassword({ email }));
+    setIsLoading(false);
     if (payload?.data?.status) {
-      navigate('/otp-verification')
+      navigate("/otp-verification");
     }
   }
 

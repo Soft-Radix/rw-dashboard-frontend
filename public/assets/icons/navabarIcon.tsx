@@ -429,3 +429,23 @@ export const ManageProductIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+export const SubProjectIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="13"
+    height="16"
+    viewBox="0 0 13 16"
+    fill="none"
+  >
+    <rect y="4.7998" width="12.6222" height="2.66667" rx="0.2" fill="white" />
+    <rect y="8.5332" width="12.6222" height="2.66667" rx="0.2" fill="white" />
+    <path
+      d="M6.15654 15.8119C6.23655 15.9093 6.3856 15.9093 6.46561 15.8119L8.8907 12.8603C8.99793 12.7298 8.90508 12.5333 8.73617 12.5333H3.88598C3.71707 12.5333 3.62422 12.7298 3.73145 12.8603L6.15654 15.8119Z"
+      fill="white"
+    />
+    <path
+      d="M6.15654 0.188082C6.23655 0.0907023 6.3856 0.0907025 6.46561 0.188083L8.8907 3.1397C8.99793 3.27022 8.90508 3.46667 8.73617 3.46667L3.88598 3.46667C3.71707 3.46667 3.62422 3.27022 3.73145 3.1397L6.15654 0.188082Z"
+      fill="white"
+    />
+  </svg>
+);
