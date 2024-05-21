@@ -153,22 +153,26 @@ function AddGroupModel({
                 ),
               }}
             />
-            <div className=" max-h-[100px] w-1/3 overflow-y-auto shadow-sm cursor-pointer">
+            <label className=" max-h-[100px] w-1/3 overflow-y-auto shadow-sm cursor-pointer">
               {searchAgentList.map((item: any) => (
                 <div
-                  className="flex items-center gap-10 px-20 w-full"
+                  className="flex items-center gap-10 px-20 w-1/3"
                   key={item.id}
+                  onClick={() => handleCheckboxChange(item.id)}
                 >
-                  <label className="flex items-center gap-10 w-full cursor-pointer">
-                    <Checkbox
-                      checked={checkedItems.includes(item.id)}
-                      onChange={() => handleCheckboxChange(item.id)}
-                    />
-                    <span>{item.first_name}</span>
-                  </label>
+                  <Checkbox
+                    checked={checkedItems.includes(item.id)}
+                    onChange={() => handleCheckboxChange(item.id)}
+                  />
+                  <span
+                    className=""
+                    onClick={() => handleCheckboxChange(item.id)}
+                  >
+                    {item.first_name}
+                  </span>
                 </div>
               ))}
-            </div>
+            </label>
           </>
         ) : (
           <InputField

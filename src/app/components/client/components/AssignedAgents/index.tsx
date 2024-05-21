@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -29,8 +29,10 @@ export default function AssignedAgents() {
   const { assignedAgentDetail } = useSelector(
     (store: ClientRootState) => store.client
   );
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   // console.log(assignedAgentDetail, "gdfjgh");
   const dispatch = useAppDispatch();
+  const { client_id } = useParams();
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -41,34 +43,25 @@ export default function AssignedAgents() {
     onSubmit: (values) => {},
   });
   const unassignAgent = async (id: any) => {
-    // console.log(id, "id");
     try {
       const { payload } = await dispatch(
-        deleteAgentList({ client_id: id, agent_id: "" })
+        deleteAgentList({ client_id: client_id, agent_id: id })
       );
-      console.log(payload, "payload");
+      // console.log(payload, "payload");
       if (payload?.data?.status) {
         setIsOpenUnassignedModal(false);
-        // fetchAgentGroupLsssist();
       }
     } catch (error) {
       console.error("Failed to delete agent group:", error);
     }
   };
 
+  // console.log(deleteId, "delete");
   return (
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable
-            headings={[
-              "Agents",
-              "First Name",
-              "Last Name",
-              "Assigned Date",
-              "",
-            ]}
-          >
+          <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
             <>
               {assignedAgentDetail.map((row, index) => (
                 <TableRow
@@ -86,36 +79,43 @@ export default function AssignedAgents() {
                     scope="row"
                     className="flex items-center gap-8 font-500"
                   >
-                    {row.id}
+                    <img
+                      className="h-40 w-40 rounded-full"
+                      src={
+                        row.user_image
+                          ? urlForImage + row.user_image
+                          : "../assets/images/logo/images.jpeg"
+                      }
+                    ></img>
+                    <span className="ml-5">{row.first_name}</span>
                   </TableCell>
+
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.first_name}
+                    {row.agent_id}
                   </TableCell>
-                  <TableCell align="center" className="font-500">
-                    {row.last_name}
-                  </TableCell>
+
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.assigned_date}
+                    {row.assigned_date_time}
                   </TableCell>
                   <TableCell
                     align="center"
                     className="whitespace-nowrap"
                     onClick={() => {
                       setIsOpenUnassignedModal(true);
-                      setIsDeleteId(row.id);
+                      setIsDeleteId(row.agent_id);
                     }}
                   >
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
                    ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
                     >
-                      {row.status ? row.status : "Unassigned"}
+                      {row.status ? row.status : "Unassign"}
                     </span>
                   </TableCell>
                 </TableRow>

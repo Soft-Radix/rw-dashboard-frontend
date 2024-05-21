@@ -20,6 +20,7 @@ import {
   ClientInfo,
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
+import { getAgentList } from "../Agent";
 
 /**
  * API calling
@@ -219,8 +220,6 @@ export const subscriptionUpdateDetails = createAsyncThunk(
   }
 );
 
-
-
 // ----*-------product-list-----
 
 export const productAdd = createAsyncThunk(
@@ -314,17 +313,26 @@ export const initialState: initialStateProps = {
   clientDetail: {},
   selectedColumn: [],
   assignedAgentDetail: [],
+  assignAccManagerDetail: [],
   total_records: 0,
 };
 
 export const addAssignAgents = createAsyncThunk(
   "client/assign-agents",
-  async (payload: ClientType) => {
+  async (payload: ClientType, { dispatch }) => {
     const response = await ApiHelperFunction({
       url: "client/assign-agents",
       method: "post",
       data: payload,
     });
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id: payload?.client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -346,10 +354,10 @@ export const GetAssignAgentsInfo = createAsyncThunk(
   }
 );
 export const deleteAgentList = createAsyncThunk(
-  "client/unassign_agent",
+  "client/unassign-agent",
   async (payload: clientIDType) => {
     const response = await ApiHelperFunction({
-      url: "client/unassign_agent",
+      url: "client/unassign-agent",
       method: "post",
       data: payload,
     });
@@ -360,7 +368,81 @@ export const deleteAgentList = createAsyncThunk(
     };
   }
 );
+export const getAssignAccMangerInfo = createAsyncThunk(
+  "client/assign-account-manager-list",
+  async (payload: ClientInfo) => {
+    const response = await ApiHelperFunction({
+      url: "client/assign-account-manager-list",
+      method: "post",
+      data: payload,
+    });
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const addAssignAccManager = createAsyncThunk(
+  "client/assign-account-manager",
+  async (payload: clientIDType, { dispatch }) => {
+    const response = await ApiHelperFunction({
+      url: "client/assign-account-manager",
+      method: "post",
+      data: payload,
+    });
 
+    dispatch(
+      getAssignAccMangerInfo({
+        client_id: payload.client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const deleteAccManagerList = createAsyncThunk(
+  "client/unassign-account-manager",
+  async (payload: clientIDType) => {
+    const response = await ApiHelperFunction({
+      url: "client/unassign-account-manager",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+export const defaultAccManagerList = createAsyncThunk(
+  "client/set-default-account-manager",
+  async (payload: clientIDType, { dispatch }) => {
+    const response = await ApiHelperFunction({
+      url: "client/set-default-account-manager",
+      method: "post",
+      data: payload,
+    });
+    dispatch(
+      getAssignAccMangerInfo({
+        client_id: payload.client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 /**
  * The auth slice.
  */
@@ -438,7 +520,7 @@ export const clientSlice = createSlice({
       .addCase(deletClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { client_ids } = action.meta?.arg;
-        console.log(client_ids, "idd");
+        // console.log(client_ids, "idd");
         state.actionStatus = false;
         if (payload?.data?.status) {
           state.list = state.list?.filter(
@@ -526,9 +608,10 @@ export const clientSlice = createSlice({
       .addCase(GetAssignAgentsInfo.fulfilled, (state, action) => {
         // console.log(action, "action");
         const { data } = action.payload?.data;
-        console.log(data.list, "ggggg");
+        // console.log(data.list, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
+        // console.log(state.assignedAgentDetail, "gggggff");
       })
       .addCase(GetAssignAgentsInfo.rejected, (state) => {
         state.fetchStatus = "idle";
@@ -538,12 +621,12 @@ export const clientSlice = createSlice({
       })
       .addCase(deleteAgentList.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        const { client_id } = action.meta?.arg;
-        console.log(client_id, "iddff");
+        const { agent_id } = action.meta?.arg;
+        // console.log(client_id, "iddff");
         state.actionStatus = false;
         if (payload?.data?.status) {
           state.assignedAgentDetail = state.assignedAgentDetail.filter(
-            (item) => item.id !== client_id
+            (item) => item.agent_id !== agent_id
           );
 
           toast.success(payload?.data?.message);
@@ -552,6 +635,78 @@ export const clientSlice = createSlice({
         }
       })
       .addCase(deleteAgentList.rejected, (state, { error }) => {
+        toast.error(error?.message);
+        state.actionStatus = false;
+      })
+      .addCase(getAssignAccMangerInfo.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
+      .addCase(getAssignAccMangerInfo.fulfilled, (state, action) => {
+        // console.log(action, "action");
+        const { data } = action.payload?.data;
+        // console.log(data.list, "ggggg");
+        state.fetchStatus = "idle";
+        state.assignAccManagerDetail = data.list;
+        console.log(state.assignAccManagerDetail, "detailss");
+      })
+      .addCase(getAssignAccMangerInfo.rejected, (state) => {
+        state.fetchStatus = "idle";
+      })
+      .addCase(addAssignAgents.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(addAssignAgents.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        state.actionStatus = false;
+        if (payload?.data?.status) {
+          state.successMsg = payload?.data?.message;
+          toast.success(payload?.data?.message);
+        } else {
+          state.errorMsg = payload?.data?.message;
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(addAssignAgents.rejected, (state, { error }) => {
+        toast.error(error?.message);
+        state.actionStatus = false;
+      })
+      .addCase(addAssignAccManager.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(addAssignAccManager.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        state.actionStatus = false;
+        if (payload?.data?.status) {
+          state.successMsg = payload?.data?.message;
+          toast.success(payload?.data?.message);
+        } else {
+          state.errorMsg = payload?.data?.message;
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(addAssignAccManager.rejected, (state, { error }) => {
+        toast.error(error?.message);
+        state.actionStatus = false;
+      })
+      .addCase(deleteAccManagerList.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(deleteAccManagerList.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        const { account_manager_id } = action.meta?.arg;
+        // console.log(client_id, "iddff");
+        state.actionStatus = false;
+        if (payload?.data?.status) {
+          state.assignAccManagerDetail = state.assignAccManagerDetail.filter(
+            (item) => item.account_manager_id !== account_manager_id
+          );
+
+          toast.success(payload?.data?.message);
+        } else {
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(deleteAccManagerList.rejected, (state, { error }) => {
         toast.error(error?.message);
         state.actionStatus = false;
       });

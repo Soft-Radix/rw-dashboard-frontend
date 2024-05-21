@@ -24,6 +24,7 @@ export interface filterType {
   start: number;
   limit: number;
   search: string;
+  client_id?: number[];
 }
 
 export interface deleteClientType {
@@ -48,6 +49,7 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   assignedAgentDetail: any[];
+  assignAccManagerDetail?: any[];
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
@@ -56,6 +58,8 @@ export interface ClientRootState {
 export interface clientIDType {
   client_id?: string | number;
   agent_id?: Number | string;
+  account_manager_id?: number[];
+  account_manager_ids?: number[];
 }
 
 // Type for the payload that updateProfile expects

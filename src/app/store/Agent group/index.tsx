@@ -325,7 +325,7 @@ export const agentGroupSlice = createSlice({
           //   response.data
           // );
           // state.agentDetail = ;
-          console.log(state.agentGroupDetail.group_members, "ghgh");
+          // console.log(state.agentGroupDetail.group_members, "ghgh");
           toast.success(response?.message);
         }
       })

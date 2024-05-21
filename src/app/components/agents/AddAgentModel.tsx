@@ -29,7 +29,7 @@ interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   fetchAgentList?: () => void;
-  isEditing: boolean;
+  isEditing?: boolean;
 }
 
 type FormType = {
