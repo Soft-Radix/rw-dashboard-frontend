@@ -24,6 +24,7 @@ export interface filterType {
   start: number;
   limit: number;
   search: string;
+
 }
 
 export interface deleteClientType {
