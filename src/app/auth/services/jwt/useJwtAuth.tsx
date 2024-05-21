@@ -6,6 +6,7 @@ import { PartialDeep } from "type-fest";
 import { useAppDispatch } from "app/store/store";
 import { logIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
+import { useNavigate } from "react-router";
 
 const defaultAuthConfig = {
   tokenStorageKey: "jwt_access_token",
@@ -67,10 +68,15 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
-  const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
-    props;
+  const {
+    config,
+    onSignedIn,
+    onSignedOut,
+    onSignedUp,
+    onError,
+    onUpdateUser,
+  } = props;
   const dispatch = useAppDispatch();
-
   // Merge default config with the one from the props
   const authConfig = _.defaults(config, defaultAuthConfig);
 
@@ -220,7 +226,18 @@ const useJwtAuth = <User, SignUpPayload>(
     if (response?.payload?.status) {
       const userData = response?.payload.data?.user;
       const accessToken = response?.payload.data?.access_token;
-      handleSignInSuccess(userData, accessToken);
+      const signin = response?.payload.data?.user?.is_signed;
+      const link = response?.payload.data?.user?.subscription_and_docusign;
+      console.log(response?.payload.data, "response?.payload.data");
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(userData.subscription_and_docusign)
+      );
+      if (signin == 1) {
+        handleSignInSuccess(userData, accessToken);
+      } else {
+        window.location.href = "/verification";
+      }
     }
     return response;
   };

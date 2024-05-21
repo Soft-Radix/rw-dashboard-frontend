@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
@@ -12,8 +12,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
 import { loginSchema } from "src/formSchema";
-import toast from 'react-hot-toast';
-
+import toast from "react-hot-toast";
 
 type FormType = {
   email: string;
@@ -31,7 +30,7 @@ function jwtSignInTab() {
     const { email, password } = formData;
     setIsLoading(true);
     await jwtService.signIn({ email, password });
-    setIsLoading(false)
+    setIsLoading(false);
   }, []);
 
   //* initialise useformik hook
@@ -41,7 +40,7 @@ function jwtSignInTab() {
       password: "",
     },
     validationSchema: loginSchema,
-    onSubmit
+    onSubmit,
   });
 
   const handleSubmit = (event) => {
@@ -57,7 +56,7 @@ function jwtSignInTab() {
           name="email"
           label="Email Address"
           placeholder="Enter Email Address"
-        // inputRef={input => input && input.focus()}
+          // inputRef={input => input && input.focus()}
         />
         <InputField
           formik={formik}

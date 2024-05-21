@@ -1,8 +1,8 @@
 import { FuseRouteConfigType } from "@fuse/utils/FuseUtils";
 import authRoles from "../../auth/authRoles";
-import SignDocuement from "./SignDocuement";
+import VerificationPage from "./VerificationPage";
 
-const ClientOnBoardConfig: FuseRouteConfigType = {
+const ForgotPasswordConfig: FuseRouteConfigType = {
   settings: {
     layout: {
       config: {
@@ -27,10 +27,10 @@ const ClientOnBoardConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "docusign-completed/:id",
-      element: <SignDocuement />,
+      path: "verification",
+      element: <VerificationPage />,
     },
   ],
 };
 
-export default ClientOnBoardConfig;
+export default ForgotPasswordConfig;
