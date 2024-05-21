@@ -14,6 +14,7 @@ export interface filterType {
   start: number;
   limit: number;
   search: string;
+  client_id?: any;
 }
 
 // export interface deleteAgentGroupType {

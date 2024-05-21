@@ -245,7 +245,7 @@ export default function Clients() {
     <>
       <TitleBar title="Clients">
         <div className="flex flex-col items-start gap-20 sm:items-center sm:flex-row">
-          <DropdownMenu
+          {/* <DropdownMenu
             marginTop={"mt-20"}
             button={
               <div
@@ -307,7 +307,7 @@ export default function Clients() {
               </span>
               <span>Hello</span>
             </div>
-          </DropdownMenu>
+          </DropdownMenu> */}
 
           {selectedIds?.length > 0 && (
             <Button

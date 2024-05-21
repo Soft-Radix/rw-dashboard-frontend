@@ -44,7 +44,6 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
               } py-2 pr-[10px] focus:outline-none text-[1.8rem] font-500`}
               onClick={() => {
                 setActiveTab(tab.id);
-                setActive(tab.id);
                 navigate(`${location.pathname}?type=${tab.id}`);
               }}
             >
