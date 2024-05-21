@@ -1,52 +1,19 @@
-import {
-  Button,
-  Box,
-  Grid,
-  Checkbox,
-  Typography,
-  TableCell,
-  Tab,
-  Tabs,
-  TableRow,
-  Theme,
-  IconButton,
-  AppBar,
-} from "@mui/material";
+import { Box, Button, Grid, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  LastPayment,
-} from "public/assets/icons/common";
-import { DownArrowIcon, PlusIcon } from "public/assets/icons/dashboardIcons";
-import { DownArrowwhite, Timericon } from "public/assets/icons/subscription";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddAgentModel from "src/app/components/agents/AddAgentModel";
-import {
-  CalenderIcon,
-  CalenderIconActive,
-  KanbanIcon,
-  KanbanIconActive,
-  TaskListIcon,
-  TaskListIconActive,
-  TaskTableIcon,
-  TaskTableIconActive,
-} from "public/assets/icons/projectsIcon";
-import { AttachmentIcon } from "public/assets/icons/supportIcons";
-import PaymentSubscriptio from "./PaymentSubscriptio";
-import ItemTable from "./ItemTable";
-import SubLogTable from "./SubLogTable";
-import CancelButtonPage from "./CancelButtonPage";
-import { changeFetchStatus, subscriptionDetails } from "app/store/Client";
+// import { subscriptionDetails } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
+import { useFormik } from "formik";
+import { EditIcon, LastPayment } from "public/assets/icons/common";
+import { Timericon } from "public/assets/icons/subscription";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import TitleBar from "src/app/components/TitleBar";
+import AddAgentModel from "src/app/components/agents/AddAgentModel";
+import CancelButtonPage from "./CancelButtonPage";
+import ItemTable from "./ItemTable";
+import PaymentSubscriptio from "./PaymentSubscriptio";
+import SubLogTable from "./SubLogTable";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -97,7 +64,7 @@ export default function SubscriptionDetails() {
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [value, setValue] = useState(0);
-  const [rows, setRows] = useState([]);
+  const [rows, setRows] = useState<any>([]);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
@@ -175,13 +142,13 @@ export default function SubscriptionDetails() {
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                          {rows?.userName}
+                          {/* {rows?.userName} */}
                         </span>
                         <Button
                           variant="outlined"
-                          className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
-                            rows?.status
-                          )}`}
+                          // className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
+                          //   rows?.status
+                          // )}`}
                         >
                           {/* {`${
                             rows.status == 0 || rows.status == 1 ? "In " : ""
@@ -194,7 +161,7 @@ export default function SubscriptionDetails() {
                           <span>
                             <Timericon />
                           </span>
-                          <span>{rows.subscription_start_date}</span>
+                          {/* <span>{rows.subscription_start_date}</span> */}
                         </div>
                         <div className="flex">
                           <img

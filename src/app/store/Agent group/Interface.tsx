@@ -7,7 +7,7 @@ export interface AgentGroupType {
   user_id?: number;
   updatedAt?: string;
   members_count?: number;
-  group_members?: [];
+  group_members?: any[];
 }
 
 export interface filterType {

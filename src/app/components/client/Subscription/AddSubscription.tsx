@@ -737,15 +737,24 @@ export default function AddSubscription() {
                           >
                             Action
                           </MenuItem>
-                          {Action?.map((item) => (
-                            <StyledMenuItem
-                              key={item.value}
-                              value={item.value}
-                              onClick={() => setIsLineModal(true)}
-                            >
-                              {item.label}
-                            </StyledMenuItem>
-                          ))}
+                          {/* {Action?.map((item) => ( */}
+                          <StyledMenuItem
+                            // key={item.value}
+                            value={"Edit"}
+                            onClick={() => setIsLineModal(true)}
+                          >
+                            {/* {item.label} */}
+                            Edit
+                          </StyledMenuItem>
+                          <StyledMenuItem
+                            // key={item.value}
+                            value={"Delete"}
+                            onClick={() => setIsOpenDeletedModal(true)}
+                          >
+                            {/* {item.label} */}
+                            Delete
+                          </StyledMenuItem>
+                          {/* ))} */}
                         </Select>
                       </div>
                     </TableCell>

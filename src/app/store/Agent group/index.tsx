@@ -308,18 +308,28 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = true;
       })
       .addCase(searchAgentGroup.fulfilled, (state, action) => {
-        const payload = action.payload as ApiResponse; // Assert type
+        const response = action.payload?.data;
+
         state.actionStatus = false;
-        if (payload?.data?.status) {
-          state.successMsg = payload?.data?.message;
-          toast.success(payload?.data?.message);
+        if (!response.status) {
+          toast.error(response?.message);
+          // console.log(response, "responsed");
         } else {
-          state.errorMsg = payload?.data?.message;
-          toast.error(payload?.data?.message);
+          let contactArray = state.agentGroupDetail.group_members.concat(
+            response.data
+          );
+          console.log(response.data, "contactArray");
+          state.agentGroupDetail.group_members = contactArray;
+
+          // state.agentDetail.attachments = state.agentDetail.attachments.concat(
+          //   response.data
+          // );
+          // state.agentDetail = ;
+          console.log(state.agentGroupDetail.group_members, "ghgh");
+          toast.success(response?.message);
         }
       })
-      .addCase(searchAgentGroup.rejected, (state, { error }) => {
-        toast.error(error?.message);
+      .addCase(searchAgentGroup.rejected, (state, action) => {
         state.actionStatus = false;
       })
 
@@ -336,6 +346,10 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = false;
         if (!response.status) {
           toast.error(response?.message);
+          state.total_records = calculatePageNumber(
+            response?.data?.total_records,
+            10
+          );
         }
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
@@ -350,7 +364,10 @@ export const agentGroupSlice = createSlice({
         // console.log(group_id, "idd");
         state.actionStatus = false;
         if (payload?.data?.status) {
-          state.list = state.list.filter((item) => item.id !== member_id);
+          state.agentGroupDetail.group_members =
+            state.agentGroupDetail.group_members.filter(
+              (item) => item.id !== member_id
+            );
 
           toast.success(payload?.data?.message);
         } else {

@@ -203,6 +203,23 @@ export const subscriptionDetails = createAsyncThunk(
   }
 );
 
+
+export const subscriptionUpdateDetails = createAsyncThunk(
+  "/product/detail/",
+  async (payload: ProductDelete) => {
+    const response = await ApiHelperFunction({
+      url: `/product/detail/${payload?.product_id}`,
+      method: "get",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 // ----*-------product-list-----
 
 export const productAdd = createAsyncThunk(
@@ -227,7 +244,7 @@ export const productUpdate = createAsyncThunk(
   async (payload: ProductUpdate ) => {
     const response = await ApiHelperFunction({
       url: `/product/update`,
-      method: "post",
+      method: "put",
       data: payload,
     });
 
@@ -259,7 +276,7 @@ export const productDelete = createAsyncThunk(
   async (payload: ProductDelete ) => {
     const response = await ApiHelperFunction({
       url: `/product/delete`,
-      method: "post",
+      method: "delete",
       data: payload,
     });
 
@@ -273,7 +290,7 @@ export const productDetails = createAsyncThunk(
   "/product/detail/",
   async (payload: ProductDelete) => {
     const response = await ApiHelperFunction({
-      url: `/product/detail//${payload?.product_id}`,
+      url: `/product/detail/${payload?.product_id}`,
       method: "get",
       data: payload,
     });
@@ -298,6 +315,24 @@ export const initialState: initialStateProps = {
   selectedColumn: [],
   total_records: 0,
 };
+
+export const addAssignAgents = createAsyncThunk(
+  "client/assign-agents",
+  async (payload: ClientType) => {
+    const response = await ApiHelperFunction({
+      url: "client/assign-agents",
+      method: "post",
+      data: payload,
+    });
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+
+
 
 /**
  * The auth slice.

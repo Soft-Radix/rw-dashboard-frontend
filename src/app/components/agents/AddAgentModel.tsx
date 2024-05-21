@@ -114,9 +114,9 @@ function AddAgentModel({
         resetForm();
 
         // Optionally fetch updated agent list
-        // if (fetchAgentList) {
-        //   fetchAgentList();
-        // }
+        if (fetchAgentList) {
+          fetchAgentList();
+        }
 
         // Close the modal
         setIsOpen(false);
