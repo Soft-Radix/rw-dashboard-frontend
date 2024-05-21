@@ -7,6 +7,7 @@ import { useAppDispatch } from "app/store/store";
 import { logIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
 import { useNavigate } from "react-router";
+import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
 
 const defaultAuthConfig = {
   tokenStorageKey: "jwt_access_token",
@@ -225,6 +226,7 @@ const useJwtAuth = <User, SignUpPayload>(
     );
     if (response?.payload?.status) {
       const userData = response?.payload.data?.user;
+      dispatch(setInitialState(userData));
       const accessToken = response?.payload.data?.access_token;
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
@@ -238,6 +240,8 @@ const useJwtAuth = <User, SignUpPayload>(
       } else {
         window.location.href = "/verification";
       }
+      handleSignInSuccess(userData, accessToken);
+      window.location.reload();
     }
     return response;
   };

@@ -30,15 +30,13 @@ const navigationAdapter = createEntityAdapter<FuseFlatNavItemType>();
 
 const emptyInitialState = navigationAdapter.getInitialState([]);
 
-const userDetail = getLocalStorage("userDetail");
-
-console.log("userDetail?.role", userDetail?.role);
-const initialState = navigationAdapter.upsertMany(
-  emptyInitialState,
-  FuseNavigationHelper.flattenNavigation(
-    userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
-  )
-);
+// console.log("userDetail?.role", userDetail?.role);
+// const initialState = navigationAdapter.upsertMany(
+//   emptyInitialState,
+//   FuseNavigationHelper.flattenNavigation(
+//     userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
+//   )
+// );
 
 /**
  * Redux Thunk actions related to the navigation store state
@@ -132,7 +130,13 @@ export const {
 } = navigationAdapter.getSelectors(
   (state: AppRootStateType) => state.navigation
 );
-
+const userDetail = getLocalStorage("userDetail");
+const initialState = navigationAdapter.upsertMany(
+  emptyInitialState,
+  FuseNavigationHelper.flattenNavigation(
+    userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
+  )
+);
 /**
  * The navigation slice
  */
@@ -140,6 +144,14 @@ export const navigationSlice = createSlice({
   name: "navigation",
   initialState,
   reducers: {
+    setInitialState: (state, { payload }) => {
+      state = navigationAdapter.upsertMany(
+        emptyInitialState,
+        FuseNavigationHelper.flattenNavigation(
+          payload?.role === "admin" ? adminNavigationConfig : navigationConfig
+        )
+      );
+    },
     setNavigation(state, action: PayloadAction<FuseNavItemType[]>) {
       return navigationAdapter.setAll(
         state,
@@ -150,7 +162,8 @@ export const navigationSlice = createSlice({
   },
 });
 
-export const { setNavigation, resetNavigation } = navigationSlice.actions;
+export const { setNavigation, resetNavigation, setInitialState } =
+  navigationSlice.actions;
 
 export const selectNavigation = createSelector(
   [selectNavigationAll, selectUserRole, selectCurrentLanguageId],

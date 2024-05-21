@@ -27,6 +27,7 @@ export type FuseNavItemType = {
   children?: FuseNavItemType[];
   hasPermission?: boolean;
   customIcon?: any;
+  isProject?: boolean;
 };
 
 export type FuseFlatNavItemType = Omit<FuseNavItemType, "children" | "sx"> & {

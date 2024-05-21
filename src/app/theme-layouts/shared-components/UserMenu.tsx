@@ -19,7 +19,7 @@ import { getLocalStorage } from "src/utils";
  * The user menu.
  */
 function UserMenu() {
-  const user = getLocalStorage('userDetail')
+  const user = getLocalStorage("userDetail");
   const { signOut } = useAuth();
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
 
@@ -34,7 +34,6 @@ function UserMenu() {
   if (!user) {
     return null;
   }
-
 
   return (
     <>
