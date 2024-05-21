@@ -7,6 +7,8 @@ import { ListItemButton, ListItemButtonProps } from "@mui/material";
 import FuseNavBadge from "../../FuseNavBadge";
 import FuseSvgIcon from "../../../FuseSvgIcon";
 import { FuseNavItemComponentProps } from "../../FuseNavItem";
+import { ProjectNavIcon } from "public/assets/icons/projectsIcon";
+import { getLocalStorage } from "src/utils";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -29,7 +31,7 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
       color: "white",
     },
     "&.active": {
-      color: 'theme.palette.text.primary',
+      color: "theme.palette.text.primary",
       backgroundColor: "#393F4C",
       pointerEvents: "none",
       transition: "border-radius .15s cubic-bezier(0.4,0.0,0.2,1)",
@@ -52,6 +54,7 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
  * FuseNavVerticalItem is a React component used to render FuseNavItem as part of the Fuse navigational component.
  */
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
+  const userDetail = getLocalStorage("userDetail");
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
@@ -84,16 +87,19 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
         {...itemProps}
       >
         {item.icon && (
-          <>
+          <div>
             {/* <FuseSvgIcon
               className={clsx("fuse-list-item-icon shrink-0", item.iconClass)}
             // color="action"
             >
               {item.icon}
             </FuseSvgIcon> */}
-            <span className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
-            >{item.customIcon}</span>
-          </>
+            <span
+              className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
+            >
+              {item.customIcon}
+            </span>
+          </div>
         )}
 
         <ListItemText
@@ -107,6 +113,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
           }}
         />
         {item.badge && <FuseNavBadge badge={item.badge} />}
+        {userDetail?.role === "admin" ? (
+          ""
+        ) : (
+          <span onClick={() => alert("hh")}>
+            {" "}
+            <ProjectNavIcon className="threeDots-icon" color="inherit" />
+          </span>
+        )}
       </Root>
     ),
     [item, itempadding, onItemClick]

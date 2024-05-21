@@ -51,7 +51,7 @@ function InputField({
           value={formik?.values[name ?? ""]}
           error={!!(formik?.errors[name ?? ""] && formik?.touched[name ?? ""])}
           {...rest}
-          className=""
+          className={rest.className}
         />
         {type === "password" && (
           <span

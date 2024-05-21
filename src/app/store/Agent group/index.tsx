@@ -32,12 +32,13 @@ export const addAgentGroup = createAsyncThunk(
     };
   }
 );
+addAgentGroup;
 
 export const getAgentGroupList = createAsyncThunk(
   "agent-group/list",
   async (payload: filterType) => {
     const response = await ApiHelperFunction({
-      url: "agent-group/list",
+      url: "agent-grouaddAgentGroupp/list",
       method: "post",
       data: payload,
     });
@@ -46,6 +47,7 @@ export const getAgentGroupList = createAsyncThunk(
     return {
       data: response.data,
     };
+    addAgentGroup;
   }
 );
 
@@ -53,7 +55,7 @@ export const deleteAgentGroup = createAsyncThunk(
   "agent-group/delete",
   async (payload: deleteAgentGroupType) => {
     const response = await ApiHelperFunction({
-      url: "agent-group/delete",
+      url: "agent-grouaddAgentGroupp/delete",
       method: "post",
       data: payload,
     });
@@ -64,7 +66,7 @@ export const deleteAgentGroup = createAsyncThunk(
     };
   }
 );
-
+addAgentGroup;
 export const getAgentGroupInfo = createAsyncThunk(
   "agent-group/{group_id}",
   async (payload: AgentGroupIDType) => {

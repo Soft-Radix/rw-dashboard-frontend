@@ -126,7 +126,7 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-  const checkPageNum = (e: any, pageNumber: number) => {
+  const checkPageNum = (e?: any, pageNumber: number) => {
     setfilters((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,
@@ -160,102 +160,98 @@ export default function AgentsGroup() {
 
   return (
     <>
-      <>
-        <TitleBar title="Agents Groups">
-          <Button
-            variant="outlined"
-            color="secondary"
-            className="h-[40px] text-[16px] flex gap-8 font-[600]"
-            aria-label="Add New Group"
-            size="large"
-            onClick={() => {
-              setIsOpenAddModal(true);
-            }}
+      <TitleBar title="Agents Groups">
+        <Button
+          variant="outlined"
+          color="secondary"
+          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          aria-label="Add New Group"
+          size="large"
+          onClick={() => {
+            setIsOpenAddModal(true);
+          }}
+        >
+          <PlusIcon color={theme.palette.secondary.main} />
+          Add New Group
+        </Button>
+      </TitleBar>
+      <div className="px-28 mb-[3rem]">
+        <div className="bg-white rounded-lg shadow-sm">
+          <div className="p-[2rem]">
+            <SearchInput name="search" placeholder="Search agents group" />
+          </div>
+          <CommonTable
+            headings={["ID", "Group Name", "Number of Agents", "Action"]}
           >
-            <PlusIcon color={theme.palette.secondary.main} />
-            Add New Group
-          </Button>
-        </TitleBar>
-        <div className="px-28 mb-[3rem]">
-          <div className="bg-white rounded-lg shadow-sm">
-            <div className="p-[2rem]">
-              <SearchInput name="search" placeholder="Search agents group" />
-            </div>
-            <CommonTable
-              headings={["ID", "Group Name", "Number of Agents", "Action"]}
-            >
-              <>
-                {agentGroupState.list.map((row, index) => {
-                  // console.log(row, "row");
-                  return (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "& td": {
-                          borderBottom: "1px solid #EDF2F6",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      <TableCell scope="row">{row.id}</TableCell>
-                      <TableCell align="center" className="whitespace-nowrap">
-                        {row.group_name}
-                      </TableCell>
+            <>
+              {agentGroupState.list.map((row, index) => {
+                // console.log(row, "row");
+                return (
+                  <TableRow
+                    key={index}
+                    sx={{
+                      "& td": {
+                        borderBottom: "1px solid #EDF2F6",
+                        paddingTop: "12px",
+                        paddingBottom: "12px",
+                        color: theme.palette.primary.main,
+                      },
+                    }}
+                  >
+                    <TableCell scope="row">{row.id}</TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.group_name}
+                    </TableCell>
 
-                      <TableCell align="center" className="whitespace-nowrap">
-                        {row.members_count}
-                      </TableCell>
+                    <TableCell align="center" className="whitespace-nowrap">
+                      {row.members_count}
+                    </TableCell>
 
-                      <TableCell align="center" className="w-[1%]">
-                        <div className="flex gap-20 pe-20">
-                          <span
-                            className="p-2 cursor-pointer"
-                            // onClick={deleteGroup}
-                          >
-                            <DeleteIcon
-                              onClick={() => {
-                                setIsOpenDeletedModal(true);
-                                setIsDeleteId(row.id);
-                              }}
-                            />
-                          </span>
-                          <span className="p-2 cursor-pointer">
-                            <Link to={`/admin/agents/groups/${row.id}`}>
-                              <EditIcon />
-                            </Link>
-                          </span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </>
-            </CommonTable>
-            <div className="flex justify-end py-14 px-[3rem]">
-              <CommonPagination
-                count={agentGroupState?.total_records}
-                page={filters.start + 1}
-                onChange={(event, pageNumber) =>
-                  checkPageNum(event, pageNumber)
-                }
-              />
-            </div>
+                    <TableCell align="center" className="w-[1%]">
+                      <div className="flex gap-20 pe-20">
+                        <span
+                          className="p-2 cursor-pointer"
+                          // onClick={deleteGroup}
+                        >
+                          <DeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setIsDeleteId(row.id);
+                            }}
+                          />
+                        </span>
+                        <span className="p-2 cursor-pointer">
+                          <Link to={`/admin/agents/groups/${row.id}`}>
+                            <EditIcon />
+                          </Link>
+                        </span>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </>
+          </CommonTable>
+          <div className="flex justify-end py-14 px-[3rem]">
+            <CommonPagination
+              count={agentGroupState?.total_records}
+              page={filters.start + 1}
+              onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
+            />
           </div>
         </div>
-        <AddGroupModel
-          isOpen={isOpenAddModal}
-          setIsOpen={setIsOpenAddModal}
-          isNewAgent={false}
-          fetchAgentGroupList={fetchAgentGroupList}
-        />
-        <DeleteClient
-          isOpen={isOpenDeletedModal}
-          setIsOpen={setIsOpenDeletedModal}
-          onDelete={() => deleteGroup(deleteId)}
-        />
-      </>
+      </div>
+      <AddGroupModel
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        isNewAgent={false}
+        fetchAgentGroupList={fetchAgentGroupList}
+      />
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        onDelete={() => deleteGroup(deleteId)}
+      />
     </>
   );
 }

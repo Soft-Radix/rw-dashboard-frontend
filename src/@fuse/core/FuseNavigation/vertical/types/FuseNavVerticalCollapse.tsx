@@ -25,6 +25,7 @@ import FuseSvgIcon from "../../../FuseSvgIcon";
 import FuseNavBadge from "../../FuseNavBadge";
 import FuseNavItem, { FuseNavItemComponentProps } from "../../FuseNavItem";
 import { FuseNavItemType } from "../../types/FuseNavItemType";
+import AddProjectModal from "src/app/pages/projects/AddProjectModal";
 
 type ListComponentProps = ListProps & {
   itempadding: number;
@@ -64,6 +65,7 @@ function needsToBeOpened(location: Location, item: FuseNavItemType) {
  * FuseNavVerticalCollapse component used for vertical navigation items with collapsible children.
  */
 function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
+  const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const location = useLocation();
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
 
@@ -211,12 +213,25 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                     </ProjectNavIconArrow>
                   </IconButton>
                 </div>
-                {/* {!items?.hideOption &&
-                  <div className="flex items-center gap-10">
-                    <ProjectNavIcon className="threeDots-icon" color="inherit" />
-                    <ProjectPlusIcon />
+                {!items?.hideOption && (
+                  <div className="flex items-center gap-10 custom">
+                    <ProjectNavIcon
+                      className="threeDots-icon"
+                      color="inherit"
+                    />
+                    <span
+                      onClick={() => {
+                        setIsOpenAddModal(true);
+                      }}
+                    >
+                      <ProjectPlusIcon />
+                    </span>
+                    <AddProjectModal
+                      isOpen={isOpenAddModal}
+                      setIsOpen={setIsOpenAddModal}
+                    />
                   </div>
-                } */}
+                )}
               </div>
             </ListItemButton>
           </div>

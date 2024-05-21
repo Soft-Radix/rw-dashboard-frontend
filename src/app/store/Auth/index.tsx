@@ -10,6 +10,9 @@ import {
   initialStateProps,
 } from "./Interface";
 
+import { getLocalStorage } from "src/utils";
+import { SubProjectIcon } from "public/assets/icons/navabarIcon";
+
 // Define a type for the payload
 
 /**
@@ -53,7 +56,6 @@ export const restPassword = createAsyncThunk(
       data: payload,
     });
 
-
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -86,7 +88,6 @@ export const setPassword = createAsyncThunk(
       data: payload,
     });
 
-
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -100,27 +101,26 @@ export const setPassword = createAsyncThunk(
 export const initialState: initialStateProps = {
   status: "idle",
   email: "",
+  navigation: [],
 };
 
 /**
  * The auth slice.
  */
 export const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {},
   extraReducers(builder) {
     builder
 
-      .addCase(logIn.pending, (state, action) => {
-
-      })
+      .addCase(logIn.pending, (state, action) => {})
       .addCase(logIn.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         if (payload?.status) {
-          toast.success(payload?.message)
+          toast.success(payload?.message);
         } else {
-          toast.error(payload?.message)
+          toast.error(payload?.message);
         }
       })
 
@@ -153,6 +153,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const { } = authSlice.actions;
+export const {} = authSlice.actions;
 
 export default authSlice.reducer;
