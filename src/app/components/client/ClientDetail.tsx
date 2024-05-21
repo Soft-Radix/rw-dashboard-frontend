@@ -1,13 +1,14 @@
-import { Button, Theme } from "@mui/material";
+import { Button, Checkbox, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 
 import ListLoading from "@fuse/core/ListLoading";
 import {
+  GetAssignAgentsInfo,
   addAssignAgents,
   changeFetchStatus,
   getClientInfo,
 } from "app/store/Client";
-import { ClientRootState } from "app/store/Client/Interface";
+import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import {
   DownArrowIconWhite,
@@ -32,6 +33,9 @@ import AssignedAccountManager from "./components/AssignedAccountManager";
 import AssignedAgents from "./components/AssignedAgents";
 import Profile from "./components/Profile";
 import SubscriptionList from "./components/SubscriptionList";
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
+import { addAgentInagentGroup } from "app/store/Agent group";
+import { debounce } from "lodash";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,6 +54,9 @@ export default function ClientDetail() {
     (store: ClientRootState) => store?.client
   );
   const { role } = useSelector((store: any) => store?.user);
+  const { searchAgentList } = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
   const { client_id } = useParams();
   if (client_id) {
     localStorage.setItem("client_id", client_id);
@@ -60,28 +67,63 @@ export default function ClientDetail() {
   // Get a specific query parameter
   const paramValue = queryParams.get("type");
   //custom dropdown
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
-
+  const [anchorEl3, setAnchorEl3] = useState<HTMLElement | null>(null);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [agentId, setAgentId] = useState<number[]>();
   const handleClose = () => {
-    setAnchorEl(null);
-    setAnchorEl1(null);
+    setAnchorEl3(null);
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
-    event.stopPropagation();
-    setAnchorEl(event.currentTarget);
+    // event.stopPropagation();
+    setAnchorEl3(event.currentTarget);
   };
 
   const handleAddnewAgents = () => {
     dispatch(
       addAssignAgents({
         client_id: client_id,
-        agent_ids:[]
+        agent_ids: checkedItems,
       })
     );
   };
 
+  const handleCheckboxChange = (id: number) => {
+    setCheckedItems((prevState) =>
+      prevState.includes(id)
+        ? prevState.filter((item) => item !== id)
+        : [...prevState, id]
+    );
+  };
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
+  useEffect(() => {
+    dispatch(addAgentInagentGroup(filterMenu));
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id: client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+  }, [filterMenu]);
+  // console.log(agentId, "popop");
   const CustomDropDown = (): JSX.Element => {
     return (
       <>
@@ -103,7 +145,7 @@ export default function ClientDetail() {
               </Button>
             </div>
           }
-          anchorEl={anchorEl}
+          anchorEl={anchorEl3}
           handleClose={handleClose}
         >
           <div className="w-[375px] p-20">
@@ -117,7 +159,24 @@ export default function ClientDetail() {
                 inputProps={{
                   className: "ps-[2rem] w-full sm:w-full",
                 }}
+                onChange={handleSearchChange}
               />
+              <div className=" max-h-[100px] w-1/2 overflow-y-auto shadow-sm cursor-pointer">
+                {searchAgentList.map((item: any) => (
+                  <div
+                    className="flex items-center gap-10 px-20 w-full"
+                    key={item.id}
+                  >
+                    <label className="flex items-center gap-10 w-full cursor-pointer">
+                      <Checkbox
+                        checked={checkedItems.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />
+                      <span>{item.first_name}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex pt-10">
               <Button

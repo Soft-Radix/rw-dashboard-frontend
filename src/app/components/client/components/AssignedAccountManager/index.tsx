@@ -91,6 +91,7 @@ export default function AssignedAccountManager() {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
+
   return (
     <>
       <div className="mb-[3rem]">

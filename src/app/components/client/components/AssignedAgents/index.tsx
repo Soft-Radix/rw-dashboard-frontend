@@ -16,83 +16,21 @@ import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import UnassignedAgent from "./UnassignedAgent";
-
-const rows = [
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Unassign",
-    department: "Account Manager",
-    date: "Feb 12,2024",
-    assignedImg: ["female-01.jpg"],
-  },
-];
+import { useSelector } from "react-redux";
+import { ClientRootState } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
+import { deleteAgentList } from "app/store/Client";
 
 export default function AssignedAgents() {
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+  const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
+  const [deleteId, setIsDeleteId] = useState<number>(null);
+  const { assignedAgentDetail } = useSelector(
+    (store: ClientRootState) => store.client
+  );
+  // console.log(assignedAgentDetail, "gdfjgh");
+  const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
   const formik = useFormik({
     initialValues: {
@@ -102,10 +40,22 @@ export default function AssignedAgents() {
     // validationSchema: validationSchemaProperty,
     onSubmit: (values) => {},
   });
+  const unassignAgent = async (id: any) => {
+    // console.log(id, "id");
+    try {
+      const { payload } = await dispatch(
+        deleteAgentList({ client_id: id, agent_id: "" })
+      );
+      console.log(payload, "payload");
+      if (payload?.data?.status) {
+        setIsOpenUnassignedModal(false);
+        // fetchAgentGroupLsssist();
+      }
+    } catch (error) {
+      console.error("Failed to delete agent group:", error);
+    }
+  };
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   return (
     <>
       <div className="mb-[3rem]">
@@ -113,14 +63,14 @@ export default function AssignedAgents() {
           <CommonTable
             headings={[
               "Agents",
-              "User ID",
-              "Associated Invoice",
+              "First Name",
+              "Last Name",
               "Assigned Date",
               "",
             ]}
           >
             <>
-              {rows.map((row, index) => (
+              {assignedAgentDetail.map((row, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -136,46 +86,42 @@ export default function AssignedAgents() {
                     scope="row"
                     className="flex items-center gap-8 font-500"
                   >
-                    <img
-                      src={`../assets/images/avatars/${row.assignedImg}`}
-                      className="w-[34px] rounded-full"
-                    />
-                    {row.ticket}
+                    {row.id}
                   </TableCell>
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.subject}
+                    {row.first_name}
                   </TableCell>
                   <TableCell align="center" className="font-500">
-                    {row.department}
+                    {row.last_name}
                   </TableCell>
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.date}
+                    {row.assigned_date}
                   </TableCell>
                   <TableCell
                     align="center"
                     className="whitespace-nowrap"
-                    onClick={() => setIsOpenUnassignedModal(true)}
+                    onClick={() => {
+                      setIsOpenUnassignedModal(true);
+                      setIsDeleteId(row.id);
+                    }}
                   >
                     <span
-                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                                            ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
+                   ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
                     >
-                      {row.status}
+                      {row.status ? row.status : "Unassigned"}
                     </span>
                   </TableCell>
                 </TableRow>
               ))}
             </>
           </CommonTable>
-          <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination count={10} />
-          </div>
         </div>
       </div>
       <AddAgentModel
@@ -186,6 +132,7 @@ export default function AssignedAgents() {
       <UnassignedAgent
         isOpen={isOpenUnssignedModal}
         setIsOpen={setIsOpenUnassignedModal}
+        onDelete={() => unassignAgent(deleteId)}
       />
     </>
   );
