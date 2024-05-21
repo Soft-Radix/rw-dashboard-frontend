@@ -13,11 +13,6 @@ import {
   ChangePassword,
   AddSubscriptionList,
   AddLineItem,
-  SubscriptionListItem,
-  ProductAdd,
-  ProductDelete,
-  ProductUpdate
-
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -158,7 +153,7 @@ export const addsubscription = createAsyncThunk(
 
 export const addLineItem = createAsyncThunk(
   "line-item/add",
-  async (payload: AddLineItem ) => {
+  async (payload: AddLineItem) => {
     const response = await ApiHelperFunction({
       url: `line-item/add`,
       method: "post",
@@ -171,45 +166,11 @@ export const addLineItem = createAsyncThunk(
     };
   }
 );
-
-export const subscriptionListItem = createAsyncThunk(
-  "client/subscription-list",
-  async (payload: SubscriptionListItem ) => {
+export const addAssignAgents = createAsyncThunk(
+  "client/assign-agents",
+  async (payload: ClientType) => {
     const response = await ApiHelperFunction({
-      url: `client/subscription-list`,
-      method: "post",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
-export const subscriptionDetails = createAsyncThunk(
-  "client/information",
-  async (payload: clientIDType) => {
-    const response = await ApiHelperFunction({
-      url: `client/subscription-detail/${payload?.client_id}`,
-      method: "get",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
-
-// ----*-------product-list-----
-
-export const productAdd = createAsyncThunk(
-  "product/add",
-  async (payload: ProductAdd ) => {
-    const response = await ApiHelperFunction({
-      url: `/product/add`,
+      url: "client/assign-agents",
       method: "post",
       data: payload,
     });
@@ -221,69 +182,6 @@ export const productAdd = createAsyncThunk(
   }
 );
 
-
-export const productUpdate = createAsyncThunk(
-  "product/update",
-  async (payload: ProductUpdate ) => {
-    const response = await ApiHelperFunction({
-      url: `/product/update`,
-      method: "post",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
-
-export const productList = createAsyncThunk(
-  "product/list",
-  async (payload: SubscriptionList ) => {
-    const response = await ApiHelperFunction({
-      url: `/product/list`,
-      method: "post",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
-
-export const productDelete = createAsyncThunk(
-  "product/delete",
-  async (payload: ProductDelete ) => {
-    const response = await ApiHelperFunction({
-      url: `/product/delete`,
-      method: "post",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
-export const productDetails = createAsyncThunk(
-  "/product/detail/",
-  async (payload: ProductDelete) => {
-    const response = await ApiHelperFunction({
-      url: `/product/detail//${payload?.product_id}`,
-      method: "get",
-      data: payload,
-    });
-
-    // Return only the data you need to keep it serializable
-    return {
-      data: response.data,
-    };
-  }
-);
 /**
  * The initial state of the auth slice.
  */
@@ -456,6 +354,24 @@ export const clientSlice = createSlice({
         }
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+      .addCase(addAssignAgents.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(addAssignAgents.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        state.actionStatus = false;
+        if (payload?.data?.status) {
+          state.successMsg = payload?.data?.message;
+          toast.success(payload?.data?.message);
+        } else {
+          state.errorMsg = payload?.data?.message;
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(addAssignAgents.rejected, (state, { error }) => {
+        toast.error(error?.message);
         state.actionStatus = false;
       });
   },

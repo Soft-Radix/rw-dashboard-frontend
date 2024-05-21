@@ -23,6 +23,7 @@ import {
 } from "app/store/AccountManager/Interface";
 import { RootState, useAppDispatch } from "app/store/store";
 import {
+  changeFetchStatus,
   deleteAccManager,
   getAccManagerInfo,
   getAccManagerList,
@@ -133,6 +134,7 @@ export default function AccountManager() {
   useEffect(() => {
     fetchManagerList();
     setIsOpenAddModal(false);
+    dispatch(changeFetchStatus());
   }, [fetchManagerList]);
   // Include necessary dependencies for useEffect
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
@@ -228,7 +230,7 @@ export default function AccountManager() {
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
                     >
-                      {row.status}
+                      {row.status || "Active"}
                     </span>
                   </TableCell>
                   <TableCell

@@ -60,6 +60,7 @@ function AddGroupModel({
 
     if (payload?.data?.status) {
       resetForm();
+      fetchAgentGroupList();
     }
   };
 
@@ -71,6 +72,7 @@ function AddGroupModel({
         delete_agent_ids: [],
       })
     );
+    setIsOpen(false);
     // Handle the case when there is an id (e.g., updating an existing group)
   };
 

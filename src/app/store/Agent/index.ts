@@ -227,7 +227,7 @@ export const agentSlice = createSlice({
         state.actionStatus = false;
         if (!response.status) {
           toast.error(response?.message);
-          console.log(response, "responsed");
+          // console.log(response, "responsed");
         } else {
           let contactArray = state.agentDetail.attachments.concat(
             response.data
