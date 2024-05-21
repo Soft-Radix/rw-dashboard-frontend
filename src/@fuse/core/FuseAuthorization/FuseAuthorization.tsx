@@ -28,11 +28,9 @@ function isUserGuest(role: string[] | string) {
   return !role || (Array.isArray(role) && role.length === 0);
 }
 
-/**
- * FuseAuthorization is a higher-order component that wraps its child component which handles the authorization logic of the app.
- * It checks the provided Auth property from FuseRouteItemType (auth property) against the current logged-in user role.
- */
 class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
+  timer: NodeJS.Timeout | null = null;
+
   constructor(props: FuseAuthorizationProps, context: AppContextType) {
     super(props);
 
@@ -54,6 +52,12 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     }
   }
 
+  componentWillUnmount() {
+    if (this.timer) {
+      clearTimeout(this.timer);
+    }
+  }
+
   shouldComponentUpdate(nextProps: FuseAuthorizationProps, nextState: State) {
     const { accessGranted } = this.state;
     console.log(
@@ -65,13 +69,20 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     return nextState.accessGranted !== accessGranted;
   }
 
-  componentDidUpdate() {
-    console.log(
-      "Component Did Update - Access Granted:",
-      this.state.accessGranted
-    );
-    if (!this.state.accessGranted) {
-      this.redirectRoute();
+  componentDidUpdate(prevProps: FuseAuthorizationProps, prevState: State) {
+    const { accessGranted } = this.state;
+
+    if (accessGranted !== prevState.accessGranted) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+      }
+
+      this.timer = setTimeout(() => {
+        this.setState({ accessGranted });
+        if (!accessGranted) {
+          this.redirectRoute();
+        }
+      }, 3000);
     }
   }
 
