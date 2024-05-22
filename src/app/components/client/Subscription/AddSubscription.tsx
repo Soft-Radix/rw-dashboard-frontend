@@ -372,7 +372,6 @@ export default function AddSubscription() {
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    console.log("========", index, event.target.value, event.target.name);
     var mode = "";
     var payment = null;
     const newErrors = list?.map((item, i) => {
