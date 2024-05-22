@@ -40,7 +40,7 @@ export const getProjectNavItems = () => {
     type: "item",
     icon: "material-twotone:compress",
     customIcon: <SubProjectIcon />,
-    // url: "projects",
+    url: `projects/${project.id}`,
     end: true,
     isProject: true,
   }));
