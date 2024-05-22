@@ -145,8 +145,7 @@ const Kanban = (props): any => {
                 <Button
                   variant="contained"
                   color="secondary"
-                  className="w-[95px] text-[12px]"
-                  size="small"
+                  className="w-[95px] text-[12px] "
                   onClick={handleSave}
                 >
                   Save
@@ -154,8 +153,7 @@ const Kanban = (props): any => {
                 <Button
                   variant="outlined"
                   color="secondary"
-                  className="w-[95px] text-[12px] ml-5"
-                  size="small"
+                  className="w-[95px] text-[12px] ml-5 "
                   onClick={() => {
                     setAddCard(!addCard);
                     formik.setFieldValue("name", "");
