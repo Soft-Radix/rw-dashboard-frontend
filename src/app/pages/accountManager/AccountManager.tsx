@@ -272,6 +272,8 @@ export default function AccountManager() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteAccManger(deleteId)}
+        heading={"Delete Account Manager"}
+        description={"Are you sure you want to delete this Account Manager  ? "}
       />
     </>
   );

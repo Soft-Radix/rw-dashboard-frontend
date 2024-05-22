@@ -137,13 +137,13 @@ export default function AgentsGroup() {
     // console.log(id, "id");
     try {
       const { payload } = await dispatch(deleteAgentGroup({ group_id: id }));
-      console.log(payload, "payload");
+      // console.log(payload, "payload");
       if (payload?.data?.status) {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
     } catch (error) {
-      console.error("Failed to delete agent group:", error);
+      // console.error("Failed to delete agent group:", error);
     }
   };
   // Debounce function to delay executing the search
@@ -292,6 +292,8 @@ export default function AgentsGroup() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteGroup(deleteId)}
+        heading={"Delete Group"}
+        description={"Are you sure you want to delete this Group? "}
       />
     </>
   );

@@ -34,6 +34,7 @@ export default function Profile({
 
     handleClose(); // Close the menu after handling the click
   };
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <>
       <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
@@ -42,8 +43,11 @@ export default function Profile({
             <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative">
               <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
                 <img
-                  // src={!clientDetail?.user_image ? `${import.meta.env.VITE_API_BASE_URL}client/image/${clientDetail?.user_image}` : "/assets/images/avatars/male-21.jpg"}
-                  src={"../assets/images/logo/images.jpeg"}
+                  src={
+                    clientDetail?.user_image
+                      ? urlForImage + clientDetail.user_image
+                      : "../assets/images/logo/images.jpeg"
+                  }
                   alt="images"
                   className="h-[100px] w-[100px] rounded-full"
                 />

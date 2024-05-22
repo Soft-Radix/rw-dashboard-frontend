@@ -5,21 +5,32 @@ import {
   PlusIcon,
   ThreeDotsIcon,
 } from "public/assets/icons/dashboardIcons";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import ItemCard from "./ItemCard";
 import ActionModal from "../ActionModal";
+import { useDispatch } from "react-redux";
+import { deleteColumn, projectColumnUpdate } from "app/store/Projects";
+import toast from "react-hot-toast";
+import * as Yup from "yup";
 
 type MainCardType = {
+  id?: string | number;
   title: string;
   isEmpty?: boolean;
+  callListApi?: any;
 };
 
-export default function MainCard({ title, isEmpty }: MainCardType) {
+export default function MainCard({
+  title,
+  isEmpty,
+  id,
+  callListApi,
+}: MainCardType) {
   const [openEditModal, setOpenEditModal] = useState(false);
   const toggleEditModal = () => setOpenEditModal(!openEditModal);
-
+  const dispatch = useDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
 
@@ -32,23 +43,63 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
+  const validationSchema = Yup.object({
+    name: Yup.string().required("Name is required"),
+  });
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
-      column_name: "",
+      name: "",
     },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
+    validationSchema,
+    onSubmit: (values) => {
+      const data = {
+        column_id: id,
+        data: values,
+      };
+      dispatch(projectColumnUpdate(data))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            toast.success(res?.data?.message);
+            callListApi();
+            toggleEditModal();
+          }
+        });
+    },
   });
 
+  const handleDelete = () => {
+    if (id) {
+      dispatch(deleteColumn(id))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            callListApi();
+            toast.success(res?.data?.message, {
+              duration: 3000,
+            });
+          }
+        });
+    }
+  };
+
+  const handleEdit = () => {
+    formik.handleSubmit();
+  };
+
+  useEffect(() => {
+    formik.setFieldValue("name", title);
+  }, [title]);
+
   return (
-    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md">
+    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px]">
       <div>
         <div className="flex justify-between">
           <Typography
-            className="text-[18px] font-semibold mb-5"
+            className="text-[18px] font-semibold mb-5 "
             color="primary.main"
+            style={{ wordBreak: "break-word" }}
           >
             {title}
           </Typography>
@@ -168,13 +219,16 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
         )}
       </div>
       <CommonModal
-        modalTitle={title}
+        modalTitle={"Edit Column"}
         open={openEditModal}
+        btnTitle={"Save"}
+        onSubmit={handleEdit}
+        closeTitle="Cancel"
         handleToggle={toggleEditModal}
       >
         <InputField
           formik={formik}
-          name="column_name"
+          name="name"
           label="Column Name"
           placeholder="Enter Column Name"
         />
@@ -185,6 +239,7 @@ export default function MainCard({ title, isEmpty }: MainCardType) {
         open={openDeleteModal}
         handleToggle={toggleDeleteModal}
         type="delete"
+        onDelete={handleDelete}
       />
     </div>
   );

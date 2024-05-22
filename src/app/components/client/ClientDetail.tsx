@@ -96,9 +96,7 @@ export default function ClientDetail() {
     dispatch(
       GetAssignAgentsInfo({
         client_id,
-        start: 0,
-        limit: 10,
-        search: "",
+        agentfilterMenu,
       })
     );
     handleClose();
@@ -127,6 +125,16 @@ export default function ClientDetail() {
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
+    search: "",
+  });
+  const [agentfilterMenu, setAgentFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const [managerfilterMenu, setManagerFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: 10,
     search: "",
   });
   const [checkedItems, setCheckedItems] = useState([]);
@@ -165,9 +173,7 @@ export default function ClientDetail() {
     dispatch(
       GetAssignAgentsInfo({
         client_id,
-        start: 0,
-        limit: 10,
-        search: "",
+        managerfilterMenu,
       })
     );
     handleClose();
@@ -190,23 +196,20 @@ export default function ClientDetail() {
   useEffect(() => {
     dispatch(
       GetAssignAgentsInfo({
+        ...agentfilterMenu,
         client_id,
-        start: 0,
-        limit: 10,
-        search: "",
       })
     );
-  }, []);
+  }, [agentfilterMenu]);
+  // console.log(agentfilterMenu, "filterMenu");
   useEffect(() => {
     dispatch(
       getAssignAccMangerInfo({
+        ...managerfilterMenu,
         client_id,
-        start: 0,
-        limit: 10,
-        search: "",
       })
     );
-  }, []);
+  }, [managerfilterMenu]);
 
   const CustomDropDown = (): JSX.Element => {
     return (
@@ -379,13 +382,24 @@ export default function ClientDetail() {
     {
       id: "assigned-agents",
       label: "Assigned agents",
-      content: <AssignedAgents />,
+      content: (
+        <AssignedAgents
+          setAgentFilterMenu={setAgentFilterMenu}
+          agentfilterMenu={agentfilterMenu}
+        />
+      ),
       actionBtn: CustomDropDown,
+      agentfilterMenu,
     },
     {
       id: "assigned-account",
       label: "Assigned account manager",
-      content: <AssignedAccountManager />,
+      content: (
+        <AssignedAccountManager
+          setManagerFilterMenu={setManagerFilterMenu}
+          managerfilterMenu={managerfilterMenu}
+        />
+      ),
       actionBtn: AssignedAccManagerDropDown,
     },
     {

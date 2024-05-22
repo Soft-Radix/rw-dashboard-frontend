@@ -75,6 +75,67 @@ export const deleteProject: any = createAsyncThunk(
     };
   }
 );
+// -----------column-apis-----
+
+//Add column api
+export const projectColumnAdd = createAsyncThunk(
+  "project/column/add",
+  async (payload: ProjectAdd) => {
+    const response = await ApiHelperFunction({
+      url: `/project/column/add`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const projectColumnList = createAsyncThunk(
+  "project/columns/list",
+  async (payload: ProjectAdd) => {
+    const response = await ApiHelperFunction({
+      url: `/project/columns/list`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const deleteColumn: any = createAsyncThunk(
+  "column/delete",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/column/delete/${payload}`,
+      method: "delete",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+export const projectColumnUpdate: any = createAsyncThunk(
+  "column/update",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `column/update/${payload.column_id}`,
+      method: "put",
+      data: payload.data,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
 
 /**
  * The initial state of the auth slice.

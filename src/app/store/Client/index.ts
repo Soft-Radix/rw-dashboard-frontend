@@ -613,7 +613,7 @@ export const clientSlice = createSlice({
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
         state.total_records = calculatePageNumber(data?.total_records, 10);
-        const toatalPage = state.total_records;
+
         // console.log(state.assignedAgentDetail, "gggggff");
       })
       .addCase(GetAssignAgentsInfo.rejected, (state) => {
@@ -651,6 +651,7 @@ export const clientSlice = createSlice({
         state.fetchStatus = "idle";
         state.assignAccManagerDetail = data.list;
         // console.log(state.assignAccManagerDetail, "detailss");
+        state.total_records = calculatePageNumber(data?.total_records, 10);
       })
       .addCase(getAssignAccMangerInfo.rejected, (state) => {
         state.fetchStatus = "idle";
