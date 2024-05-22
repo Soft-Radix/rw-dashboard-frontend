@@ -2,7 +2,7 @@ import NavLinkAdapter from "@fuse/core/NavLinkAdapter";
 import { alpha, styled } from "@mui/material/styles";
 import ListItemText from "@mui/material/ListItemText";
 import clsx from "clsx";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Button,
   ListItemButton,
@@ -17,6 +17,12 @@ import { ProjectNavIcon } from "public/assets/icons/projectsIcon";
 import { getLocalStorage } from "src/utils";
 import LongMenu from "../../../../../../src/app/components/Dropdown";
 import dotImg from "../../../../../../public/assets/icons/dots.svg";
+import DropdownMenu from "../../../../../../src/app/components/Dropdown";
+import { DeleteIcon, EditIcon } from "public/assets/icons/navabarIcon";
+import DeleteClient from "src/app/components/client/DeleteClient";
+import DeleteProject from "src/app/pages/projects/DeleteProject";
+import { deleteProject } from "app/store/Projects";
+import toast from "react-hot-toast";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -63,6 +69,8 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
  */
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [deleteid, setDeleteId] = useState();
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -96,6 +104,21 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
     return null;
   }
 
+  const onDelete = async () => {
+    setDeleteId(null);
+    try {
+      const payload = {
+        project_id: deleteid,
+      };
+      //@ts-ignore
+      const res = await dispatch(deleteProject(payload));
+
+      // setList(res?.payload?.data?.data?.list);
+      toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   return useMemo(
     () => (
       <Root
@@ -132,6 +155,11 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
               "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate",
           }}
         />
+        <DeleteProject
+          isOpen={isOpenDeletedModal}
+          setIsOpen={setIsOpenDeletedModal}
+          onDelete={onDelete}
+        />
         {item?.isProject && (
           <>
             <Button aria-describedby={id} onClick={handleClick}>
@@ -147,14 +175,51 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
                 horizontal: "left",
               }}
             >
-              <Typography sx={{ p: 2 }}>The content of the Popover.</Typography>
+              <div>
+                <Typography
+                  sx={{
+                    p: 2,
+                    backgroundColor: "white",
+                    color: "black",
+                    width: "164px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  Edit <EditIcon />
+                </Typography>
+              </div>
+
+              <div
+                onClick={() => {
+                  setIsOpenDeletedModal(true);
+                  setDeleteId(id);
+                }}
+              >
+                <Typography
+                  sx={{
+                    p: 2,
+                    backgroundColor: "white",
+                    color: "black",
+                    width: "164px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  Delete <DeleteIcon />
+                </Typography>
+              </div>
             </Popover>
           </>
         )}
         {item.badge && <FuseNavBadge badge={item.badge} />}
       </Root>
     ),
-    [item, itempadding, onItemClick]
+    [item, itempadding, onItemClick, anchorEl]
   );
 }
 

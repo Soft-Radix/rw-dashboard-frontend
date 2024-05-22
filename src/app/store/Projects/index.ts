@@ -62,11 +62,11 @@ export const projectList = createAsyncThunk(
   }
 );
 
-export const productDelete = createAsyncThunk(
-  "product/delete",
-  async (payload: ProductDelete) => {
+export const deleteProject = createAsyncThunk(
+  "project/delete",
+  async (payload: deleteAccManagerType) => {
     const response = await ApiHelperFunction({
-      url: `/product/delete`,
+      url: "/project/delete",
       method: "delete",
       data: payload,
     });
