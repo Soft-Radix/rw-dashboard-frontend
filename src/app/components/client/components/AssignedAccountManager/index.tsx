@@ -17,8 +17,11 @@ import CommonTable from "src/app/components/commonTable";
 import UnassignedAgent from "../AssignedAgents/UnassignedAgent";
 import CommonPagination from "src/app/components/pagination";
 
-export default function AssignedAccountManager() {
-  const { assignAccManagerDetail } = useSelector(
+export default function AssignedAccountManager({
+  setManagerFilterMenu,
+  managerfilterMenu,
+}) {
+  const { assignAccManagerDetail, total_records } = useSelector(
     (store: ClientRootState) => store?.client
   );
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
@@ -28,9 +31,6 @@ export default function AssignedAccountManager() {
   // console.log(assignAccManagerDetail, "popopff");
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [rows, setRows] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const unassignAccManager = async (id: any) => {
@@ -54,25 +54,17 @@ export default function AssignedAccountManager() {
         account_manager_id: id,
       })
     );
-  const totalPageCount = Math.ceil(
-    assignAccManagerDetail.length / itemsPerPage
-  );
+
   // console.log(assignAccManagerDetail.length, "length");
   // console.log(totalPageCount, "totalPageCount");
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page);
-    // console.log(page, "page");
-    // Handle any additional logic when the page changes, e.g., fetching data
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setManagerFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      start: pageNumber - 1,
+    }));
   };
-
-  const currentRows = assignAccManagerDetail.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
     <>
@@ -86,7 +78,7 @@ export default function AssignedAccountManager() {
               "",
             ]}
           >
-            {currentRows?.length === 0 ? (
+            {assignAccManagerDetail?.length === 0 ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -105,7 +97,7 @@ export default function AssignedAccountManager() {
               </TableRow>
             ) : (
               <>
-                {currentRows.map((row, index) => (
+                {assignAccManagerDetail.map((row, index) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -178,11 +170,13 @@ export default function AssignedAccountManager() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {currentRows?.length > 0 && (
+            {assignAccManagerDetail?.length > 0 && (
               <CommonPagination
-                count={totalPageCount}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
+                count={total_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={managerfilterMenu.start + 1}
               />
             )}
           </div>

@@ -40,6 +40,7 @@ import ImagesOverlap from "../ImagesOverlap";
 import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
+import DeleteClient from "../client/DeleteClient";
 
 let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 const rows = [
@@ -76,8 +77,10 @@ export default function AgentDetails() {
   const [expandedImage, setExpandedImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
+  const [deleteId, setIsDeleteId] = useState<number>(null);
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const handleImageClick = (imageUrl) => {
     if (expandedImage === imageUrl) {
       setExpandedImage(null); // If already expanded, close it
@@ -140,6 +143,7 @@ export default function AgentDetails() {
     if (payload?.data?.status) {
       dispatch(getAgentInfo({ agent_id }));
     }
+    setIsOpenDeletedModal(false);
   };
 
   return (
@@ -331,9 +335,14 @@ export default function AgentDetails() {
                       </div>
                       <div
                         className="absolute top-7 right-7"
-                        onClick={() => handleDeleteAttachment(item.id)}
+                        // onClick={() => handleDeleteAttachment(item.id)}
                       >
-                        <AttachmentDeleteIcon />
+                        <AttachmentDeleteIcon
+                          onClick={() => {
+                            setIsOpenDeletedModal(true);
+                            setIsDeleteId(item.id);
+                          }}
+                        />
                       </div>
                     </div>
                   ))}
@@ -402,6 +411,13 @@ export default function AgentDetails() {
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
           isEditing={true}
+        />
+        <DeleteClient
+          isOpen={isOpenDeletedModal}
+          setIsOpen={setIsOpenDeletedModal}
+          onDelete={() => handleDeleteAttachment(deleteId)}
+          heading={"Delete Attachment"}
+          description={"Are you sure you want to delete this attachment ? "}
         />
       </div>
     </>
