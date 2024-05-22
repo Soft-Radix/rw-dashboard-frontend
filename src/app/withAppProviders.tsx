@@ -26,7 +26,6 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
    * The component that wraps the provided component with the necessary context providers.
    */
   const userDetail = getLocalStorage("userDetail");
-  console.log("🚀 ~ withAppProviders ~ userDetail:", userDetail);
   function WithAppProviders(props: React.PropsWithChildren<ComponentProps>) {
     /**
      * The value to pass to the AppContext provider.

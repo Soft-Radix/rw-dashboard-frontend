@@ -70,14 +70,8 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
-  const {
-    config,
-    onSignedIn,
-    onSignedOut,
-    onSignedUp,
-    onError,
-    onUpdateUser,
-  } = props;
+  const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
+    props;
   const dispatch = useAppDispatch();
   // Merge default config with the one from the props
   const authConfig = _.defaults(config, defaultAuthConfig);
