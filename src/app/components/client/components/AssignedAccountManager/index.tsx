@@ -57,12 +57,15 @@ export default function AssignedAccountManager() {
   const totalPageCount = Math.ceil(
     assignAccManagerDetail.length / itemsPerPage
   );
+  // console.log(assignAccManagerDetail.length, "length");
+  // console.log(totalPageCount, "totalPageCount");
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
     setCurrentPage(page);
+    // console.log(page, "page");
     // Handle any additional logic when the page changes, e.g., fetching data
   };
 
@@ -77,8 +80,8 @@ export default function AssignedAccountManager() {
         <div className="bg-white rounded-lg shadow-sm">
           <CommonTable
             headings={[
-              "AccountManager",
-              "AccountManagerId",
+              "Account Manager",
+              "AccountManager Id",
               "Assigned date",
               "",
             ]}

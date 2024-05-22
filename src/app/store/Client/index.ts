@@ -325,14 +325,14 @@ export const addAssignAgents = createAsyncThunk(
       method: "post",
       data: payload,
     });
-    dispatch(
-      GetAssignAgentsInfo({
-        client_id: payload?.client_id,
-        start: 0,
-        limit: 10,
-        search: "",
-      })
-    );
+    // dispatch(
+    //   GetAssignAgentsInfo({
+    //     client_id: payload?.client_id,
+    //     start: 0,
+    //     limit: 10,
+    //     search: "",
+    //   })
+    // );
     // Return only the data you need to keep it serializable
     return {
       data: response.data,

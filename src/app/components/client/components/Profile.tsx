@@ -162,8 +162,7 @@ export default function Profile({
                         src="../assets/icons/loaction.svg"
                         className="mr-4"
                       />
-                      {clientDetail?.address ??
-                        "Akshya Nagar 1st Block 1st Cross, Rammurthy, Bangalore-560016"}
+                      {clientDetail?.address || "N/A"}
                     </span>
                   </div>
                 </div>

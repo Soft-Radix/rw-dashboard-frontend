@@ -101,14 +101,14 @@ export default function Clients() {
         active == "all"
           ? 0
           : active == "active"
-          ? 1
-          : active == "paused"
-          ? 2
-          : active == "cancel"
-          ? 3
-          : active == "pastDue"
-          ? 4
-          : null,
+            ? 1
+            : active == "paused"
+              ? 2
+              : active == "cancel"
+                ? 3
+                : active == "pastDue"
+                  ? 4
+                  : null,
     };
     dispatch(getClientList(payload));
   }, [dispatch, filters, active]);
@@ -190,7 +190,7 @@ export default function Clients() {
           status={false}
         />
       ),
-      actionBtn: () => null,
+      actionBtn: ClientTabButton,
     },
     {
       id: "paused",
@@ -207,7 +207,7 @@ export default function Clients() {
           status={false}
         />
       ),
-      actionBtn: () => null,
+      actionBtn: ClientTabButton,
     },
     {
       id: "cancel",
@@ -224,7 +224,7 @@ export default function Clients() {
           status={false}
         />
       ),
-      actionBtn: () => null,
+      actionBtn: ClientTabButton,
     },
     {
       id: "pastDue",
@@ -241,7 +241,7 @@ export default function Clients() {
           status={false}
         />
       ),
-      actionBtn: () => null,
+      actionBtn: ClientTabButton,
     },
   ];
 
