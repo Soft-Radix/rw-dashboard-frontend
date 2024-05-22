@@ -6,6 +6,7 @@ import { styled } from "@mui/material/styles";
 import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
 import CustomButton from "./custom_button";
+import { red } from "@mui/material/colors";
 
 const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -60,8 +61,9 @@ export default function CommonModal({
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
         },
+
         ".muiltr-5gnc0a-MuiPaper-root-MuiDialog-paper": {
-          backgroundColor: bgColor || "initial",
+          backgroundColor: bgColor || "white",
         },
       }}
     >
