@@ -313,6 +313,8 @@ export default function GroupAgentsList() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteGroup(deleteId)}
+        heading={"Delete Agent"}
+        description={"Are you sure you want to delete this Agent  ? "}
       />
     </>
   );

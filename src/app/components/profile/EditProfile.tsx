@@ -88,15 +88,21 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     });
 
     formData.append("client_id", String(clientDetail.id));
+
     if (selectedImage) {
       formData.append("files", selectedImage); // Add the selected image to the FormData
     }
 
-    const { payload } = await dispatch(updateProfile({ formData }));
-    // console.log(payload, "pl");
+    try {
+      const { payload } = await dispatch(updateProfile({ formData }));
 
-    if (payload?.data?.status) {
-      setIsOpen(false);
+      // console.log(payload, "pl");
+
+      if (payload?.data?.status) {
+        setIsOpen(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
     }
   };
   const formik = useFormik({

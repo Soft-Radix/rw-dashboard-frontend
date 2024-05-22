@@ -144,7 +144,11 @@ export interface AddSubscriptionList {
 
 export interface ClientInfo {
   client_id: number | string;
-  start: number;
-  limit: number;
-  search: string;
+  start?: number;
+  limit?: number;
+  search?: string;
+  agentfilterMenu?: object;
+  setAgentfilterMenu?: object;
+  managerfilterMenu?: object;
+  setManagerfilterMenu?: object;
 }

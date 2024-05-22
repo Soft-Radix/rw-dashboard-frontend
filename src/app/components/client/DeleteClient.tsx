@@ -9,9 +9,18 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onDelete: () => void;
   loading?: boolean;
+  heading?: string;
+  description?: string;
 }
 
-function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
+function DeleteClient({
+  isOpen,
+  setIsOpen,
+  onDelete,
+  loading,
+  heading,
+  description,
+}: IProps) {
   return (
     <>
       <CommonModal
@@ -30,10 +39,10 @@ function DeleteClient({ isOpen, setIsOpen, onDelete, loading }: IProps) {
             <DeleteIcon className="h-28 w-28 " />
           </div>
           <Typography className="text-[20px] font-600 text-[#111827]">
-            Delete Client
+            {heading}
           </Typography>
           <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-            Are you sure you want to delete this client ?
+            {description}
           </Typography>
         </div>
       </CommonModal>
