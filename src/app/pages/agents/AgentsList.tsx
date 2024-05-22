@@ -215,6 +215,7 @@ export default function AgentsList() {
         setIsOpen={setIsOpenAddModal}
         fetchAgentList={fetchAgentList}
         isEditing={false}
+       
       />
     </>
   );

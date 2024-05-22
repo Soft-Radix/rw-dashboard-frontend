@@ -46,7 +46,7 @@ function CommonTable({
               : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"
           } `}
         >
-          <TableRow {...headingRowProps}>
+          <TableRow {...headingRowProps} >
             {headings.map((item, index) => (
               <TableCell
                 className={`th ${index === 0 ? "pl-20" : ""} w-[${100 / headings?.length}%]`}
