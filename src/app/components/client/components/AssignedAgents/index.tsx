@@ -27,10 +27,8 @@ export default function AssignedAgents() {
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [rows, setRows] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
-  const { assignedAgentDetail } = useSelector(
+
+  const { assignedAgentDetail, total_records } = useSelector(
     (store: ClientRootState) => store.client
   );
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -59,29 +57,23 @@ export default function AssignedAgents() {
       console.error("Failed to delete agent group:", error);
     }
   };
-  const totalPageCount = Math.ceil(assignedAgentDetail.length / itemsPerPage);
-  console.log(assignedAgentDetail.length, "finf");
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page);
-    // Handle any additional logic when the page changes, e.g., fetching data
+  // console.log(assignedAgentDetail.length, "finf");
+
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    // setfilters((prevFilters) => ({
+    //   ...prevFilters,
+    //   start: pageNumber - 1,
+    // }));
   };
 
-  const currentRows = assignedAgentDetail.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  // console.log(deleteId, "delete");
   return (
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
-            {currentRows?.length === 0 ? (
+            {assignedAgentDetail?.length === 0 ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -100,7 +92,7 @@ export default function AssignedAgents() {
               </TableRow>
             ) : (
               <>
-                {currentRows.map((row, index) => (
+                {assignedAgentDetail.map((row, index) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -167,11 +159,12 @@ export default function AssignedAgents() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {currentRows?.length > 0 && (
+            {assignedAgentDetail?.length > 0 && (
               <CommonPagination
-                count={totalPageCount}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
+                count={total_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
               />
             )}
           </div>

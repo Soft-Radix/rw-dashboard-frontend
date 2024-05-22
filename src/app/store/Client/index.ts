@@ -315,6 +315,7 @@ export const initialState: initialStateProps = {
   assignedAgentDetail: [],
   assignAccManagerDetail: [],
   total_records: 0,
+  toatalPage: 0,
 };
 
 export const addAssignAgents = createAsyncThunk(
@@ -608,9 +609,11 @@ export const clientSlice = createSlice({
       .addCase(GetAssignAgentsInfo.fulfilled, (state, action) => {
         // console.log(action, "action");
         const { data } = action.payload?.data;
-        // console.log(data.list, "ggggg");
+        // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
+        state.total_records = calculatePageNumber(data?.total_records, 10);
+        const toatalPage = state.total_records;
         // console.log(state.assignedAgentDetail, "gggggff");
       })
       .addCase(GetAssignAgentsInfo.rejected, (state) => {
@@ -647,7 +650,7 @@ export const clientSlice = createSlice({
         // console.log(data.list, "ggggg");
         state.fetchStatus = "idle";
         state.assignAccManagerDetail = data.list;
-        console.log(state.assignAccManagerDetail, "detailss");
+        // console.log(state.assignAccManagerDetail, "detailss");
       })
       .addCase(getAssignAccMangerInfo.rejected, (state) => {
         state.fetchStatus = "idle";
