@@ -39,7 +39,7 @@ export default function VerificationPage() {
     };
 
     setList(userData);
-    if (userData.length === 0 && Userresponse?.data?.is_signed == 0) {
+    if (userData.length === 0 && Userresponse?.data?.is_signed == 0  ) {
       redirect();
       localStorage.removeItem("response");
     }
