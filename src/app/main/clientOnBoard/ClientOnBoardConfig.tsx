@@ -27,7 +27,7 @@ const ClientOnBoardConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "docusign-completed/:id",
+      path: "sign-document",
       element: <SignDocuement />,
     },
   ],

@@ -21,7 +21,7 @@ interface IProps {
   sortColumn?: string;
   sortOrder?: string;
   onSort?: (column: string) => void;
-  handleSelectAll?: () => void
+  handleSelectAll?: () => void;
 }
 function CommonTable({
   children,
@@ -40,7 +40,11 @@ function CommonTable({
         className={`${useBorderDesign ? "border-design" : "common_table "}`}
       >
         <TableHead
-          className={`${isSorting && 'cursor-pointer'} ${useBorderDesign ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]" : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"} `}
+          className={`${isSorting && "cursor-pointer"} ${
+            useBorderDesign
+              ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]"
+              : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"
+          } `}
         >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
@@ -48,9 +52,7 @@ function CommonTable({
                 className={`th ${index === 0 ? "pl-20" : ""}`}
                 key={index}
                 align={
-                  headings.length  === index || index === 0
-                    ? "left" 
-                    :  "center"
+                  headings.length === index || index === 0 ? "left" : "center"
                 }
                 onClick={() => {
                   if (typeof onSort == "function") {
@@ -58,25 +60,30 @@ function CommonTable({
                   } else null;
                 }}
               >
-                {isSorting ?
-                  (<div className="flex items-center">
+                {isSorting ? (
+                  <div className="flex items-center">
                     {index === 0 && (
                       <Checkbox
                         onClick={(e: BaseSyntheticEvent) => {
-                          e.stopPropagation()
-                          handleSelectAll()
+                          e.stopPropagation();
+                          handleSelectAll();
                         }}
                         sx={{
                           paddingLeft: 0, // Set paddingLeft to 0
-                          '&:hover': {
-                            backgroundColor: 'transparent', // No hover background globally
+                          "&:hover": {
+                            backgroundColor: "transparent", // No hover background globally
                           },
                         }}
                       />
                     )}
-                    {index !== headings.length - 1 && <HeadIcon className="mr-10" />}  {item}
-                  </div>)
-                  : (item)}
+                    {index !== headings.length - 1 && (
+                      <HeadIcon className="mr-10" />
+                    )}{" "}
+                    {item}
+                  </div>
+                ) : (
+                  item
+                )}
               </TableCell>
             ))}
           </TableRow>
