@@ -21,34 +21,34 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
   const fetchData = async (payload: any) => {
     try {
       const res = await dispatch(projectAdd(payload));
+      if (res?.payload?.data?.status == 1) {
+        const newProject = res?.payload?.data;
+        let layout = {
+          id: newProject?.data.id,
+          title: newProject.data.name,
+          type: "item",
+          icon: "material-twotone:compress",
+          customIcon: <SubProjectIcon />,
+          // url: "projects",
+          end: true,
+          isProject: true,
+        };
 
-      const newProject = res?.payload?.data;
-      let layout = {
-        id: newProject?.data.id,
-        title: newProject.data.name,
-        type: "item",
-        icon: "material-twotone:compress",
-        customIcon: <SubProjectIcon />,
-        // url: "projects",
-        end: true,
-        isProject: true,
-      };
+        const projectData = [...navigationConfig, layout];
 
-      const projectData = [...navigationConfig, layout];
+        let localData = getLocalStorage("userDetail");
+        let projectIndex = projectData.findIndex(
+          (item) => item.id === "projects"
+        );
 
-      let localData = getLocalStorage("userDetail");
-      let projectIndex = projectData.findIndex(
-        (item) => item.id === "projects"
-      );
+        let projects = [...localData.projects, newProject?.data];
+        localData.projects = projects;
 
-      let projects = [...localData.projects, newProject?.data];
-      localData.projects = projects;
+        localStorage.setItem("userDetail", JSON.stringify(localData));
 
-      localStorage.setItem("userDetail", JSON.stringify(localData));
-
-      window.location.reload();
-
-      setIsOpen((prev) => !prev);
+        window.location.reload();
+        setIsOpen(false);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -70,8 +70,6 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
 
   const handleSave = () => {
     formik.handleSubmit();
-
-    setIsOpen(false);
   };
   return (
     <CommonModal
