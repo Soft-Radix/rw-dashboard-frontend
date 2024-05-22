@@ -93,7 +93,7 @@ export default function MainCard({
   }, [title]);
 
   return (
-    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md">
+    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px]">
       <div>
         <div className="flex justify-between">
           <Typography
