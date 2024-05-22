@@ -7,11 +7,14 @@ import { useState } from "react";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 
 import ProjectTabPanel from "../../components/projects/ProjectTapPanel";
+import { useParams } from "react-router";
 export default function Projects() {
   const theme: Theme = useTheme();
   const [addCard, setAddCard] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const { name } = useParams();
+
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   // const [color, setcolor] = useState<{ background: string }>({
   //   background: "red",
@@ -33,8 +36,8 @@ export default function Projects() {
   return (
     <div>
       <div className="flex items-center justify-between px-28 py-20 ">
-        <Typography className="text-[18px] font-bold sm:text-[20px]  ">
-          Project 1
+        <Typography className="text-[18px] font-bold sm:text-[20px]  capitalize">
+          {name}
         </Typography>
         <Button
           variant="outlined"
