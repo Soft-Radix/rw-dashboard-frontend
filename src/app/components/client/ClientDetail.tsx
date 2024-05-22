@@ -52,17 +52,12 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   const location: Location = useLocation();
-  const {
-    clientDetail,
-    actionStatus,
-    fetchStatus,
-    assignAccManagerDetail,
-  } = useSelector((store: ClientRootState) => store?.client);
-  console.log(assignAccManagerDetail, "detailsffffs");
+  const { clientDetail, actionStatus, fetchStatus, assignAccManagerDetail } =
+    useSelector((store: ClientRootState) => store?.client);
+  // console.log(assignAccManagerDetail, "detailsffffs");
   const { role } = useSelector((store: any) => store?.user);
   const { searchAgentList } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
@@ -159,19 +154,7 @@ export default function ClientDetail() {
     const { value } = event.target;
     debouncedSearch(value);
   };
-  const fetchManagerList = useCallback(() => {
-    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
-  }, [filterMenu]);
-  // const handleAddnewAccManager = () => {
-  //   dispatch(
-  //     addAssignAccManager({
-  //       client_id: client_id,
-  //       account_manager_ids: checkedItems,
-  //     })
-  //   );
-  //   handleClose();
-  //   setIsOpenEditModal(false);
-  // };
+
   const handleAddnewAccManager = () => {
     dispatch(
       addAssignAccManager({
@@ -196,6 +179,9 @@ export default function ClientDetail() {
     );
     setCheckedItems([]); // Clear the checked items
   };
+  const fetchManagerList = useCallback(() => {
+    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
+  }, [filterMenu]);
   useEffect(() => {
     dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
     fetchManagerList();
@@ -238,7 +224,7 @@ export default function ClientDetail() {
               size="large"
               endIcon={<DownArrowIconWhite className="cursor-pointer" />}
             >
-              Assigned New Agent
+              Assign New Agent
             </Button>
           </div>
         }

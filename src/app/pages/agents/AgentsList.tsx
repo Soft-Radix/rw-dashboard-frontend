@@ -106,87 +106,106 @@ export default function AgentsList() {
               "",
             ]}
           >
-            {agentState.status === "loading" ? (
+            {agentState?.list.length === 0 ? (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <span className="font-bold text-20 text-[#e4e4e4]">
+                    No Data Found
+                  </span>
+                </TableCell>
+              </TableRow>
+            ) : agentState.status === "loading" ? (
               <TableRow>
-                <TableCell colSpan={8} align="center">
+                <TableCell colSpan={7} align="center">
                   <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (
-              <>
-                {agentState.list.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
+              agentState.list.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell scope="row" className="font-500">
+                    {row.id}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
                   >
-                    <TableCell scope="row" className="font-500">
-                      {row.id}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap font-500"
-                    >
-                      {row.first_name}
-                    </TableCell>
+                    {row.first_name}
+                  </TableCell>
 
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap font-500"
-                    >
-                      {row.last_name}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap font-500"
-                    >
-                      {moment(row.created_at).format("MMMM Do, YYYY")}
-                    </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap font-500"
-                    >
-                      {moment(row.updated_at).format("MMMM Do, YYYY")}
-                    </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.last_name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {moment(row.created_at).format("MMMM Do, YYYY")}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {moment(row.updated_at).format("MMMM Do, YYYY")}
+                  </TableCell>
 
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap font-500"
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                  ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
                     >
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                      >
-                        {row.status || "Active"}
+                      {row.status || "Active"}
+                    </span>
+                  </TableCell>
+                  <TableCell align="left" className="w-[1%] font-500">
+                    <div className="flex gap-20 pe-20">
+                      <span className="p-2 cursor-pointer">
+                        <Link to={`/admin/agent-detail/${row.id}`}>
+                          <ArrowRightCircleIcon />
+                        </Link>
                       </span>
-                    </TableCell>
-                    <TableCell align="left" className="w-[1%] font-500">
-                      <div className="flex gap-20 pe-20">
-                        <span className="p-2 cursor-pointer">
-                          <Link to={`/admin/agent-detail/${row.id}`}>
-                            <ArrowRightCircleIcon />
-                          </Link>
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))
             )}
           </CommonTable>
 
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination
-              count={agentState?.total_records}
-              onChange={(e, PageNumber:number) => checkPageNum(e, PageNumber)}
-              page={filters.start + 1}
-            />
+            {agentState?.list.length > 0 && (
+              <CommonPagination
+                count={agentState?.total_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={filters.start + 1}
+              />
+            )}
           </div>
         </div>
       </div>
