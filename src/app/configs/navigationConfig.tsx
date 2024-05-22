@@ -1,31 +1,31 @@
 import { FuseNavItemType } from "@fuse/core/FuseNavigation/types/FuseNavItemType";
 import i18next from "i18next";
 import {
+  AccountManagerIcon,
+  AgentGroupIcon,
+  AgentNavIcon,
+  BillingIcon,
+  BillingNavIcon,
+  ChatBoardIcon,
   ClientNavIcon,
   DashBoardIcon,
-  AgentNavIcon,
-  BillingNavIcon,
-  SettingNavIcon,
-  AgentGroupIcon,
-  AccountManagerIcon,
   ManageProductIcon,
-  ProjectIcon,
-  TaskIcon,
-  ChatBoardIcon,
-  SharedFileIcon,
-  PasswordManagerIcon,
   MyAgentIcon,
-  UserIcon,
+  PasswordManagerIcon,
+  ProjectIcon,
   SettingIcon,
-  BillingIcon,
-  SupportIcon,
+  SettingNavIcon,
+  SharedFileIcon,
   SubProjectIcon,
+  SupportIcon,
+  TaskIcon,
+  UserIcon,
 } from "public/assets/icons/navabarIcon";
+import { getLocalStorage } from "src/utils";
 import ar from "./navigation-i18n/ar";
 import en from "./navigation-i18n/en";
 import tr from "./navigation-i18n/tr";
-import { getLocalStorage } from "src/utils";
-import { ProjectNavIcon } from "public/assets/icons/projectsIcon";
+import { useDispatch } from "react-redux";
 
 i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);

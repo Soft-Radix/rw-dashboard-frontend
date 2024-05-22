@@ -105,11 +105,13 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   }
 
   const onDelete = async () => {
+    alert("Delete");
     setDeleteId(null);
     try {
       const payload = {
         project_id: deleteid,
       };
+      console.log("🚀 ~ onDelete ~ payload.deleteid:", payload.deleteid);
       //@ts-ignore
       const res = await dispatch(deleteProject(payload));
 
