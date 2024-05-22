@@ -102,7 +102,6 @@ export default function AgentsList() {
               "Last Name",
               "Start Date",
               "Last Login",
-
               "Status",
               "",
             ]}
@@ -185,7 +184,7 @@ export default function AgentsList() {
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
               count={agentState?.total_records}
-              onChange={(e, PageNumber) => checkPageNum(e, PageNumber)}
+              onChange={(e, PageNumber:number) => checkPageNum(e, PageNumber)}
               page={filters.start + 1}
             />
           </div>

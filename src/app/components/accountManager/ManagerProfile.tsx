@@ -113,7 +113,7 @@ const ManagerProfile = () => {
                     src={
                       accManagerDetail.user_image
                         ? urlForImage + accManagerDetail.user_image
-                        : "../assets/images/pages/agent/luis_.jpg"
+                        : "../assets/images/logo/images.jpeg"
                     }
                   ></img>
                   // <img src="../assets/images/pages/agent/luis_.jpg" />
