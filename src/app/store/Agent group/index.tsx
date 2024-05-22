@@ -38,7 +38,7 @@ export const getAgentGroupList = createAsyncThunk(
   "agent-group/list",
   async (payload: filterType) => {
     const response = await ApiHelperFunction({
-      url: "agent-grouaddAgentGroupp/list",
+      url: "agent-group/list",
       method: "post",
       data: payload,
     });
