@@ -20,7 +20,6 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
       const res = await dispatch(projectAdd(payload));
       // setList(res?.payload?.data?.data?.list);
       //   toast.success(res?.payload?.data?.message);
-      console.log("======res==", res);
       setIsOpen((prev) => !prev);
     } catch (error) {
       console.error("Error fetching data:", error);

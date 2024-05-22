@@ -49,6 +49,7 @@ export type JwtAuth<User, SignUpPayload> = {
   isAuthenticated: boolean;
   isLoading: boolean;
   signIn: (U: SignInPayload) => void;
+  autoSignIng: () => void;
   signOut: () => void;
   signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
   updateUser: (U: PartialDeep<User>) => void;
@@ -100,6 +101,7 @@ const useJwtAuth = <User, SignUpPayload>(
     localStorage.removeItem(authConfig.tokenStorageKey);
     delete axios.defaults.headers.common.Authorization;
     localStorage.removeItem("userDetail");
+    localStorage.removeItem("response");
   }, []);
 
   /**
@@ -230,7 +232,6 @@ const useJwtAuth = <User, SignUpPayload>(
       const accessToken = response?.payload.data?.access_token;
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
-      console.log(response?.payload.data, "response?.payload.data");
       localStorage.setItem(
         "userData",
         JSON.stringify(userData.subscription_and_docusign)
@@ -239,12 +240,24 @@ const useJwtAuth = <User, SignUpPayload>(
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
       } else {
+        localStorage.setItem("response", JSON.stringify(response?.payload));
         window.location.href = "/verification";
       }
       // handleSignInSuccess(userData, accessToken);
       // window.location.reload();
     }
     return response;
+  };
+
+  const autoSignIng = () => {
+    let response = getLocalStorage("response");
+
+    if (response?.status) {
+      const userData = response?.data?.user;
+      dispatch(setInitialState(userData));
+      const accessToken = response?.data?.access_token;
+      handleSignInSuccess(userData, accessToken);
+    }
   };
 
   /**
@@ -375,6 +388,7 @@ const useJwtAuth = <User, SignUpPayload>(
     isAuthenticated,
     isLoading,
     signIn,
+    autoSignIng,
     signUp,
     signOut,
     updateUser,

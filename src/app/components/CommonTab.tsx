@@ -43,9 +43,9 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
                   : "border-b border-transparent text-para_light"
               } py-2 pr-[10px] focus:outline-none text-[1.8rem] font-500`}
               onClick={() => {
+                navigate(`${location.pathname}?type=${tab.id}`);
                 setActiveTab(tab.id);
                 setActive(tab.id);
-                navigate(`${location.pathname}?type=${tab.id}`);
               }}
             >
               {tab.label}
