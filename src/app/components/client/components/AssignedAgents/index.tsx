@@ -131,7 +131,13 @@ export default function AssignedAgents() {
                   >
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
-                   ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                   ${
+                     row.status === "Unassign"
+                       ? "text-secondary bg-secondary_bg"
+                       : row.status === "Unassigned"
+                       ? "text-[#F44336] bg-[#F443362E]"
+                       : "text-[#F0B402] bg-[#FFEEBB]"
+                   }`}
                     >
                       {row.status ? row.status : "Unassign"}
                     </span>

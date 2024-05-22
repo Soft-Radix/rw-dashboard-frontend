@@ -612,7 +612,14 @@ export default function AddSubscription() {
       seenIds.add(item.id);
     }
   }
-
+  const today = new Date();
+  // Add one day to get tomorrow's date
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const yyyy = tomorrow.getFullYear();
+  const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
+  const dd = String(tomorrow.getDate()).padStart(2, "0");
+  const tomorrowStr = `${yyyy}-${mm}-${dd}`;
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -1129,8 +1136,9 @@ export default function AddSubscription() {
                       <input
                         type="date"
                         name="billing_start_date"
-                        min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
+                        // min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
                         // disabled={row.billing_start_date ? false : true} // Disable the input if billing_start_date does not exist
+                        min={tomorrowStr}
                         value={
                           row.billing_start_date != 0 ||
                           row.billing_start_date != "" ||
