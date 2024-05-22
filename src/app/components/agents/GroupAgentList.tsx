@@ -228,54 +228,78 @@ export default function GroupAgentsList() {
             <CommonTable
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
-              <>
-                {currentRows?.map((row: any, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
-                  >
-                    <TableCell scope="row">{row.id}</TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.first_name}
-                    </TableCell>
+              {" "}
+              {currentRows?.length === 0 ? (
+                <TableRow
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell colSpan={7} align="center">
+                    <span className="font-bold text-20 text-[#e4e4e4]">
+                      No Data Found
+                    </span>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                  {currentRows?.map((row: any, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.first_name}
+                      </TableCell>
 
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.last_name}
-                    </TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.last_name}
+                      </TableCell>
 
-                    <TableCell scope="row" className="w-[15%]">
-                      <div className="flex gap-20 pe-20">
-                        <span className="p-2 cursor-pointer">
-                          <DeleteIcon
-                            onClick={() => {
-                              setIsOpenDeletedModal(true);
-                              setIsDeleteId(row.id);
-                            }}
-                          />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <Link to="/admin/agents/list">Go to Agent Page</Link>
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
+                      <TableCell scope="row" className="w-[15%]">
+                        <div className="flex gap-20 pe-20">
+                          <span className="p-2 cursor-pointer">
+                            <DeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setIsDeleteId(row.id);
+                              }}
+                            />
+                          </span>
+                          <span className="p-2 cursor-pointer">
+                            <Link to="/admin/agents/list">
+                              Go to Agent Page
+                            </Link>
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
             </CommonTable>
           </>
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination
-              count={totalPageCount}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
+            {currentRows?.length > 0 && (
+              <CommonPagination
+                count={totalPageCount}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         </div>
       </div>
