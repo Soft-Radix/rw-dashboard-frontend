@@ -15,6 +15,7 @@ import { useParams } from "react-router";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import UnassignedAgent from "../AssignedAgents/UnassignedAgent";
+import CommonPagination from "src/app/components/pagination";
 
 export default function AssignedAccountManager() {
   const { assignAccManagerDetail } = useSelector(
@@ -27,6 +28,10 @@ export default function AssignedAccountManager() {
   // console.log(assignAccManagerDetail, "popopff");
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [rows, setRows] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const unassignAccManager = async (id: any) => {
     try {
@@ -49,6 +54,22 @@ export default function AssignedAccountManager() {
         account_manager_id: id,
       })
     );
+  const totalPageCount = Math.ceil(
+    assignAccManagerDetail.length / itemsPerPage
+  );
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    // Handle any additional logic when the page changes, e.g., fetching data
+  };
+
+  const currentRows = assignAccManagerDetail.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <>
@@ -56,7 +77,7 @@ export default function AssignedAccountManager() {
         <div className="bg-white rounded-lg shadow-sm">
           <CommonTable headings={["Agents", "Assigned date", ""]}>
             <>
-              {assignAccManagerDetail.map((row, index) => (
+              {currentRows.map((row, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -125,9 +146,13 @@ export default function AssignedAccountManager() {
               ))}
             </>
           </CommonTable>
-          {/* <div className="flex justify-end py-14 px-[3rem]">
-            {/* <CommonPagination count={10} />
-          </div>  */}
+          <div className="flex justify-end py-14 px-[3rem]">
+            <CommonPagination
+              count={totalPageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
       <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />

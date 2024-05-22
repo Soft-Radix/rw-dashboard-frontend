@@ -26,6 +26,9 @@ export default function AssignedAgents() {
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+  const [rows, setRows] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const { assignedAgentDetail } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -55,6 +58,20 @@ export default function AssignedAgents() {
       console.error("Failed to delete agent group:", error);
     }
   };
+  const totalPageCount = Math.ceil(assignedAgentDetail.length / itemsPerPage);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    // Handle any additional logic when the page changes, e.g., fetching data
+  };
+
+  const currentRows = assignedAgentDetail.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   // console.log(deleteId, "delete");
   return (
@@ -63,7 +80,7 @@ export default function AssignedAgents() {
         <div className="bg-white rounded-lg shadow-sm">
           <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
             <>
-              {assignedAgentDetail.map((row, index) => (
+              {currentRows.map((row, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -122,6 +139,13 @@ export default function AssignedAgents() {
               ))}
             </>
           </CommonTable>
+          <div className="flex justify-end py-14 px-[3rem]">
+            <CommonPagination
+              count={totalPageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
       <AddAgentModel
