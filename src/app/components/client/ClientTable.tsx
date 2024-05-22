@@ -146,7 +146,7 @@ function ClientTable({
                 )}
 
                 <TableCell scope="row">
-                  <Link to={`/admin/client/detail/${row.id}`}>
+                  <Link to={`/admin/client/detail/${row.id}?type=profile`}>
                     <ArrowRightCircleIcon />
                   </Link>
                 </TableCell>

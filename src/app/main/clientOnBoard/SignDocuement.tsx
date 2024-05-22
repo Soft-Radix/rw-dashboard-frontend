@@ -17,6 +17,8 @@ import {
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
+import { getLocalStorage } from "src/utils";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
 
 type FormType = {
   cnfPassword: string;
@@ -29,6 +31,8 @@ export default function SignDocuement() {
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const userData = getLocalStorage("userData");
+  const { jwtService } = useAuth();
 
   const store = useSelector((store: AuthRootState) => store.auth);
 
@@ -56,6 +60,17 @@ export default function SignDocuement() {
       navigate("/sign-in");
     }
   }
+  const handleSubmit = () => {
+    const redirect = async () => {
+      console.log("calling");
+      await jwtService.autoSignIng();
+    };
+
+    if (userData.length == 0) {
+      redirect();
+      localStorage.removeItem("response");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center flex-col h-screen gap-60 px-28 ">
@@ -85,6 +100,7 @@ export default function SignDocuement() {
             color="secondary"
             size="large"
             className="text-[18px] font-500"
+            onClick={handleSubmit}
           >
             Save
           </Button>
