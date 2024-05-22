@@ -50,6 +50,7 @@ export type initialStateProps = {
   actionStatus: boolean;
   assignedAgentDetail: any[];
   assignAccManagerDetail?: any[];
+  toatalPage: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed

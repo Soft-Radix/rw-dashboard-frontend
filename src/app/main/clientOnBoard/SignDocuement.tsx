@@ -19,6 +19,7 @@ import {
 } from "public/assets/icons/welcome";
 import { getLocalStorage } from "src/utils";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
+import { projectAdd } from "app/store/Projects";
 
 type FormType = {
   cnfPassword: string;
@@ -33,6 +34,7 @@ export default function SignDocuement() {
   const navigate = useNavigate();
   const userData = getLocalStorage("userData");
   const { jwtService } = useAuth();
+  const [name, setName] = useState("");
 
   const store = useSelector((store: AuthRootState) => store.auth);
 
@@ -60,16 +62,27 @@ export default function SignDocuement() {
       navigate("/sign-in");
     }
   }
-  const handleSubmit = () => {
+  const fetchData = async () => {
+    const Userresponse = getLocalStorage("response");
+    const payload = {
+      name: name,
+    };
     const redirect = async () => {
       console.log("calling");
       await jwtService.autoSignIng();
     };
-
-    if (userData.length == 0) {
-      redirect();
-      localStorage.removeItem("response");
+    try {
+      const res = await dispatch(projectAdd(payload));
+      if (res) {
+        redirect();
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
+  };
+
+  const handleSubmit = () => {
+    fetchData();
   };
 
   return (
@@ -89,8 +102,10 @@ export default function SignDocuement() {
             </p>
           </Typography>
           <InputField
-            formik={formik}
+            // formik={formik}
             name="first_name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             label="Name Your First Project"
             placeholder="Enter Your First Project Name"
             className="text-[16px] font-500 text-[#111827] leading-3"
@@ -99,6 +114,7 @@ export default function SignDocuement() {
             variant="contained"
             color="secondary"
             size="large"
+            disabled={name == "" ? true : false}
             className="text-[18px] font-500"
             onClick={handleSubmit}
           >

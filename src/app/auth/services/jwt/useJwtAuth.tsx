@@ -70,8 +70,14 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
-  const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
-    props;
+  const {
+    config,
+    onSignedIn,
+    onSignedOut,
+    onSignedUp,
+    onError,
+    onUpdateUser,
+  } = props;
   const dispatch = useAppDispatch();
   // Merge default config with the one from the props
   const authConfig = _.defaults(config, defaultAuthConfig);
@@ -95,7 +101,6 @@ const useJwtAuth = <User, SignUpPayload>(
     localStorage.removeItem(authConfig.tokenStorageKey);
     delete axios.defaults.headers.common.Authorization;
     localStorage.removeItem("userDetail");
-    localStorage.removeItem("response");
   }, []);
 
   /**
@@ -226,16 +231,23 @@ const useJwtAuth = <User, SignUpPayload>(
       const accessToken = response?.payload.data?.access_token;
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
+      console.log(response?.payload.data, "response?.payload.data");
+
       localStorage.setItem(
         "userData",
         JSON.stringify(userData.subscription_and_docusign)
       );
-      if (signin == 1) {
+      if (response?.payload.data?.user?.role == "admin") {
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
       } else {
-        localStorage.setItem("response", JSON.stringify(response?.payload));
-        window.location.href = "/verification";
+        if (signin == 1) {
+          handleSignInSuccess(userData, accessToken);
+          window.location.reload();
+        } else {
+          window.location.href = "/verification";
+          localStorage.setItem("response", JSON.stringify(response?.payload));
+        }
       }
       // handleSignInSuccess(userData, accessToken);
       // window.location.reload();
@@ -302,7 +314,6 @@ const useJwtAuth = <User, SignUpPayload>(
         authConfig.updateUserUrl,
         userData
       );
-
       const updatedUserData = response?.data;
 
       onUpdateUser(updatedUserData);

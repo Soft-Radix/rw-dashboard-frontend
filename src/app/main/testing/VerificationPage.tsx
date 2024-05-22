@@ -39,7 +39,7 @@ export default function VerificationPage() {
     };
 
     setList(userData);
-    if (userData.length === 0) {
+    if (userData.length === 0 && Userresponse?.data?.is_signed == 0  ) {
       redirect();
       localStorage.removeItem("response");
     }
@@ -67,7 +67,6 @@ export default function VerificationPage() {
     //   navigate("/sign-document");
     // }
   };
-
   return (
     <>
       <div className="flex justify-center items-center flex-col h-screen gap-60 px-28 ">
@@ -78,7 +77,8 @@ export default function VerificationPage() {
         <img src="assets/icons/remote-icon.svg" alt="" />
 
         <div className="bg-[#fff] sm:min-w-[60%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md ">
-          {Userresponse?.data?.user?.subcription_status == "Active" ? (
+          {Userresponse?.data?.user?.subcription_status == "Pending" &&
+          list.length > 0 ? (
             <div className="flex flex-col justify-center gap-40">
               <Typography className="text-[48px] text-center font-700 leading-normal">
                 Sign Document
@@ -108,7 +108,8 @@ export default function VerificationPage() {
               </div>
             </div>
           ) : null}
-          {Userresponse?.data?.user?.subcription_status != "Active" ? (
+          {Userresponse?.data?.user?.subcription_status == "Pending" &&
+          list.length == 0 ? (
             <>
               <div className="flex flex-col justify-center gap-10">
                 <div>
@@ -116,9 +117,26 @@ export default function VerificationPage() {
                 </div>
                 <div>
                   <Typography className="block text-[28px] font-bold text-center text-[#111827] mb-5">
-                    {Userresponse?.data?.user?.subcription_status == "Pending"
-                      ? "No subscription !"
-                      : "Subscription paused manually !"}
+                    No subscription
+                  </Typography>
+                  <Typography className="text-[18px] font-400 text-[#757982] text-center leading-4 ">
+                    It appears there is no active subscription.
+                  </Typography>
+                </div>
+              </div>
+            </>
+          ) : null}
+
+          {Userresponse?.data?.user?.subcription_status == "Suspended" &&
+          list.length == 0 ? (
+            <>
+              <div className="flex flex-col justify-center gap-10">
+                <div>
+                  <NoSubscription />
+                </div>
+                <div>
+                  <Typography className="block text-[28px] font-bold text-center text-[#111827] mb-5">
+                    Subscription paused manually !
                   </Typography>
                   <Typography className="text-[18px] font-400 text-[#757982] text-center leading-4 ">
                     It appears there is no active subscription.

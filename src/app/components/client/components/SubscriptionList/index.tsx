@@ -113,73 +113,94 @@ export default function SubscriptionList() {
       {/* no subscription end */}
       <div className="bg-white rounded-lg shadow-sm">
         <CommonTable headings={["ID", "Title", "Start Date", "Status", "", ""]}>
-          <>
-            {currentRows?.map((row, index) => (
-              <TableRow
-                key={index}
-                // sx={{
-                //     "& td": {
-                //         borderBottom: "1px solid #EDF2F6",
-                //         paddingTop: "12px",
-                //         paddingBottom: "12px",
-                //         color: theme.palette.primary.main,
-                //     },
-                // }}
-              >
-                <TableCell scope="row" className="font-500">
-                  {row.id}
-                </TableCell>
-                <TableCell align="center" className="font-500">
-                  {row.title}
-                </TableCell>
-                <TableCell
-                  align="center"
-                  className="whitespace-nowrap font-500"
+          {currentRows?.length === 0 ? (
+            <TableRow
+              sx={{
+                "& td": {
+                  borderBottom: "1px solid #EDF2F6",
+                  paddingTop: "12px",
+                  paddingBottom: "12px",
+                  color: theme.palette.primary.main,
+                },
+              }}
+            >
+              <TableCell colSpan={7} align="center">
+                <span className="font-bold text-20 text-[#e4e4e4]">
+                  No Data Found
+                </span>
+              </TableCell>
+            </TableRow>
+          ) : (
+            <>
+              {currentRows?.map((row, index) => (
+                <TableRow
+                  key={index}
+                  // sx={{
+                  //     "& td": {
+                  //         borderBottom: "1px solid #EDF2F6",
+                  //         paddingTop: "12px",
+                  //         paddingBottom: "12px",
+                  //         color: theme.palette.primary.main,
+                  //     },
+                  // }}
                 >
-                  {row.subscription_start_date}
-                </TableCell>
-
-                <TableCell align="center" className="whitespace-nowrap">
-                  <span
-                    className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${StatusMapping(row.status)}`}
+                  <TableCell scope="row" className="font-500">
+                    {row.id}
+                  </TableCell>
+                  <TableCell align="center" className="font-500">
+                    {row.title}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
                   >
-                    {`${
-                      row.status == 0 || row.status == 1 ? "In " : ""
-                    }${StatusMapping(row.status)}`}
-                  </span>
-                </TableCell>
+                    {row.subscription_start_date}
+                  </TableCell>
 
-                <TableCell
-                  align="center"
-                  className="whitespace-nowrap font-500"
-                >
-                  <LongMenu icon={dotImg} />
+                  <TableCell align="center" className="whitespace-nowrap">
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      ${StatusMapping(row.status)}`}
+                    >
+                      {`${
+                        row.status == 0 || row.status == 1 ? "In " : ""
+                      }${StatusMapping(row.status)}`}
+                    </span>
+                  </TableCell>
 
-                  {/* <Link to="#">
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <LongMenu icon={dotImg} />
+
+                    {/* <Link to="#">
                                                    <img src={row.assignedImg} alt="dots" />
                                                 </Link> */}
-                </TableCell>
-                <TableCell align="left" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
+                  </TableCell>
+                  <TableCell align="left" className="w-[1%]">
+                    <div className="flex gap-20 pe-20">
+                      <span className="p-2 cursor-pointer">
+                        {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
 
-                      <ArrowRightCircleIcon />
-                      {/* </Link> */}
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </>
+                        <ArrowRightCircleIcon />
+                        {/* </Link> */}
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
         </CommonTable>
         <div className="flex justify-end py-14 px-[3rem]">
-          <CommonPagination
-            count={totalPageCount}
-            currentPage={currentPage}
-            onPageChange={handlePageChange}
-          />
+          {currentRows?.length > 0 && (
+            <CommonPagination
+              count={totalPageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
+          )}
         </div>
       </div>
       {/* <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
