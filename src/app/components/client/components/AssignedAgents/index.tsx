@@ -22,7 +22,10 @@ import { useAppDispatch } from "app/store/store";
 import { deleteAgentList } from "app/store/Client";
 import ListLoading from "@fuse/core/ListLoading";
 
-export default function AssignedAgents() {
+export default function AssignedAgents({
+  setAgentFilterMenu,
+  agentfilterMenu,
+}) {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
@@ -62,10 +65,10 @@ export default function AssignedAgents() {
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
-    // setfilters((prevFilters) => ({
-    //   ...prevFilters,
-    //   start: pageNumber - 1,
-    // }));
+    setAgentFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      start: pageNumber - 1,
+    }));
   };
 
   return (
@@ -165,6 +168,7 @@ export default function AssignedAgents() {
                 onChange={(e, PageNumber: number) =>
                   checkPageNum(e, PageNumber)
                 }
+                page={agentfilterMenu.start + 1}
               />
             )}
           </div>
