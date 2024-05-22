@@ -127,7 +127,7 @@ export default function GroupAgentsList() {
       const { payload } = await dispatch(
         deleteAgentMemberGroup({ member_id: id })
       );
-      console.log(payload, "payload");
+      // console.log(payload, "payload");
       if (payload?.data?.status) {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
@@ -167,7 +167,7 @@ export default function GroupAgentsList() {
     }
   }, [agentGroupDetail]);
   const totalPageCount = Math.ceil(
-    agentGroupDetail?.group_members.length / itemsPerPage
+    agentGroupDetail?.group_members?.length / itemsPerPage
   );
 
   const handlePageChange = (
@@ -178,10 +178,12 @@ export default function GroupAgentsList() {
     // Handle any additional logic when the page changes, e.g., fetching data
   };
 
-  const currentRows = agentGroupDetail?.group_members.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const currentRows = agentGroupDetail?.group_members
+    ? agentGroupDetail.group_members.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    : [];
 
   return (
     <>

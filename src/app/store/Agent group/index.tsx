@@ -55,7 +55,7 @@ export const deleteAgentGroup = createAsyncThunk(
   "agent-group/delete",
   async (payload: deleteAgentGroupType) => {
     const response = await ApiHelperFunction({
-      url: "agent-grouaddAgentGroupp/delete",
+      url: "agent-group/delete",
       method: "post",
       data: payload,
     });
