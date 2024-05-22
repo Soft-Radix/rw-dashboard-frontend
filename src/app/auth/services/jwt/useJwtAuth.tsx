@@ -6,9 +6,7 @@ import { PartialDeep } from "type-fest";
 import { useAppDispatch } from "app/store/store";
 import { logIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
-import { useNavigate } from "react-router";
 import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
-
 const defaultAuthConfig = {
   tokenStorageKey: "jwt_access_token",
   signInUrl: "api/auth/sign-in",
@@ -225,13 +223,19 @@ const useJwtAuth = <User, SignUpPayload>(
     let response = await dispatch(
       logIn({ email: credentials?.email, password: credentials?.password })
     );
+    console.warn(response, "response");
+
     if (response?.payload?.status) {
+      // debugger;
       const userData = response?.payload.data?.user;
       dispatch(setInitialState(userData));
       const accessToken = response?.payload.data?.access_token;
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
-      console.log(response?.payload.data, "response?.payload.data");
+      console.log(
+        response?.payload.data?.data?.access_token,
+        "response?.payload.data"
+      );
 
       localStorage.setItem(
         "userData",
@@ -245,8 +249,10 @@ const useJwtAuth = <User, SignUpPayload>(
           handleSignInSuccess(userData, accessToken);
           window.location.reload();
         } else {
-          window.location.href = "/verification";
+          console.log("🚀 ~ setTimeout ~ accessToken:", accessToken);
           localStorage.setItem("response", JSON.stringify(response?.payload));
+          window.open("/verification/" + accessToken);
+          // window.location.href = "/verification/" + accessToken;
         }
       }
       // handleSignInSuccess(userData, accessToken);

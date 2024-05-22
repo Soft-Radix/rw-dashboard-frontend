@@ -6,6 +6,9 @@ export interface LoginPayload {
 export interface ForgotPassPayload {
     email: string;
 }
+export interface refreshToken {
+    token:any
+}
 export interface SetPasswordType {
     token: string;
     password: string

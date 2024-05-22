@@ -27,7 +27,7 @@ const ForgotPasswordConfig: FuseRouteConfigType = {
   auth: authRoles.onlyGuest,
   routes: [
     {
-      path: "verification",
+      path: "verification/:token",
       element: <VerificationPage />,
     },
   ],
