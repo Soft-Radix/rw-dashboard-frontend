@@ -1,19 +1,25 @@
-import { Button, Theme } from "@mui/material";
+import { Button, Checkbox, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 
 import ListLoading from "@fuse/core/ListLoading";
+import { addAgentInagentGroup } from "app/store/Agent group";
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import {
+  GetAssignAgentsInfo,
+  addAssignAccManager,
   addAssignAgents,
   changeFetchStatus,
+  getAssignAccMangerInfo,
   getClientInfo,
 } from "app/store/Client";
-import { ClientRootState } from "app/store/Client/Interface";
+import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
+import { debounce } from "lodash";
 import {
   DownArrowIconWhite,
   PlusIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   Location,
@@ -32,6 +38,9 @@ import AssignedAccountManager from "./components/AssignedAccountManager";
 import AssignedAgents from "./components/AssignedAgents";
 import Profile from "./components/Profile";
 import SubscriptionList from "./components/SubscriptionList";
+import { getAccManagerList } from "app/store/AccountManager";
+import { AccManagerRootState } from "app/store/AccountManager/Interface";
+import { getAgentList } from "app/store/Agent";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -46,10 +55,63 @@ export default function ClientDetail() {
   const [isOpenChangePassModal, setIsOpenChangePassModal] =
     useState<boolean>(false);
   const location: Location = useLocation();
-  const { clientDetail, actionStatus, fetchStatus } = useSelector(
-    (store: ClientRootState) => store?.client
-  );
+  const { clientDetail, actionStatus, fetchStatus, assignAccManagerDetail } =
+    useSelector((store: ClientRootState) => store?.client);
+  console.log(assignAccManagerDetail, "detailsffffs");
   const { role } = useSelector((store: any) => store?.user);
+  const { searchAgentList } = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
+  const { list } = useSelector(
+    (store: AccManagerRootState) => store.accManagerSlice
+  );
+  const [filteredAgentList, setFilteredAgentList] = useState(searchAgentList);
+  const [filteredAccMaangerList, setFilteredAccMaangerList] = useState(list);
+
+  useEffect(() => {
+    setFilteredAgentList(searchAgentList);
+  }, [searchAgentList]);
+
+  useEffect(() => {
+    setFilteredAccMaangerList(list);
+  }, [list]);
+
+  const handleCheckboxChange = (id) => {
+    setCheckedItems((prevCheckedItems) => {
+      if (prevCheckedItems.includes(id)) {
+        return prevCheckedItems.filter((item) => item !== id);
+      } else {
+        return [...prevCheckedItems, id];
+      }
+    });
+  };
+
+  const handleAddnewAgents = () => {
+    dispatch(
+      addAssignAgents({
+        client_id: client_id,
+        agent_ids: checkedItems,
+      })
+    );
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+    handleClose();
+    setIsOpenEditModal(false);
+
+    // Filter out the selected items
+    setFilteredAgentList((prevList: any) =>
+      prevList.filter((item) => !checkedItems.includes(item.id))
+    );
+    setCheckedItems([]); // Clear the checked items
+  };
+
+  // console.log(list,"fdkfdlfkkdfsdfl")
   const { client_id } = useParams();
   if (client_id) {
     localStorage.setItem("client_id", client_id);
@@ -60,29 +122,177 @@ export default function ClientDetail() {
   // Get a specific query parameter
   const paramValue = queryParams.get("type");
   //custom dropdown
+  const [anchorEl3, setAnchorEl3] = useState<HTMLElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [anchorEl1, setAnchorEl1] = useState<HTMLElement | null>(null);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
+  const [checkedItems, setCheckedItems] = useState([]);
 
   const handleClose = () => {
+    setAnchorEl3(null);
     setAnchorEl(null);
-    setAnchorEl1(null);
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
+    setAnchorEl3(event.currentTarget);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleAddnewAgents = () => {
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300); // Adjust the delay as needed (300ms in this example)
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
+  const fetchManagerList = useCallback(() => {
+    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
+  }, [filterMenu]);
+  // const handleAddnewAccManager = () => {
+  //   dispatch(
+  //     addAssignAccManager({
+  //       client_id: client_id,
+  //       account_manager_ids: checkedItems,
+  //     })
+  //   );
+  //   handleClose();
+  //   setIsOpenEditModal(false);
+  // };
+  const handleAddnewAccManager = () => {
     dispatch(
-      addAssignAgents({
+      addAssignAccManager({
         client_id: client_id,
-        agent_ids:[]
+        account_manager_ids: checkedItems,
       })
     );
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+    handleClose();
+    setIsOpenEditModal(false);
+
+    // Filter out the selected items
+    setFilteredAccMaangerList((prevList: any) =>
+      prevList.filter((item) => !checkedItems.includes(item.id))
+    );
+    setCheckedItems([]); // Clear the checked items
   };
+  useEffect(() => {
+    dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
+    fetchManagerList();
+  }, [dispatch, filterMenu]);
+
+  useEffect(() => {
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+  }, []);
+  useEffect(() => {
+    dispatch(
+      getAssignAccMangerInfo({
+        client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
+  }, []);
 
   const CustomDropDown = (): JSX.Element => {
+    return (
+      <DropdownMenu
+        marginTop={"mt-20"}
+        button={
+          <div
+            className="relative flex items-center"
+            onClick={handleButtonClick}
+          >
+            <Button
+              variant="outlined"
+              className="h-[40px] sm:text-[16px] flex gap-8  text-white leading-none bg-secondary hover:bg-secondary"
+              aria-label="Manage Sections"
+              size="large"
+              endIcon={<DownArrowIconWhite className="cursor-pointer" />}
+            >
+              Assigned New Agent
+            </Button>
+          </div>
+        }
+        anchorEl={anchorEl3}
+        handleClose={handleClose}
+      >
+        <div className="w-[375px] p-20">
+          <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
+
+          <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+            <InputField
+              name={"agent"}
+              placeholder={"Enter Agent Name"}
+              className="common-inputField "
+              inputProps={{
+                className: "ps-[2rem] w-full sm:w-full",
+              }}
+              onChange={handleSearchChange}
+            />
+            <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
+              {filteredAgentList.map((item: any) => (
+                <div
+                  className="flex items-center gap-10 px-20 w-full"
+                  key={item.id}
+                >
+                  <label className="flex items-center gap-10 w-full cursor-pointer">
+                    <Checkbox
+                      checked={checkedItems.includes(item.id)}
+                      onChange={() => handleCheckboxChange(item.id)}
+                    />
+                    <span>{item.first_name}</span>
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="flex pt-10">
+            <Button
+              variant="contained"
+              color="secondary"
+              className="w-[156px] h-[48px] text-[18px]"
+              onClick={handleAddnewAgents}
+            >
+              Assign
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              className="w-[156px] h-[48px] text-[18px] ml-14"
+              onClick={handleClose}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </DropdownMenu>
+    );
+  };
+  const AssignedAccManagerDropDown = (): JSX.Element => {
     return (
       <>
         <DropdownMenu
@@ -99,7 +309,7 @@ export default function ClientDetail() {
                 size="large"
                 endIcon={<DownArrowIconWhite className="cursor-pointer" />}
               >
-                Assigned New Agent
+                Assign New Account Manager
               </Button>
             </div>
           }
@@ -107,24 +317,43 @@ export default function ClientDetail() {
           handleClose={handleClose}
         >
           <div className="w-[375px] p-20">
-            <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
+            <p className="text-title font-600 text-[1.6rem]">
+              Account Manager Name
+            </p>
 
             <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
               <InputField
                 name={"agent"}
-                placeholder={"Enter Agent Name"}
+                placeholder={"Enter Account Manager Name"}
                 className="common-inputField "
                 inputProps={{
                   className: "ps-[2rem] w-full sm:w-full",
                 }}
+                onChange={handleSearchChange}
               />
+              <div className=" max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
+                {filteredAccMaangerList.map((item: any) => (
+                  <div
+                    className="flex items-center gap-10 px-20 w-full"
+                    key={item.id}
+                  >
+                    <label className="flex items-center gap-10 w-full cursor-pointer">
+                      <Checkbox
+                        checked={checkedItems.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />
+                      <span>{item.first_name}</span>
+                    </label>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex pt-10">
               <Button
                 variant="contained"
                 color="secondary"
                 className="w-[156px] h-[48px] text-[18px]"
-                onClick={handleAddnewAgents}
+                onClick={handleAddnewAccManager}
               >
                 Assign
               </Button>
@@ -166,7 +395,7 @@ export default function ClientDetail() {
       id: "assigned-account",
       label: "Assigned account manager",
       content: <AssignedAccountManager />,
-      actionBtn: CustomDropDown,
+      actionBtn: AssignedAccManagerDropDown,
     },
     {
       id: "subscription",
@@ -187,7 +416,6 @@ export default function ClientDetail() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-
   return (
     <>
       <TitleBar title="Clients" minHeight="min-h-[80px]">

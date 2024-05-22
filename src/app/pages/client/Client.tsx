@@ -32,6 +32,8 @@ export default function Clients() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [count, setCount] = useState(1);
+  const [active, setActive] = useState("all");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -93,13 +95,27 @@ export default function Clients() {
     }
   };
   const fetchList = useCallback(() => {
-    dispatch(getClientList(filters));
-  }, [filters]);
+    const payload = {
+      ...filters,
+      type:
+        active == "all"
+          ? 0
+          : active == "active"
+          ? 1
+          : active == "passed"
+          ? 2
+          : active == "cancel"
+          ? 3
+          : active == "pastDue"
+          ? 4
+          : null,
+    };
+    dispatch(getClientList(payload));
+  }, [dispatch, filters, active]);
 
   useEffect(() => {
     fetchList();
-  }, [filters]);
-
+  }, [dispatch, filters, active]);
   const ClientTabButton = () => {
     return (
       <div className="flex flex-col gap-10 sm:flex-row">
@@ -143,7 +159,6 @@ export default function Clients() {
       </div>
     );
   };
-
   const tabs = [
     {
       id: "all",
@@ -163,25 +178,65 @@ export default function Clients() {
     {
       id: "active",
       label: "Active",
-      content: <AssignedAgents />,
+      // content: <AssignedAgents type={1} />,
+      content: (
+        <ClientTable
+          clientState={clientState}
+          handleSelectAll={handleSelectAll}
+          selectedIds={selectedIds}
+          handleCheckboxChange={handleCheckboxChange}
+          setfilters={setfilters}
+          filters={filters}
+        />
+      ),
       actionBtn: () => null,
     },
     {
       id: "passed",
       label: "Passed",
-      content: <AssignedAgents />,
+      // content: <AssignedAgents type={2} />,
+      content: (
+        <ClientTable
+          clientState={clientState}
+          handleSelectAll={handleSelectAll}
+          selectedIds={selectedIds}
+          handleCheckboxChange={handleCheckboxChange}
+          setfilters={setfilters}
+          filters={filters}
+        />
+      ),
       actionBtn: () => null,
     },
     {
       id: "cancel",
       label: "Cancelled",
-      content: <AssignedAgents />,
+      // content: <AssignedAgents type={3} />,
+      content: (
+        <ClientTable
+          clientState={clientState}
+          handleSelectAll={handleSelectAll}
+          selectedIds={selectedIds}
+          handleCheckboxChange={handleCheckboxChange}
+          setfilters={setfilters}
+          filters={filters}
+        />
+      ),
       actionBtn: () => null,
     },
     {
       id: "pastDue",
       label: "Past Due",
-      content: <AssignedAgents />,
+      // content: <AssignedAgents type={4} />,
+      content: (
+        <ClientTable
+          clientState={clientState}
+          handleSelectAll={handleSelectAll}
+          selectedIds={selectedIds}
+          handleCheckboxChange={handleCheckboxChange}
+          setfilters={setfilters}
+          filters={filters}
+        />
+      ),
       actionBtn: () => null,
     },
   ];
@@ -190,7 +245,7 @@ export default function Clients() {
     <>
       <TitleBar title="Clients">
         <div className="flex flex-col items-start gap-20 sm:items-center sm:flex-row">
-          <DropdownMenu
+          {/* <DropdownMenu
             marginTop={"mt-20"}
             button={
               <div
@@ -252,7 +307,7 @@ export default function Clients() {
               </span>
               <span>Hello</span>
             </div>
-          </DropdownMenu>
+          </DropdownMenu> */}
 
           {selectedIds?.length > 0 && (
             <Button
@@ -282,7 +337,7 @@ export default function Clients() {
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
           <div className="bg-white rounded-lg shadow-sm pt-[2rem]">
-            <CommonTab tabs={tabs} />
+            <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>
         </div>

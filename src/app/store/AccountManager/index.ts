@@ -83,7 +83,7 @@ export const deleteAccManager = createAsyncThunk(
 export const assignedAccManagerList = createAsyncThunk(
   "accountManager/AssignClients",
   async (payload: assignedClientInfoType) => {
-    console.log(payload, "payload");
+    // console.log(payload, "payload");
     const response = await ApiHelperFunction({
       url: "accountManager/AssignClients",
       method: "post",
@@ -196,6 +196,7 @@ export const accManagerSlice = createSlice({
           toast.error(response?.message);
         } else {
           state.list = response?.data?.list || [];
+          // console.log(state.list, "listtt");
           state.total_records = calculatePageNumber(
             response?.data?.total_records,
             10
@@ -213,7 +214,7 @@ export const accManagerSlice = createSlice({
         // console.log(data, "datata");
         state.fetchStatus = "idle";
         state.accManagerDetail = data;
-        // console.log(state.accManagerDetail, "jj");
+        // console.log(state.accManagerDetail, "listtt");
       })
       .addCase(getAccManagerInfo.rejected, (state) => {
         state.fetchStatus = "idle";

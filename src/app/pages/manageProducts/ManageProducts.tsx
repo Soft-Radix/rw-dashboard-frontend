@@ -10,6 +10,7 @@ import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
+import CommonPagination from "src/app/components/pagination";
 
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
@@ -20,6 +21,8 @@ export default function ManageProducts() {
   const [list, setList] = useState<any[]>([]);
   const [id, setId] = useState();
   const theme: Theme = useTheme();
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const dispatch = useAppDispatch();
 
   const fetchData = async () => {
@@ -50,6 +53,7 @@ export default function ManageProducts() {
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
       fetchData();
+      setIsOpenDeletedModal(false);
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
     } catch (error) {
@@ -70,6 +74,21 @@ export default function ManageProducts() {
       console.error("Error fetching data:", error);
     }
   };
+
+  const totalPageCount = Math.ceil(list.length / itemsPerPage);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    // Handle any additional logic when the page changes, e.g., fetching data
+  };
+
+  const currentRows = list.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div>
@@ -92,7 +111,7 @@ export default function ManageProducts() {
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
             <>
-              {list?.map((item, index) => {
+              {currentRows?.map((item, index) => {
                 return (
                   <>
                     <TableRow
@@ -196,7 +215,11 @@ export default function ManageProducts() {
             </>
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* <CommonPagination count={10} /> */}
+            <CommonPagination
+              count={totalPageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>

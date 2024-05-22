@@ -46,7 +46,7 @@ export default function SubscriptionList() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [rows, setRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   const { client_id } = useParams();
   useEffect(() => {

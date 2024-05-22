@@ -24,6 +24,7 @@ export interface filterType {
   start: number;
   limit: number;
   search: string;
+  client_id?: number[] | string[];
 }
 
 export interface deleteClientType {
@@ -31,7 +32,7 @@ export interface deleteClientType {
 }
 
 export interface ProductDelete {
-  product_id:number|string
+  product_id: number | string;
 }
 
 /**
@@ -47,13 +48,18 @@ export type initialStateProps = {
   total_records: number;
   selectedColumn: string[];
   actionStatus: boolean;
+  assignedAgentDetail: any[];
+  assignAccManagerDetail?: any[];
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
 }
 
 export interface clientIDType {
-  client_id: string;
+  client_id?: string | number;
+  agent_id?: Number | string;
+  account_manager_id?: number[];
+  account_manager_ids?: number[];
 }
 
 // Type for the payload that updateProfile expects
@@ -75,18 +81,18 @@ export interface SubscriptionList {
 }
 
 export interface ProductAdd {
-  name: string,
-  description: string,
-  unit_price: number
+  name: string;
+  description: string;
+  unit_price: number;
 }
 
-export interface ProductUpdate{
-  product_id:number|string,
-  name: string,
-  description: string,
-  unit_price: number
+export interface ProductUpdate {
+  product_id: number | string;
+  name: string;
+  description: string;
+  unit_price: number;
 }
-export interface SubscriptionListItem{
+export interface SubscriptionListItem {
   client_id?: number | string;
   start: number;
   limit: number;
@@ -133,4 +139,11 @@ export interface AddSubscriptionList {
     unit_discount: number;
     net_price: number;
   }[];
+}
+
+export interface ClientInfo {
+  client_id: number | string;
+  start: number;
+  limit: number;
+  search: string;
 }
