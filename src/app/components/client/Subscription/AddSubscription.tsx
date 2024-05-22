@@ -416,7 +416,6 @@ export default function AddSubscription() {
       setList((prevList) => {
         const updatedList = [...prevList];
         updatedList[index][name] = value;
-        console.log("===", updatedList[index][name], value);
         // Calculate net price and update the net_price key in the list array
         const netPrice = handleNetPrice(
           updatedList[index].unit_discount,
@@ -600,17 +599,17 @@ export default function AddSubscription() {
       setError("Title is required");
     }
   };
-  const uniqueList = [];
-  const seenIds = new Set();
+  // const uniqueList = [];
+  const uniqueList = [...new Set(list)];
 
   // Iterate through the list in reverse order
-  for (let i = list.length - 1; i >= 0; i--) {
-    const item = list[i];
-    if (!seenIds.has(item.id)) {
-      uniqueList.push(item);
-      seenIds.add(item.id);
-    }
-  }
+  // for (let i = list.length - 1; i >= 0; i--) {
+  //   const item = list[i];
+  //   if (!seenIds.has(item.id)) {
+  //     uniqueList.push(item);
+  //     seenIds.add(item.id);
+  //   }
+  // }
   const today = new Date();
   // Add one day to get tomorrow's date
   const tomorrow = new Date(today);
@@ -691,8 +690,8 @@ export default function AddSubscription() {
             ]}
           >
             <>
-              {list &&
-                list?.map((row, index) => (
+              {uniqueList &&
+                uniqueList?.map((row, index) => (
                   <TableRow
                     key={row.id}
                     sx={{

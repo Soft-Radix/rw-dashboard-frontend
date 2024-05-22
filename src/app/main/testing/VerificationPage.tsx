@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { forgotPassword, logIn } from "app/store/Auth";
+import { RefreshToken, forgotPassword, logIn } from "app/store/Auth";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
@@ -10,7 +10,7 @@ import AuthBox from "src/app/components/AuthBox";
 import InputField from "src/app/components/InputField";
 import { forgotPasswordSchema } from "src/formSchema";
 import { AxiosError } from "axios";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { getLocalStorage } from "src/utils";
 import {
@@ -30,20 +30,42 @@ export default function VerificationPage() {
   const dispatch = useAppDispatch();
   const [list, setList] = useState<any>([]);
   const { jwtService } = useAuth();
-
+  const { token } = useParams();
   const navigate = useNavigate();
-  const Userresponse = getLocalStorage("response");
+  const UserResponse = getLocalStorage("response");
   useEffect(() => {
     const redirect = async () => {
       await jwtService.autoSignIng();
     };
 
     setList(userData);
-    if (userData.length === 0 && Userresponse?.data?.is_signed == 0  ) {
+    if (userData.length === 0 && UserResponse?.data?.is_signed == 0) {
       redirect();
-      localStorage.removeItem("response");
+      // localStorage.removeItem("response");
     }
   }, [navigate]);
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+
+      localStorage.setItem("response", JSON.stringify(res?.payload?.data));
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(
+          res?.payload?.data?.data?.user?.subscription_and_docusign
+        )
+      );
+
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleButtonClick = (item) => {
     // Open the document link in a new tab
@@ -67,6 +89,13 @@ export default function VerificationPage() {
     //   navigate("/sign-document");
     // }
   };
+
+  useEffect(() => {
+    fetchData();
+    const userData = getLocalStorage("userData");
+    setList(userData);
+  }, []);
+
   return (
     <>
       <div className="flex justify-center items-center flex-col h-screen gap-60 px-28 ">
@@ -77,7 +106,7 @@ export default function VerificationPage() {
         <img src="assets/icons/remote-icon.svg" alt="" />
 
         <div className="bg-[#fff] sm:min-w-[60%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md ">
-          {Userresponse?.data?.user?.subcription_status == "Pending" &&
+          {UserResponse?.data?.user?.subcription_status == "Pending" &&
           list.length > 0 ? (
             <div className="flex flex-col justify-center gap-40">
               <Typography className="text-[48px] text-center font-700 leading-normal">
@@ -108,7 +137,7 @@ export default function VerificationPage() {
               </div>
             </div>
           ) : null}
-          {Userresponse?.data?.user?.subcription_status == "Pending" &&
+          {UserResponse?.data?.user?.subcription_status == "Pending" &&
           list.length == 0 ? (
             <>
               <div className="flex flex-col justify-center gap-10">
@@ -127,7 +156,7 @@ export default function VerificationPage() {
             </>
           ) : null}
 
-          {Userresponse?.data?.user?.subcription_status == "Suspended" &&
+          {UserResponse?.data?.user?.subcription_status == "Suspended" &&
           list.length == 0 ? (
             <>
               <div className="flex flex-col justify-center gap-10">

@@ -8,6 +8,7 @@ import {
   LoginPayload,
   SetPasswordType,
   initialStateProps,
+  refreshToken,
 } from "./Interface";
 
 import { getLocalStorage } from "src/utils";
@@ -56,6 +57,24 @@ export const restPassword = createAsyncThunk(
       data: payload,
     });
 
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const RefreshToken = createAsyncThunk(
+  "auth/refresh-token",
+  async (payload: refreshToken) => {
+    console.log("🚀 ~ payload:", payload.token);
+    const response = await ApiHelperFunction({
+      url: "auth/refresh-token",
+      method: "get",
+      headers: { Authorization: `Bearer ${payload.token}` },
+    });
+    // console.log(response, "response");
+    // localStorage.setItem("response", JSON.stringify(response?.data?.data));
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
