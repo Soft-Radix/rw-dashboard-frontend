@@ -89,7 +89,7 @@ export default function Profile() {
           <div
             className="aspect-[4.2/1] bg-cover bg-center min-h-[200px] relative"
             style={{
-              backgroundImage: "url(/assets/images/pages/profile/cover.jpg)",
+              // backgroundImage: "url(/assets/images/pages/profile/cover.jpg)",
             }}
           >
             <span className="absolute top-14 right-14 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer shadow-lg">

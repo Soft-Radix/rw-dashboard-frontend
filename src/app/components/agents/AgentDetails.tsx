@@ -91,7 +91,6 @@ export default function AgentDetails() {
     return () => {
       dispatch(resetFormData());
       dispatch(changeFetchStatus());
-      
     };
   }, []);
 
@@ -160,7 +159,7 @@ export default function AgentDetails() {
                       src={
                         agentDetail?.user_image
                           ? urlForImage + agentDetail.user_image
-                          : "../assets/images/pages/agent/luis_.jpg"
+                          : "../assets/images/logo/images.jpeg"
                       }
                     ></img>
                   </div>
