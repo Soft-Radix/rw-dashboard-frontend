@@ -68,7 +68,6 @@ export default function SignDocuement() {
 
     if (userData.length == 0) {
       redirect();
-      localStorage.removeItem("response");
     }
   };
 
