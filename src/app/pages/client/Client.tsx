@@ -356,6 +356,8 @@ export default function Clients() {
         setIsOpen={setIsOpenDeletedModal}
         loading={clientState?.actionStatus}
         onDelete={deleteClient}
+        heading={"Delete Client"}
+        description={"Are you sure you want to delete this Client  ? "}
       />
     </>
   );

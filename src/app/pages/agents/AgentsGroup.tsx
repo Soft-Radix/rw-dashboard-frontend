@@ -292,8 +292,8 @@ export default function AgentsGroup() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteGroup(deleteId)}
-        heading={"Delete Group Name"}
-        description={"Are you sure you want to delete this Group Name ? "}
+        heading={"Delete Group"}
+        description={"Are you sure you want to delete this Group? "}
       />
     </>
   );
