@@ -25,6 +25,7 @@ type ModalType = {
   modalSubTitle: string;
   type: string;
   maxWidth?: string;
+  onDelete?: any;
 };
 
 export default function ActionModal({
@@ -34,6 +35,7 @@ export default function ActionModal({
   modalSubTitle,
   type,
   maxWidth = "387",
+  onDelete,
 }: ModalType) {
   return (
     <BootstrapDialog
@@ -64,6 +66,7 @@ export default function ActionModal({
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
+          onClick={onDelete}
         >
           Yes
         </Button>

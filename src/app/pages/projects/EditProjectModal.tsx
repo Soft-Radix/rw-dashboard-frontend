@@ -36,8 +36,9 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
         localData.projects[updateProject] = newProject?.data;
 
         localStorage.setItem("userDetail", JSON.stringify(localData));
-
+        formik.resetForm();
         window.location.reload();
+        setIsOpen(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -60,8 +61,6 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
 
   const handleSave = () => {
     formik.handleSubmit();
-
-    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -70,7 +69,10 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => {
+        formik.setFieldValue("name", "");
+        setIsOpen((prev) => !prev);
+      }}
       modalTitle="Edit Project"
       maxWidth="314"
       btnTitle="Save"
