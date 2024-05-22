@@ -93,12 +93,13 @@ export default function MainCard({
   }, [title]);
 
   return (
-    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md">
+    <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px]">
       <div>
         <div className="flex justify-between">
           <Typography
-            className="text-[18px] font-semibold mb-5"
+            className="text-[18px] font-semibold mb-5 "
             color="primary.main"
+            style={{ wordBreak: "break-word" }}
           >
             {title}
           </Typography>
