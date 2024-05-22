@@ -237,11 +237,12 @@ const useJwtAuth = <User, SignUpPayload>(
       );
       if (signin == 1) {
         handleSignInSuccess(userData, accessToken);
+        window.location.reload();
       } else {
         window.location.href = "/verification";
       }
-      handleSignInSuccess(userData, accessToken);
-      window.location.reload();
+      // handleSignInSuccess(userData, accessToken);
+      // window.location.reload();
     }
     return response;
   };

@@ -102,7 +102,7 @@ export default function Clients() {
           ? 0
           : active == "active"
           ? 1
-          : active == "passed"
+          : active == "paused"
           ? 2
           : active == "cancel"
           ? 3
@@ -187,13 +187,14 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          status={false}
         />
       ),
       actionBtn: () => null,
     },
     {
-      id: "passed",
-      label: "Passed",
+      id: "paused",
+      label: "Paused",
       // content: <AssignedAgents type={2} />,
       content: (
         <ClientTable
@@ -203,6 +204,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          status={false}
         />
       ),
       actionBtn: () => null,
@@ -219,6 +221,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          status={false}
         />
       ),
       actionBtn: () => null,
@@ -235,6 +238,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          status={false}
         />
       ),
       actionBtn: () => null,
