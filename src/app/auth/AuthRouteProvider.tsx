@@ -215,7 +215,6 @@ function AuthRoute(props: AuthProviderProps) {
    */
   const resetAuthService = useCallback(() => {
     localStorage.removeItem("authService");
-    localStorage.removeItem("response");
   }, []);
 
   /**

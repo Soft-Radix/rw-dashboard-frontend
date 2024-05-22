@@ -372,7 +372,7 @@ export default function AddSubscription() {
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    event.stopPropagation();
+    console.log("========", index, event.target.value, event.target.name);
     var mode = "";
     var payment = null;
     const newErrors = list?.map((item, i) => {
@@ -417,6 +417,7 @@ export default function AddSubscription() {
       setList((prevList) => {
         const updatedList = [...prevList];
         updatedList[index][name] = value;
+        console.log("===", updatedList[index][name], value);
         // Calculate net price and update the net_price key in the list array
         const netPrice = handleNetPrice(
           updatedList[index].unit_discount,
@@ -427,7 +428,6 @@ export default function AddSubscription() {
         updatedList[index].net_price = netPrice
           ? netPrice
           : updatedList[index].unit_price;
-
         return updatedList;
       });
     }
@@ -692,8 +692,8 @@ export default function AddSubscription() {
             ]}
           >
             <>
-              {uniqueList &&
-                uniqueList?.map((row, index) => (
+              {list &&
+                list?.map((row, index) => (
                   <TableRow
                     key={row.id}
                     sx={{
