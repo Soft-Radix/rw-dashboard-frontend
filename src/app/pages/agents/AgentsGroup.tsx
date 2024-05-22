@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "app/store/store";
 import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import { debounce } from "lodash";
 
 const rows = [
   {
@@ -145,6 +146,18 @@ export default function AgentsGroup() {
       console.error("Failed to delete agent group:", error);
     }
   };
+  // Debounce function to delay executing the search
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
   const fetchAgentGroupList = useCallback(() => {
     dispatch(getAgentGroupList(filters));
   }, [filters]);
@@ -178,7 +191,11 @@ export default function AgentsGroup() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <div className="p-[2rem]">
-            <SearchInput name="search" placeholder="Search agents group" />
+            <SearchInput
+              name="search"
+              placeholder="Search agents group"
+              onChange={handleSearchChange}
+            />
           </div>
           <CommonTable
             headings={["ID", "Group Name", "Number of Agents", "Action"]}

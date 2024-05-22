@@ -94,6 +94,9 @@ export default function GroupAgentsList() {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const { group_id } = useParams();
   const navigate = useNavigate();
+  const [rows, setRows] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
   const { agentGroupDetail } = useSelector(
@@ -124,7 +127,7 @@ export default function GroupAgentsList() {
       const { payload } = await dispatch(
         deleteAgentMemberGroup({ member_id: id })
       );
-      console.log(payload, "payload");
+      // console.log(payload, "payload");
       if (payload?.data?.status) {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
@@ -163,6 +166,24 @@ export default function GroupAgentsList() {
       });
     }
   }, [agentGroupDetail]);
+  const totalPageCount = Math.ceil(
+    agentGroupDetail?.group_members?.length / itemsPerPage
+  );
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+    // Handle any additional logic when the page changes, e.g., fetching data
+  };
+
+  const currentRows = agentGroupDetail?.group_members
+    ? agentGroupDetail.group_members.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )
+    : [];
 
   return (
     <>
@@ -208,7 +229,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               <>
-                {agentGroupDetail?.group_members?.map((row: any, index) => (
+                {currentRows?.map((row: any, index) => (
                   <TableRow
                     key={index}
                     sx={{
@@ -240,7 +261,7 @@ export default function GroupAgentsList() {
                           />
                         </span>
                         <span className="p-2 cursor-pointer">
-                          <Link to="/admin/dashboard">Go to Agent Page</Link>
+                          <Link to="/admin/agents/list">Go to Agent Page</Link>
                         </span>
                       </div>
                     </TableCell>
@@ -250,7 +271,11 @@ export default function GroupAgentsList() {
             </CommonTable>
           </>
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* <CommonPagination count={10} /> */}
+            <CommonPagination
+              count={totalPageCount}
+              currentPage={currentPage}
+              onPageChange={handlePageChange}
+            />
           </div>
         </div>
       </div>
