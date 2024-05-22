@@ -145,14 +145,13 @@ export const navigationSlice = createSlice({
   initialState,
   reducers: {
     setInitialState: (state, { payload }) => {
-      console.log("🚀 ~ payload:", payload);
       state = navigationAdapter.upsertMany(
         emptyInitialState,
         FuseNavigationHelper.flattenNavigation(
           payload?.role === "admin"
             ? adminNavigationConfig
             : payload.isAdd
-              ? []
+              ? payload.customNavigation
               : navigationConfig
         )
       );

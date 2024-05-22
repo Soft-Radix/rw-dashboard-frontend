@@ -6,13 +6,15 @@ import {
   ProjectAdd,
   ProductDelete,
   ProductUpdate,
+  ProjectUpdate,
 } from "./Interface";
+import { deleteAccManagerType } from "../AccountManager/Interface";
 
 /**
  * API calling
  */
 
-// ----*-------product-list-----
+// ----*-------project-apis-----
 
 export const projectAdd = createAsyncThunk(
   "project/add",
@@ -23,23 +25,21 @@ export const projectAdd = createAsyncThunk(
       data: payload,
     });
 
-    // Return only the data you need to keep it serializable
     return {
       data: response.data,
     };
   }
 );
 
-export const productUpdate = createAsyncThunk(
-  "product/update",
-  async (payload: ProductUpdate) => {
+export const projectUpdate = createAsyncThunk(
+  "project/update",
+  async (payload: ProjectUpdate) => {
     const response = await ApiHelperFunction({
-      url: `/product/update`,
+      url: `project/update/${payload.project_id}`,
       method: "put",
-      data: payload,
+      data: payload.data,
     });
 
-    // Return only the data you need to keep it serializable
     return {
       data: response.data,
     };
@@ -55,23 +55,21 @@ export const projectList = createAsyncThunk(
       data: payload,
     });
 
-    // Return only the data you need to keep it serializable
     return {
       data: response.data,
     };
   }
 );
 
-export const deleteProject = createAsyncThunk(
+export const deleteProject: any = createAsyncThunk(
   "project/delete",
-  async (payload: deleteAccManagerType) => {
+  async (payload: any) => {
     const response = await ApiHelperFunction({
       url: "/project/delete",
       method: "delete",
       data: payload,
     });
 
-    // Return only the data you need to keep it serializable
     return {
       data: response.data,
     };

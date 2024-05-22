@@ -14,7 +14,7 @@ function DeleteProject({ isOpen, setIsOpen, onDelete, loading }: IProps) {
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => setIsOpen(!isOpen)}
       modalTitle="Delete Product"
       maxWidth="310"
       DeleteModal={true}

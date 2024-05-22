@@ -31,10 +31,10 @@ i18next.addResourceBundle("en", "navigation", en);
 i18next.addResourceBundle("tr", "navigation", tr);
 i18next.addResourceBundle("ar", "navigation", ar);
 
-const getProjectNavItems = () => {
+export const getProjectNavItems = () => {
   const userDetail = getLocalStorage("userDetail");
 
-  return userDetail.projects?.map((project) => ({
+  return userDetail?.projects?.map((project) => ({
     id: project.id,
     title: project.name,
     type: "item",

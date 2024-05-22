@@ -23,6 +23,10 @@ import DeleteClient from "src/app/components/client/DeleteClient";
 import DeleteProject from "src/app/pages/projects/DeleteProject";
 import { deleteProject } from "app/store/Projects";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "app/store/store";
+import navigationConfig from "app/configs/navigationConfig";
+import EditProjectModal from "src/app/pages/projects/EditProjectModal";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -70,8 +74,10 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
-  const [deleteid, setDeleteId] = useState();
+  const [deleteid, setDeleteId] = useState<number | string>("");
+  const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 
+  const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -105,22 +111,27 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   }
 
   const onDelete = async () => {
-    alert("Delete");
-    setDeleteId(null);
-    try {
-      const payload = {
+    await dispatch(
+      deleteProject({
         project_id: deleteid,
-      };
-      console.log("🚀 ~ onDelete ~ payload.deleteid:", payload.deleteid);
-      //@ts-ignore
-      const res = await dispatch(deleteProject(payload));
-
-      // setList(res?.payload?.data?.data?.list);
-      toast.success(res?.payload?.data?.message);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+      })
+    )
+      .unwrap()
+      .then((res) => {
+        if (res?.data?.status == 1) {
+          let localData = getLocalStorage("userDetail");
+          const removeItem = localData.projects?.filter((item) => {
+            return deleteid !== item.id;
+          });
+          let projects = [...removeItem];
+          localData.projects = projects;
+          localStorage.setItem("userDetail", JSON.stringify(localData));
+          window.location.reload();
+        }
+      });
+    const projectData = [...navigationConfig];
   };
+
   return useMemo(
     () => (
       <Root
@@ -162,6 +173,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
           setIsOpen={setIsOpenDeletedModal}
           onDelete={onDelete}
         />
+        <EditProjectModal
+          isOpen={isOpenEditModal}
+          setIsOpen={setIsOpenEditModal}
+          projectData={{
+            id: item?.id,
+            name: item?.title,
+          }}
+        />
         {item?.isProject && (
           <>
             <Button aria-describedby={id} onClick={handleClick}>
@@ -177,27 +196,32 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
                 horizontal: "left",
               }}
             >
-              <div>
-                <Typography
-                  sx={{
-                    p: 2,
-                    backgroundColor: "white",
-                    color: "black",
-                    width: "164px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    cursor: "pointer",
-                  }}
-                >
-                  Edit <EditIcon />
-                </Typography>
-              </div>
+              <Typography
+                sx={{
+                  p: 2,
+                  backgroundColor: "white",
+                  color: "black",
+                  width: "164px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  cursor: "pointer",
+                }}
+                onClick={(e) => {
+                  // alert("hello");
+                  e.stopPropagation();
+                  setIsOpenEditModal(true);
+                  handleClose();
+                }}
+              >
+                Edit <EditIcon />
+              </Typography>
 
               <div
                 onClick={() => {
                   setIsOpenDeletedModal(true);
-                  setDeleteId(id);
+                  setDeleteId(item?.id);
+                  handleClose();
                 }}
               >
                 <Typography
@@ -221,7 +245,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
         {item.badge && <FuseNavBadge badge={item.badge} />}
       </Root>
     ),
-    [item, itempadding, onItemClick, anchorEl]
+    [
+      item,
+      itempadding,
+      onItemClick,
+      anchorEl,
+      isOpenDeletedModal,
+      isOpenEditModal,
+    ]
   );
 }
 
