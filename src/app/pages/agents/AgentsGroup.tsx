@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "app/store/store";
 import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import ListLoading from "@fuse/core/ListLoading";
 
 const rows = [
   {
@@ -184,54 +185,63 @@ export default function AgentsGroup() {
             headings={["ID", "Group Name", "Number of Agents", "Action"]}
           >
             <>
-              {agentGroupState.list.map((row, index) => {
-                // console.log(row, "row");
-                return (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                      },
-                    }}
-                  >
-                    <TableCell scope="row">{row.id}</TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.group_name}
-                    </TableCell>
+              {agentGroupState.status === "loading" ? (
+                <TableRow>
+                  <TableCell colSpan={8} align="center">
+                    <ListLoading /> {/* Render loader component */}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                agentGroupState.list.map((row, index) => {
+                  // console.log(row, "row");
+                  return (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.group_name}
+                      </TableCell>
 
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.members_count}
-                    </TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.members_count}
+                      </TableCell>
 
-                    <TableCell align="center" className="w-[1%]">
-                      <div className="flex gap-20 pe-20">
-                        <span
-                          className="p-2 cursor-pointer"
-                          // onClick={deleteGroup}
-                        >
-                          <DeleteIcon
-                            onClick={() => {
-                              setIsOpenDeletedModal(true);
-                              setIsDeleteId(row.id);
-                            }}
-                          />
-                        </span>
-                        <span className="p-2 cursor-pointer">
-                          <Link to={`/admin/agents/groups/${row.id}`}>
-                            <EditIcon />
-                          </Link>
-                        </span>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                      <TableCell align="center" className="w-[1%]">
+                        <div className="flex gap-20 pe-20">
+                          <span
+                            className="p-2 cursor-pointer"
+                            // onClick={deleteGroup}
+                          >
+                            <DeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setIsDeleteId(row.id);
+                              }}
+                            />
+                          </span>
+                          <span className="p-2 cursor-pointer">
+                            <Link to={`/admin/agents/groups/${row.id}`}>
+                              <EditIcon />
+                            </Link>
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
             </>
           </CommonTable>
+
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
               count={agentGroupState?.total_records}
