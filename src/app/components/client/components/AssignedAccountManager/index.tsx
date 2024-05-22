@@ -75,7 +75,14 @@ export default function AssignedAccountManager() {
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable headings={["Agents", "Assigned date", ""]}>
+          <CommonTable
+            headings={[
+              "AccountManager",
+              "AccountManagerId",
+              "Assigned date",
+              "",
+            ]}
+          >
             <>
               {currentRows.map((row, index) => (
                 <TableRow
