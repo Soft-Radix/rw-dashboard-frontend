@@ -22,7 +22,7 @@ const ProjectsConfig = {
       element: <Projects />,
     },
     {
-      path: "projects/:id",
+      path: "projects/:id/:name",
       element: <Projects />,
     },
   ],

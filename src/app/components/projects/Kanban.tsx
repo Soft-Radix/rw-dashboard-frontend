@@ -35,7 +35,7 @@ const Kanban = (props): any => {
   } = props;
   const [columnList, setColumnList] = useState<any>([]);
   const dispatch = useAppDispatch();
-  const { id } = useParams();
+  const { id, name } = useParams();
   const theme: Theme = useTheme();
   const [addCard, setAddCard] = useState(false);
 
@@ -62,11 +62,12 @@ const Kanban = (props): any => {
       const res = await dispatch(projectColumnAdd(data));
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
+      formik.setFieldValue("name", "");
+      formik.resetForm();
       listData();
       setIsOpen((prev) => !prev);
       setIsEditing(false);
       setId(null);
-      formik.setFieldValue("name", "");
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -93,7 +94,7 @@ const Kanban = (props): any => {
   };
   useEffect(() => {
     listData();
-  }, []);
+  }, [id]);
 
   return (
     <div>
@@ -158,6 +159,7 @@ const Kanban = (props): any => {
                   onClick={() => {
                     setAddCard(!addCard);
                     formik.setFieldValue("name", "");
+                    formik.resetForm();
                   }}
                 >
                   Cancel
