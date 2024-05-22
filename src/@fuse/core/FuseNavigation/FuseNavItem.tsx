@@ -19,6 +19,7 @@ export type FuseNavItemComponentProps = {
   nestedLevel?: number;
   onItemClick?: (T: FuseNavItemType) => void;
   checkPermission?: boolean;
+  id?: number | string;
 };
 
 /**

@@ -148,7 +148,11 @@ export const navigationSlice = createSlice({
       state = navigationAdapter.upsertMany(
         emptyInitialState,
         FuseNavigationHelper.flattenNavigation(
-          payload?.role === "admin" ? adminNavigationConfig : navigationConfig
+          payload?.role === "admin"
+            ? adminNavigationConfig
+            : payload.isAdd
+              ? payload.customNavigation
+              : navigationConfig
         )
       );
     },
