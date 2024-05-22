@@ -225,15 +225,15 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     url: "admin/acc-manager",
   },
 
-  {
-    id: "billings",
-    title: "Billings",
-    translate: "Billings",
-    type: "item",
-    icon: "billing",
-    customIcon: <BillingNavIcon />,
-    url: "admin/billings",
-  },
+  // {
+  //   id: "billings",
+  //   title: "Billings",
+  //   translate: "Billings",
+  //   type: "item",
+  //   icon: "billing",
+  //   customIcon: <BillingNavIcon />,
+  //   url: "admin/billings",
+  // },
   {
     id: "setting",
     title: "Setting",

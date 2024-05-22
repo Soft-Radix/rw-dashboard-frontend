@@ -93,14 +93,14 @@ export default function ClientDetail() {
         agent_ids: checkedItems,
       })
     );
-    // dispatch(
-    //   GetAssignAgentsInfo({
-    //     client_id,
-    //     start: 0,
-    //     limit: 10,
-    //     search: "",
-    //   })
-    // );
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+      })
+    );
     handleClose();
     setIsOpenEditModal(false);
 
@@ -154,9 +154,6 @@ export default function ClientDetail() {
     const { value } = event.target;
     debouncedSearch(value);
   };
-  const fetchManagerList = useCallback(() => {
-    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
-  }, [filterMenu]);
 
   const handleAddnewAccManager = () => {
     dispatch(
@@ -182,6 +179,9 @@ export default function ClientDetail() {
     );
     setCheckedItems([]); // Clear the checked items
   };
+  const fetchManagerList = useCallback(() => {
+    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
+  }, [filterMenu]);
   useEffect(() => {
     dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
     fetchManagerList();
