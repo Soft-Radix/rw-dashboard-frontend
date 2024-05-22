@@ -314,7 +314,6 @@ const useJwtAuth = <User, SignUpPayload>(
         authConfig.updateUserUrl,
         userData
       );
-
       const updatedUserData = response?.data;
 
       onUpdateUser(updatedUserData);
