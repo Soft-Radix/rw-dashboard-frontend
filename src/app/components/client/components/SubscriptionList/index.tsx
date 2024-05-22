@@ -164,9 +164,9 @@ export default function SubscriptionList() {
                   <div className="flex gap-20 pe-20">
                     <span className="p-2 cursor-pointer">
                       {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
-                      <Link to="#">
-                        <ArrowRightCircleIcon />
-                      </Link>
+
+                      <ArrowRightCircleIcon />
+                      {/* </Link> */}
                     </span>
                   </div>
                 </TableCell>

@@ -19,7 +19,7 @@ function ClientTable({
   handleCheckboxChange,
   setfilters,
   filters,
-
+  status = true,
 }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -61,7 +61,9 @@ function ClientTable({
           headings={
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
-              : ["ID", "Name", "Company Name", "Date", "Status", ""]
+              : status
+              ? ["ID", "Name", "Company Name", "Date", "Status", ""]
+              : ["ID", "Name", "Company Name", "Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
@@ -125,7 +127,7 @@ function ClientTable({
                     {moment(row.created_at).format("ll")}
                   </TableCell>
                 )}
-                {renderCell("Status") && (
+                {status && renderCell("Status") && (
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
@@ -133,18 +135,18 @@ function ClientTable({
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
                     ${
-                      row.status === "Enabled"
+                      row.subcription_status === "Enabled"
                         ? "text-[#4CAF50] bg-[#4CAF502E]"
                         : "text-[#F44336] bg-[#F443362E]"
                     }`}
                     >
-                      {row.status || "N/A"}
+                      {row.subcription_status || "N/A"}
                     </span>
                   </TableCell>
                 )}
 
                 <TableCell scope="row">
-                  <Link to={`/admin/client/detail/${row.id}`}>
+                  <Link to={`/admin/client/detail/${row.id}?type=profile`}>
                     <ArrowRightCircleIcon />
                   </Link>
                 </TableCell>

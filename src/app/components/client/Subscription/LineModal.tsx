@@ -158,6 +158,15 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
     fetchDataDEtails();
   }, [dispatch]);
 
+  const today = new Date();
+  // Add one day to get tomorrow's date
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const yyyy = tomorrow.getFullYear();
+  const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
+  const dd = String(tomorrow.getDate()).padStart(2, "0");
+  const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+
   return (
     <CommonModal
       open={isOpen}
@@ -281,7 +290,8 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
             type="date"
             id="billing_start_date"
             name="billing_start_date"
-            min={new Date().toISOString().split("T")[0]}
+            // min={new Date().toISOString().split("T")[0]}
+            min={tomorrowStr}
             value={formik.values.billing_start_date || ""}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}

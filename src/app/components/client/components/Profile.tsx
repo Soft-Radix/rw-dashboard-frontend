@@ -43,7 +43,7 @@ export default function Profile({
               <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
                 <img
                   // src={!clientDetail?.user_image ? `${import.meta.env.VITE_API_BASE_URL}client/image/${clientDetail?.user_image}` : "/assets/images/avatars/male-21.jpg"}
-                  src={"/assets/images/avatars/male-21.jpg"}
+                  src={"../assets/images/logo/images.jpeg"}
                   alt="images"
                   className="h-[100px] w-[100px] rounded-full"
                 />

@@ -113,9 +113,9 @@ function jwtSignInTab() {
       <div className="flex items-center justify-center mt-20 cursor-pointer">
         <Typography color="text.secondary">New User?</Typography>
         <Typography color="secondary.main">
-          <Link className="ml-2 !no-underline font-bold " to="/sign-up">
-            Create Account
-          </Link>
+          {/* <Link className="ml-2 !no-underline font-bold " to="/sign-up"> */}
+          Create Account
+          {/* </Link> */}
         </Typography>
       </div>
     </div>
