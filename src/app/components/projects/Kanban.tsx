@@ -39,8 +39,23 @@ const Kanban = (props): any => {
   const theme: Theme = useTheme();
   const [addCard, setAddCard] = useState(false);
 
+  // const validationSchema = Yup.object({
+  //   name: Yup.string()
+  //     .matches(
+  //       /^[a-zA-Z0-9 ]*$/,
+  //       "Only letters, numbers and spaces are allowed"
+  //     )
+  //     .required("Name is required"),
+  // });
   const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .trim()
+      .matches(
+        /^[a-zA-Z0-9 ]*$/,
+        "Only letters, numbers and spaces are allowed"
+      )
+      .required("Name is required")
+      .min(1, "Name is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -140,6 +155,7 @@ const Kanban = (props): any => {
                 name="name"
                 label="Column Name"
                 placeholder="Enter Column Name"
+                onKeyDown={(e) => console.log(`Key pressed: ${e.key}`)}
               />
               <div className="mt-20">
                 <Button
