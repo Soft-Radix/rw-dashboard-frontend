@@ -23,12 +23,11 @@ interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   handleList: (list: any[]) => void;
-
 }
 
 const tableTiltles = ["Name", "Description", "Unit Price"];
 
-function CustomLineModal({ isOpen, setIsOpen, handleList}: IProps) {
+function CustomLineModal({ isOpen, setIsOpen, handleList }: IProps) {
   const [list, setList] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const dispatch = useAppDispatch();
@@ -53,7 +52,12 @@ function CustomLineModal({ isOpen, setIsOpen, handleList}: IProps) {
 
   const handleSave = () => {
     handleList(selectedItems);
+    const updatedList = list.filter(
+      (item) => !selectedItems.some((selected) => selected.id == item.id)
+    );
+    setList(updatedList);
     setIsOpen((prev) => !prev);
+    setSelectedItems([]);
   };
 
   const handleSelect = (e: React.ChangeEvent<HTMLInputElement>, data: any) => {

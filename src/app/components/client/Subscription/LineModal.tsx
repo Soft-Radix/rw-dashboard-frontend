@@ -140,15 +140,15 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
         const data = res?.payload?.data?.data;
         if (data) {
           formik.setValues({
-            name: data.name,
-            description: data.description,
-            unit_price: data.unit_price,
-            quantity: data.quantity,
-            billing_frequency: data.billing_frequency,
-            billing_terms: data.billing_terms,
-            no_of_payments: data.no_of_payments,
-            billing_start_date: data.billing_start_date,
-            is_delay_in_billing: data.is_delay_in_billing,
+            name: data?.name,
+            description: data?.description,
+            unit_price: data?.unit_price || 0,
+            quantity: data?.quantity || 0,
+            billing_frequency: data?.billing_frequency || 1,
+            billing_terms: data?.billing_terms || 1,
+            no_of_payments: data?.no_of_payments || 0,
+            billing_start_date: data?.billing_start_date || null,
+            is_delay_in_billing: data?.is_delay_in_billing || 0,
           });
         }
       } catch (error) {

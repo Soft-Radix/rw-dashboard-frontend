@@ -336,7 +336,13 @@ export default function Dashboard() {
                     <TableCell align="center" className="whitespace-nowrap">
                       <span
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Completed" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "In Progress" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                      ${
+                        row.status === "Completed"
+                          ? "text-[#4CAF50] bg-[#4CAF502E]"
+                          : row.status === "In Progress"
+                          ? "text-[#F44336] bg-[#F443362E]"
+                          : "text-[#F0B402] bg-[#FFEEBB]"
+                      }`}
                       >
                         {row.status}
                       </span>

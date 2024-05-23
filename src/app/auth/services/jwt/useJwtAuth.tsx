@@ -99,6 +99,7 @@ const useJwtAuth = <User, SignUpPayload>(
     localStorage.removeItem(authConfig.tokenStorageKey);
     delete axios.defaults.headers.common.Authorization;
     localStorage.removeItem("userDetail");
+    // localStorage.clear();
   }, []);
 
   /**
@@ -233,7 +234,7 @@ const useJwtAuth = <User, SignUpPayload>(
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
       console.log(
-        response?.payload.data?.data?.access_token,
+        response?.payload.data?.data?.access_token?.user.projects,
         "response?.payload.data"
       );
 
@@ -246,13 +247,15 @@ const useJwtAuth = <User, SignUpPayload>(
         window.location.reload();
       } else {
         if (signin == 1) {
-          handleSignInSuccess(userData, accessToken);
-          window.location.reload();
+          if (response?.payload.data?.user.projects.length == 0) {
+            window.location.href = "/sign-document";
+          } else {
+            handleSignInSuccess(userData, accessToken);
+            window.location.reload();
+          }
         } else {
-          console.log("🚀 ~ setTimeout ~ accessToken:", accessToken);
           localStorage.setItem("response", JSON.stringify(response?.payload));
-          window.open("/verification/" + accessToken);
-          // window.location.href = "/verification/" + accessToken;
+          window.location.href = "/verification/" + accessToken;
         }
       }
       // handleSignInSuccess(userData, accessToken);
@@ -264,11 +267,17 @@ const useJwtAuth = <User, SignUpPayload>(
   const autoSignIng = () => {
     let response = getLocalStorage("response");
 
-    if (response?.status) {
-      const userData = response?.data?.user;
+    if (
+      response?.user?.is_signed &&
+      response.user?.subscription_and_docusign.length == 0
+    ) {
+      const userData = response?.user;
       dispatch(setInitialState(userData));
-      const accessToken = response?.data?.access_token;
-      handleSignInSuccess(userData, accessToken);
+      const accessToken = response?.access_token;
+      if (response.user.projects?.length > 0) {
+        handleSignInSuccess(userData, accessToken);
+        window.location.reload();
+      }
     }
   };
 

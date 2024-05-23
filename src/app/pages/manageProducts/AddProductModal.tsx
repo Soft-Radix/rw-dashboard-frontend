@@ -19,8 +19,22 @@ interface IProps {
   id?: number | null;
 }
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string()
+    .transform((value) => (value ? value.trim() : ""))
+    .required("Name is required")
+    .test(
+      "not-only-spaces",
+      "Name cannot be only spaces",
+      (value) => value && value.trim().length > 0
+    ),
+  description: Yup.string()
+    .transform((value) => (value ? value.trim() : ""))
+    .required("Description is required")
+    .test(
+      "not-only-spaces",
+      "Description cannot be only spaces",
+      (value) => value && value.trim().length > 0
+    ),
   unit_price: Yup.number()
     .required("Unit Price is required")
     .min(0.01, "Unit Price must be greater than 0"),
@@ -147,6 +161,7 @@ function AddProduct({
           label="Unit Price"
           placeholder="Enter Price"
           formik={formik}
+          type="number"
         />
       </div>
     </CommonModal>

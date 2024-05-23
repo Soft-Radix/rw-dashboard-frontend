@@ -159,13 +159,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
         )}
 
         <ListItemText
-          className="fuse-list-item-text"
+          className="fuse-list-item-text capitalize"
           primary={item.title}
           secondary={item.subtitle}
           classes={{
-            primary: "text-13 font-medium fuse-list-item-text-primary truncate",
+            primary:
+              "text-13 font-medium fuse-list-item-text-primary truncate capitalize",
             secondary:
-              "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate",
+              "text-11 font-medium fuse-list-item-text-secondary leading-normal truncate capitalize",
           }}
         />
         <DeleteProject

@@ -120,6 +120,8 @@ export const setPassword = createAsyncThunk(
 export const initialState: initialStateProps = {
   status: "idle",
   email: "",
+  userData: [],
+  UserResponse: [],
   // navigation: [],
 };
 
@@ -133,7 +135,20 @@ export const authSlice = createSlice({
   extraReducers(builder) {
     builder
 
-      .addCase(logIn.pending, (state, action) => {})
+      .addCase(RefreshToken.fulfilled, (state, action) => {
+        const { data } = action.payload as ApiResponse; // Assert type
+        if (data.status) {
+          state.userData = data?.data?.user?.subscription_and_docusign || [];
+          state.UserResponse = data?.data;
+          localStorage.setItem("response", JSON.stringify(data?.data));
+          localStorage.setItem(
+            "userData",
+            JSON.stringify(data?.data?.user?.subscription_and_docusign || [])
+          );
+          localStorage.setItem("userDetail", JSON.stringify(data?.data?.user));
+        }
+      })
+
       .addCase(logIn.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         if (payload?.status) {

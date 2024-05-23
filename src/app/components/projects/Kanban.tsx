@@ -411,6 +411,7 @@ const Kanban = (props: IProps): JSX.Element => {
                   color="secondary"
                   className="w-[95px] text-[12px]"
                   onClick={handleSave}
+                  disabled={formik.isSubmitting}
                 >
                   Save
                 </Button>
