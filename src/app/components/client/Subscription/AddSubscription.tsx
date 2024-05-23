@@ -97,6 +97,9 @@ export default function AddSubscription() {
   const [list, setList] = useState<any[]>([]);
   const [UnitDiscountMode, setUnitDiscontMode] = useState<any[]>([]);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [deleteItem, setDeleteItem] = useState("");
+  const [deleteDescription, SetDeleteDescription] = useState("");
+
   const [recurringShow, setRecurringShow] = useState(false);
   const [error, setError] = useState("");
   const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
@@ -292,45 +295,134 @@ export default function AddSubscription() {
     );
   };
 
-  // const handleListFromChild = (arg: any[]) => {
+  // const handleListFromChild = (arg) => {
+  //   if (!arg || !arg.length) return;
+  //   // Extract data and ensure all billing_frequency values are the same
+  //   const billingFrequency = arg[0].billing_frequency;
+  //   const billingTerms = arg[0].billing_terms;
+  //   const noOfPayments = arg[0].no_of_payments;
+  //   const billingStartDate = arg[0].billing_start_date;
   //   const extractedData = arg?.map((item) => ({
   //     ...item,
   //     net_price: item.unit_price,
+  //     billing_frequency: billingFrequency,
+  //     billing_terms: billingTerms,
+  //     no_of_payments: noOfPayments,
+  //     billing_start_date: billingStartDate,
   //   }));
-  //   const data = [...list];
-  //   data?.forEach((item, index) => {
-  //     data[index]["billing_frequency"] = extractedData[0]["billing_frequency"];
-  //     data[index]["billingTerms"] = extractedData[0]["billingTerms"];
-  //     data[index]["no_of_payments"] = extractedData[0]["no_of_payments"];
-  //     data[index]["billing_start_date"] =
-  //       extractedData[0]["billing_start_date"];
-  //   });
-  //   console.log("=====data===", extractedData);
-  //   setList((prevList) => [...prevList, ...extractedData]);
 
+  //   // Update the existing list with new extracted data
   //   setList((prevList) => {
-  //     return prevList.map((item, i) => {
-  //       return {
-  //         ...item,
-  //       };
-  //     });
+  //     const updatedList = prevList
+  //       ? prevList?.map((item) => ({
+  //           ...item,
+  //           billing_frequency: billingFrequency,
+  //           billing_terms: billingTerms,
+  //           no_of_payments: noOfPayments,
+  //           billing_start_date: billingStartDate,
+  //         }))
+  //       : [];
+
+  //     // Combine the updated list with the new extracted data
+  //     return [...updatedList, ...extractedData];
   //   });
+
+  //   // Compute the new subtotal
   //   let sum = 0;
-  //   extractedData.map((item, i) => {
+  //   extractedData.forEach((item) => {
   //     sum += Number(item.net_price);
-  //     setDetails({ ...details, subtotal: sum });
   //   });
+
+  //   setDetails((prevDetails) => ({
+  //     ...prevDetails,
+  //     subtotal: sum,
+  //   }));
+
+  //   console.log("Updated extracted data:", extractedData);
   // };
 
+  // const handleListFromChild = (arg) => {
+  //   if (!arg || !arg.length) return;
+
+  //   // Extract data and ensure all billing_frequency values are the same
+  //   const billingFrequency = arg[0].billing_frequency;
+  //   const billingTerms = arg[0].billing_terms;
+  //   const noOfPayments = arg[0].no_of_payments;
+  //   const billingStartDate = arg[0].billing_start_date;
+  //   const extractedData = arg.map((item) => ({
+  //     ...item,
+  //     net_price: item.unit_price,
+  //     billing_frequency: billingFrequency,
+  //     billing_terms: billingTerms,
+  //     no_of_payments: noOfPayments,
+  //     billing_start_date: billingStartDate,
+  //   }));
+  //   setList((prevList) => {
+  //     if (!prevList || prevList.length === 0) {
+  //       // If prevList is empty, set it to extractedData
+  //       return extractedData;
+  //     }
+
+  //     // Create a map for the new items by id for quick lookup
+  //     const extractedDataMap = extractedData.reduce((map, item) => {
+  //       map[item.id] = item;
+  //       return map;
+  //     }, {});
+
+  //     // Update the existing list with new extracted data or add new items
+  //     const updatedList = prevList.map((item) => {
+  //       if (extractedDataMap[item.id]) {
+  //         return {
+  //           ...extractedDataMap[item.id],
+  //           billing_frequency: billingFrequency,
+  //           billing_terms: billingTerms,
+  //           no_of_payments: noOfPayments,
+  //           billing_start_date: billingStartDate,
+  //         };
+  //       }
+  //       return item;
+  //     });
+
+  //     // Add any new items from extractedData that don't exist in the updatedList
+  //     extractedData.forEach((item) => {
+  //       if (!updatedList.some((existingItem) => existingItem.id == item.id)) {
+  //         updatedList.push({
+  //           ...item,
+  //           billing_frequency: billingFrequency,
+  //           billing_terms: billingTerms,
+  //           no_of_payments: noOfPayments,
+  //           billing_start_date: billingStartDate,
+  //         });
+  //       }
+  //     });
+
+  //     return updatedList;
+  //   });
+
+  //   // Compute the new subtotal
+  //   const sum = extractedData.reduce(
+  //     (total, item) => total + Number(item.net_price),
+  //     0
+  //   );
+
+  //   setDetails((prevDetails) => ({
+  //     ...prevDetails,
+  //     subtotal: sum,
+  //   }));
+
+  //   console.log("Updated extracted data:", extractedData);
+  // };
   const handleListFromChild = (arg) => {
     if (!arg || !arg.length) return;
 
-    // Extract data and ensure all billing_frequency values are the same
+    // Extract common data from the first item in arg
     const billingFrequency = arg[0].billing_frequency;
     const billingTerms = arg[0].billing_terms;
     const noOfPayments = arg[0].no_of_payments;
     const billingStartDate = arg[0].billing_start_date;
-    const extractedData = arg?.map((item) => ({
+
+    // Map over arg to ensure all objects have consistent values
+    const extractedData = arg.map((item) => ({
       ...item,
       net_price: item.unit_price,
       billing_frequency: billingFrequency,
@@ -339,28 +431,69 @@ export default function AddSubscription() {
       billing_start_date: billingStartDate,
     }));
 
-    // Update the existing list with new extracted data
     setList((prevList) => {
-      const updatedList = prevList
-        ? prevList?.map((item) => ({
+      if (!prevList || prevList.length === 0) {
+        // If prevList is empty, set it to extractedData
+        return extractedData;
+      }
+
+      // Create a map for the new items by id for quick lookup
+      const extractedDataMap = extractedData.reduce((map, item) => {
+        map[item.id] = item;
+        return map;
+      }, {});
+
+      // Update the existing list with new extracted data or add new items
+      const updatedList = prevList.map((item) => {
+        if (extractedDataMap[item.id]) {
+          return {
+            ...extractedDataMap[item.id],
+            billing_frequency: billingFrequency,
+            billing_terms: billingTerms,
+            no_of_payments: noOfPayments,
+            billing_start_date: billingStartDate,
+          };
+        }
+        return {
+          ...item,
+          billing_frequency: billingFrequency,
+          billing_terms: billingTerms,
+          no_of_payments: noOfPayments,
+          billing_start_date: billingStartDate,
+        };
+      });
+
+      // Add any new items from extractedData that don't exist in the updatedList
+      extractedData.forEach((item) => {
+        if (!updatedList.some((existingItem) => existingItem.id === item.id)) {
+          updatedList.push({
             ...item,
             billing_frequency: billingFrequency,
             billing_terms: billingTerms,
             no_of_payments: noOfPayments,
             billing_start_date: billingStartDate,
-          }))
-        : [];
+          });
+        }
+      });
 
-      // Combine the updated list with the new extracted data
-      return [...updatedList, ...extractedData];
+      return updatedList;
     });
 
     // Compute the new subtotal
-    let sum = 0;
-    extractedData.forEach((item) => {
-      sum += Number(item.net_price);
-    });
-
+    const sum = extractedData.reduce(
+      // (total, item) => total + Number(item.net_price * item.quantity),
+      (total, item, index) =>
+        total +
+        handleNetPrice(
+          item.unit_discount,
+          item.unit_discount_type,
+          item.unit_price,
+          index,
+          item.quantity
+        ),
+      0
+    );
+    console.log("======sum===", sum);
     setDetails((prevDetails) => ({
       ...prevDetails,
       subtotal: sum,
@@ -368,7 +501,6 @@ export default function AddSubscription() {
 
     console.log("Updated extracted data:", extractedData);
   };
-
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -418,10 +550,11 @@ export default function AddSubscription() {
         updatedList[index][name] = value;
         // Calculate net price and update the net_price key in the list array
         const netPrice = handleNetPrice(
-          updatedList[index].unit_discount,
-          updatedList[index].unit_discount_type,
+          updatedList[index].unit_discount || 0,
+          updatedList[index].unit_discount_type || 1,
           updatedList[index].unit_price,
-          index
+          index,
+          updatedList[index].quantity
         );
         updatedList[index].net_price = netPrice
           ? netPrice
@@ -464,10 +597,18 @@ export default function AddSubscription() {
     list &&
       list?.map((item, i) => {
         sum += Number(item.net_price);
-        unitDiscount += Number(item.unit_price);
+        unitDiscount += Number(
+          handleNetPrice(
+            item.unit_discount,
+            item.unit_discount_type,
+            item.unit_price,
+            i,
+            item.quantity
+          )
+        );
       });
     setRecurring(unitDiscount - Number(sum));
-    setDetails({ ...details, subtotal: Number(sum) });
+    setDetails({ ...details, subtotal: Number(unitDiscount) });
   };
 
   useEffect(() => {
@@ -481,14 +622,21 @@ export default function AddSubscription() {
   //   });
   // }, [list]);
 
-  const handleNetPrice = (discount: any, mode: any, price: any, index: any) => {
+  const handleNetPrice = (
+    discount: any,
+    mode: any,
+    price: any,
+    index: any,
+    quantity?: any
+  ) => {
+    console.log("======mode ===", mode);
     if (discount && discount > 0) {
       if (mode == undefined || mode == 0 || mode == "1") {
-        const netPrice = price - (price * discount) / 100;
+        const netPrice = quantity * (price - (price * discount) / 100);
 
         return netPrice.toFixed(2);
       } else if (mode == "2") {
-        const netPrice = price - discount;
+        const netPrice = quantity * (price - discount);
 
         return netPrice.toFixed(2);
       }
@@ -497,7 +645,7 @@ export default function AddSubscription() {
     // const updateList = [...list];
     // updateList[index] = { ...updateList[index], net_price: price };
     // setList(updateList);
-    return price;
+    return quantity * price;
   };
 
   const handleDetailsChange = (e: any) => {
@@ -507,6 +655,7 @@ export default function AddSubscription() {
     }
     setDetails({ ...details, [name]: value });
   };
+
   const onDelete = () => {
     const updatedList = list.filter((item) => item.id != id);
     setList(updatedList);
@@ -618,6 +767,18 @@ export default function AddSubscription() {
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
   const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+
+  const handleCancel = () => {
+    setList([]);
+    setDetails({
+      title: "",
+      one_time_discount_name: "",
+      one_time_discount_type: 0,
+      one_time_discount: 0,
+      subtotal: 0,
+    });
+  };
+
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -765,6 +926,10 @@ export default function AddSubscription() {
                             onClick={() => {
                               setIsOpenDeletedModal(true);
                               setId(row.id);
+                              setDeleteItem("Delete Line Item");
+                              SetDeleteDescription(
+                                "Are you sure you want to delete this line item ?"
+                              );
                             }}
                           >
                             {/* {item.label} */}
@@ -927,10 +1092,15 @@ export default function AddSubscription() {
                             name="unit_discount"
                             variant="standard"
                             size="small"
-                            placeholder="%00.00"
+                            placeholder={
+                              row.unit_discount_type == 2 ? "$00.00" : "%00.00"
+                            }
                             value={
-                              row.unit_discount != 0 || row.unit_discount != ""
-                                ? row.unit_discount
+                              row.unit_discount
+                                ? row.unit_discount != 0 ||
+                                  row.unit_discount != ""
+                                  ? row.unit_discount
+                                  : ""
                                 : ""
                             }
                             inputProps={{
@@ -975,7 +1145,8 @@ export default function AddSubscription() {
 
                         row.unit_discount_type,
                         row.unit_price,
-                        index
+                        index,
+                        row.quantity
                       )}
                     </TableCell>
 
@@ -1277,7 +1448,11 @@ export default function AddSubscription() {
                             }
                             onChange={handleDetailsChange}
                             size="small"
-                            placeholder="%00"
+                            placeholder={
+                              details.one_time_discount_type == 2
+                                ? "$00"
+                                : "%00"
+                            }
                             sx={{
                               width: "60px",
                               paddingBottom: "0px",
@@ -1304,12 +1479,17 @@ export default function AddSubscription() {
                       </div>
                     </div>
                     <p className="flex items-center text-base font-semibold leading-5 text-[#757982] ">
-                      -${details.one_time_discount}
+                      {details.one_time_discount_type == 2 ? "-$" : "-%"}
+                      {details.one_time_discount}
                       <Link to={"#"} className="ms-10">
                         <DeleteIcon
                           className="w-[16px]"
                           onClick={() => {
                             setIsOpenDeletedModal(true);
+                            setDeleteItem("Delete Line Item Discount");
+                            SetDeleteDescription(
+                              "Are you sure you want to delete this line item discount?"
+                            );
                           }}
                         />
                       </Link>
@@ -1331,7 +1511,12 @@ export default function AddSubscription() {
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
               <span className="text-para_light font-500">Due Now</span>
               <span className="inline-block ml-20 font-600">
-                ${details.subtotal - details.one_time_discount}
+                {details.one_time_discount_type == 2
+                  ? `$${details.subtotal - details.one_time_discount}`
+                  : `$${
+                      details.subtotal -
+                      (details.subtotal * details.one_time_discount) / 100
+                    }`}
               </span>
             </li>
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
@@ -1352,7 +1537,12 @@ export default function AddSubscription() {
                 Total -
               </span>
               <span className="inline-block ml-20 font-600">
-                ${details.subtotal - details.one_time_discount}
+                {details.one_time_discount_type == 2
+                  ? `$${details.subtotal - details.one_time_discount}`
+                  : `$${
+                      details.subtotal -
+                      (details.subtotal * details.one_time_discount) / 100
+                    }`}
               </span>
             </li>
           </ul>
@@ -1363,7 +1553,7 @@ export default function AddSubscription() {
             color="secondary"
             className="w-[156px] h-[48px] text-[18px] leading-5"
             onClick={() => handleSave()}
-            disabled={list.length == 0 ? true : false}
+            disabled={list.length == 0 || details.subtotal <= 0 ? true : false}
           >
             Save
           </Button>
@@ -1371,6 +1561,7 @@ export default function AddSubscription() {
             variant="outlined"
             color="secondary"
             className="w-[156px] h-[48px] text-[18px] ml-14  leading-5"
+            onClick={() => handleCancel()}
           >
             Cancel
           </Button>
@@ -1401,9 +1592,9 @@ export default function AddSubscription() {
       <DeleteModal
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
-        title="Delete Line Item"
+        title={deleteItem}
         onDelete={onDelete}
-        description="Are you sure you want to delete this line item ?"
+        description={deleteDescription}
       />
     </>
   );

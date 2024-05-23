@@ -28,7 +28,7 @@ export default function ManageProducts() {
   const fetchData = async () => {
     const payload = {
       start: 0,
-      limit: 10,
+      limit: 40,
       search: "",
     };
     try {
@@ -42,7 +42,7 @@ export default function ManageProducts() {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const onDelete = async () => {
     setId(null);
