@@ -36,7 +36,7 @@ export default function Clients() {
   const [count, setCount] = useState(1);
   const { search } = useLocation();
   const query = search.split("=");
-  const [active, setActive] = useState("all");
+  const [active, setActive] = useState(query[query.length - 1]);
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -124,6 +124,7 @@ export default function Clients() {
   useEffect(() => {
     setActive(query[query.length - 1]);
   }, [search]);
+
   const ClientTabButton = () => {
     return (
       <div className="flex flex-col gap-10 sm:flex-row">
