@@ -193,24 +193,31 @@ export default function ClientDetail() {
     fetchManagerList();
   }, [dispatch, filterMenu]);
 
-  useEffect(() => {
-    dispatch(
-      GetAssignAgentsInfo({
-        ...agentfilterMenu,
-        client_id,
-      })
-    );
-  }, [agentfilterMenu]);
   // console.log(agentfilterMenu, "filterMenu");
-  useEffect(() => {
+  const managerCallApi = () => {
     dispatch(
       getAssignAccMangerInfo({
         ...managerfilterMenu,
         client_id,
       })
     );
-  }, [managerfilterMenu]);
+  };
 
+  const callAgentApi = () => {
+    dispatch(
+      GetAssignAgentsInfo({
+        ...agentfilterMenu,
+        client_id,
+      })
+    );
+  };
+
+  useEffect(() => {
+    callAgentApi();
+  }, [agentfilterMenu]);
+  useEffect(() => {
+    managerCallApi();
+  }, [managerfilterMenu]);
   const CustomDropDown = (): JSX.Element => {
     return (
       <DropdownMenu

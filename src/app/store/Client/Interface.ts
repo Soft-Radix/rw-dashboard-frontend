@@ -46,11 +46,14 @@ export type initialStateProps = {
   clientDetail?: object;
   list: ClientType[];
   total_records: number;
+  agentTotal_records: number;
   selectedColumn: string[];
   actionStatus: boolean;
   assignedAgentDetail: any[];
   assignAccManagerDetail?: any[];
   toatalPage: number;
+  currentPage?: number;
+  managertotal_records?: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
@@ -151,4 +154,5 @@ export interface ClientInfo {
   setAgentfilterMenu?: object;
   managerfilterMenu?: object;
   setManagerfilterMenu?: object;
+  previousPage?: number;
 }

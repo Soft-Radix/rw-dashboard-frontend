@@ -311,11 +311,13 @@ export const initialState: initialStateProps = {
   errorMsg: "",
   list: [],
   clientDetail: {},
-  selectedColumn: [],
+  selectedColumn: ["Id", "Name", "Company Name", "Date", "Status", ""],
   assignedAgentDetail: [],
   assignAccManagerDetail: [],
   total_records: 0,
+  agentTotal_records: 0,
   toatalPage: 0,
+  managertotal_records: 0,
 };
 
 export const addAssignAgents = createAsyncThunk(
@@ -356,7 +358,7 @@ export const GetAssignAgentsInfo = createAsyncThunk(
 );
 export const deleteAgentList = createAsyncThunk(
   "client/unassign-agent",
-  async (payload: clientIDType) => {
+  async (payload: clientIDType, { dispatch }) => {
     const response = await ApiHelperFunction({
       url: "client/unassign-agent",
       method: "post",
@@ -415,7 +417,6 @@ export const deleteAccManagerList = createAsyncThunk(
       method: "post",
       data: payload,
     });
-
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -474,15 +475,23 @@ export const clientSlice = createSlice({
 
       let isExist = state.selectedColumn.indexOf(payload);
       if (isExist !== -1) {
-        state.selectedColumn = state.selectedColumn.filter(
-          (item) => item !== payload
-        );
+        // check that state have atleast 2 values ["",(heading)]
+        if (state.selectedColumn?.length > 2) {
+          state.selectedColumn = state.selectedColumn.filter(
+            (item) => item !== payload
+          );
+        }
+        console.log("state", state.selectedColumn[0]);
       } else {
         state.selectedColumn.push(payload);
       }
 
       // Sort selectedColumn based on predefined positions5
       state.selectedColumn.sort((a, b) => {
+        // Check if either a or b is an empty string
+        if (a === "") return 1; // Move empty string 'a' to the end
+        if (b === "") return -1; // Move empty string 'b' to the end
+
         const indexA =
           predefinedItems[a] !== undefined
             ? predefinedItems[a]
@@ -491,6 +500,7 @@ export const clientSlice = createSlice({
           predefinedItems[b] !== undefined
             ? predefinedItems[b]
             : state.selectedColumn.length;
+
         return indexA - indexB;
       });
     },
@@ -612,8 +622,12 @@ export const clientSlice = createSlice({
         // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
-        state.total_records = calculatePageNumber(data?.total_records, 10);
+        console.log(data?.total_records, "data?.total_records47474");
 
+        state.agentTotal_records = calculatePageNumber(data?.total_records, 10);
+        // if (data.list.length === 0) {
+        //   state.agentTotal_records = restAll();
+        // }
         // console.log(state.assignedAgentDetail, "gggggff");
       })
       .addCase(GetAssignAgentsInfo.rejected, (state) => {
@@ -651,7 +665,10 @@ export const clientSlice = createSlice({
         state.fetchStatus = "idle";
         state.assignAccManagerDetail = data.list;
         // console.log(state.assignAccManagerDetail, "detailss");
-        state.total_records = calculatePageNumber(data?.total_records, 10);
+        state.managertotal_records = calculatePageNumber(
+          data?.total_records,
+          10
+        );
       })
       .addCase(getAssignAccMangerInfo.rejected, (state) => {
         state.fetchStatus = "idle";
@@ -704,7 +721,6 @@ export const clientSlice = createSlice({
           state.assignAccManagerDetail = state.assignAccManagerDetail.filter(
             (item) => item.account_manager_id !== account_manager_id
           );
-
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);

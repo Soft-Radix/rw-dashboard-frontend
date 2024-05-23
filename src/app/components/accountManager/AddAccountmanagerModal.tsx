@@ -248,7 +248,7 @@ function AddAccountManagerModel({
     }
   }, [accManagerDetail]);
 
-  console.log(accClientList, "accClientttttList");
+  // console.log(accClientList, "accClientttttList");
   useEffect(() => {
     if (accManagerDetail) {
       formik.setValues({
@@ -282,7 +282,7 @@ function AddAccountManagerModel({
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
-          src={previewUrl || "/assets/images/avatars/male-01.jpg"}
+          src={previewUrl || "../assets/images/logo/images.jpeg"}
           alt="profile_picture"
           className="w-full h-full rounded-full"
         />
