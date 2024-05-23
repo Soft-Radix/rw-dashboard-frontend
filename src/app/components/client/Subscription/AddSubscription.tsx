@@ -501,68 +501,67 @@ export default function AddSubscription() {
 
     console.log("Updated extracted data:", extractedData);
   };
-  const handleChange = (index: number) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    var mode = "";
-    var payment = null;
-    const newErrors = list?.map((item, i) => {
-      mode = item["billing_terms"]; // Assign value to mode
-      payment = item["no_of_payments"];
-      if (item.unit_price <= 0) {
-        return "Please add a unit price";
-      }
-      return "";
-    });
-    setUnitPriceError(newErrors);
-    const newQuantityErrors = list?.map((item, i) => {
-      if (item.quantity <= 0) {
-        return "Please add a Quantity"; // Populate the error message if unit price is 0
-      }
-      return ""; // Otherwise, set the error message to an empty string
-    });
-    setQuantityError(newQuantityErrors);
+  const handleChange =
+    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      var mode = "";
+      var payment = null;
+      const newErrors = list?.map((item, i) => {
+        mode = item["billing_terms"]; // Assign value to mode
+        payment = item["no_of_payments"];
+        if (item.unit_price <= 0) {
+          return "Please add a unit price";
+        }
+        return "";
+      });
+      setUnitPriceError(newErrors);
+      const newQuantityErrors = list?.map((item, i) => {
+        if (item.quantity <= 0) {
+          return "Please add a Quantity"; // Populate the error message if unit price is 0
+        }
+        return ""; // Otherwise, set the error message to an empty string
+      });
+      setQuantityError(newQuantityErrors);
 
-    if (mode != "2" && (payment <= 0 || payment == null)) {
-      setPaymentError("Please Enter Payment greater than 0");
-    } else {
-      setPaymentError("");
-    }
+      if (mode != "2" && (payment <= 0 || payment == null)) {
+        setPaymentError("Please Enter Payment greater than 0");
+      } else {
+        setPaymentError("");
+      }
 
-    const { value, name } = event.target;
-    if (
-      name == "billing_frequency" ||
-      name == "billing_terms" ||
-      name == "no_of_payments" ||
-      name == "billing_start_date"
-    ) {
-      setList((prevList) => {
-        return prevList?.map((item, i) => {
-          return {
-            ...item,
-            [name]: value,
-          };
+      const { value, name } = event.target;
+      if (
+        name == "billing_frequency" ||
+        name == "billing_terms" ||
+        name == "no_of_payments" ||
+        name == "billing_start_date"
+      ) {
+        setList((prevList) => {
+          return prevList?.map((item, i) => {
+            return {
+              ...item,
+              [name]: value,
+            };
+          });
         });
-      });
-    } else {
-      setList((prevList) => {
-        const updatedList = [...prevList];
-        updatedList[index][name] = value;
-        // Calculate net price and update the net_price key in the list array
-        const netPrice = handleNetPrice(
-          updatedList[index].unit_discount || 0,
-          updatedList[index].unit_discount_type || 1,
-          updatedList[index].unit_price,
-          index,
-          updatedList[index].quantity
-        );
-        updatedList[index].net_price = netPrice
-          ? netPrice
-          : updatedList[index].unit_price;
-        return updatedList;
-      });
-    }
-  };
+      } else {
+        setList((prevList) => {
+          const updatedList = [...prevList];
+          updatedList[index][name] = value;
+          // Calculate net price and update the net_price key in the list array
+          const netPrice = handleNetPrice(
+            updatedList[index].unit_discount || 0,
+            updatedList[index].unit_discount_type || 1,
+            updatedList[index].unit_price,
+            index,
+            updatedList[index].quantity || 1
+          );
+          updatedList[index].net_price = netPrice
+            ? netPrice
+            : updatedList[index].unit_price;
+          return updatedList;
+        });
+      }
+    };
 
   useEffect(() => {
     var mode = "";
@@ -889,10 +888,11 @@ export default function AddSubscription() {
                             "&.MuiSelect-selectMenu": {
                               paddingRight: "0px !important", // Adjust padding for the select menu
                             },
-                            "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root": {
-                              paddingBottom: "0px",
-                              padding: "4px",
-                            },
+                            "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root":
+                              {
+                                paddingBottom: "0px",
+                                padding: "4px",
+                              },
                             "& .MuiSelect-select": {
                               minHeight: "0rem !important",
                             },
@@ -961,11 +961,11 @@ export default function AddSubscription() {
                         }}
                         hideTopPadding={true}
                         value={
-                          row.quantity != 0 ||
+                          row?.quantity != 0 ||
                           row.quantity != "" ||
                           row.quantity != null
                             ? row.quantity
-                            : ""
+                            : 1
                         }
                         onChange={(
                           event: React.ChangeEvent<HTMLInputElement>
