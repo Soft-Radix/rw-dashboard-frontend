@@ -40,7 +40,7 @@ function AddClient({ isOpen, setIsOpen, fetchList }: IProps) {
   useEffect(() => {
     if (!!clientState?.successMsg) {
       dispatch(restAll());
-      fetchList();
+      // fetchList();
       setIsOpen(false);
       formik.resetForm();
     } else if (!!clientState?.errorMsg) {
