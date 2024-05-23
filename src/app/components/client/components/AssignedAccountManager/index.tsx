@@ -82,6 +82,7 @@ export default function AssignedAccountManager({
               "AccountManager Id",
               "Assigned date",
               "",
+              "",
             ]}
           >
             {assignAccManagerDetail?.length === 0 ? (

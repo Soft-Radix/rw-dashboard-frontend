@@ -142,6 +142,8 @@ export default function ClientDetail() {
   const handleClose = () => {
     setAnchorEl3(null);
     setAnchorEl(null);
+    setCheckedItems([]);
+    debouncedSearch("");
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -277,6 +279,7 @@ export default function ClientDetail() {
               color="secondary"
               className="w-[156px] h-[48px] text-[18px]"
               onClick={handleAddnewAgents}
+              disabled={checkedItems.length === 0}
             >
               Assign
             </Button>
@@ -355,6 +358,7 @@ export default function ClientDetail() {
                 color="secondary"
                 className="w-[156px] h-[48px] text-[18px]"
                 onClick={handleAddnewAccManager}
+                disabled={checkedItems.length === 0}
               >
                 Assign
               </Button>
