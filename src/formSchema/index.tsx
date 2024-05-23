@@ -94,10 +94,16 @@ const editAgentSchema = Yup.object({
     }), // ,
   address: Yup.string().required("Address is required"),
 });
+// const AgentGroupSchema = Yup.object({
+//   group_name: Yup.string()
+//     .required("Group name is required")
+//     .matches(/^\S+$/, noSpaceMessage),
+// });
+const noInitialSpaceMessage = "Group name cannot start with a space";
 const AgentGroupSchema = Yup.object({
   group_name: Yup.string()
     .required("Group name is required")
-    .matches(/^\S+$/, noSpaceMessage),
+    .matches(/^\S[\s\S]*$/, noInitialSpaceMessage),
 });
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
