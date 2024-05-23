@@ -21,7 +21,7 @@ import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import ManageButton from "src/app/components/client/ManageButton";
-import { useLocation, useParams } from "react-router";
+import { useLocation } from "react-router";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -34,8 +34,8 @@ export default function Clients() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [count, setCount] = useState(1);
-  const location = useLocation();
-  console.log("🚀 ~ Clients ~ params:", location);
+  const { search } = useLocation();
+  const query = search.split("=");
   const [active, setActive] = useState("all");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
@@ -120,6 +120,10 @@ export default function Clients() {
   useEffect(() => {
     fetchList();
   }, [dispatch, filters, active]);
+
+  useEffect(() => {
+    setActive(query[query.length - 1]);
+  }, [search]);
   const ClientTabButton = () => {
     return (
       <div className="flex flex-col gap-10 sm:flex-row">
