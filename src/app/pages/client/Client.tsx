@@ -78,14 +78,15 @@ export default function Clients() {
 
   const handleSelectAll = () => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+
     const allSelected = allRowIds.every((id: number) =>
       selectedIds.includes(id)
     );
 
     if (allSelected) {
-      setSelectedIds([]); // Deselect all
-    } else {
       setSelectedIds(allRowIds); // Select all
+    } else {
+      setSelectedIds([]); // Deselect all
     }
   };
 

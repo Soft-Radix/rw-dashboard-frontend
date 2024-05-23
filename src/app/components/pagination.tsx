@@ -46,6 +46,8 @@ function CommonPagination({
   count,
   ...rest
 }: IProps) {
+  // console.log("🚀 ~ count:", count);
+
   return (
     <StyledPagination
       count={count}

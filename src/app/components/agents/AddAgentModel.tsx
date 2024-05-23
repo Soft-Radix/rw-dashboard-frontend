@@ -207,6 +207,7 @@ function AddAgentModel({
       }
     }
   }, [agentDetail, isOpen]);
+  
 
   return (
     <CommonModal
