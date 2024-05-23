@@ -1,13 +1,10 @@
-import { Button } from "@mui/material";
-import React, { ReactNode, SetStateAction, useState } from "react";
+import React, { SetStateAction, useState } from "react";
 import {
+  Location,
   NavigateFunction,
   useLocation,
-  Location,
   useNavigate,
 } from "react-router-dom";
-import DropdownMenu from "../../app/components/Dropdown";
-import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
 
 interface Tab {
   id: string;
@@ -45,7 +42,7 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
               onClick={() => {
                 navigate(`${location.pathname}?type=${tab.id}`);
                 setActiveTab(tab.id);
-                setActive(tab.id);
+                // setActive(tab.id);
               }}
             >
               {tab.label}
