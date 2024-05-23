@@ -101,14 +101,14 @@ export default function Clients() {
         active == "all"
           ? 0
           : active == "active"
-            ? 1
-            : active == "paused"
-              ? 2
-              : active == "cancel"
-                ? 3
-                : active == "pastDue"
-                  ? 4
-                  : null,
+          ? 1
+          : active == "paused"
+          ? 2
+          : active == "cancel"
+          ? 3
+          : active == "pastDue"
+          ? 4
+          : null,
     };
     dispatch(getClientList(payload));
   }, [dispatch, filters, active]);

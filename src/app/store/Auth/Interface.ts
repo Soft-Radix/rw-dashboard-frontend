@@ -31,7 +31,9 @@ export interface ApiResponse {
  */
 export type initialStateProps = {
     status: string;
-    email?: string
+    email?: string;
+    userData?:any[]
+    UserResponse?:any[]
 };
 
 
@@ -39,6 +41,9 @@ export interface AuthState {
     // Define properties of your 'auth' slice
     status: boolean;
     email: string | null;
+    userData:any[];
+     UserResponse :any
+
 }
 
 export interface AuthRootState {

@@ -86,18 +86,17 @@ export default function SubscriptionList() {
 
   const StatusMapping = (status) => {
     if (status == 0) {
-      return "Review";
+      return "Pending";
     } else if (status == 1) {
-      return "Progress";
-    } else if (status == 2) {
-      return "Pause";
-    } else if (status == 3) {
       return "Completed";
+    } else if (status == 2) {
+      return "Paused";
+    } else if (status == 3) {
+      return "Expired";
     } else if (status == 4) {
-      return "cancelled";
+      return "Cancelled";
     }
   };
-
   return (
     <>
       {/* no subscription start */}

@@ -10,7 +10,7 @@ type SelectProp = {
  */
 export const getLocalStorage = (item: string) => {
   let data = localStorage.getItem(item);
-  return data ? JSON.parse(data) : {};
+   return data !== null && data !== undefined ? JSON.parse(data) : '{}';
 };
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
