@@ -1,26 +1,16 @@
-import { Button, Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import { TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddAgentModel from "src/app/components/agents/AddAgentModel";
-import UnassignedAgent from "./UnassignedAgent";
-import { useSelector } from "react-redux";
+import { deleteAgentList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { deleteAgentList } from "app/store/Client";
-import ListLoading from "@fuse/core/ListLoading";
+import { useFormik } from "formik";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import AddAgentModel from "src/app/components/agents/AddAgentModel";
+import CommonTable from "src/app/components/commonTable";
+import CommonPagination from "src/app/components/pagination";
+import UnassignedAgent from "./UnassignedAgent";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
@@ -31,7 +21,7 @@ export default function AssignedAgents({
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
 
-  const { assignedAgentDetail, total_records } = useSelector(
+  const { assignedAgentDetail, agentTotal_records } = useSelector(
     (store: ClientRootState) => store.client
   );
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -52,8 +42,12 @@ export default function AssignedAgents({
       const { payload } = await dispatch(
         deleteAgentList({ client_id: client_id, agent_id: id })
       );
-      // console.log(payload, "payload");
+
       if (payload?.data?.status) {
+        setAgentFilterMenu((prevFilters) => ({
+          ...prevFilters,
+          start: assignedAgentDetail.length - 1 == 0 ? 0 : prevFilters.start,
+        }));
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -65,12 +59,15 @@ export default function AssignedAgents({
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
+    // If current page data length is 0 and it's not the first page, navigate to previous page
+
     setAgentFilterMenu((prevFilters) => ({
       ...prevFilters,
       start: pageNumber - 1,
     }));
   };
 
+  // console.log("agentTotal_records", agentTotal_records);
   return (
     <>
       <div className="mb-[3rem]">
@@ -162,15 +159,13 @@ export default function AssignedAgents({
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {assignedAgentDetail?.length > 0 && (
-              <CommonPagination
-                count={total_records}
-                onChange={(e, PageNumber: number) =>
-                  checkPageNum(e, PageNumber)
-                }
-                page={agentfilterMenu.start + 1}
-              />
-            )}
+            {/* {assignedAgentDetail?.length >= 0 && ( */}
+            <CommonPagination
+              count={agentTotal_records}
+              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
+              page={agentfilterMenu.start + 1}
+            />
+            {/* )} */}
           </div>
         </div>
       </div>

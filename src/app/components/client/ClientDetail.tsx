@@ -142,6 +142,8 @@ export default function ClientDetail() {
   const handleClose = () => {
     setAnchorEl3(null);
     setAnchorEl(null);
+    setCheckedItems([]);
+    debouncedSearch("");
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -193,24 +195,31 @@ export default function ClientDetail() {
     fetchManagerList();
   }, [dispatch, filterMenu]);
 
-  useEffect(() => {
-    dispatch(
-      GetAssignAgentsInfo({
-        ...agentfilterMenu,
-        client_id,
-      })
-    );
-  }, [agentfilterMenu]);
   // console.log(agentfilterMenu, "filterMenu");
-  useEffect(() => {
+  const managerCallApi = () => {
     dispatch(
       getAssignAccMangerInfo({
         ...managerfilterMenu,
         client_id,
       })
     );
-  }, [managerfilterMenu]);
+  };
 
+  const callAgentApi = () => {
+    dispatch(
+      GetAssignAgentsInfo({
+        ...agentfilterMenu,
+        client_id,
+      })
+    );
+  };
+
+  useEffect(() => {
+    callAgentApi();
+  }, [agentfilterMenu]);
+  useEffect(() => {
+    managerCallApi();
+  }, [managerfilterMenu]);
   const CustomDropDown = (): JSX.Element => {
     return (
       <DropdownMenu
@@ -270,6 +279,7 @@ export default function ClientDetail() {
               color="secondary"
               className="w-[156px] h-[48px] text-[18px]"
               onClick={handleAddnewAgents}
+              disabled={checkedItems.length === 0}
             >
               Assign
             </Button>
@@ -348,6 +358,7 @@ export default function ClientDetail() {
                 color="secondary"
                 className="w-[156px] h-[48px] text-[18px]"
                 onClick={handleAddnewAccManager}
+                disabled={checkedItems.length === 0}
               >
                 Assign
               </Button>

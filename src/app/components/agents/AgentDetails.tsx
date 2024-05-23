@@ -315,15 +315,11 @@ export default function AgentDetails() {
               </div>
               <div className="flex flex-col px-20 my-[2rem] gap-9">
                 <div className="text-2xl text-title font-600">Attachment</div>
-                <div className="flex gap-10 py-5 flex-wrap">
+                <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
                     <div
                       className="relative cursor-pointer "
-                      onClick={() =>
-                        handleImageClick(
-                          "../assets/images/pages/supportDetail/black.png"
-                        )
-                      }
+                      onClick={() => handleImageClick(urlForImage + item.file)}
                     >
                       <img
                         src={urlForImage + item.file}
@@ -347,18 +343,21 @@ export default function AgentDetails() {
                     </div>
                   ))}
 
-                  {/* {expandedImage && (
+                  {expandedImage && (
                     <div
                       className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
                       onClick={() => setExpandedImage(null)}
                     >
-                      <img
-                        src={expandedImage}
-                        alt="Expanded Image"
-                        className="max-w-full max-h-full"
-                      />
+                      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                        <img
+                          src={expandedImage}
+                          alt="Expanded Image"
+                          className="max-w-full max-h-full"
+                        />
+                      </div>
                     </div>
-                  )} */}
+                  )}
+
                   <label
                     className=" cursor-pointer border-[0.5px] border-[#4F46E5] rounded-8 bg-[#EDEDFC] flex 
                    flex-col items-center sm:h-[97px] w-[200px] justify-center sm:py-64 py-36"

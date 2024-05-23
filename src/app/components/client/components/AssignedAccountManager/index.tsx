@@ -21,7 +21,7 @@ export default function AssignedAccountManager({
   setManagerFilterMenu,
   managerfilterMenu,
 }) {
-  const { assignAccManagerDetail, total_records } = useSelector(
+  const { assignAccManagerDetail, managertotal_records } = useSelector(
     (store: ClientRootState) => store?.client
   );
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
@@ -39,7 +39,13 @@ export default function AssignedAccountManager({
         deleteAccManagerList({ client_id: client_id, account_manager_id: id })
       );
       // console.log(payload, "payload");
+
       if (payload?.data?.status) {
+        setManagerFilterMenu((prevFilters) => ({
+          ...prevFilters,
+          start: assignAccManagerDetail.length - 1 == 0 ? 0 : prevFilters.start,
+        }));
+        // callAgentApi();
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -75,6 +81,7 @@ export default function AssignedAccountManager({
               "Account Manager",
               "AccountManager Id",
               "Assigned date",
+              "",
               "",
             ]}
           >
@@ -170,15 +177,13 @@ export default function AssignedAccountManager({
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {assignAccManagerDetail?.length > 0 && (
-              <CommonPagination
-                count={total_records}
-                onChange={(e, PageNumber: number) =>
-                  checkPageNum(e, PageNumber)
-                }
-                page={managerfilterMenu.start + 1}
-              />
-            )}
+            {/* {assignAccManagerDetail?.length > 0 && ( */}
+            <CommonPagination
+              count={managertotal_records}
+              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
+              page={managerfilterMenu.start + 1}
+            />
+            {/* )} */}
           </div>
         </div>
       </div>

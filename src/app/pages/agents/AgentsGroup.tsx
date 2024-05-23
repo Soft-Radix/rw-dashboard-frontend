@@ -139,6 +139,10 @@ export default function AgentsGroup() {
       const { payload } = await dispatch(deleteAgentGroup({ group_id: id }));
       // console.log(payload, "payload");
       if (payload?.data?.status) {
+        setfilters((prevFilters) => ({
+          ...prevFilters,
+          start: agentGroupState.list.length - 1 == 0 ? 0 : prevFilters.start,
+        }));
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
@@ -270,15 +274,13 @@ export default function AgentsGroup() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {agentGroupState?.list.length > 0 && (
-              <CommonPagination
-                count={agentGroupState?.total_records}
-                page={filters.start + 1}
-                onChange={(event, pageNumber) =>
-                  checkPageNum(event, pageNumber)
-                }
-              />
-            )}
+            {/* {agentGroupState?.list.length > 0 && ( */}
+            <CommonPagination
+              count={agentGroupState?.total_records}
+              page={filters.start + 1}
+              onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
+            />
+            {/* )} */}
           </div>
         </div>
       </div>

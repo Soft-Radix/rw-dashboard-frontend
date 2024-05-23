@@ -154,6 +154,22 @@ export const projectColumnUpdate: any = createAsyncThunk(
   }
 );
 
+export const projectColumnMove: any = createAsyncThunk(
+  "project/column-move",
+  async (payload: any) => {
+    console.log("🚀 ~ payload:", payload);
+    const response = await ApiHelperFunction({
+      url: `project/column-move`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */

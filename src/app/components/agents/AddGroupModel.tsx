@@ -132,6 +132,7 @@ function AddGroupModel({
       btnTitle="Save"
       closeTitle="Cancel"
       onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
+      disabled={isNewAgent && checkedItems.length === 0}
     >
       <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (

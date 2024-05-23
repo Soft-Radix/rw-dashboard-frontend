@@ -109,5 +109,5 @@ export function calculatePageNumber(
   }
 
   // This is a one-based page number, so add 1 to the result.
-  return Math.floor(itemIndex / itemsPerPage) + 1;
+  return Math.ceil(itemIndex / itemsPerPage);
 }

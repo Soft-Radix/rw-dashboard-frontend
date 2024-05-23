@@ -2,11 +2,11 @@ import { lazy } from "react";
 
 const Client = lazy(() => import("./Client"));
 const ClientDetail = lazy(() => import("../../components/client/ClientDetail"));
-const AddSubscription = lazy(() =>
-  import("../../components/client/Subscription/AddSubscription")
+const AddSubscription = lazy(
+  () => import("../../components/client/Subscription/AddSubscription")
 );
-const SubscriptionDetails = lazy(() =>
-  import("../../components/client/Subscription/SubscriptionDetails")
+const SubscriptionDetails = lazy(
+  () => import("../../components/client/Subscription/SubscriptionDetails")
 );
 
 /**

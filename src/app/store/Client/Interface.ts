@@ -46,11 +46,14 @@ export type initialStateProps = {
   clientDetail?: object;
   list: ClientType[];
   total_records: number;
+  agentTotal_records: number;
   selectedColumn: string[];
   actionStatus: boolean;
   assignedAgentDetail: any[];
   assignAccManagerDetail?: any[];
   toatalPage: number;
+  currentPage?: number;
+  managertotal_records?: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
@@ -73,6 +76,8 @@ export interface ChangePassword {
   client_id?: number | string;
   old_password?: string;
   new_password: string;
+  email?: string;
+  password?: string;
 }
 
 export interface SubscriptionList {
@@ -151,4 +156,5 @@ export interface ClientInfo {
   setAgentfilterMenu?: object;
   managerfilterMenu?: object;
   setManagerfilterMenu?: object;
+  previousPage?: number;
 }
