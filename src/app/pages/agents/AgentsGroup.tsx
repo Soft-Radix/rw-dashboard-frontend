@@ -139,6 +139,10 @@ export default function AgentsGroup() {
       const { payload } = await dispatch(deleteAgentGroup({ group_id: id }));
       // console.log(payload, "payload");
       if (payload?.data?.status) {
+        setfilters((prevFilters) => ({
+          ...prevFilters,
+          start: agentGroupState.list.length - 1 == 0 ? 0 : prevFilters.start,
+        }));
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }

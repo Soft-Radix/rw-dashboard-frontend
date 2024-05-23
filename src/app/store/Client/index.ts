@@ -123,6 +123,22 @@ export const changePassword = createAsyncThunk(
   }
 );
 
+export const resetPassword = createAsyncThunk(
+  "client/set-password-link",
+  async (payload: clientIDType) => {
+    const response = await ApiHelperFunction({
+      url: `client/set-password-link`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 // --------------subscription------
 
 export const subscriptionList = createAsyncThunk(
@@ -611,6 +627,21 @@ export const clientSlice = createSlice({
         }
       })
       .addCase(changePassword.rejected, (state, action) => {
+        state.actionStatus = false;
+      })
+      .addCase(resetPassword.pending, (state) => {
+        state.actionStatus = true;
+      })
+      .addCase(resetPassword.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.actionStatus = false;
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          toast.success(response?.message);
+        }
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
         state.actionStatus = false;
       })
       .addCase(GetAssignAgentsInfo.pending, (state) => {
