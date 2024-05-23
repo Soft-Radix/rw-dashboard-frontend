@@ -207,7 +207,6 @@ function AddAgentModel({
       }
     }
   }, [agentDetail, isOpen]);
-  
 
   return (
     <CommonModal
@@ -314,16 +313,13 @@ function AddAgentModel({
                 key={index}
                 className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
               >
-                <div className="bg-F6F6F6 mb-10 px-10 rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
-                  <span className="mr-4">
-                    <PreviewIcon />
-                  </span>
-                  <span className="text-[16px] text-[#4F46E5] py-5">
-                    {file.name}
-                  </span>
-                  <span onClick={() => handleRemoveFile(file)}>
-                    <CrossGreyIcon />
-                  </span>
+                <div className="mr-4 text-[16px] text-[#4F46E5] py-5 w-full flex  items-center">
+                  <PreviewIcon />
+                  {file.name}
+                </div>
+
+                <div onClick={() => handleRemoveFile(file)}>
+                  <CrossGreyIcon />
                 </div>
               </div>
             ))}
