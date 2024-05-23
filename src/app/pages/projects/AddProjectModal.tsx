@@ -25,11 +25,11 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
         const newProject = res?.payload?.data;
         let layout = {
           id: newProject?.data.id,
-          title: newProject.data.name,
+          title: (newProject.data.name as string).toUpperCase(),
           type: "item",
           icon: "material-twotone:compress",
           customIcon: <SubProjectIcon />,
-          // url: "projects",
+          url: `projects/${newProject?.data.id}/${newProject.data.name}`,
           end: true,
           isProject: true,
         };
