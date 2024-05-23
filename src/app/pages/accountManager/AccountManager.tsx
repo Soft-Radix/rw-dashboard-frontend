@@ -185,7 +185,7 @@ export default function AccountManager() {
             />
           </div>
           <CommonTable
-            headings={["ID", "First Name", "Last Name", "Email", "Status", ,]}
+            headings={["ID", "First Name", "Last Name", "Email", "Status", ""]}
           >
             {accManagerState?.list?.length > 0 &&
               accManagerState?.list?.map((row: any, index: number) => (

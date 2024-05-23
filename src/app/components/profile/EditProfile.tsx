@@ -81,23 +81,16 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
   const dispatch = useAppDispatch();
   const onSubmit = async (values: FormType) => {
     const formData = new FormData();
-
     // Append form fields to FormData
     Object.entries(values).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
-
     formData.append("client_id", String(clientDetail.id));
-
     if (selectedImage) {
       formData.append("files", selectedImage); // Add the selected image to the FormData
     }
-
     try {
       const { payload } = await dispatch(updateProfile({ formData }));
-
-      // console.log(payload, "pl");
-
       if (payload?.data?.status) {
         setIsOpen(false);
       }
@@ -118,7 +111,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     },
     onSubmit,
   });
-
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   // Update initial values after clientDetail changes
   useEffect(() => {
     if (clientDetail) {
@@ -132,8 +125,11 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         country_code: clientDetail.country_code || "",
         address: clientDetail.address,
       });
+      if (clientDetail.user_image) {
+        setpreviewUrl(urlForImage + clientDetail.user_image);
+      }
     }
-  }, [clientDetail]); // Dependency on clientDetail
+  }, [clientDetail, isOpen]); // Dependency on clientDetail
 
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");

@@ -1,5 +1,7 @@
 import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
+import { resetPassword } from "app/store/Client";
 import { ClientType } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
 import {
   ArrowRightCircleIcon,
   DownGreenIcon,
@@ -7,6 +9,7 @@ import {
   LastPayment,
 } from "public/assets/icons/common";
 import { useState } from "react";
+import { useParams } from "react-router";
 
 interface ProfileProps {
   setIsOpenEditModal: (prev: boolean) => void;
@@ -18,6 +21,7 @@ export default function Profile({
   setIsOpenChangePassModal,
   clientDetail,
 }: ProfileProps) {
+  const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const handleClick = (event) => {
@@ -26,6 +30,8 @@ export default function Profile({
   const handleClose = () => {
     setAnchorEl(null); // Reset anchor element to hide the menu
   };
+  const { client_id } = useParams();
+  // console.log(client_id, "client");
 
   // Menu item click handler
   const handleMenuItemClick = (status) => {
@@ -33,6 +39,9 @@ export default function Profile({
     setSelectedItem(status);
 
     handleClose(); // Close the menu after handling the click
+  };
+  const handleResetPassword = async () => {
+    await dispatch(resetPassword({ client_id: client_id }));
   };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
@@ -175,32 +184,63 @@ export default function Profile({
           </div>
         </Grid>
 
-        <Grid item lg={12} className="basis-full mt-[30px]">
-          <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
-            <div className="flex gap-[20px] items-end justify-center">
-              <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
-                <img src="../assets/icons/lock.svg" />
+        <Grid item lg={12} className="basis-full mt-[30px] flex gap-28">
+          <div className="flex-1">
+            <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
+              <div className="flex gap-[20px] items-end justify-center">
+                <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
+                  <img src="../assets/icons/lock.svg" />
+                </div>
+                <div>
+                  <Typography
+                    component="h4"
+                    className="mb-8 text-2xl text-title font-600"
+                  >
+                    Change Password
+                  </Typography>
+                  <p className="text-para_light">
+                    For security purposes, if you wish to change your password,
+                    please click here to change.
+                  </p>
+                </div>
               </div>
-              <div>
-                <Typography
-                  component="h4"
-                  className="mb-8 text-2xl text-title font-600"
-                >
-                  Change Password
-                </Typography>
-                <p className="text-para_light">
-                  For security purposes, if you wish to change your password,
-                  please click here to change.
-                </p>
+              <div
+                className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                onClick={() => {
+                  setIsOpenChangePassModal(true);
+                }}
+              >
+                <ArrowRightCircleIcon />
               </div>
             </div>
-            <div
-              className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
-              onClick={() => {
-                setIsOpenChangePassModal(true);
-              }}
-            >
-              <ArrowRightCircleIcon />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
+              <div className="flex gap-[20px] items-end justify-center">
+                <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
+                  <img src="../assets/icons/lock.svg" />
+                </div>
+                <div>
+                  <Typography
+                    component="h4"
+                    className="mb-8 text-2xl text-title font-600"
+                  >
+                    Reset Password
+                  </Typography>
+                  <p className="text-para_light">
+                    It will send a link to the client to reset their password.
+                  </p>
+                </div>
+              </div>
+              <div
+                className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                onClick={handleResetPassword}
+                // onClick={() => {
+                //   setIsOpenChangePassModal(true);
+                // }}
+              >
+                <ArrowRightCircleIcon />
+              </div>
             </div>
           </div>
         </Grid>
