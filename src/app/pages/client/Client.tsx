@@ -21,6 +21,7 @@ import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import ManageButton from "src/app/components/client/ManageButton";
+import { useLocation, useParams } from "react-router";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -33,6 +34,8 @@ export default function Clients() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [count, setCount] = useState(1);
+  const location = useLocation();
+  console.log("🚀 ~ Clients ~ params:", location);
   const [active, setActive] = useState("all");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
@@ -75,14 +78,15 @@ export default function Clients() {
 
   const handleSelectAll = () => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+
     const allSelected = allRowIds.every((id: number) =>
       selectedIds.includes(id)
     );
 
     if (allSelected) {
-      setSelectedIds([]); // Deselect all
-    } else {
       setSelectedIds(allRowIds); // Select all
+    } else {
+      setSelectedIds([]); // Deselect all
     }
   };
 
