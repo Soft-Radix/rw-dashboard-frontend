@@ -122,6 +122,7 @@ function HeaderFullScreenToggle(props: HeaderFullScreenToggleProps) {
         className={clsx("h-40 p-8", className, isFullScreen && "text-red-500")}
         size="large"
       >
+        {/* <Notification /> */}
         <ToogleScreen />
       </IconButton>
     </Tooltip>

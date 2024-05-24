@@ -38,7 +38,7 @@ const changePasswordByAdmin = Yup.object({
     .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
 
   cnfPassword: Yup.string()
-    .required("Confirm password is required") // Field is required
+    .required("Confirm Password is required") // Field is required
     .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
 });
 

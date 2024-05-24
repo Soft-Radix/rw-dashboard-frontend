@@ -14,6 +14,7 @@ import SelectField from "../selectField";
 import { ClientType } from "app/store/Client/Interface";
 import { updateProfile } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
+import { addClientSchema } from "src/formSchema";
 
 type profileState = {
   value: string;
@@ -109,6 +110,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       country_code: "+1",
       address: "",
     },
+    validationSchema: addClientSchema,
     onSubmit,
   });
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -127,6 +129,8 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       });
       if (clientDetail.user_image) {
         setpreviewUrl(urlForImage + clientDetail.user_image);
+      } else if (!isOpen) {
+        setpreviewUrl(""); // Reset preview URL
       }
     }
   }, [clientDetail, isOpen]); // Dependency on clientDetail

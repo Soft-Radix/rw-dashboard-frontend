@@ -16,6 +16,7 @@ import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import UnassignedAgent from "../AssignedAgents/UnassignedAgent";
 import CommonPagination from "src/app/components/pagination";
+import { start } from "repl";
 
 export default function AssignedAccountManager({
   setManagerFilterMenu,
@@ -66,10 +67,15 @@ export default function AssignedAccountManager({
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
-    setManagerFilterMenu((prevFilters) => ({
-      ...prevFilters,
-      start: pageNumber - 1,
-    }));
+    setManagerFilterMenu((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
 
   return (
@@ -79,7 +85,7 @@ export default function AssignedAccountManager({
           <CommonTable
             headings={[
               "Account Manager",
-              "AccountManager Id",
+              "Account Manager Id",
               "Assigned date",
               "",
               "",

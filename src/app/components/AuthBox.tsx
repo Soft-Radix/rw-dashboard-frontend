@@ -55,10 +55,10 @@ function AuthBox() {
           <div className="text-[60px]">the RCW!</div>
         </div>
         <div className="mt-24 max-w-[467px] leading-6 tracking-tight text-white text-[18px]">
-          Embark on a journey with us, empowering your entrepreneurial spirit to
-          shape and cultivate your business from the ground up.
+          Take your business to the next level with a highly-skilled,
+          professionally trained virtual assistance.
         </div>
-        <div className="flex items-center mt-32">
+        {/* <div className="flex items-center mt-32">
           <AvatarGroup
             sx={{
               "& .MuiAvatar-root": {
@@ -79,7 +79,7 @@ function AuthBox() {
             </Typography>{" "}
             <br /> people joined us
           </div>
-        </div>
+        </div> */}
       </div>
     </Box>
   );

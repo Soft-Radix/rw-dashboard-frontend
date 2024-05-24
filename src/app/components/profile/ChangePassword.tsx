@@ -1,7 +1,7 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import { MenuItem, styled, useTheme } from "@mui/material";
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import { useAppDispatch } from "app/store/store";
@@ -23,7 +23,7 @@ function ChangePassword({ isOpen, setIsOpen, role }: IProps) {
   const dispatch = useAppDispatch();
   const { client_id } = useParams();
   const [isLoading, setisLoading] = useState(false);
-  const onSubmit = async (values) => {
+  const onSubmit = async (values, { resetForm }) => {
     let requestData = {
       type: userType[role],
       new_password: values.new_password,
@@ -36,6 +36,7 @@ function ChangePassword({ isOpen, setIsOpen, role }: IProps) {
     const { payload } = await dispatch(changePassword(requestData));
     if (payload?.data?.status) {
       setIsOpen(false);
+      resetForm();
     }
     setisLoading(false);
   };
@@ -56,6 +57,9 @@ function ChangePassword({ isOpen, setIsOpen, role }: IProps) {
       userType[role] == 2 ? changePasswordByAdmin : changePasswordByClient,
     onSubmit,
   });
+  useEffect(() => {
+    formik.resetForm();
+  }, [isOpen]);
 
   return (
     <CommonModal
