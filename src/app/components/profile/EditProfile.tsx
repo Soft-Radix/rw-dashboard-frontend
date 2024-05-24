@@ -207,6 +207,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         <InputField
           formik={formik}
           name="email"
+          disabled
           label="Email Address"
           placeholder="Enter Email Address"
         />

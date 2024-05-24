@@ -56,7 +56,7 @@ function AuthBox() {
         </div>
         <div className="mt-24 max-w-[467px] leading-6 tracking-tight text-white text-[18px]">
           Take your business to the next level with a highly-skilled,
-          professionally trained virtual assistance.
+          professionally trained virtual assistant.
         </div>
         {/* <div className="flex items-center mt-32">
           <AvatarGroup
