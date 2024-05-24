@@ -29,7 +29,12 @@ const ApiHelperFunction =
             const error = axiosError as AxiosError;
 
             if (error?.response) {
-                return { data: error?.response?.data }
+                const responseData = error.response.data;
+                // if (responseData?.status === 402) {
+                //     window.location.href = "/verification";
+                // }
+                return { data: responseData };
+    
             } else {
                 throw error
             }
