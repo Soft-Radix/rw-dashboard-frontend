@@ -26,6 +26,7 @@ type ModalType = {
   type: string;
   maxWidth?: string;
   onDelete?: any;
+  disabled?: boolean;
 };
 
 export default function ActionModal({
@@ -36,6 +37,7 @@ export default function ActionModal({
   type,
   maxWidth = "387",
   onDelete,
+  disabled,
 }: ModalType) {
   return (
     <BootstrapDialog
@@ -67,6 +69,7 @@ export default function ActionModal({
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
           onClick={onDelete}
+          disabled={disabled}
         >
           Yes
         </Button>
@@ -75,6 +78,7 @@ export default function ActionModal({
           color="secondary"
           className="w-[156px] h-[48px] text-[18px] ml-10"
           onClick={handleToggle}
+          disabled={disabled}
         >
           Cancel
         </Button>

@@ -8,9 +8,16 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onDelete?: () => void;
   loading?: boolean;
+  disable?: boolean;
 }
 
-function DeleteProject({ isOpen, setIsOpen, onDelete, loading }: IProps) {
+function DeleteProject({
+  isOpen,
+  setIsOpen,
+  onDelete,
+  loading,
+  disable,
+}: IProps) {
   return (
     <CommonModal
       open={isOpen}
@@ -18,7 +25,7 @@ function DeleteProject({ isOpen, setIsOpen, onDelete, loading }: IProps) {
       modalTitle="Delete Product"
       maxWidth="310"
       DeleteModal={true}
-      disabled={loading}
+      disabled={disable}
       onSubmit={onDelete}
       btnTitle="Yes"
       closeTitle="Cancel"
