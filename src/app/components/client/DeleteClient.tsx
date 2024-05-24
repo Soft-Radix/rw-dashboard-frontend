@@ -3,6 +3,8 @@ import { useFormik } from "formik";
 import { Dispatch, SetStateAction } from "react";
 import CommonModal from "../CommonModal";
 import { DeleteIcon } from "public/assets/icons/common";
+import { useSelector } from "react-redux";
+import { AgentGroupRootState } from "app/store/Agent group/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -21,6 +23,9 @@ function DeleteClient({
   heading,
   description,
 }: IProps) {
+  const { actionStatus } = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
   return (
     <>
       <CommonModal
@@ -29,7 +34,7 @@ function DeleteClient({
         modalTitle="Add Client"
         maxWidth="310"
         DeleteModal={true}
-        disabled={loading}
+        disabled={actionStatus}
         onSubmit={onDelete}
         btnTitle="Yes"
         closeTitle="Cancel"

@@ -38,7 +38,7 @@ function AddGroupModel({
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  const { searchAgentList, addagentList, } = useSelector(
+  const { searchAgentList, addagentList } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
   // console.log(addagentList, "pp");
@@ -53,7 +53,7 @@ function AddGroupModel({
   // const {searchAgentList}=useSelector(store:roo)
 
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    console.log(values, "valauuuu");
+    // console.log(values, "valauuuu");
 
     const { payload } = await dispatch(addAgentGroup(values));
     // console.log(payload, "payload");
@@ -83,21 +83,12 @@ function AddGroupModel({
         : [...prevState, id]
     );
   };
+
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
     search: "",
   });
-
-  useEffect(() => {
-    if (!!agentGroupState?.successMsg) {
-      dispatch(restAll());
-      fetchAgentGroupList;
-      setIsOpen((prev) => false);
-    } else if (!!agentGroupState?.errorMsg) {
-      dispatch(restAll());
-    }
-  }, [agentGroupState]);
 
   const formik = useFormik({
     initialValues: {
@@ -123,6 +114,15 @@ function AddGroupModel({
     dispatch(addAgentInagentGroup(filterMenu));
   }, [filterMenu]);
   // console.log(checkedItems, "hhh");
+  useEffect(() => {
+    if (!!agentGroupState?.successMsg) {
+      dispatch(restAll());
+      fetchAgentGroupList;
+      setIsOpen((prev) => false);
+    } else if (!!agentGroupState?.errorMsg) {
+      dispatch(restAll());
+    }
+  }, [agentGroupState]);
   return (
     <CommonModal
       open={isOpen}

@@ -86,7 +86,7 @@ export default function ClientDetail() {
     });
   };
 
-  const handleAddnewAgents = () => { 
+  const handleAddnewAgents = () => {
     dispatch(
       addAssignAgents({
         client_id: client_id,
@@ -99,7 +99,7 @@ export default function ClientDetail() {
         agentfilterMenu,
       })
     );
-    // handleClose();
+    handleClose();
     setIsOpenEditModal(false);
 
     // Filter out the selected items

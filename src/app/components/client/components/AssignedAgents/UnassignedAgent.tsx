@@ -4,6 +4,8 @@ import { Dispatch, SetStateAction } from "react";
 
 import { DeleteIcon } from "public/assets/icons/common";
 import CommonModal from "src/app/components/CommonModal";
+import { useSelector } from "react-redux";
+import { ClientRootState } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -13,6 +15,9 @@ interface IProps {
 }
 
 function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
+  const { actionStatus } = useSelector(
+    (store: ClientRootState) => store.client
+  );
   return (
     <>
       <CommonModal
@@ -24,7 +29,7 @@ function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
         btnTitle="Yes"
         closeTitle="Cancel"
         onSubmit={onDelete}
-       
+        disabled={actionStatus}
       >
         <div className="flex flex-col items-center justify-center gap-10 ">
           <div className="h-56 w-56 flex items-center justify-center rounded-full border-1 border-solid border-[#F44336] cursor-pointer ">
