@@ -42,10 +42,15 @@ export default function AgentsList() {
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      start: pageNumber - 1,
-    }));
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
   // Debounce function to delay executing the search
   const debouncedSearch = debounce((searchValue) => {
@@ -215,7 +220,6 @@ export default function AgentsList() {
         setIsOpen={setIsOpenAddModal}
         fetchAgentList={fetchAgentList}
         isEditing={false}
-       
       />
     </>
   );

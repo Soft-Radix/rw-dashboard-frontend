@@ -78,6 +78,11 @@ export interface SubscriptionList {
 export interface ProjectAdd {
   name: string;
 }
+
+export interface ProjectAddDoc {
+  name: string;
+  token:any
+}
 export interface ProjectUpdate {
   project_id: number | string;
   data: { name: string };

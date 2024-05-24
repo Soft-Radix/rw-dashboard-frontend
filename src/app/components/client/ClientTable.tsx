@@ -49,10 +49,16 @@ function ClientTable({
     return <ListLoading />;
   }
   const checkPageNum = (e: any, pageNumber: number) => {
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      start: pageNumber - 1,
-    }));
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
 
   return (

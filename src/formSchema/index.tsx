@@ -38,7 +38,7 @@ const changePasswordByAdmin = Yup.object({
     .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
 
   cnfPassword: Yup.string()
-    .required("Confirm password is required") // Field is required
+    .required("Confirm Password is required") // Field is required
     .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
 });
 
@@ -94,10 +94,16 @@ const editAgentSchema = Yup.object({
     }), // ,
   address: Yup.string().required("Address is required"),
 });
+// const AgentGroupSchema = Yup.object({
+//   group_name: Yup.string()
+//     .required("Group name is required")
+//     .matches(/^\S+$/, noSpaceMessage),
+// });
+const noInitialSpaceMessage = "Group name cannot start with a space";
 const AgentGroupSchema = Yup.object({
   group_name: Yup.string()
     .required("Group name is required")
-    .matches(/^\S+$/, noSpaceMessage),
+    .matches(/^\S[\s\S]*$/, noInitialSpaceMessage),
 });
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
