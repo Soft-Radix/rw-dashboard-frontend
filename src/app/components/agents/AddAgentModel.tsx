@@ -198,7 +198,6 @@ function AddAgentModel({
         phone_number: agentDetail.phone_number || "",
         address: agentDetail.address,
       });
-
       if (agentDetail.user_image) {
         setpreviewUrl(urlForImage + agentDetail.user_image);
       }

@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import TitleBar from "src/app/components/TitleBar";
@@ -25,83 +25,10 @@ import { useAppDispatch } from "app/store/store";
 import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import DeleteClient from "src/app/components/client/DeleteClient";
 import { debounce } from "lodash";
-
-const rows = [
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Progress",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "In Review",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-  {
-    ticket: "1542145611525",
-    subject: "Web page design",
-    status: "Completed",
-    department: "Account Manager",
-    date: "4",
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-  },
-];
+import { getAgentList } from "app/store/Agent";
 
 export default function AgentsGroup() {
+  const group_id = useParams();
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
@@ -123,6 +50,11 @@ export default function AgentsGroup() {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const [filterss, setfilterss] = useState<filterType>({
     start: 0,
     limit: 10,
     search: "",
@@ -180,6 +112,11 @@ export default function AgentsGroup() {
   //     setValues: agentGroupState.group_name;
   //   }
   // });
+  // useEffect(() => {
+  //   dispatch(getAgentList({ filters, group_id: group_id }));
+
+  //   // console.log(filters, "filters");
+  // }, [filters]);
 
   return (
     <>
