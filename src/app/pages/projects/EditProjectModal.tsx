@@ -4,7 +4,7 @@ import { ProjectUpdate } from "app/store/Projects/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import { SubProjectIcon } from "public/assets/icons/navabarIcon";
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "src/app/components/CommonModal";
 import InputField from "src/app/components/InputField";
 import { getLocalStorage } from "src/utils";
@@ -20,12 +20,15 @@ interface IProps {
 }
 
 function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
+  const [disable, setDisable] = useState(false);
   const dispatch = useAppDispatch();
   const userData = getLocalStorage("userDetail");
 
   const fetchData = async (data: ProjectUpdate) => {
+    setDisable(true);
     try {
       const res = await dispatch(projectUpdate(data));
+      setDisable(false);
       if (res?.payload?.data.status == 1) {
         const newProject = res?.payload?.data;
         let localData = getLocalStorage("userDetail");
@@ -41,6 +44,7 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
         setIsOpen(false);
       }
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -81,6 +85,7 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
       bgColor="white"
       titleColor="black"
       onSubmit={handleSave}
+      disabled={disable}
     >
       <InputField
         formik={formik}

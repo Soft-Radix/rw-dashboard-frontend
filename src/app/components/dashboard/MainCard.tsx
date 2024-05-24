@@ -33,6 +33,7 @@ export default function MainCard({
   const dispatch = useDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
+  const [disable, setDisabled] = useState(false);
 
   /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -57,10 +58,12 @@ export default function MainCard({
         column_id: id,
         data: values,
       };
+      setDisabled(true);
       dispatch(projectColumnUpdate(data))
         .unwrap()
         .then((res) => {
           if (res?.data?.status == 1) {
+            setDisabled(false);
             toast.success(res?.data?.message);
             callListApi();
             toggleEditModal();
@@ -71,14 +74,16 @@ export default function MainCard({
 
   const handleDelete = () => {
     if (id) {
+      setDisabled(true);
       dispatch(deleteColumn(id))
         .unwrap()
         .then((res) => {
           if (res?.data?.status == 1) {
             callListApi();
             toast.success(res?.data?.message, {
-              duration: 3000,
+              duration: 4000,
             });
+            setDisabled(false);
           }
         });
     }
@@ -225,6 +230,7 @@ export default function MainCard({
         onSubmit={handleEdit}
         closeTitle="Cancel"
         handleToggle={toggleEditModal}
+        disabled={disable}
       >
         <InputField
           formik={formik}
@@ -240,6 +246,7 @@ export default function MainCard({
         handleToggle={toggleDeleteModal}
         type="delete"
         onDelete={handleDelete}
+        disabled={disable}
       />
     </div>
   );

@@ -47,6 +47,7 @@ export type initialStateProps = {
   total_records: number;
   selectedColumn: string[];
   actionStatus: boolean;
+  isloading?: boolean;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed

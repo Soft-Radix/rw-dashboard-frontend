@@ -109,6 +109,7 @@ export default function CommonModal({
           color="secondary"
           className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
+          disabled={disabled}
         >
           {closeTitle}
         </Button>
