@@ -143,15 +143,13 @@ function AddAgentModel({
   useEffect(() => {
     if (!!agentState?.successMsg) {
       dispatch(restAll());
-      // fetchAgentList();
+      fetchAgentList();
       setIsOpen((prev) => false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
   }, [agentState]);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setIsOpen(true);

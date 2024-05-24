@@ -38,7 +38,7 @@ function AddGroupModel({
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  const { searchAgentList, addagentList } = useSelector(
+  const { searchAgentList, addagentList, } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
   // console.log(addagentList, "pp");
@@ -132,7 +132,10 @@ function AddGroupModel({
       btnTitle="Save"
       closeTitle="Cancel"
       onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
-      disabled={isNewAgent && checkedItems.length === 0}
+      disabled={
+        (isNewAgent && checkedItems.length === 0) ||
+        agentGroupState.actionStatus
+      }
     >
       <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (
