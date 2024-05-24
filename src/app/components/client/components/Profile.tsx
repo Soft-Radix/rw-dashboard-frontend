@@ -215,7 +215,7 @@ export default function Profile({
             </div>
           </div>
           <div className="flex-1">
-            <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
+            <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg h-full">
               <div className="flex gap-[20px] items-end justify-center">
                 <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
                   <img src="../assets/icons/lock.svg" />

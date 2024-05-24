@@ -120,6 +120,7 @@ function AddAgentModel({
 
         // Close the modal
         setIsOpen(false);
+        setUploadedFiles([]);
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -187,6 +188,7 @@ function AddAgentModel({
       const newFiles: File[] = Array.from(files);
       setUploadedFiles([...uploadedFiles, ...newFiles]);
     }
+    e.target.value = ""; //upload same file again
   };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   useEffect(() => {
@@ -206,8 +208,9 @@ function AddAgentModel({
         setpreviewUrl(previewUrl);
       }
     }
+    setUploadedFiles([]);
   }, [agentDetail, isOpen]);
-
+  console.log("uploadedFiles", uploadedFiles);
   return (
     <CommonModal
       open={isOpen}
