@@ -54,6 +54,7 @@ function CommonPagination({
       page={currentPage}
       onChange={onPageChange}
       {...rest}
+      
     />
   );
 }

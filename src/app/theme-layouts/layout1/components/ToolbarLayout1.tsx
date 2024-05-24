@@ -58,8 +58,8 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
                 <Hidden lgDown>
                   {(config.navbar.style === "style-3" ||
                     config.navbar.style === "style-3-dense") && (
-                      <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
-                    )}
+                    <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
+                  )}
 
                   {config.navbar.style === "style-1" && !navbar.open && (
                     <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
@@ -78,12 +78,12 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
           </div>
 
           <div className="flex items-center h-full px-8 overflow-x-auto">
+            <Notifications />
             {/* <LanguageSwitcher /> */}
             {/* <AdjustFontSize /> */}
-            <FullScreenToggle />
+            {/* <FullScreenToggle /> */}
             {/* <NavigationSearch /> */}
             {/* <QuickPanelToggleButton /> */}
-            {/* <Notifications /> */}
             <UserMenu />
           </div>
 

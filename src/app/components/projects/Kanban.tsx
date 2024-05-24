@@ -424,6 +424,7 @@ const Kanban = (props: IProps): JSX.Element => {
                     formik.setFieldValue("name", "");
                     formik.resetForm();
                   }}
+                  disabled={formik.isSubmitting}
                 >
                   Cancel
                 </Button>

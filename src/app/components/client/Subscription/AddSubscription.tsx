@@ -723,7 +723,7 @@ export default function AddSubscription() {
   useEffect(() => {
     if (!isOpenAddModal || !isOpenDeletedModal) {
       const actions = [];
-      uniqueList?.forEach((item) => {
+      list?.forEach((item) => {
         actions.push("action");
       });
       setAction([...actions]);

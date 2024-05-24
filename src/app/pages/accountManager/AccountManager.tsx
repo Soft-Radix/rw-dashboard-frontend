@@ -139,11 +139,18 @@ export default function AccountManager() {
   // Include necessary dependencies for useEffect
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   // Other component logic
+ 
   const checkPageNum = (e: any, pageNumber: number) => {
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      start: pageNumber - 1,
-    }));
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
   const deleteAccManger = async (id: any) => {
     // console.log(id, "id");

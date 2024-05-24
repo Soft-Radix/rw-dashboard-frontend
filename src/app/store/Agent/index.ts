@@ -183,7 +183,6 @@ export const agentSlice = createSlice({
             response?.data?.total_records,
             10
           );
-          // console.log(state.total_records, "fdf");
         }
       })
       .addCase(getAgentList.rejected, (state, action) => {

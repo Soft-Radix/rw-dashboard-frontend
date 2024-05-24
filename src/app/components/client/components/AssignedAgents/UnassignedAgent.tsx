@@ -21,10 +21,10 @@ function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
         modalTitle="Add Client"
         maxWidth="310"
         DeleteModal={true}
-        disabled={loading}
         btnTitle="Yes"
         closeTitle="Cancel"
         onSubmit={onDelete}
+       
       >
         <div className="flex flex-col items-center justify-center gap-10 ">
           <div className="h-56 w-56 flex items-center justify-center rounded-full border-1 border-solid border-[#F44336] cursor-pointer ">

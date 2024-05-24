@@ -59,12 +59,15 @@ export default function AssignedAgents({
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
-    // If current page data length is 0 and it's not the first page, navigate to previous page
-
-    setAgentFilterMenu((prevFilters) => ({
-      ...prevFilters,
-      start: pageNumber - 1,
-    }));
+    setAgentFilterMenu((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
 
   // console.log("agentTotal_records", agentTotal_records);
@@ -132,15 +135,12 @@ export default function AssignedAgents({
                     >
                       {row.assigned_date_time}
                     </TableCell>
-                    <TableCell
-                      align="center"
-                      className="whitespace-nowrap"
-                      onClick={() => {
-                        setIsOpenUnassignedModal(true);
-                        setIsDeleteId(row.agent_id);
-                      }}
-                    >
+                    <TableCell align="center" className="whitespace-nowrap">
                       <span
+                        onClick={() => {
+                          setIsOpenUnassignedModal(true);
+                          setIsDeleteId(row.agent_id);
+                        }}
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
                    ${
                      row.status === "Unassign"

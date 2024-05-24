@@ -120,6 +120,7 @@ function AddAgentModel({
 
         // Close the modal
         setIsOpen(false);
+        setUploadedFiles([]);
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -142,15 +143,13 @@ function AddAgentModel({
   useEffect(() => {
     if (!!agentState?.successMsg) {
       dispatch(restAll());
-      // fetchAgentList();
+      fetchAgentList();
       setIsOpen((prev) => false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
   }, [agentState]);
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setIsOpen(true);
@@ -187,6 +186,7 @@ function AddAgentModel({
       const newFiles: File[] = Array.from(files);
       setUploadedFiles([...uploadedFiles, ...newFiles]);
     }
+    e.target.value = ""; //upload same file again
   };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   useEffect(() => {
@@ -206,9 +206,9 @@ function AddAgentModel({
         setpreviewUrl(previewUrl);
       }
     }
+    setUploadedFiles([]);
   }, [agentDetail, isOpen]);
-  
-
+  console.log("uploadedFiles", uploadedFiles);
   return (
     <CommonModal
       open={isOpen}
@@ -314,16 +314,13 @@ function AddAgentModel({
                 key={index}
                 className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
               >
-                <div className="bg-F6F6F6 mb-10 px-10 rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
-                  <span className="mr-4">
-                    <PreviewIcon />
-                  </span>
-                  <span className="text-[16px] text-[#4F46E5] py-5">
-                    {file.name}
-                  </span>
-                  <span onClick={() => handleRemoveFile(file)}>
-                    <CrossGreyIcon />
-                  </span>
+                <div className="mr-4 text-[16px] text-[#4F46E5] py-5 w-full flex  items-center">
+                  <PreviewIcon />
+                  {file.name}
+                </div>
+
+                <div onClick={() => handleRemoveFile(file)}>
+                  <CrossGreyIcon />
                 </div>
               </div>
             ))}
