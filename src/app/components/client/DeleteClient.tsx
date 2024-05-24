@@ -5,6 +5,7 @@ import CommonModal from "../CommonModal";
 import { DeleteIcon } from "public/assets/icons/common";
 import { useSelector } from "react-redux";
 import { AgentGroupRootState } from "app/store/Agent group/Interface";
+import { AccManagerRootState } from "app/store/AccountManager/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -24,7 +25,7 @@ function DeleteClient({
   description,
 }: IProps) {
   const { actionStatus } = useSelector(
-    (store: AgentGroupRootState) => store.agentGroup
+    (store: AccManagerRootState) => store.accManagerSlice
   );
   return (
     <>

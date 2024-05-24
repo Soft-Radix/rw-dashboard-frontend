@@ -60,7 +60,6 @@ function ClientTable({
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
-
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm">
@@ -152,29 +151,29 @@ function ClientTable({
                       {moment(row.created_at).format("ll")}
                     </TableCell>
                   )}
-                  {status && renderCell("Status") && (
-                    <TableCell
-                      align="left"
-                      className="whitespace-nowrap font-500"
+                  {/* {status && renderCell("Status") && ( */}
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                        ${
+                          row.subscription_status == "Active"
+                            ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                            : row.subscription_status == "Pending"
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subscription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subscription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
+                        }`}
                     >
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-    ${
-      row.subcription_status === "Active"
-        ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
-        : row.subcription_status === "Pending"
-          ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-          : row.subcription_status === "Suspended"
-            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-            : row.subcription_status === "Cancelled"
-              ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-              : ""
-    }`}
-                      >
-                        {row.subcription_status}
-                      </span>
-                    </TableCell>
-                  )}
+                      {row.subscription_status || "N/A"}
+                    </span>
+                  </TableCell>
+                  {/* )} */}
 
                   <TableCell scope="row">
                     <Link to={`/admin/client/detail/${row.id}`}>
