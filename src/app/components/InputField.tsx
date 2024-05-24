@@ -32,7 +32,7 @@ function InputField({
   };
 
   return (
-    <div className={`${rest.className} common-inputField w-full`}>
+    <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (
         <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
           {label}
@@ -70,12 +70,15 @@ function InputField({
           </span>
         )}
       </div>
+
       {!hideTopPadding && (
-        <span className="inline-block text-red pt-[5px]">
-          {formik?.errors[name ?? ""] &&
-            formik?.touched[name ?? ""] &&
-            formik?.errors[name ?? ""]}
-        </span>
+        <div>
+          <span className=" text-red pt-[5px]  ">
+            {formik?.errors[name ?? ""] &&
+              formik?.touched[name ?? ""] &&
+              formik?.errors[name ?? ""]}
+          </span>
+        </div>
       )}
     </div>
   );
