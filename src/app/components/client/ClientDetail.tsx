@@ -86,7 +86,7 @@ export default function ClientDetail() {
     });
   };
 
-  const handleAddnewAgents = () => {
+  const handleAddnewAgents = () => { 
     dispatch(
       addAssignAgents({
         client_id: client_id,
@@ -99,7 +99,7 @@ export default function ClientDetail() {
         agentfilterMenu,
       })
     );
-    handleClose();
+    // handleClose();
     setIsOpenEditModal(false);
 
     // Filter out the selected items
@@ -279,7 +279,7 @@ export default function ClientDetail() {
               color="secondary"
               className="w-[156px] h-[48px] text-[18px]"
               onClick={handleAddnewAgents}
-              disabled={checkedItems.length === 0}
+              disabled={checkedItems.length === 0 || actionStatus}
             >
               Assign
             </Button>
@@ -288,6 +288,7 @@ export default function ClientDetail() {
               color="secondary"
               className="w-[156px] h-[48px] text-[18px] ml-14"
               onClick={handleClose}
+              disabled={actionStatus}
             >
               Cancel
             </Button>

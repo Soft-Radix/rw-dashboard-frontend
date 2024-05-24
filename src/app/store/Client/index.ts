@@ -687,9 +687,11 @@ export const clientSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(getAssignAccMangerInfo.pending, (state) => {
+        state.actionStatus = true;
         state.fetchStatus = "loading";
       })
       .addCase(getAssignAccMangerInfo.fulfilled, (state, action) => {
+        state.actionStatus = false;
         // console.log(action, "action");
         const { data } = action.payload?.data;
         // console.log(data.list, "ggggg");
@@ -702,6 +704,7 @@ export const clientSlice = createSlice({
         );
       })
       .addCase(getAssignAccMangerInfo.rejected, (state) => {
+        state.actionStatus = false;
         state.fetchStatus = "idle";
       })
       .addCase(addAssignAgents.pending, (state) => {

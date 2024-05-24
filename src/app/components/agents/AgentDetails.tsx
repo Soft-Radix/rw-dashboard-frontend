@@ -317,16 +317,18 @@ export default function AgentDetails() {
                 <div className="text-2xl text-title font-600">Attachment</div>
                 <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
-                    <div
-                      className="relative cursor-pointer "
-                      onClick={() => handleImageClick(urlForImage + item.file)}
-                    >
+                    <div className="relative cursor-pointer ">
                       <img
                         src={urlForImage + item.file}
                         alt="Black Attachment"
                         className=" w-[200px] rounded-md sm:h-[130px]"
                       />
-                      <div className="absolute top-7 left-7">
+                      <div
+                        className="absolute top-7 left-7"
+                        onClick={() =>
+                          handleImageClick(urlForImage + item.file)
+                        }
+                      >
                         <AttachmentIcon />
                       </div>
                       <div
