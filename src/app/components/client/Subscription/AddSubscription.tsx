@@ -570,6 +570,7 @@ export default function AddSubscription() {
       one_time_discount_type: "",
       one_time_discount: 0,
     });
+    setDisableDelete(false);
   };
 
   const handleSave = () => {
