@@ -152,11 +152,11 @@ export default function AssignedAccountManager({
                     <TableCell
                       align="center"
                       className="whitespace-nowrap font-500"
-                      onClick={() =>
-                        defaultAddAccManager(row.account_manager_id)
-                      }
                     >
                       <FormControlLabel
+                        onClick={() =>
+                          defaultAddAccManager(row.account_manager_id)
+                        }
                         value="Mark as default"
                         control={<Radio checked={row.is_default === 1} />}
                         label="Mark as default"
