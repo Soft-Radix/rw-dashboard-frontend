@@ -368,7 +368,11 @@ input:-webkit-autofill:active {
 
 .muiltr-1ogds6z-MuiTableRow-root td {
   padding-bottom: 32px !important;
-  padding-top: 26px;
+  padding-top: 26px !important;
+}
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-sizeSmall.whitespace-nowrap.font-500.muiltr-12112v9 {
+  padding-bottom: 32px !important;
+  padding-top: 26px !important;
 }
 .muiltr-1u9l49p-MuiButtonBase-root-MuiButton-root.Mui-disabled {
   color: rgba(0, 0, 0, 0.26) !important;
