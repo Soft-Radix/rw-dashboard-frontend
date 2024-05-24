@@ -15,6 +15,7 @@ import CommonPagination from "src/app/components/pagination";
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [disable, setDisable] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
@@ -28,7 +29,7 @@ export default function ManageProducts() {
   const fetchData = async () => {
     const payload = {
       start: 0,
-      limit: 40,
+      limit: 100,
       search: "",
     };
     try {
@@ -42,9 +43,10 @@ export default function ManageProducts() {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, id]);
+  }, [dispatch, id, isOpenAddModal]);
 
   const onDelete = async () => {
+    setDisable(true);
     setId(null);
     try {
       const payload = {
@@ -52,11 +54,13 @@ export default function ManageProducts() {
       };
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
+      setDisable(false);
       fetchData();
       setIsOpenDeletedModal(false);
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -238,6 +242,7 @@ export default function ManageProducts() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         onDelete={onDelete}
+        disabled={disable}
       />
     </div>
   );

@@ -79,13 +79,14 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     if (needsToBeOpened(location, item)) {
       // console.log(item, "itemr");
       if (!open) {
-        setOpen(true);
+        setOpen(!open);
       }
     }
 
     // eslint-disable-next-line
   }, [location, item]);
   useEffect(() => {
+    if (location.pathname.includes("/projects")) return;
     if (
       location.pathname !== "/admin/agents/groups" &&
       location.pathname !== "/admin/agents/list"
@@ -135,7 +136,6 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     // console.log(newItems, "nw");
     setItems({ ...items, children: newItems });
   };
-  // console.log(items, "newItem");
   return useMemo(
     () => (
       <Root

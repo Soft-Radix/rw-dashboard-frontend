@@ -69,10 +69,14 @@ export default function CommonModal({
     >
       {!DeleteModal ? (
         <div
-          className={`p-16 flex justify-between w-full items-center ${headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"} `}
+          className={`p-16 flex justify-between w-full items-center ${
+            headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"
+          } `}
         >
           <Typography
-            className={`text-[16px] font-semibold" ${titleColor ? "text-black" : "text-white"}`}
+            className={`text-[16px] font-semibold" ${
+              titleColor ? "text-black" : "text-white"
+            }`}
           >
             {modalTitle}
           </Typography>
@@ -106,10 +110,10 @@ export default function CommonModal({
         </Button>
         <Button
           variant="outlined"
+          disabled={disabled}
           color="secondary"
           className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
-          disabled={disabled}
         >
           {closeTitle}
         </Button>

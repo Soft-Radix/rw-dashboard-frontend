@@ -23,31 +23,24 @@ interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   handleList: (list: any[]) => void;
+  customList?: any[];
+  setCustomList?: Dispatch<SetStateAction<any[]>>;
 }
 
 const tableTiltles = ["Name", "Description", "Unit Price"];
 
-function CustomLineModal({ isOpen, setIsOpen, handleList }: IProps) {
+function CustomLineModal({
+  isOpen,
+  setIsOpen,
+  handleList,
+  customList,
+  setCustomList,
+}: IProps) {
   const [list, setList] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const dispatch = useAppDispatch();
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const payload = {
-          start: 0,
-          limit: 10,
-          search: "",
-        };
-        const res = await dispatch(subscriptionList(payload));
-        setList(res?.payload?.data?.data?.list);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
+    setList(customList);
   }, [dispatch]);
 
   const handleSave = () => {
@@ -56,6 +49,7 @@ function CustomLineModal({ isOpen, setIsOpen, handleList }: IProps) {
       (item) => !selectedItems.some((selected) => selected.id == item.id)
     );
     setList(updatedList);
+    setCustomList(updatedList);
     setIsOpen((prev) => !prev);
     setSelectedItems([]);
   };
@@ -73,7 +67,6 @@ function CustomLineModal({ isOpen, setIsOpen, handleList }: IProps) {
       );
     }
   };
-
   return (
     <CommonModal
       open={isOpen}

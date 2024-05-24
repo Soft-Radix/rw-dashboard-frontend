@@ -50,7 +50,9 @@ function CommonTable({
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
               <TableCell
-                className={`th ${index === 0 ? "pl-20" : ""} w-[${100 / headings?.length}%]`}
+                className={`th ${index === 0 ? "pl-20" : ""} w-[${
+                  100 / headings?.length
+                }%]`}
                 key={index}
                 align={
                   headings.length === index || index === 0 ? "left" : "center"

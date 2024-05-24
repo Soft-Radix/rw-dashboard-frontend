@@ -6,13 +6,22 @@ import CommonModal from "src/app/components/CommonModal";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  onDelete ?: () => void;
+  onDelete?: () => void;
   loading?: boolean;
-  title ?: string; 
-  description ?: string; 
+  title?: string;
+  description?: string;
+  disable?: boolean;
 }
 
-function DeleteModal({ isOpen, setIsOpen, onDelete, loading ,title ,description}: IProps) {
+function DeleteModal({
+  isOpen,
+  setIsOpen,
+  onDelete,
+  loading,
+  title,
+  description,
+  disable,
+}: IProps) {
   return (
     <>
       <CommonModal
@@ -21,7 +30,7 @@ function DeleteModal({ isOpen, setIsOpen, onDelete, loading ,title ,description}
         modalTitle="Delete Line Item"
         maxWidth="310"
         DeleteModal={true}
-        disabled={loading}
+        disabled={loading || disable}
         onSubmit={onDelete}
         btnTitle="Yes"
         closeTitle="Cancel"
@@ -31,11 +40,12 @@ function DeleteModal({ isOpen, setIsOpen, onDelete, loading ,title ,description}
             <DeleteIcon className="h-28 w-28 " />
           </div>
           <Typography className="text-[20px] font-600 text-[#111827]">
-          {title ? title : 'Delete Item'}
+            {title ? title : "Delete Item"}
           </Typography>
           <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-          {description ? description : ' Are you sure you want to delete this item ?'}
-         
+            {description
+              ? description
+              : " Are you sure you want to delete this item ?"}
           </Typography>
         </div>
       </CommonModal>
