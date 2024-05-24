@@ -72,6 +72,7 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
  * FuseNavVerticalItem is a React component used to render FuseNavItem as part of the Fuse navigational component.
  */
 function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
+  const [disable, setDisable] = useState(false);
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [deleteid, setDeleteId] = useState<number | string>("");
@@ -111,6 +112,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   }
 
   const onDelete = async () => {
+    setDisable(true);
     await dispatch(
       deleteProject({
         project_id: deleteid,
@@ -119,6 +121,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
       .unwrap()
       .then((res) => {
         if (res?.data?.status == 1) {
+          setDisable(false);
           let localData = getLocalStorage("userDetail");
           const removeItem = localData.projects?.filter((item) => {
             return deleteid !== item.id;
@@ -173,6 +176,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
           isOpen={isOpenDeletedModal}
           setIsOpen={setIsOpenDeletedModal}
           onDelete={onDelete}
+          disable={disable}
         />
         <EditProjectModal
           isOpen={isOpenEditModal}
@@ -210,7 +214,6 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
                 }}
                 onClick={(e) => {
                   // alert("hello");
-                  e.stopPropagation();
                   setIsOpenEditModal(true);
                   handleClose();
                 }}
@@ -253,6 +256,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
       anchorEl,
       isOpenDeletedModal,
       isOpenEditModal,
+      disable,
     ]
   );
 }
