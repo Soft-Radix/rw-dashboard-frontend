@@ -8,6 +8,7 @@ export interface AgentGroupType {
   updatedAt?: string;
   members_count?: number;
   group_members?: any[];
+  actionStatus?: boolean;
 }
 
 export interface filterType {

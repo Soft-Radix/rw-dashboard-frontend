@@ -77,7 +77,7 @@ function AddAccountManagerModel({
   const accmanagerState = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
-  const { accManagerDetail, accClientList } = useSelector(
+  const { accManagerDetail, accClientList, actionStatus } = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
   // console.log(accManagerDetail, "accManagerDetail");
@@ -276,7 +276,7 @@ function AddAccountManagerModel({
       }
       maxWidth="733"
       btnTitle={"Save"}
-      //   disabled={loading}
+      disabled={actionStatus}
       onSubmit={formik.handleSubmit}
       closeTitle="Cancel"
     >
