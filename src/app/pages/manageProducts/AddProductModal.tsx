@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "src/app/components/CommonModal";
 import InputField from "src/app/components/InputField";
 import * as Yup from "yup";
@@ -67,18 +67,21 @@ function AddProduct({
       }
     },
   });
-
+  const [disabled, setDisable] = useState(false);
   const dispatch = useAppDispatch();
   const fetchData = async (payload: any) => {
+    setDisable(true);
     try {
       //@ts-ignore
       const res = await dispatch(productAdd(payload));
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
       setIsOpen((prev) => !prev);
+      setDisable(false);
       setIsEditing(false);
       setId(null);
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -104,6 +107,7 @@ function AddProduct({
     if (!id) return;
 
     const fetchDataDEtails = async () => {
+      setDisable(true);
       try {
         const payload = {
           product_id: id,
@@ -119,7 +123,9 @@ function AddProduct({
             name: data.name || "",
           });
         }
+        setDisable(false);
       } catch (error) {
+        setDisable(false);
         console.error("Error fetching data:", error);
       }
     };
@@ -134,6 +140,7 @@ function AddProduct({
         setIsEditing(false);
         setId(null);
       }}
+      disabled={disabled}
       modalTitle={isEditing == true ? "Edit Product" : "Add Product"}
       maxWidth="730"
       btnTitle="Save"

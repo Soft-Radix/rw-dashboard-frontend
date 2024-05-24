@@ -41,7 +41,7 @@ const CustomNumberInput = React.forwardRef(function CustomNumberInput(
 
 export default function NumberInput({
   label,
-  formik,
+  formik = null,
   name,
   disable = false,
   value,
@@ -56,6 +56,7 @@ export default function NumberInput({
         placeholder="0"
         onChange={onChange}
       /> */}
+
       <BaseNumberInput
         slots={{
           root: StyledInputRoot,
@@ -82,9 +83,9 @@ export default function NumberInput({
         disabled={disable}
         placeholder="0"
         value={value}
-        onChange={(e: any) =>
-          formik ? formik.setFieldValue(name, e.target.value) : null
-        }
+        onChange={(e: any) => {
+          formik ? formik.setFieldValue(name, e.target.value) : null;
+        }}
         // {...props}
         // ref={ref}
       />

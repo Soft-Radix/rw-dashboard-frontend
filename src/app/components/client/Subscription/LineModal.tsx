@@ -1,7 +1,7 @@
 import { Checkbox, FormHelperText, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { BillingTermsOptions, EmployOptions, StyledMenuItem } from "src/utils";
 import CommonModal from "../../CommonModal";
 import InputField from "../../InputField";
@@ -26,6 +26,27 @@ interface IProps {
   handleList: (list: any[]) => void;
   id?: number | null;
 }
+const today = new Date();
+const validateBillingStartDate = (dateString) => {
+  const selectedDate = new Date(dateString);
+  selectedDate.setHours(0, 0, 0, 0); // Set to the beginning of the day for comparison
+
+  const year = selectedDate.getFullYear().toString();
+  const isFourDigitYear = /^\d{4}$/.test(year);
+
+  if (!isFourDigitYear) {
+    return { isValid: false, error: "Year must be in 4 digits" };
+  }
+
+  if (selectedDate <= today) {
+    return {
+      isValid: false,
+      error: "Billing Start Date must be greater than today",
+    };
+  }
+
+  return { isValid: true, error: "" };
+};
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -39,18 +60,18 @@ const validationSchema = Yup.object({
   billing_frequency: Yup.string().required("Billing Frequency is required"),
   billing_terms: Yup.string().required("Billing Terms are required"),
 
-  no_of_payments: Yup.date()
-    .nullable()
-    .when("billing_frequency", {
-      is: (value) => {
-        return value != 2;
-      },
-      then: (Schema) =>
-        Yup.number()
-          .required("Number of Payments is required")
-          .min(1, "Number of Payments must be greater than 0"),
-      otherwise: (Schema) => Schema.notRequired().nullable(),
-    }),
+  no_of_payments: Yup.number().when("billing_terms", {
+    is: (value) => {
+      return value != 2;
+    },
+    then: (Schema) =>
+      Schema.required("Number of Payments is required").min(
+        1,
+        "Number of Payments must be greater than 0"
+      ),
+    otherwise: (Schema) => Schema.notRequired().nullable(),
+  }),
+
   is_delay_in_billing: Yup.boolean(),
   billing_start_date: Yup.date()
     .nullable()
@@ -65,6 +86,8 @@ const validationSchema = Yup.object({
 
 function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const [value, setValue] = React.useState<number | null>(null);
+  const [disable, setDisable] = useState(false);
+  const [dateError, setDateError] = useState("");
   const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
   const formik = useFormik({
@@ -90,35 +113,43 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   });
 
   const fetchData = async (payload: any) => {
+    setDisable(true);
     try {
       //@ts-ignore
       const res = await dispatch(addLineItem(payload));
       // setList(res?.payload?.data?.data?.list);
       setIsOpen((prev) => !prev);
+      setDisable(false);
       handleList([res?.payload?.data?.data]);
       formik.resetForm();
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
 
   const fetchUpdateData = async (payload: any) => {
+    setDisable(true);
     try {
       //@ts-ignore
       const res = await dispatch(productUpdate(payload));
       // setList(res?.payload?.data?.data?.list);
       setId(null);
+      setDisable(false);
       handleList([res?.payload?.data?.data]);
       // fetchData();
       toast.success(res?.payload?.data?.message);
       setIsOpen((prev) => !prev);
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
 
   const handleSave = () => {
-    formik.handleSubmit();
+    if (dateError == "") {
+      formik.handleSubmit();
+    }
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +189,6 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
     fetchDataDEtails();
   }, [dispatch]);
 
-  const today = new Date();
   // Add one day to get tomorrow's date
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
@@ -166,7 +196,25 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
   const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+  useEffect(() => {
+    if (formik.values?.billing_start_date) {
+      const validation = validateBillingStartDate(
+        formik.values?.billing_start_date
+      );
 
+      if (validation.isValid) {
+        setDateError("");
+        // setDisable(false);
+      } else {
+        console.error(validation.error);
+        // setDisable(true);
+        setDateError(validation.error);
+      }
+    } else {
+      // setDisable(false);
+      setDateError("");
+    }
+  }, [formik]);
   return (
     <CommonModal
       open={isOpen}
@@ -175,11 +223,12 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
         formik.resetForm();
         setId(null);
       }}
-      modalTitle="Add Custom Line Items"
+      modalTitle={`${id ? "Edit" : "Add"} Custom Line Items`}
       maxWidth="733"
       btnTitle={"Save"}
       closeTitle="Cancel"
       onSubmit={handleSave}
+      disabled={disable}
     >
       <div className="flex flex-col gap-20 mb-20">
         <InputField
@@ -201,6 +250,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
           name="unit_price"
           label="Unit Price"
           placeholder="Enter Unit Price"
+          type={"number"}
         />
 
         <InputField
@@ -208,6 +258,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
           name="quantity"
           label="Quantity"
           placeholder="Enter Quantity"
+          type={"number"}
         />
 
         <SelectField
@@ -254,7 +305,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
           <NumberInput
             label="Number of Payments"
             name="no_of_payments"
-            formik={formik}
+            // formik={formik}
             value={0}
             disable={true}
           />
@@ -286,6 +337,14 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
             </label>
             <br />
           </div>
+          {formik.values.is_delay_in_billing === 1 ? (
+            <div className=" mb-[1rem]">
+              <label className="text-[16px] font-medium leading-[20px]">
+                Billing Start Date ( Date of first payment )
+              </label>
+            </div>
+          ) : null}
+
           <input
             type="date"
             id="billing_start_date"
@@ -303,6 +362,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
               {formik.errors.billing_start_date}
             </div>
           ) : null}
+          {dateError ? <div className="text-red-600">{dateError}</div> : null}
           {/* <DateInput /> */}
         </div>
       </div>

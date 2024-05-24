@@ -40,7 +40,7 @@ import { DeleteIcon } from "public/assets/icons/common";
 import DeleteModal from "./DeleteModal";
 import { useSelector } from "react-redux";
 import { ClientRootState } from "app/store/Client/Interface";
-import { addsubscription } from "app/store/Client";
+import { addsubscription, subscriptionList } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
 
@@ -61,6 +61,9 @@ export default function AddSubscription() {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const client_id = localStorage.getItem("client_id");
+  const [dateError, setDateError] = useState("");
+  const [customList, setCustomList] = useState<any[]>([]);
+  const [disable, setDisable] = useState(false);
   const formik = useFormik({
     initialValues: [
       {
@@ -92,6 +95,7 @@ export default function AddSubscription() {
     subtotal: 0,
   });
   const [customLine, setCustomLine] = useState(false);
+  const [deleteList, setDeleteList] = useState([]);
   const [recurring, setRecurring] = useState<any>(0);
   const [isLineModal, setIsLineModal] = useState(false);
   const [list, setList] = useState<any[]>([]);
@@ -99,7 +103,7 @@ export default function AddSubscription() {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [deleteItem, setDeleteItem] = useState("");
   const [deleteDescription, SetDeleteDescription] = useState("");
-
+  const [Action, setAction] = useState([]);
   const [recurringShow, setRecurringShow] = useState(false);
   const [error, setError] = useState("");
   const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
@@ -148,7 +152,7 @@ export default function AddSubscription() {
                   aria-label="Lines"
                   endIcon={<DownArrowIcon className="cursor-pointer" />}
                 >
-                  Add Lines Items
+                  Add Line Items
                 </Button>
               </div>
             }
@@ -295,123 +299,6 @@ export default function AddSubscription() {
     );
   };
 
-  // const handleListFromChild = (arg) => {
-  //   if (!arg || !arg.length) return;
-  //   // Extract data and ensure all billing_frequency values are the same
-  //   const billingFrequency = arg[0].billing_frequency;
-  //   const billingTerms = arg[0].billing_terms;
-  //   const noOfPayments = arg[0].no_of_payments;
-  //   const billingStartDate = arg[0].billing_start_date;
-  //   const extractedData = arg?.map((item) => ({
-  //     ...item,
-  //     net_price: item.unit_price,
-  //     billing_frequency: billingFrequency,
-  //     billing_terms: billingTerms,
-  //     no_of_payments: noOfPayments,
-  //     billing_start_date: billingStartDate,
-  //   }));
-
-  //   // Update the existing list with new extracted data
-  //   setList((prevList) => {
-  //     const updatedList = prevList
-  //       ? prevList?.map((item) => ({
-  //           ...item,
-  //           billing_frequency: billingFrequency,
-  //           billing_terms: billingTerms,
-  //           no_of_payments: noOfPayments,
-  //           billing_start_date: billingStartDate,
-  //         }))
-  //       : [];
-
-  //     // Combine the updated list with the new extracted data
-  //     return [...updatedList, ...extractedData];
-  //   });
-
-  //   // Compute the new subtotal
-  //   let sum = 0;
-  //   extractedData.forEach((item) => {
-  //     sum += Number(item.net_price);
-  //   });
-
-  //   setDetails((prevDetails) => ({
-  //     ...prevDetails,
-  //     subtotal: sum,
-  //   }));
-
-  //   console.log("Updated extracted data:", extractedData);
-  // };
-
-  // const handleListFromChild = (arg) => {
-  //   if (!arg || !arg.length) return;
-
-  //   // Extract data and ensure all billing_frequency values are the same
-  //   const billingFrequency = arg[0].billing_frequency;
-  //   const billingTerms = arg[0].billing_terms;
-  //   const noOfPayments = arg[0].no_of_payments;
-  //   const billingStartDate = arg[0].billing_start_date;
-  //   const extractedData = arg.map((item) => ({
-  //     ...item,
-  //     net_price: item.unit_price,
-  //     billing_frequency: billingFrequency,
-  //     billing_terms: billingTerms,
-  //     no_of_payments: noOfPayments,
-  //     billing_start_date: billingStartDate,
-  //   }));
-  //   setList((prevList) => {
-  //     if (!prevList || prevList.length === 0) {
-  //       // If prevList is empty, set it to extractedData
-  //       return extractedData;
-  //     }
-
-  //     // Create a map for the new items by id for quick lookup
-  //     const extractedDataMap = extractedData.reduce((map, item) => {
-  //       map[item.id] = item;
-  //       return map;
-  //     }, {});
-
-  //     // Update the existing list with new extracted data or add new items
-  //     const updatedList = prevList.map((item) => {
-  //       if (extractedDataMap[item.id]) {
-  //         return {
-  //           ...extractedDataMap[item.id],
-  //           billing_frequency: billingFrequency,
-  //           billing_terms: billingTerms,
-  //           no_of_payments: noOfPayments,
-  //           billing_start_date: billingStartDate,
-  //         };
-  //       }
-  //       return item;
-  //     });
-
-  //     // Add any new items from extractedData that don't exist in the updatedList
-  //     extractedData.forEach((item) => {
-  //       if (!updatedList.some((existingItem) => existingItem.id == item.id)) {
-  //         updatedList.push({
-  //           ...item,
-  //           billing_frequency: billingFrequency,
-  //           billing_terms: billingTerms,
-  //           no_of_payments: noOfPayments,
-  //           billing_start_date: billingStartDate,
-  //         });
-  //       }
-  //     });
-
-  //     return updatedList;
-  //   });
-
-  //   // Compute the new subtotal
-  //   const sum = extractedData.reduce(
-  //     (total, item) => total + Number(item.net_price),
-  //     0
-  //   );
-
-  //   setDetails((prevDetails) => ({
-  //     ...prevDetails,
-  //     subtotal: sum,
-  //   }));
-
-  //   console.log("Updated extracted data:", extractedData);
-  // };
   const handleListFromChild = (arg) => {
     if (!arg || !arg.length) return;
 
@@ -421,6 +308,15 @@ export default function AddSubscription() {
     const noOfPayments = arg[0].no_of_payments;
     const billingStartDate = arg[0].billing_start_date;
 
+    const validation = validateBillingStartDate(billingStartDate);
+
+    if (validation.isValid) {
+      // Handle valid date, e.g., update state or form data
+      setDateError(""); // Clear any previous error
+    } else {
+      console.error(validation.error);
+      setDateError(validation.error); // Set the error message to be displayed
+    }
     // Map over arg to ensure all objects have consistent values
     const extractedData = arg.map((item) => ({
       ...item,
@@ -493,13 +389,13 @@ export default function AddSubscription() {
         ),
       0
     );
-    console.log("======sum===", sum);
     setDetails((prevDetails) => ({
       ...prevDetails,
       subtotal: sum,
     }));
 
     console.log("Updated extracted data:", extractedData);
+    // setCustomList(deleteList);
   };
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
@@ -536,6 +432,17 @@ export default function AddSubscription() {
       name == "no_of_payments" ||
       name == "billing_start_date"
     ) {
+      if (name == "billing_start_date") {
+        const validation = validateBillingStartDate(value);
+
+        if (validation.isValid) {
+          // Handle valid date, e.g., update state or form data
+          setDateError(""); // Clear any previous error
+        } else {
+          console.error(validation.error);
+          setDateError(validation.error); // Set the error message to be displayed
+        }
+      }
       setList((prevList) => {
         return prevList?.map((item, i) => {
           return {
@@ -590,7 +497,6 @@ export default function AddSubscription() {
       setPaymentError("");
     }
   }, [list]);
-
   const handleSubTotal = () => {
     let sum = 0;
     let unitDiscount = 0;
@@ -615,13 +521,6 @@ export default function AddSubscription() {
     handleSubTotal();
   }, [list]);
 
-  // useEffect(() => {
-  //   setDetails({
-  //     ...details,
-  //     total_price: details.subtotal - details.one_time_discount,
-  //   });
-  // }, [list]);
-
   const handleNetPrice = (
     discount: any,
     mode: any,
@@ -629,7 +528,6 @@ export default function AddSubscription() {
     index: any,
     quantity?: any
   ) => {
-    console.log("======mode ===", mode);
     if (discount && discount > 0) {
       if (mode == undefined || mode == 0 || mode == "1") {
         const netPrice = quantity * (price - (price * discount) / 100);
@@ -642,9 +540,7 @@ export default function AddSubscription() {
       }
     }
     handleChange(index);
-    // const updateList = [...list];
-    // updateList[index] = { ...updateList[index], net_price: price };
-    // setList(updateList);
+
     return quantity * price;
   };
 
@@ -658,6 +554,10 @@ export default function AddSubscription() {
 
   const onDelete = () => {
     const updatedList = list.filter((item) => item.id != id);
+    const updatedCustomList = list.filter((item) => item.id == id);
+    if (updatedCustomList[0].type == 0) {
+      setCustomList([...updatedCustomList, ...customList]);
+    }
     setList(updatedList);
     setId(null);
     setIsOpenDeletedModal(false);
@@ -717,6 +617,7 @@ export default function AddSubscription() {
         billing_start_date: item.billing_start_date || "",
       }));
       const fetchData = async () => {
+        setDisable(true);
         try {
           const payload = {
             client_id: client_id,
@@ -727,6 +628,7 @@ export default function AddSubscription() {
           //@ts-ignore
           const res = await dispatch(addsubscription(payload));
           // setList(res?.payload?.data?.data?.list);
+          setDisable(false);
           toast.success(res?.payload?.data?.message);
 
           navigate(`/admin/client/detail/${client_id}?type=subscription`);
@@ -739,6 +641,7 @@ export default function AddSubscription() {
             subtotal: 0,
           });
         } catch (error) {
+          setDisable(false);
           console.error("Error fetching data:", error);
         }
       };
@@ -751,14 +654,6 @@ export default function AddSubscription() {
   // const uniqueList = [];
   const uniqueList = [...new Set(list)];
 
-  // Iterate through the list in reverse order
-  // for (let i = list.length - 1; i >= 0; i--) {
-  //   const item = list[i];
-  //   if (!seenIds.has(item.id)) {
-  //     uniqueList.push(item);
-  //     seenIds.add(item.id);
-  //   }
-  // }
   const today = new Date();
   // Add one day to get tomorrow's date
   const tomorrow = new Date(today);
@@ -779,6 +674,62 @@ export default function AddSubscription() {
     });
   };
 
+  const validateBillingStartDate = (dateString) => {
+    const selectedDate = new Date(dateString);
+    selectedDate.setHours(0, 0, 0, 0); // Set to the beginning of the day for comparison
+
+    const year = selectedDate.getFullYear().toString();
+    const isFourDigitYear = /^\d{4}$/.test(year);
+
+    if (!isFourDigitYear) {
+      return { isValid: false, error: "Year must be in 4 digits" };
+    }
+
+    if (selectedDate <= today) {
+      return {
+        isValid: false,
+        error: "Billing Start Date must be greater than today",
+      };
+    }
+
+    return { isValid: true, error: "" };
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const payload = {
+          start: 0,
+          limit: 10,
+          search: "",
+        };
+        const res = await dispatch(subscriptionList(payload));
+        setCustomList(res?.payload?.data?.data?.list);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const actions = [];
+    uniqueList?.forEach((item) => {
+      actions.push("action");
+    });
+    setAction([...actions]);
+  }, [list]);
+
+  useEffect(() => {
+    if (!isOpenAddModal || !isOpenDeletedModal) {
+      const actions = [];
+      uniqueList?.forEach((item) => {
+        actions.push("action");
+      });
+      setAction([...actions]);
+    }
+  }, [isOpenAddModal, isOpenDeletedModal]);
+  console.log("first0", Action);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -881,7 +832,8 @@ export default function AddSubscription() {
                         <Select
                           // formik={formik}
                           name="unitDiscount"
-                          defaultValue={""}
+                          defaultValue={"action"}
+                          value={Action[index]}
                           sx={{
                             height: "30px",
                             minWidth: 100,
@@ -901,7 +853,7 @@ export default function AddSubscription() {
                           inputProps={{ "aria-label": "Without label" }}
                         >
                           <MenuItem
-                            value=""
+                            value={"action"}
                             style={{
                               display: "none",
                             }}
@@ -913,6 +865,9 @@ export default function AddSubscription() {
                             // key={item.value}
                             value={"Edit"}
                             onClick={() => {
+                              const action = [...Action];
+                              action[index] = "Edit";
+                              setAction([...action]);
                               setIsLineModal(true);
                               setId(row.id);
                             }}
@@ -924,6 +879,9 @@ export default function AddSubscription() {
                             // key={item.value}
                             value={"Delete"}
                             onClick={() => {
+                              const action = [...Action];
+                              action[index] = "Delete";
+                              setAction([...action]);
                               setIsOpenDeletedModal(true);
                               setId(row.id);
                               setDeleteItem("Delete Line Item");
@@ -947,87 +905,115 @@ export default function AddSubscription() {
                     </TableCell>
                     <TableCell
                       align="center"
-                      className="border-solid whitespace-nowrap font-500 border-1"
+                      className="border-solid whitespace-nowrap font-500 border-1 "
                     >
-                      <InputField
-                        name={"quantity"}
-                        type="number"
-                        formik={formik}
-                        placeholder={"0"}
-                        className="m-auto common-inputField w-max"
-                        inputProps={{
-                          className: "ps-[1rem] max-w-[90px] m-auto ",
-                          placeholderTextColor: "#111827 !important",
-                        }}
-                        hideTopPadding={true}
-                        value={
-                          row.quantity != 0 ||
-                          row.quantity != "" ||
-                          row.quantity != null
-                            ? row.quantity
-                            : ""
-                        }
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => {
-                          handleChange(index)(event);
-                        }}
-                        sx={{
-                          "& .MuiInputBase-input": {
-                            border: "0.5px solid #9DA0A6",
-                            "::placeholder": {
-                              color: "#111827 !important", // Set placeholder color
-                              opacity: 1,
+                      <div className="relative">
+                        <InputField
+                          name={"quantity"}
+                          type="number"
+                          formik={formik}
+                          placeholder={"0"}
+                          className="m-auto common-inputField w-max "
+                          inputProps={{
+                            className: "ps-[1rem] max-w-[90px] m-auto ",
+                            placeholderTextColor: "#111827 !important",
+                          }}
+                          hideTopPadding={true}
+                          value={
+                            row.quantity != 0 ||
+                            row.quantity != "" ||
+                            row.quantity != null
+                              ? row.quantity
+                              : ""
+                          }
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                          sx={{
+                            "& .MuiInputBase-input": {
+                              border: "0.5px solid #9DA0A6",
+                              "::placeholder": {
+                                color: "#111827 !important", // Set placeholder color
+                                opacity: 1,
+                              },
                             },
-                          },
-                        }}
-                      />
-                      {quantityError[index] && (
-                        <span style={{ color: "red" }}>
-                          {quantityError[index]}
-                        </span>
-                      )}
+                          }}
+                        />
+                        {quantityError[index] && (
+                          <span
+                            style={{
+                              color: "red",
+                              position: "absolute",
+                              top: "100%",
+                              left: "-9px",
+                              fontSize: "11px",
+                              fontWeight: "400",
+                              width: "140px",
+                              wordWrap: "break-word", // camelCase for CSS properties
+                              whiteSpace: "normal",
+                            }}
+                          >
+                            {quantityError[index]}
+                          </span>
+                        )}
+                      </div>
                     </TableCell>
                     <TableCell align="center" className="whitespace-nowrap">
-                      <InputField
-                        name={"unit_price"}
-                        type="number"
-                        placeholder={"$00.00"}
-                        formik={formik[index]}
-                        // value={row.unit_price}
-                        value={
-                          row.unit_price != 0 ||
-                          row.unit_price != "" ||
-                          row.unit_price != null
-                            ? row.unit_price
-                            : ""
-                        }
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => {
-                          handleChange(index)(event);
-                        }}
-                        className="m-auto common-inputField w-max"
-                        inputProps={{
-                          className: "ps-[1rem] max-w-[90px] m-auto ",
-                        }}
-                        hideTopPadding={true}
-                        sx={{
-                          "&  .MuiInputBase-input": {
-                            border: "0.5px solid #9DA0A6",
-                            height: 44,
-                            "::placeholder": {
-                              color: "#111827 !important", // Set placeholder color
-                              opacity: 1,
+                      <div className="relative">
+                        <InputField
+                          name={"unit_price"}
+                          type="number"
+                          placeholder={"$00.00"}
+                          formik={formik[index]}
+                          // value={row.unit_price}
+                          value={
+                            row.unit_price != 0 ||
+                            row.unit_price != "" ||
+                            row.unit_price != null
+                              ? row.unit_price
+                              : ""
+                          }
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                          className="m-auto common-inputField w-max"
+                          inputProps={{
+                            className: "ps-[1rem] max-w-[90px] m-auto ",
+                          }}
+                          hideTopPadding={true}
+                          sx={{
+                            "&  .MuiInputBase-input": {
+                              border: "0.5px solid #9DA0A6",
+                              height: 44,
+                              "::placeholder": {
+                                color: "#111827 !important", // Set placeholder color
+                                opacity: 1,
+                              },
                             },
-                          },
-                        }}
-                      />
-                      {unitPriceError[index] && (
-                        <span style={{ color: "red" }}>
-                          {unitPriceError[index]}
-                        </span>
-                      )}
+                          }}
+                        />
+                        {unitPriceError[index] && (
+                          <span
+                            style={{
+                              color: "red",
+                              position: "absolute",
+                              top: "100%",
+                              left: "-9px",
+                              fontSize: "11px",
+                              fontWeight: "400",
+                              width: "140px",
+                              wordWrap: "break-word", // camelCase for CSS properties
+                              whiteSpace: "normal",
+                            }}
+                          >
+                            {unitPriceError[index]}
+                          </span>
+                        )}
+                      </div>
                     </TableCell>
 
                     <TableCell
@@ -1234,42 +1220,58 @@ export default function AddSubscription() {
                       row.billing_terms == null ||
                       row.billing_terms == "" ? (
                         <>
-                          <InputField
-                            name={"no_of_payments"}
-                            placeholder={"0"}
-                            type="number"
-                            // value={row.unit_price}
-                            value={
-                              row.no_of_payments != 0 ||
-                              row.no_of_payments != "" ||
-                              row.no_of_payments != null
-                                ? row.no_of_payments
-                                : ""
-                            }
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              handleChange(index)(event);
-                            }}
-                            className="m-auto common-inputField w-max"
-                            inputProps={{
-                              className: "ps-[1rem] max-w-[90px] m-auto ",
-                            }}
-                            hideTopPadding={true}
-                            sx={{
-                              "&  .MuiInputBase-input": {
-                                border: "0.5px solid #9DA0A6",
-                                height: 44,
-                                "::placeholder": {
-                                  color: "#111827 !important", // Set placeholder color
-                                  opacity: 1,
+                          <div className="relative">
+                            <InputField
+                              name={"no_of_payments"}
+                              placeholder={"0"}
+                              type="number"
+                              // value={row.unit_price}
+                              value={
+                                row.no_of_payments != 0 ||
+                                row.no_of_payments != "" ||
+                                row.no_of_payments != null
+                                  ? row.no_of_payments
+                                  : ""
+                              }
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ) => {
+                                handleChange(index)(event);
+                              }}
+                              className="m-auto common-inputField w-max"
+                              inputProps={{
+                                className: "ps-[1rem] max-w-[90px] m-auto ",
+                              }}
+                              hideTopPadding={true}
+                              sx={{
+                                "&  .MuiInputBase-input": {
+                                  border: "0.5px solid #9DA0A6",
+                                  height: 44,
+                                  "::placeholder": {
+                                    color: "#111827 !important", // Set placeholder color
+                                    opacity: 1,
+                                  },
                                 },
-                              },
-                            }}
-                          />
-                          {paymentError && (
-                            <span style={{ color: "red" }}>{paymentError}</span>
-                          )}
+                              }}
+                            />
+                            {paymentError && (
+                              <span
+                                style={{
+                                  color: "red",
+                                  position: "absolute",
+                                  top: "100%",
+                                  left: "-9px",
+                                  fontSize: "11px",
+                                  fontWeight: "400",
+                                  width: "140px",
+                                  wordWrap: "break-word", // camelCase for CSS properties
+                                  whiteSpace: "normal",
+                                }}
+                              >
+                                {paymentError}
+                              </span>
+                            )}
+                          </div>
                         </>
                       ) : (
                         <InputField
@@ -1302,25 +1304,46 @@ export default function AddSubscription() {
                       align="center"
                       className="whitespace-nowrap font-500"
                     >
-                      <input
-                        type="date"
-                        name="billing_start_date"
-                        // min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
-                        // disabled={row.billing_start_date ? false : true} // Disable the input if billing_start_date does not exist
-                        min={tomorrowStr}
-                        value={
-                          row.billing_start_date != 0 ||
-                          row.billing_start_date != "" ||
-                          row.billing_start_date != null
-                            ? row.billing_start_date
-                            : ""
-                        }
-                        onChange={(
-                          event: React.ChangeEvent<HTMLInputElement>
-                        ) => {
-                          handleChange(index)(event);
-                        }}
-                      />
+                      <div className="relative">
+                        <input
+                          type="date"
+                          name="billing_start_date"
+                          className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
+                          // min={new Date().toISOString().split("T")[0]} // Set the minimum date to today
+                          // disabled={row.billing_start_date ? false : true} // Disable the input if billing_start_date does not exist
+                          min={tomorrowStr}
+                          value={
+                            row.billing_start_date != 0 ||
+                            row.billing_start_date != "" ||
+                            row.billing_start_date != null
+                              ? row.billing_start_date
+                              : ""
+                          }
+                          onChange={(
+                            event: React.ChangeEvent<HTMLInputElement>
+                          ) => {
+                            handleChange(index)(event);
+                          }}
+                        />
+
+                        {dateError ? (
+                          <div
+                            style={{
+                              color: "red",
+                              position: "absolute",
+                              top: "100%",
+                              left: "-9px",
+                              fontSize: "11px",
+                              fontWeight: "400",
+                              width: "140px",
+                              wordWrap: "break-word", // camelCase for CSS properties
+                              whiteSpace: "normal", // camelCase for CSS properties
+                            }}
+                          >
+                            {dateError}
+                          </div>
+                        ) : null}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1553,13 +1576,21 @@ export default function AddSubscription() {
             color="secondary"
             className="w-[156px] h-[48px] text-[18px] leading-5"
             onClick={() => handleSave()}
-            disabled={list.length == 0 || details.subtotal <= 0 ? true : false}
+            disabled={
+              list.length == 0 ||
+              details.subtotal <= 0 ||
+              dateError != "" ||
+              disable
+                ? true
+                : false
+            }
           >
             Save
           </Button>
           <Button
             variant="outlined"
             color="secondary"
+            disabled={disable}
             className="w-[156px] h-[48px] text-[18px] ml-14  leading-5"
             onClick={() => handleCancel()}
           >
@@ -1573,11 +1604,15 @@ export default function AddSubscription() {
         isEditing={false}
       />
 
-      <CustomLineModal
-        isOpen={customLine}
-        setIsOpen={setCustomLine}
-        handleList={handleListFromChild}
-      />
+      {customLine && (
+        <CustomLineModal
+          isOpen={customLine}
+          setIsOpen={setCustomLine}
+          handleList={handleListFromChild}
+          customList={customList}
+          setCustomList={setCustomList}
+        />
+      )}
 
       {isLineModal && (
         <LineModal
@@ -1586,6 +1621,7 @@ export default function AddSubscription() {
           handleList={handleListFromChild}
           setId={setId}
           // fetchUpdateData={fetchUpdateData}
+
           id={id}
         />
       )}
