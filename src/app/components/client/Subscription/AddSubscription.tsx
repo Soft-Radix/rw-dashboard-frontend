@@ -109,6 +109,7 @@ export default function AddSubscription() {
   const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
   const [quantityError, setQuantityError] = useState<string[]>([]);
   const [paymentError, setPaymentError] = useState("");
+  const [disableDelete, setDisableDelete] = useState(false);
   const location: Location = useLocation();
   const [id, setId] = useState();
   const navigate: NavigateFunction = useNavigate();
@@ -553,6 +554,7 @@ export default function AddSubscription() {
   };
 
   const onDelete = () => {
+    setDisableDelete(true);
     const updatedList = list.filter((item) => item.id != id);
     const updatedCustomList = list.filter((item) => item.id == id);
     if (updatedCustomList[0].type == 0) {
@@ -1631,6 +1633,7 @@ export default function AddSubscription() {
         title={deleteItem}
         onDelete={onDelete}
         description={deleteDescription}
+        disable={disableDelete}
       />
     </>
   );
