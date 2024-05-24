@@ -51,7 +51,7 @@ const Root = styled(ListItemButton)<ListItemButtonStyleProps>(
     "&.active": {
       color: "theme.palette.text.primary",
       backgroundColor: "#393F4C",
-      pointerEvents: "none",
+      // pointerEvents: "none",
       transition: "border-radius .15s cubic-bezier(0.4,0.0,0.2,1)",
       "& > .fuse-list-item-text-primary": {
         color: "inherit",
