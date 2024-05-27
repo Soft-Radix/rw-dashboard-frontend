@@ -77,16 +77,21 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
   const handleSave = () => {
     formik.handleSubmit();
   };
+
+  const handleToggle = (e: React.MouseEvent) => {
+    setIsOpen((prev) => !prev);
+    formik.resetForm(); // Reset form values when closing the modal
+  };
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={handleToggle}
       modalTitle="Add Project"
       maxWidth="314"
       btnTitle="Save"
       closeTitle="Cancel"
       headerBgColor="white"
-      // bgColor="white"
+      bgColor="white"
       titleColor="black"
       onSubmit={handleSave}
       disabled={disable}
@@ -98,6 +103,7 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
         value={formik.values.name}
         placeholder="Enter Project Name"
         className="input-color"
+        onClick={(e) => e.stopPropagation()}
       />
     </CommonModal>
   );

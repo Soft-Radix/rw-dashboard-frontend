@@ -27,6 +27,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "app/store/store";
 import navigationConfig from "app/configs/navigationConfig";
 import EditProjectModal from "src/app/pages/projects/EditProjectModal";
+import { useNavigate } from "react-router";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -77,7 +78,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [deleteid, setDeleteId] = useState<number | string>("");
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -129,6 +130,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
           let projects = [...removeItem];
           localData.projects = projects;
           localStorage.setItem("userDetail", JSON.stringify(localData));
+          navigate("/");
           window.location.reload();
         }
       });
