@@ -89,14 +89,19 @@ export default function Clients() {
       setSelectedIds([]); // Deselect all
     }
   };
+  const { actionStatusClient } = useSelector(
+    (store: ClientRootState) => store.client
+  );
 
   const deleteClient = async () => {
+    if (!!actionStatusClient || selectedIds.length < 1) return;
     const { payload } = await dispatch(
       deletClient({ client_ids: selectedIds })
     );
     if (payload?.data?.status) {
       setIsOpenDeletedModal(false);
     }
+    setSelectedIds([]);
   };
   const fetchList = useCallback(() => {
     const payload = {
@@ -360,6 +365,7 @@ export default function Clients() {
         setIsOpen={setIsOpenAddModal}
         fetchList={fetchList}
       />
+
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}

@@ -32,58 +32,6 @@ import { useSelector } from "react-redux";
 import { debounce } from "lodash";
 import DeleteClient from "src/app/components/client/DeleteClient";
 
-const rows = [
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Active ",
-  },
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Suspended",
-  },
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Pending",
-  },
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Pending",
-  },
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Suspended",
-  },
-
-  {
-    id: "#2367055342",
-    fname: "Benjamin",
-    lname: "Benjamin",
-
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    status: "Active",
-  },
-];
-
 export default function AccountManager() {
   const accountManager_Id = useParams();
   console.log(accountManager_Id, "kk");
@@ -93,7 +41,7 @@ export default function AccountManager() {
     (state: RootState) => state.accManagerSlice
   );
   //@ts-ignore
-  console.log("accManage========rttState.", accManagerState?.list?.length > 0);
+  // console.log("accManage========rttState.", accManagerState?.list?.length > 0);
   // console.log(accManagerState?.list?.data?.list, "managerList");
 
   const theme: Theme = useTheme();
@@ -139,7 +87,7 @@ export default function AccountManager() {
   // Include necessary dependencies for useEffect
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   // Other component logic
- 
+
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
     setfilters((prevFilters) => {
@@ -152,21 +100,34 @@ export default function AccountManager() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
-  const deleteAccManger = async (id: any) => {
-    // console.log(id, "id");
+  // if (payload?.data?.status) {
+  //   setManagerFilterMenu((prevFilters) => ({
+  //     ...prevFilters,
+  //     start: assignAccManagerDetail.length - 1 == 0 ? 0 : prevFilters.start,
+  //   }));
+  //   dispatch(
+  //     getAccManagerList({ ...managerfilterMenu, client_id: client_id })
+  //   );
+
+  const deleteAccManagerList = async (id: any) => {
+    if (!!accManagerState.actionStatus || !id) return;
     try {
       const { payload } = await dispatch(
         deleteAccManager({ accountManger_id: id })
       );
+
       if (payload?.data?.status) {
+        setfilters((prevFilters) => ({
+          ...prevFilters,
+          start: accManagerState?.list?.length === 1 ? 0 : prevFilters.start,
+        }));
         setIsOpenDeletedModal(false);
-        // fetchAgentGroupLsssist();
+        setIsDeleteId(null);
       }
     } catch (error) {
       console.error("Failed to delete agent group:", error);
     }
   };
-
   return (
     <>
       <TitleBar title="Account Manager">
@@ -235,7 +196,13 @@ export default function AccountManager() {
                   >
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Active" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.status === "Suspended" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402]  bg-[#FFEEBB]"}`}
+                      ${
+                        row.status === "Active"
+                          ? "text-[#4CAF50] bg-[#4CAF502E]"
+                          : row.status === "Suspended"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : "text-[#4CAF50] bg-[#4CAF502E]"
+                      }`}
                     >
                       {row.status || "Active"}
                     </span>
@@ -278,7 +245,7 @@ export default function AccountManager() {
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
-        onDelete={() => deleteAccManger(deleteId)}
+        onDelete={() => deleteAccManagerList(deleteId)}
         heading={"Delete Account Manager"}
         description={"Are you sure you want to delete this Account Manager  ? "}
       />

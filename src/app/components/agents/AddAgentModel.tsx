@@ -118,6 +118,7 @@ function AddAgentModel({
         // Close the modal
         setIsOpen(false);
         setUploadedFiles([]);
+        setpreviewUrl("");
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -141,11 +142,12 @@ function AddAgentModel({
     if (!!agentState?.successMsg) {
       dispatch(restAll());
       fetchAgentList();
-      setIsOpen((prev) => false);
+      setIsOpen(false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentState]);
+    formik.resetForm();
+  }, [agentState, isOpen]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -199,12 +201,10 @@ function AddAgentModel({
         setpreviewUrl(urlForImage + agentDetail.user_image);
       }
       if (!isOpen) {
-        setpreviewUrl(previewUrl);
+        setpreviewUrl("");
       }
     }
     setUploadedFiles([]);
-    setpreviewUrl("");
-    formik.resetForm();
   }, [agentDetail, isOpen]);
   // console.log("uploadedFiles", uploadedFiles);
   return (

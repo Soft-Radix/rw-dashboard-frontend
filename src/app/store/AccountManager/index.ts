@@ -227,12 +227,12 @@ export const accManagerSlice = createSlice({
         // console.log(payload, "payload");
         const { accountManger_id } = action.meta?.arg;
         // console.log(accountManger_id, "idd");
-        state.actionStatus = false;
         if (payload?.data?.status) {
           state.list = state.list.filter(
             (item) => item.id !== accountManger_id
           );
 
+          state.actionStatus = false;
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);

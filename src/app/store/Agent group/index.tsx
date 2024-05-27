@@ -241,11 +241,11 @@ export const agentGroupSlice = createSlice({
         const payload = action.payload as ApiResponse; // Assert type
         const { group_id } = action.meta?.arg;
         // console.log(group_id, "idd");
-        state.actionStatusDisabled = false;
         if (payload?.data?.status) {
-          state.list = state.list.filter((item) => item.id !== group_id);
+          // state.list = state.list.filter((item) => item.id !== group_id);
 
           toast.success(payload?.data?.message);
+          state.actionStatusDisabled = false;
         } else {
           toast.error(payload?.data?.message);
         }
@@ -365,13 +365,13 @@ export const agentGroupSlice = createSlice({
         const payload = action.payload as ApiResponse; // Assert type
         const { member_id } = action.meta?.arg;
         // console.log(group_id, "idd");
-        state.actionStatus = false;
         if (payload?.data?.status) {
           state.agentGroupDetail.group_members =
             state.agentGroupDetail.group_members.filter(
               (item) => item.id !== member_id
             );
 
+          state.actionStatus = false;
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);

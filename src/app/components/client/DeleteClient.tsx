@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import { AgentRootState } from "app/store/Agent/Interafce";
+import { ClientRootState } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -34,6 +35,9 @@ function DeleteClient({
   const { actionStatusAttachment } = useSelector(
     (store: AgentRootState) => store.agent
   );
+  const { actionStatusClient } = useSelector(
+    (store: ClientRootState) => store.client
+  );
 
   return (
     <>
@@ -44,7 +48,10 @@ function DeleteClient({
         maxWidth="310"
         DeleteModal={true}
         disabled={
-          actionStatus || actionStatusDisabled || actionStatusAttachment
+          actionStatus ||
+          actionStatusDisabled ||
+          actionStatusAttachment ||
+          actionStatusClient
         }
         onSubmit={onDelete}
         btnTitle="Yes"
