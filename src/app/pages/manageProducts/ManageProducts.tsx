@@ -128,8 +128,16 @@ export default function ManageProducts() {
                         },
                       }}
                     >
-                      <TableCell scope="row">{item.name}</TableCell>
-                      <TableCell align="center" className="whitespace-nowrap">
+                      <TableCell
+                        scope="row"
+                        className="w-[400px] break-words break-all"
+                      >
+                        {item.name}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="w-[400px] break-words break-all"
+                      >
                         {item.description}
                       </TableCell>
 

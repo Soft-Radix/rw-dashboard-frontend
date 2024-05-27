@@ -35,9 +35,15 @@ const validationSchema = Yup.object({
       "Description cannot be only spaces",
       (value) => value && value.trim().length > 0
     ),
+
   unit_price: Yup.number()
     .required("Unit Price is required")
-    .min(0.01, "Unit Price must be greater than 0"),
+    .min(0.01, "Unit Price must be greater than 0")
+    .test(
+      "decimal-places",
+      "Only two decimal places are allowed",
+      (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+    ),
 });
 function AddProduct({
   isOpen,
