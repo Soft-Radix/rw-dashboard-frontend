@@ -319,27 +319,13 @@ export default function AgentDetails() {
                 <div className="text-2xl text-title font-600">Attachment</div>
                 <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
-                    <div className="relative cursor-pointer " key={item.id}>
-                      {item.file_type && item.file_type.startsWith("image/") ? (
-                        <img
-                          src={urlForImage + item.file}
-                          alt="Black Attachment"
-                          className=" w-[200px] rounded-md sm:h-[130px]"
-                        />
-                      ) : (
-                        <div>
-                          <a
-                            href={urlForImage + item.file}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="flex items-center"
-                          >
-                            {/* Provide a link to download the PDF */}
-                            <AttachmentIcon className="mr-1" />
-                            {item.file_name}
-                          </a>
-                        </div>
-                      )}
+                    <div className="relative cursor-pointer ">
+                      {/* <img
+                        src={urlForImage + item.file}
+                        alt="Black Attachment"
+                        className="w-[200px] rounded-md sm:h-[130px]"
+                      /> */}
+                      <a href="/">check</a>
                       <div
                         className="absolute top-7 left-7"
                         onClick={() =>
