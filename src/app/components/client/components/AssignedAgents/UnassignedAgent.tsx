@@ -12,10 +12,17 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   onDelete?: () => void;
   loading?: boolean;
+  description?: string;
 }
 
-function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
-  const { actionStatus } = useSelector(
+function UnassignedAgent({
+  isOpen,
+  setIsOpen,
+  loading,
+  onDelete,
+  description,
+}: IProps) {
+  const { actionStatus, actionStatusDisabled } = useSelector(
     (store: ClientRootState) => store.client
   );
   return (
@@ -29,7 +36,7 @@ function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
         btnTitle="Yes"
         closeTitle="Cancel"
         onSubmit={onDelete}
-        disabled={actionStatus}
+        disabled={actionStatus || actionStatusDisabled}
       >
         <div className="flex flex-col items-center justify-center gap-10 ">
           <div className="h-56 w-56 flex items-center justify-center rounded-full border-1 border-solid border-[#F44336] cursor-pointer ">
@@ -39,7 +46,7 @@ function UnassignedAgent({ isOpen, setIsOpen, loading, onDelete }: IProps) {
             Unassigned
           </Typography>
           <Typography className="text-[14px]  text-[#757982] text-center px-28">
-            Are you sure you want to unassign this agent ?
+            {description}
           </Typography>
         </div>
       </CommonModal>

@@ -17,6 +17,7 @@ import CommonTable from "src/app/components/commonTable";
 import UnassignedAgent from "../AssignedAgents/UnassignedAgent";
 import CommonPagination from "src/app/components/pagination";
 import { start } from "repl";
+import { getAccManagerList } from "app/store/AccountManager";
 
 export default function AssignedAccountManager({
   setManagerFilterMenu,
@@ -46,7 +47,10 @@ export default function AssignedAccountManager({
           ...prevFilters,
           start: assignAccManagerDetail.length - 1 == 0 ? 0 : prevFilters.start,
         }));
-        // callAgentApi();
+        dispatch(
+          getAccManagerList({ ...managerfilterMenu, client_id: client_id })
+        );
+
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -172,9 +176,9 @@ export default function AssignedAccountManager({
                     >
                       <span
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
+                      ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#4F46E5] bg-[#EDEDFC]"}`}
                       >
-                        {row.status ? row.status : "Unassigned"}
+                        {row.status ? row.status : "Unassign"}
                       </span>
                     </TableCell>
                   </TableRow>
@@ -198,6 +202,7 @@ export default function AssignedAccountManager({
         isOpen={isOpenUnssignedModal}
         setIsOpen={setIsOpenUnassignedModal}
         onDelete={() => unassignAccManager(deleteId)}
+        description={"Are you sure you want to unassign this account manager?"}
       />
     </>
   );

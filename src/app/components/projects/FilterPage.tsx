@@ -52,7 +52,7 @@ const FilterPage = (props: FilterDesign) => {
           <SearchIcon
             width={18}
             height={18}
-            className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[40%] translate-y-[-50%] text-para_light"
+            className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
           />
         </div>
         <div className="w-full sm:w-auto flex  flex-row items-center justify-between gap-3 sm:gap-40 cursor-pointer">

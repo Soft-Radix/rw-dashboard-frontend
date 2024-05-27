@@ -40,54 +40,6 @@ import {
 } from "app/store/Agent group/Interface";
 import DeleteClient from "../client/DeleteClient";
 
-const rows = [
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-  {
-    id: "1542145611525",
-    firstName: "Benajmin",
-    lastName: "Benajmin",
-  },
-];
-
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
 
@@ -122,6 +74,7 @@ export default function GroupAgentsList() {
   };
   const theme: Theme = useTheme();
   const deleteGroup = async (id: any) => {
+    if (!!actionStatus || !id) return;
     // console.log(id, "id");
     try {
       const { payload } = await dispatch(
@@ -132,6 +85,7 @@ export default function GroupAgentsList() {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
+      setIsDeleteId(null);
     } catch (error) {
       console.error("Failed to delete agent group:", error);
     }
@@ -203,7 +157,7 @@ export default function GroupAgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <form onSubmit={formik.handleSubmit}>
-            <div className="p-[2rem]  sm:w-1/3 flex items-center gap-20 flex-col sm:flex-row w-full">
+            <div className="p-[2rem]  sm:w-1/3 flex items-end gap-20 flex-col sm:flex-row w-full">
               {" "}
               {/* Use formik.handleSubmit as the onSubmit handler */}
               <InputField
@@ -270,8 +224,8 @@ export default function GroupAgentsList() {
                         {row.last_name}
                       </TableCell>
 
-                      <TableCell scope="row" className="w-[15%]">
-                        <div className="flex gap-20 pe-20">
+                      <TableCell align="left" className="w-[18%]  px-[7px]">
+                        <div className="flex gap-5 pe-20 items-center justify-center">
                           <span className="p-2 cursor-pointer">
                             <DeleteIcon
                               onClick={() => {
@@ -280,7 +234,7 @@ export default function GroupAgentsList() {
                               }}
                             />
                           </span>
-                          <span className="p-2 cursor-pointer">
+                          <span className="p-2 cursor-pointer ">
                             <Link to="/admin/agents/list">
                               Go to Agent Page
                             </Link>

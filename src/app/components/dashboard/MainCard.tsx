@@ -29,7 +29,15 @@ export default function MainCard({
   callListApi,
 }: MainCardType) {
   const [openEditModal, setOpenEditModal] = useState(false);
-  const toggleEditModal = () => setOpenEditModal(!openEditModal);
+  const [originalTitle, setOriginalTitle] = useState(title);
+  const toggleEditModal = () => {
+    if (openEditModal) {
+      formik.setFieldValue("name", originalTitle);
+    } else {
+      setOriginalTitle(formik.values.name);
+    }
+    setOpenEditModal(!openEditModal);
+  };
   const dispatch = useDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);

@@ -6,6 +6,8 @@ import { DeleteIcon } from "public/assets/icons/common";
 import { useSelector } from "react-redux";
 import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
+import { AgentRootState } from "app/store/Agent/Interafce";
+import { ClientRootState } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -27,6 +29,16 @@ function DeleteClient({
   const { actionStatus } = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
+  const { actionStatusDisabled } = useSelector(
+    (store: AgentGroupRootState) => store.agentGroup
+  );
+  const { actionStatusAttachment } = useSelector(
+    (store: AgentRootState) => store.agent
+  );
+  const { actionStatusClient } = useSelector(
+    (store: ClientRootState) => store.client
+  );
+
   return (
     <>
       <CommonModal
@@ -35,7 +47,12 @@ function DeleteClient({
         modalTitle="Add Client"
         maxWidth="310"
         DeleteModal={true}
-        disabled={actionStatus}
+        disabled={
+          actionStatus ||
+          actionStatusDisabled ||
+          actionStatusAttachment ||
+          actionStatusClient
+        }
         onSubmit={onDelete}
         btnTitle="Yes"
         closeTitle="Cancel"

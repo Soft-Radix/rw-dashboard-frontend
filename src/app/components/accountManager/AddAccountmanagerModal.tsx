@@ -164,6 +164,7 @@ function AddAccountManagerModel({
     } else if (!!accmanagerState?.errorMsg) {
       dispatch(restAll());
     }
+    formik.resetForm();
   }, [accmanagerState]);
 
   const handleClose = () => {
@@ -232,21 +233,6 @@ function AddAccountManagerModel({
     setSelectedItems(updatedSelectedItems);
     setSelectAll(false);
   };
-  useEffect(() => {
-    if (accManagerDetail) {
-      formik.setValues({
-        first_name: accManagerDetail.first_name || "",
-        last_name: accManagerDetail.last_name || "",
-        // status: accManagerDetail.status || "",
-        email: accManagerDetail.email || "",
-        phone_number: accManagerDetail.phone_number || "",
-        address: accManagerDetail.address,
-      });
-      if (accManagerDetail.user_image) {
-        setpreviewUrl(urlForImage + accManagerDetail.user_image);
-      }
-    }
-  }, [accManagerDetail]);
 
   // console.log(accClientList, "accClientttttList");
   useEffect(() => {
@@ -262,9 +248,10 @@ function AddAccountManagerModel({
         setpreviewUrl(urlForImage + accManagerDetail.user_image);
       }
       if (!isOpen) {
-        setpreviewUrl(previewUrl);
+        setpreviewUrl("");
       }
     }
+    formik.resetForm();
   }, [accManagerDetail, isOpen]);
 
   return (

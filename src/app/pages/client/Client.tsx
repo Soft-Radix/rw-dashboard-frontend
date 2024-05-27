@@ -89,14 +89,19 @@ export default function Clients() {
       setSelectedIds([]); // Deselect all
     }
   };
+  const { actionStatusClient } = useSelector(
+    (store: ClientRootState) => store.client
+  );
 
   const deleteClient = async () => {
+    if (!!actionStatusClient || selectedIds.length < 1) return;
     const { payload } = await dispatch(
       deletClient({ client_ids: selectedIds })
     );
     if (payload?.data?.status) {
       setIsOpenDeletedModal(false);
     }
+    setSelectedIds([]);
   };
   const fetchList = useCallback(() => {
     const payload = {
@@ -349,7 +354,7 @@ export default function Clients() {
 
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-sm pt-[2rem]">
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem] ">
             <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>
@@ -360,13 +365,14 @@ export default function Clients() {
         setIsOpen={setIsOpenAddModal}
         fetchList={fetchList}
       />
+
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         loading={clientState?.actionStatus}
         onDelete={deleteClient}
         heading={"Delete Client"}
-        description={"Are you sure you want to delete this Client  ? "}
+        description={"Are you sure you want to delete this Client? "}
       />
     </>
   );

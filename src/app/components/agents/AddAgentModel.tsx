@@ -40,7 +40,6 @@ type FormType = {
   address: string;
 };
 
-const names = ["All", "Rahul", "Manisha", "Elvish", "Abhishek"];
 function AddAgentModel({
   isOpen,
   setIsOpen,
@@ -111,8 +110,6 @@ function AddAgentModel({
         // console.log(responseData, "data");
         // Reset form after successful submission
 
-        resetForm();
-
         // Optionally fetch updated agent list
         if (fetchAgentList) {
           fetchAgentList();
@@ -121,6 +118,7 @@ function AddAgentModel({
         // Close the modal
         setIsOpen(false);
         setUploadedFiles([]);
+        setpreviewUrl("");
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -144,37 +142,38 @@ function AddAgentModel({
     if (!!agentState?.successMsg) {
       dispatch(restAll());
       fetchAgentList();
-      setIsOpen((prev) => false);
+      setIsOpen(false);
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentState]);
+    formik.resetForm();
+  }, [agentState, isOpen]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
     setIsOpen(true);
   };
 
-  const handleMenuItemClick = (itemName: string) => {
-    if (itemName === "All") {
-      // Toggle select all
-      const allSelected = !selectAll;
-      setSelectAll(allSelected);
-      setSelectedItems(
-        allSelected ? names.filter((name) => name !== "All") : []
-      );
-    } else {
-      // Toggle the selected state of the clicked item
-      const updatedSelectedItems = selectedItems.includes(itemName)
-        ? selectedItems.filter((item) => item !== itemName)
-        : [...selectedItems, itemName];
-      setSelectedItems(updatedSelectedItems);
-      // Check if all items are selected
+  // const handleMenuItemClick = (itemName: string) => {
+  //   if (itemName === "All") {
+  //     // Toggle select all
+  //     const allSelected = !selectAll;
+  //     setSelectAll(allSelected);
+  //     setSelectedItems(
+  //       allSelected ? names.filter((name) => name !== "All") : []
+  //     );
+  //   } else {
+  //     // Toggle the selected state of the clicked item
+  //     const updatedSelectedItems = selectedItems.includes(itemName)
+  //       ? selectedItems.filter((item) => item !== itemName)
+  //       : [...selectedItems, itemName];
+  //     setSelectedItems(updatedSelectedItems);
+  //     // Check if all items are selected
 
-      const allSelected = updatedSelectedItems.length === names.length - 1;
-      setSelectAll(allSelected);
-    }
-  };
+  //     const allSelected = updatedSelectedItems.length === names.length - 1;
+  //     setSelectAll(allSelected);
+  //   }
+  // };
   const handleRemoveFile = (file: File) => {
     const filteredFiles = uploadedFiles.filter((f) => f !== file);
     setUploadedFiles(filteredFiles);
@@ -202,12 +201,12 @@ function AddAgentModel({
         setpreviewUrl(urlForImage + agentDetail.user_image);
       }
       if (!isOpen) {
-        setpreviewUrl(previewUrl);
+        setpreviewUrl("");
       }
     }
     setUploadedFiles([]);
   }, [agentDetail, isOpen]);
-  console.log("uploadedFiles", uploadedFiles);
+  // console.log("uploadedFiles", uploadedFiles);
   return (
     <CommonModal
       open={isOpen}

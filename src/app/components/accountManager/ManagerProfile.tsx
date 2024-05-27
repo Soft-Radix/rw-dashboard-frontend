@@ -28,6 +28,7 @@ import { RootState, useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import ListLoading from "@fuse/core/ListLoading";
+import moment from "moment";
 
 const rows = [
   {
@@ -183,7 +184,7 @@ const ManagerProfile = () => {
                     <div className="flex">
                       <img src="../assets/icons/group.svg" className="mr-4" />
 
-                      <span>#2367055342</span>
+                      <span>{accManagerDetail?.id || "N/A"}</span>
                     </div>
                     <div className="flex sm:px-20">
                       <span className="flex">
@@ -191,7 +192,13 @@ const ManagerProfile = () => {
                           src="../assets/icons/ri_time-line.svg"
                           className="sm:mr-4"
                         />{" "}
-                        <span>{accManagerDetail?.phone_number || "N/A"}</span>
+                        <span>
+                          {accManagerDetail?.created_at
+                            ? moment(accManagerDetail.created_at).format(
+                                "MMMM Do, YYYY"
+                              )
+                            : "N/A"}
+                        </span>
                       </span>
                     </div>
                   </div>
