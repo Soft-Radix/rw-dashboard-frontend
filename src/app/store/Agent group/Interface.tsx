@@ -45,7 +45,7 @@ export interface AgentGroupRootState {
 }
 
 export interface AgentGroupIDType {
-  group_id: string;
+  group_id?: string;
 }
 export interface deleteAgentGroupType {
   group_id?: number;

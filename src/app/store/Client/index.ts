@@ -591,7 +591,7 @@ export const clientSlice = createSlice({
         // console.log(action, "action");
         const { data } = action.payload?.data;
         // console.log(data, "ggggg");
-        AgentGroupIDType
+
         state.clientDetail = data;
       })
       .addCase(getClientInfo.rejected, (state) => {
