@@ -124,6 +124,7 @@ function AddGroupModel({
     } else if (!!agentGroupState?.errorMsg) {
       dispatch(restAll());
     }
+    formik.resetForm();
   }, [agentGroupState, filterMenu]);
   return (
     <CommonModal

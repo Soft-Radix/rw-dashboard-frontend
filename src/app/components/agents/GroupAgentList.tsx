@@ -74,6 +74,7 @@ export default function GroupAgentsList() {
   };
   const theme: Theme = useTheme();
   const deleteGroup = async (id: any) => {
+    if (!!actionStatus || !id) return;
     // console.log(id, "id");
     try {
       const { payload } = await dispatch(
@@ -84,6 +85,7 @@ export default function GroupAgentsList() {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
+      setIsDeleteId(null);
     } catch (error) {
       console.error("Failed to delete agent group:", error);
     }

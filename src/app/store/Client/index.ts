@@ -335,6 +335,7 @@ export const initialState: initialStateProps = {
   toatalPage: 0,
   managertotal_records: 0,
   actionStatusDisabled: false,
+  actionStatusClient: false,
 };
 
 export const addAssignAgents = createAsyncThunk(
@@ -543,17 +544,18 @@ export const clientSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(deletClient.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusClient = true;
       })
       .addCase(deletClient.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { client_ids } = action.meta?.arg;
         // console.log(client_ids, "idd");
-        state.actionStatus = false;
         if (payload?.data?.status) {
           state.list = state.list?.filter(
             (item) => !client_ids?.includes(item.id)
           );
+
+          state.actionStatusClient = false;
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);
@@ -561,7 +563,7 @@ export const clientSlice = createSlice({
       })
       .addCase(deletClient.rejected, (state, { error }) => {
         toast.error(error?.message);
-        state.actionStatus = false;
+        state.actionStatusClient = false;
       })
 
       .addCase(getClientList.pending, (state) => {

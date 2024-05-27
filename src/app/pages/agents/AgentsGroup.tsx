@@ -32,6 +32,7 @@ export default function AgentsGroup() {
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
+
   // console.log(agentGroupState, "as");
 
   const dispatch = useAppDispatch();
@@ -73,15 +74,18 @@ export default function AgentsGroup() {
   };
   const deleteGroup = async (id: any) => {
     // console.log(id, "id");
+    if (!!agentGroupState.actionStatusDisabled || !id) return;
     try {
       const { payload } = await dispatch(deleteAgentGroup({ group_id: id }));
       // console.log(payload, "payload");
+
       if (payload?.data?.status) {
         setfilters((prevFilters) => ({
           ...prevFilters,
           start: agentGroupState.list.length - 1 == 0 ? 0 : prevFilters.start,
         }));
         setIsOpenDeletedModal(false);
+        setIsDeleteId(null);
         // fetchAgentGroupLsssist();
       }
     } catch (error) {

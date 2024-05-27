@@ -55,6 +55,7 @@ export type initialStateProps = {
   currentPage?: number;
   managertotal_records?: number;
   actionStatusDisabled?: boolean;
+  actionStatusClient?: boolean;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
