@@ -29,8 +29,8 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
 
   return (
     <div className="relative">
-      <div className="flex justify-between gap-[30px] pt-[1.5rem] pb-[1.6rem] flex-wrap px-[2rem] min-h-[4rem]">
-        <div className="flex justify-left gap-[30px] flex-wrap ">
+      <div className="flex justify-between gap-[20px] pt-[1.5rem] pb-[1.6rem] flex-wrap px-[2rem] min-h-[4rem]">
+        <div className="flex justify-left gap-[20px] flex-wrap ">
           {tabs.map((tab) => (
             <button
               key={tab.id}

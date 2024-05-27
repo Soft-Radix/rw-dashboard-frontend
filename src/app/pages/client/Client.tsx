@@ -349,7 +349,7 @@ export default function Clients() {
 
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-sm pt-[2rem]">
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem] ">
             <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>
@@ -366,7 +366,7 @@ export default function Clients() {
         loading={clientState?.actionStatus}
         onDelete={deleteClient}
         heading={"Delete Client"}
-        description={"Are you sure you want to delete this Client  ? "}
+        description={"Are you sure you want to delete this Client? "}
       />
     </>
   );

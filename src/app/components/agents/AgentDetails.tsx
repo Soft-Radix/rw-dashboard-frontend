@@ -69,6 +69,7 @@ export default function AgentDetails() {
   const theme: Theme = useTheme();
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const { agentDetail, fetchStatus } = useSelector(
     (store: AgentRootState) => store?.agent
   );
@@ -97,9 +98,6 @@ export default function AgentDetails() {
     };
   }, []);
 
-  if (fetchStatus === "loading") {
-    return <ListLoading />;
-  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -132,6 +130,7 @@ export default function AgentDetails() {
       // Dispatch the uploadAttachment action with formData
       dispatch(uploadAttachment(formData));
     }
+    e.target.value = "";
   };
   // console.log(uploadedFiles, "fghughdu");
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -145,6 +144,9 @@ export default function AgentDetails() {
     }
     setIsOpenDeletedModal(false);
   };
+  if (fetchStatus === "loading") {
+    return <ListLoading />;
+  }
 
   return (
     <>
@@ -318,11 +320,12 @@ export default function AgentDetails() {
                 <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
                     <div className="relative cursor-pointer ">
-                      <img
+                      {/* <img
                         src={urlForImage + item.file}
                         alt="Black Attachment"
-                        className=" w-[200px] rounded-md sm:h-[130px]"
-                      />
+                        className="w-[200px] rounded-md sm:h-[130px]"
+                      /> */}
+                      <a href="/">check</a>
                       <div
                         className="absolute top-7 left-7"
                         onClick={() =>
