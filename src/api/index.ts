@@ -30,9 +30,10 @@ const ApiHelperFunction =
 
             if (error?.response) {
                 const responseData = error.response.data;
-                // if (responseData?.status === 402) {
-                //     window.location.href = "/verification";
-                // }
+                if (error.response?.status === 402) {
+                    localStorage.clear()
+                    // window.location.href = "/verification/"+ responseData?.access_token;
+                }
                 return { data: responseData };
     
             } else {
