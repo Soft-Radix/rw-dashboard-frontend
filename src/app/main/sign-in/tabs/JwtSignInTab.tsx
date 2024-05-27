@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { useAuth0 } from "@auth0/auth0-react";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
+import FacebookLogin from "react-facebook-login";
 
 type FormType = {
   email: string;
@@ -51,12 +52,17 @@ function jwtSignInTab() {
     // formik.handleSubmit();
   };
 
-  const handleLoginSuccess = (response: any) => {
-    console.log("Login Success:", response);
-  };
-  const handleLoginFailure = (response: any) => {
-    alert("2");
-    console.error("Login Failed:", response);
+  const responseFacebook = (response) => {
+    console.log(response);
+    const payload = {
+      id: response.id,
+      type: 2,
+      firstname: response.name,
+      lastname: response.name,
+      email: response.email ? response.email : `${response.id}@facebook.com`,
+    };
+    // onLogin(user);
+    jwtService.socialSignIn(payload);
   };
 
   const login = useGoogleLogin({
@@ -138,10 +144,50 @@ function jwtSignInTab() {
           Log In with Google
         </Button>
       </div>
+
+      {/* <FacebookLogin
+        appId="801534445416008"
+        autoLoad
+        callback={responseFacebook}
+        className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+        render={(renderProps) => (
+          <Button
+            variant="contained"
+            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+            aria-label="Log In"
+            onClick={() => renderProps.click()}
+          >
+            <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+            Log In with Facebook
+          </Button>
+        )}
+      /> */}
+      <div className="flex justify-center mt-8">
+        <div className="w-full">
+          <FacebookLogin
+            appId="801534445416008"
+            autoLoad
+            callback={responseFacebook}
+            className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
+            // render={(renderProps) => (
+            //   <div onClick={renderProps.onClick}>
+            //     <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+            //     Log In with Facebook
+            //   </div>
+            // )}
+            icon={
+              <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+            }
+            cssClass="flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
+            textButton="&nbsp;&nbsp; Log In with Facebook"
+          />
+        </div>
+      </div>
+
       <div className="flex justify-center mt-8">
         <Button
           variant="contained"
-          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+          className=" w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
           onClick={() => loginWithRedirect()}
         >
