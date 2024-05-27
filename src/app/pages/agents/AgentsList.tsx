@@ -16,13 +16,14 @@ import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import { useSelector } from "react-redux";
-import { AgentRootState, filterType } from "app/store/Agent/Interafce";
+import { AgentRootState } from "app/store/Agent/Interafce";
 import { addAgent, getAgentInfo, getAgentList } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import moment from "moment";
 import ListLoading from "@fuse/core/ListLoading";
 import SearchInput from "src/app/components/SearchInput";
 import { debounce } from "lodash";
+import { filterType } from "app/store/Client/Interface";
 
 export default function AgentsList() {
   const agentState = useSelector((store: AgentRootState) => store.agent);
