@@ -334,6 +334,7 @@ export const initialState: initialStateProps = {
   agentTotal_records: 0,
   toatalPage: 0,
   managertotal_records: 0,
+  actionStatusDisabled: false,
 };
 
 export const addAssignAgents = createAsyncThunk(
@@ -590,7 +591,7 @@ export const clientSlice = createSlice({
         // console.log(action, "action");
         const { data } = action.payload?.data;
         // console.log(data, "ggggg");
-        state.fetchStatus = "idle";
+        AgentGroupIDType
         state.clientDetail = data;
       })
       .addCase(getClientInfo.rejected, (state) => {
@@ -744,13 +745,13 @@ export const clientSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(deleteAccManagerList.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusDisabled = true;
       })
       .addCase(deleteAccManagerList.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { account_manager_id } = action.meta?.arg;
         // console.log(client_id, "iddff");
-        state.actionStatus = false;
+        state.actionStatusDisabled = false;
         if (payload?.data?.status) {
           state.assignAccManagerDetail = state.assignAccManagerDetail.filter(
             (item) => item.account_manager_id !== account_manager_id
@@ -762,7 +763,7 @@ export const clientSlice = createSlice({
       })
       .addCase(deleteAccManagerList.rejected, (state, { error }) => {
         toast.error(error?.message);
-        state.actionStatus = false;
+        state.actionStatusDisabled = false;
       });
   },
 });

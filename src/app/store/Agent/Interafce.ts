@@ -19,7 +19,7 @@ export interface AgentType {
   attachments?: any[];
 }
 
-export interface filterType {
+export interface filterAgentType {
   start?: number;
   limit?: number;
   search?: string;
@@ -30,6 +30,7 @@ export interface filterType {
  * The type definition for the initial state of the auth slice.
  */
 export type initialStateProps = {
+  actionStatusAttachment?: boolean;
   status: string;
   successMsg: string;
   errorMsg: string;
