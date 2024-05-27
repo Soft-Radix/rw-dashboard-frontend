@@ -20,9 +20,10 @@ export interface AgentType {
 }
 
 export interface filterType {
-  start: number;
-  limit: number;
-  search: string;
+  start?: number;
+  limit?: number;
+  search?: string;
+  group_id?: any;
 }
 
 /**
