@@ -30,6 +30,7 @@ const ApiHelperFunction =
 
             if (error?.response) {
                 const responseData = error.response.data;
+                console.log("======uuiiui=====",responseData)
                 if (error.response?.status === 402) {
                     localStorage.clear()
                     // window.location.href = "/verification/"+ responseData?.access_token;
