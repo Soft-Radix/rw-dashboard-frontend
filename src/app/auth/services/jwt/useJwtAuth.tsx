@@ -4,7 +4,7 @@ import jwtDecode, { JwtPayload } from "jwt-decode";
 import _ from "@lodash";
 import { PartialDeep } from "type-fest";
 import { useAppDispatch } from "app/store/store";
-import { logIn } from "app/store/Auth";
+import { logIn, sociallogIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
 import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
 const defaultAuthConfig = {
@@ -42,11 +42,19 @@ type SignInPayload = {
   email?: string;
   password?: string;
 };
+type SocialSignInPayload = {
+  email: string;
+  id: string;
+  type: number;
+  firstname: string;
+  lastname: string;
+};
 export type JwtAuth<User, SignUpPayload> = {
   user: User;
   isAuthenticated: boolean;
   isLoading: boolean;
   signIn: (U: SignInPayload) => void;
+  socialSignIn: (U: SocialSignInPayload) => void;
   autoSignIng: () => void;
   signOut: () => void;
   signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
@@ -264,6 +272,56 @@ const useJwtAuth = <User, SignUpPayload>(
     return response;
   };
 
+  const socialSignIn = async (credentials: SocialSignInPayload) => {
+    let response = await dispatch(
+      sociallogIn({
+        social_id: credentials?.id,
+        social_type: credentials?.type,
+        first_name: credentials?.firstname,
+        last_name: credentials?.lastname,
+        email: credentials?.email,
+      })
+    );
+    console.warn(response, "response");
+
+    if (response?.payload?.status) {
+      // debugger;
+      const userData = response?.payload.data?.user;
+      dispatch(setInitialState(userData));
+      const accessToken = response?.payload.data?.access_token;
+      const signin = response?.payload.data?.user?.is_signed;
+      const link = response?.payload.data?.user?.subscription_and_docusign;
+      console.log(
+        response?.payload.data?.data?.access_token?.user.projects,
+        "response?.payload.data"
+      );
+
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(userData.subscription_and_docusign)
+      );
+      if (response?.payload.data?.user?.role == "admin") {
+        handleSignInSuccess(userData, accessToken);
+        window.location.reload();
+      } else {
+        if (signin == 1) {
+          if (response?.payload.data?.user.projects.length == 0) {
+            window.location.href = "/sign-document";
+          } else {
+            handleSignInSuccess(userData, accessToken);
+            window.location.reload();
+          }
+        } else {
+          localStorage.setItem("response", JSON.stringify(response?.payload));
+          window.location.href = "/verification/" + accessToken;
+        }
+      }
+      // handleSignInSuccess(userData, accessToken);
+      // window.location.reload();
+    }
+    return response;
+  };
+
   const autoSignIng = () => {
     let response = getLocalStorage("response");
 
@@ -409,6 +467,7 @@ const useJwtAuth = <User, SignUpPayload>(
     isLoading,
     signIn,
     autoSignIng,
+    socialSignIn,
     signUp,
     signOut,
     updateUser,

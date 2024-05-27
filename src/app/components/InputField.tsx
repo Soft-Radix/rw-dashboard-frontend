@@ -1,6 +1,6 @@
 import { FormLabel, TextField, TextFieldProps } from "@mui/material";
 import { FormikProps } from "formik";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface CustomButtonProps {
   // className?: string;
@@ -30,6 +30,22 @@ function InputField({
   const handleEyeToggle = () => {
     setIsType(isType === "text" ? "password" : "text");
   };
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    const handleWheel = (event) => {
+      if (document.activeElement === inputRef.current) {
+        event.preventDefault();
+      }
+    };
+
+    const inputElement = inputRef.current;
+    inputElement.addEventListener("wheel", handleWheel);
+
+    return () => {
+      inputElement.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
@@ -40,6 +56,7 @@ function InputField({
       )}
       <div className={`input_wrap ${inputClass}`}>
         <TextField
+          ref={inputRef}
           name={name}
           type={isType}
           disabled={disabled}

@@ -299,6 +299,14 @@ export default function AddSubscription() {
       </>
     );
   };
+  const today = new Date();
+  // Add one day to get tomorrow's date
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const yyyy = tomorrow.getFullYear();
+  const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
+  const dd = String(tomorrow.getDate()).padStart(2, "0");
+  const tomorrowStr = `${yyyy}-${mm}-${dd}`;
 
   const handleListFromChild = (arg) => {
     if (!arg || !arg.length) return;
@@ -308,15 +316,16 @@ export default function AddSubscription() {
     const billingTerms = arg[0].billing_terms;
     const noOfPayments = arg[0].no_of_payments;
     const billingStartDate = arg[0].billing_start_date;
+    if (billingStartDate >= tomorrowStr) {
+      const validation = validateBillingStartDate(billingStartDate);
 
-    const validation = validateBillingStartDate(billingStartDate);
-
-    if (validation.isValid) {
-      // Handle valid date, e.g., update state or form data
-      setDateError(""); // Clear any previous error
-    } else {
-      console.error(validation.error);
-      setDateError(validation.error); // Set the error message to be displayed
+      if (validation.isValid) {
+        // Handle valid date, e.g., update state or form data
+        setDateError(""); // Clear any previous error
+      } else {
+        console.error(validation.error);
+        setDateError(validation.error); // Set the error message to be displayed
+      }
     }
     // Map over arg to ensure all objects have consistent values
     const extractedData = arg.map((item) => ({
@@ -657,15 +666,6 @@ export default function AddSubscription() {
   // const uniqueList = [];
   const uniqueList = [...new Set(list)];
 
-  const today = new Date();
-  // Add one day to get tomorrow's date
-  const tomorrow = new Date(today);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  const yyyy = tomorrow.getFullYear();
-  const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
-  const dd = String(tomorrow.getDate()).padStart(2, "0");
-  const tomorrowStr = `${yyyy}-${mm}-${dd}`;
-
   const handleCancel = () => {
     setList([]);
     setDetails({
@@ -732,7 +732,6 @@ export default function AddSubscription() {
       setAction([...actions]);
     }
   }, [isOpenAddModal, isOpenDeletedModal]);
-  console.log("first0", Action);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -770,19 +769,19 @@ export default function AddSubscription() {
                     borderBottom: "none !important", // Hide the underline (if using underline variant)
                   },
                 }}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="start">
-                      <Link to="#">
-                        <img
-                          src={penIcon}
-                          alt="pen-icon"
-                          className="h-[2.5rem] w-[2.5rem]"
-                        />{" "}
-                      </Link>{" "}
-                    </InputAdornment>
-                  ),
-                }}
+                // InputProps={{
+                //   endAdornment: (
+                //     <InputAdornment position="start">
+                //       <Link to="#">
+                //         <img
+                //           src={penIcon}
+                //           alt="pen-icon"
+                //           className="h-[2.5rem] w-[2.5rem]"
+                //         />{" "}
+                //       </Link>{" "}
+                //     </InputAdornment>
+                //   ),
+                // }}
               />
               <p className="text-right text-red pt-[5px]">{error}</p>
             </div>
@@ -1322,6 +1321,15 @@ export default function AddSubscription() {
                               ? row.billing_start_date
                               : ""
                           }
+                          // value={
+                          //   row.billing_start_date != 0 &&
+                          //   row.billing_start_date != "" &&
+                          //   row.billing_start_date != null
+                          //     ? row.billing_start_date >= tomorrowStr
+                          //       ? row.billing_start_date
+                          //       : null
+                          //     : ""
+                          // }
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
@@ -1413,19 +1421,19 @@ export default function AddSubscription() {
                             borderBottom: "none !important", // Hide the underline (if using underline variant)
                           },
                         }}
-                        InputProps={{
-                          endAdornment: (
-                            <InputAdornment position="start">
-                              <Link to="#">
-                                <img
-                                  src={penIcon}
-                                  alt="pen-icon"
-                                  className="h-[2.5rem] w-[2.5rem]"
-                                />{" "}
-                              </Link>{" "}
-                            </InputAdornment>
-                          ),
-                        }}
+                        // InputProps={{
+                        //   endAdornment: (
+                        //     <InputAdornment position="start">
+                        //       <Link to="#">
+                        //         <img
+                        //           src={penIcon}
+                        //           alt="pen-icon"
+                        //           className="h-[2.5rem] w-[2.5rem]"
+                        //         />{" "}
+                        //       </Link>{" "}
+                        //     </InputAdornment>
+                        //   ),
+                        // }}
                       />
                       <div
                         className="border-[0.5px] w-max border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center

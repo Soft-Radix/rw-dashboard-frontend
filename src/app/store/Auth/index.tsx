@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ForgotPassPayload,
   LoginPayload,
+  LoginSocialPayload,
   SetPasswordType,
   initialStateProps,
   refreshToken,
@@ -24,6 +25,20 @@ export const logIn = createAsyncThunk(
   async (payload: LoginPayload) => {
     const response = await ApiHelperFunction({
       url: "auth/login", // end point
+      method: "post", // method
+      data: payload, // payload data
+    });
+
+    let resData = response?.data;
+    return resData;
+  }
+);
+
+export const sociallogIn = createAsyncThunk(
+  "auth/social-login",
+  async (payload: LoginSocialPayload) => {
+    const response = await ApiHelperFunction({
+      url: "auth/social-login", // end point
       method: "post", // method
       data: payload, // payload data
     });

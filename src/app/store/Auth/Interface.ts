@@ -2,6 +2,15 @@ export interface LoginPayload {
     email: string;
     password: string;
 }
+export interface LoginSocialPayload {
+    email: string;
+    social_id: string,
+    social_type: number,
+    first_name:string,
+    last_name: string,
+
+}
+
 
 export interface ForgotPassPayload {
     email: string;

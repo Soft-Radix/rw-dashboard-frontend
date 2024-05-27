@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { getLocalStorage } from "src/utils";
+import { Auth0Provider } from "@auth0/auth0-react";
 import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
 
 // import axios from 'axios';

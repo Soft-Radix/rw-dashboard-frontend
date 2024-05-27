@@ -13,6 +13,9 @@ import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
 import { loginSchema } from "src/formSchema";
 import toast from "react-hot-toast";
+import { useAuth0 } from "@auth0/auth0-react";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
 
 type FormType = {
   email: string;
@@ -22,7 +25,7 @@ type FormType = {
 
 function jwtSignInTab() {
   const { jwtService } = useAuth();
-
+  const { loginWithRedirect } = useAuth0();
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -44,9 +47,43 @@ function jwtSignInTab() {
   });
 
   const handleSubmit = (event) => {
-    event.preventDefault(); // Prevent default form behavior
-    formik.handleSubmit(); // Trigger formik form submission
+    event.preventDefault();
+    // formik.handleSubmit();
   };
+
+  const handleLoginSuccess = (response: any) => {
+    console.log("Login Success:", response);
+  };
+  const handleLoginFailure = (response: any) => {
+    alert("2");
+    console.error("Login Failed:", response);
+  };
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse);
+      // Use the token to fetch user details from Google's API
+      fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((user) => {
+          console.log(user);
+          const payload = {
+            id: user.sub,
+            type: 1,
+            firstname: user.name,
+            lastname: user.name,
+            email: user.email,
+          };
+          // onLogin(user);
+          jwtService.socialSignIn(payload);
+        })
+        .catch((error) => console.error("Error fetching user info:", error));
+    },
+  });
 
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
@@ -95,6 +132,7 @@ function jwtSignInTab() {
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
+          onClick={() => login()}
         >
           <img src="assets/icons/google.svg" alt="" className="mr-14" />
           Log In with Google
@@ -105,6 +143,7 @@ function jwtSignInTab() {
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
+          onClick={() => loginWithRedirect()}
         >
           <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
           Log In with Facebook

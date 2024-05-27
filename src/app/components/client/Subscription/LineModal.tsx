@@ -337,13 +337,12 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
             </label>
             <br />
           </div>
-          {formik.values.is_delay_in_billing === 1 ? (
-            <div className=" mb-[1rem]">
-              <label className="text-[16px] font-medium leading-[20px]">
-                Billing Start Date ( Date of first payment )
-              </label>
-            </div>
-          ) : null}
+
+          <div className=" mb-[1rem]">
+            <label className="text-[16px] font-medium leading-[20px]">
+              Billing Start Date ( Date of first payment )
+            </label>
+          </div>
 
           <input
             type="date"
