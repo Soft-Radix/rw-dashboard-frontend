@@ -75,7 +75,7 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        formik.setFieldValue("name", "");
+        formik.setFieldValue("name", projectData?.name);
         setIsOpen((prev) => !prev);
       }}
       modalTitle="Edit Project"
