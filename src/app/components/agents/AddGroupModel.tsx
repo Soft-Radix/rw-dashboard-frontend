@@ -21,6 +21,7 @@ import { debounce } from "lodash";
 import { filterType } from "app/store/Client/Interface";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
 import { useParams } from "react-router";
+import { getAgentList } from "app/store/Agent";
 
 interface IProps {
   isOpen: boolean;
@@ -72,6 +73,7 @@ function AddGroupModel({
         delete_agent_ids: [],
       })
     );
+    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
     // Handle the case when there is an id (e.g., updating an existing group)
   };
@@ -111,18 +113,18 @@ function AddGroupModel({
   };
   // console.log(filterMenu, "ggg");
   useEffect(() => {
-    dispatch(addAgentInagentGroup(filterMenu));
+    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
   }, [filterMenu]);
   // console.log(checkedItems, "hhh");
   useEffect(() => {
     if (!!agentGroupState?.successMsg) {
       dispatch(restAll());
-      fetchAgentGroupList;
+      // fetchAgentGroupList;
       setIsOpen((prev) => false);
     } else if (!!agentGroupState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentGroupState]);
+  }, [agentGroupState, filterMenu]);
   return (
     <CommonModal
       open={isOpen}

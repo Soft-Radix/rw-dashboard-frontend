@@ -159,6 +159,7 @@ export const initialState: initialStateProps = {
   selectedColumn: [],
   total_records: 0,
   addagentList: [],
+  actionStatusDisabled: false,
 };
 
 /**
@@ -234,13 +235,13 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(deleteAgentGroup.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusDisabled = true;
       })
       .addCase(deleteAgentGroup.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { group_id } = action.meta?.arg;
         // console.log(group_id, "idd");
-        state.actionStatus = false;
+        state.actionStatusDisabled = false;
         if (payload?.data?.status) {
           state.list = state.list.filter((item) => item.id !== group_id);
 
@@ -251,7 +252,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(deleteAgentGroup.rejected, (state, { error }) => {
         toast.error(error?.message);
-        state.actionStatus = false;
+        state.actionStatusDisabled = false;
       })
 
       .addCase(getAgentGroupList.pending, (state) => {

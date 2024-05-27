@@ -77,22 +77,31 @@ const addAgentSchema = Yup.object({
   ...emailField,
 });
 
+const noInitialSpace = (value) =>
+  !value || value.trim().length === value.length;
+
 const editAgentSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
   last_name: Yup.string()
     .required("Last name is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
-  ...emailField,
+  email: Yup.string()
+    .required("Email is required")
+    .email("Invalid email address"),
   phone_number: Yup.string()
     .required("Phone number is required")
     .max(10, "Phone number cannot exceed 10 digits")
-    .matches(/^\+?[1-9]\d{1,14}$/, {
+    .matches(/^\+?[1-9]\d{0,9}$/, {
       message: "Invalid phone number",
       excludeEmptyString: true,
-    }), // ,
-  address: Yup.string().required("Address is required"),
+    }),
+  address: Yup.string()
+    .required("Address is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace),
 });
 // const AgentGroupSchema = Yup.object({
 //   group_name: Yup.string()

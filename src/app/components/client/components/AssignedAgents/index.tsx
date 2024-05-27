@@ -11,6 +11,8 @@ import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import UnassignedAgent from "./UnassignedAgent";
+import { getAgentList } from "app/store/Agent";
+import { filterAgentType } from "app/store/Agent/Interafce";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
@@ -20,6 +22,11 @@ export default function AssignedAgents({
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+  const [filters, setfilters] = useState<filterAgentType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
 
   const { assignedAgentDetail, agentTotal_records } = useSelector(
     (store: ClientRootState) => store.client
@@ -48,6 +55,7 @@ export default function AssignedAgents({
           ...prevFilters,
           start: assignedAgentDetail.length - 1 == 0 ? 0 : prevFilters.start,
         }));
+        dispatch(getAgentList(filters));
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -147,7 +155,7 @@ export default function AssignedAgents({
                        ? "text-secondary bg-secondary_bg"
                        : row.status === "Unassigned"
                          ? "text-[#F44336] bg-[#F443362E]"
-                         : "text-[#F0B402] bg-[#FFEEBB]"
+                         : "text-[#4F46E5] bg-[#EDEDFC]"
                    }`}
                       >
                         {row.status ? row.status : "Unassign"}
@@ -178,6 +186,7 @@ export default function AssignedAgents({
         isOpen={isOpenUnssignedModal}
         setIsOpen={setIsOpenUnassignedModal}
         onDelete={() => unassignAgent(deleteId)}
+        description={"Are you sure you want to unassign this agent ?"}
       />
     </>
   );

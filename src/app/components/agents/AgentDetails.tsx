@@ -69,6 +69,7 @@ export default function AgentDetails() {
   const theme: Theme = useTheme();
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState<boolean>(false);
   const { agentDetail, fetchStatus } = useSelector(
     (store: AgentRootState) => store?.agent
   );
@@ -97,9 +98,6 @@ export default function AgentDetails() {
     };
   }, []);
 
-  if (fetchStatus === "loading") {
-    return <ListLoading />;
-  }
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -132,6 +130,7 @@ export default function AgentDetails() {
       // Dispatch the uploadAttachment action with formData
       dispatch(uploadAttachment(formData));
     }
+    e.target.value = "";
   };
   // console.log(uploadedFiles, "fghughdu");
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -145,6 +144,9 @@ export default function AgentDetails() {
     }
     setIsOpenDeletedModal(false);
   };
+  if (fetchStatus === "loading") {
+    return <ListLoading />;
+  }
 
   return (
     <>
@@ -372,7 +374,8 @@ export default function AgentDetails() {
                         type="file"
                         style={{ display: "none" }}
                         multiple
-                        accept=".pdf,.png,.jpg,.jpeg"
+                        // accept="image/*,"
+                        accept=".pdf,.png,.jpg,.jpeg,.pdf"
                         onChange={handleUploadFile}
                       />
                     </label>

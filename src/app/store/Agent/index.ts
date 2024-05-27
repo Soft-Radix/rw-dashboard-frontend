@@ -6,7 +6,7 @@ import {
   AgentType,
   agentIDType,
   deleteDocument,
-  filterType,
+  filterAgentType,
   initialStateProps,
   uploadData,
 } from "./Interafce";
@@ -36,7 +36,7 @@ export const addAgent = createAsyncThunk(
 );
 export const getAgentList = createAsyncThunk(
   "agent/list",
-  async (payload: filterType) => {
+  async (payload: filterAgentType) => {
     const response = await ApiHelperFunction({
       url: "agent/list",
       method: "post",
@@ -129,6 +129,7 @@ export const initialState: initialStateProps = {
   actionStatus: false,
   total_records: 0,
   resetFormData: {},
+  actionStatusAttachment: false,
 };
 
 /**
@@ -218,9 +219,11 @@ export const agentSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(uploadAttachment.pending, (state) => {
+        state.fetchStatus = "loading";
         state.actionStatus = true;
       })
       .addCase(uploadAttachment.fulfilled, (state, action) => {
+        state.fetchStatus = "idle";
         const response = action.payload?.data;
 
         state.actionStatus = false;
@@ -237,22 +240,23 @@ export const agentSlice = createSlice({
           //   response.data
           // );
           // state.agentDetail = ;
-          console.log(state.agentDetail.attachments, "ghgh");
+          // console.log(state.agentDetail.attachments, "ghgh");
           toast.success(response?.message);
         }
       })
       .addCase(uploadAttachment.rejected, (state, action) => {
+        state.fetchStatus = "idle";
         state.actionStatus = false;
       })
       .addCase(deleteAttachment.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusAttachment = true;
       })
       .addCase(deleteAttachment.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         // console.log(payload, "payload");
         // const { attachment_id } = action.meta?.arg;
         // console.log(accountManger_id, "idd");
-        state.actionStatus = false;
+        state.actionStatusAttachment = false;
         // if (payload?.data?.status) {
         //   state.list = state.list.filter(
         //     // (item) => item.id !== accountManger_id
@@ -265,7 +269,7 @@ export const agentSlice = createSlice({
       })
       .addCase(deleteAttachment.rejected, (state, { error }) => {
         toast.error(error?.message);
-        state.actionStatus = false;
+        state.actionStatusAttachment = false;
       });
   },
 });
