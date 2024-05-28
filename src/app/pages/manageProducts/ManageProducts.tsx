@@ -11,6 +11,9 @@ import CommonTable from "src/app/components/commonTable";
 import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
 import CommonPagination from "src/app/components/pagination";
+import { filterType } from "app/store/AccountManager/Interface";
+import { RootState } from "app/store/store";
+import { useSelector } from "react-redux";
 
 export const truncateText = (text, wordLimit) => {
   const words = text.split(" ");
@@ -33,7 +36,14 @@ export default function ManageProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const dispatch = useAppDispatch();
-
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const accManagerState = useSelector(
+    (state: RootState) => state.accManagerSlice
+  );
   const fetchData = async () => {
     const payload = {
       start: 0,
@@ -43,7 +53,15 @@ export default function ManageProducts() {
     try {
       //@ts-ignore
       const res = await dispatch(productList(payload));
+
       setList(res?.payload?.data?.data?.list);
+      const currentRows = res?.payload?.data?.data?.list?.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
+      if (currentRows.length === 0 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -67,6 +85,7 @@ export default function ManageProducts() {
       setIsOpenDeletedModal(false);
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
+      setIsDeleteId(null);
     } catch (error) {
       setDisable(false);
       console.error("Error fetching data:", error);
@@ -89,18 +108,52 @@ export default function ManageProducts() {
 
   const totalPageCount = Math.ceil(list?.length / itemsPerPage);
 
+  // const handlePageChange = (
+  //   event: React.ChangeEvent<unknown>,
+  //   page: number
+  // ) => {
+  //   setCurrentPage(page);
+  //   // Handle any additional logic when the page changes, e.g., fetching data
+  // };
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
-    setCurrentPage(page);
     // Handle any additional logic when the page changes, e.g., fetching data
+    let newPage = page;
+
+    // Check if the current page's rows are empty
+    const currentRows = list?.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+
+    if (currentRows.length === 0) {
+      // If current rows are empty and not on the first page, go to the previous page
+      newPage = page - 1;
+    }
+
+    setCurrentPage(newPage);
   };
 
   const currentRows = list?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
+  };
 
   return (
     <div>
