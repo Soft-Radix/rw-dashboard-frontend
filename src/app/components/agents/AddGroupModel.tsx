@@ -74,6 +74,10 @@ function AddGroupModel({
         delete_agent_ids: [],
       })
     );
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+    }));
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
     // Handle the case when there is an id (e.g., updating an existing group)
@@ -130,6 +134,11 @@ function AddGroupModel({
 
   const handleToggle = (e: React.MouseEvent) => {
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+    }));
+    setCheckedItems([]);
     setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
   };
