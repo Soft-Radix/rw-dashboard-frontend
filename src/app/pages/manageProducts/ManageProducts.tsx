@@ -12,6 +12,14 @@ import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
 import CommonPagination from "src/app/components/pagination";
 
+export const truncateText = (text, wordLimit) => {
+  const words = text.split(" ");
+  if (words?.length > wordLimit) {
+    return words.slice(0, wordLimit).join(" ") + "...";
+  }
+  return text;
+};
+
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -128,21 +136,15 @@ export default function ManageProducts() {
                         },
                       }}
                     >
-                      <TableCell
-                        scope="row"
-                        className="w-[400px] break-words break-all truncate max-w-[400px]"
-                      >
-                        {/* <Tooltip title={item.name} enterDelay={500}> */}
-                        {item.name}
-                        {/* </Tooltip> */}
+                      <TableCell scope="row" className="w-[400px]  ">
+                        <Tooltip title={item.name} enterDelay={500}>
+                          <span>{truncateText(item.name, 5)}</span>
+                        </Tooltip>
                       </TableCell>
-                      <TableCell
-                        align="center"
-                        className="w-[400px] break-words break-all truncate max-w-[400px]"
-                      >
-                        {/* <Tooltip title={item.description} enterDelay={500}> */}
-                        {item.description}
-                        {/* </Tooltip> */}
+                      <TableCell align="center" className="w-[400px]  ">
+                        <Tooltip title={item.description} enterDelay={500}>
+                          <span>{truncateText(item.description, 5)}</span>
+                        </Tooltip>
                       </TableCell>
 
                       <TableCell align="center" className="whitespace-nowrap">
