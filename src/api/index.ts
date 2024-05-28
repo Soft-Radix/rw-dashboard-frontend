@@ -24,18 +24,14 @@ const ApiHelperFunction =
                 } 
             }
             const result = await Axios(requestObj);
+            console.log("======resulut=====",result)
             return { data: result.data };
         } catch (axiosError) {
             const error = axiosError as AxiosError;
 
             if (error?.response) {
-                const responseData = error.response.data;
-                console.log("======uuiiui=====",responseData)
-                if (error.response?.status === 402) {
-                    localStorage.clear()
-                    // window.location.href = "/verification/"+ responseData?.access_token;
-                }
-                return { data: responseData };
+              
+                return { data:error.response.data };
     
             } else {
                 throw error

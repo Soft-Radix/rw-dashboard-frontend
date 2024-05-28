@@ -17,6 +17,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import FacebookLogin from "react-facebook-login";
+import { Console } from "console";
 
 type FormType = {
   email: string;
@@ -52,17 +53,20 @@ function jwtSignInTab() {
     formik.handleSubmit();
   };
 
-  const responseFacebook = (response) => {
+  const responseFacebook = async (response) => {
     console.log(response);
-    const payload = {
-      id: response.id,
-      type: 2,
-      firstname: response.name,
-      lastname: response.name,
-      email: response.email ? response.email : `${response.id}@facebook.com`,
-    };
-    // onLogin(user);
-    jwtService.socialSignIn(payload);
+    if (response.id) {
+      const payload = {
+        id: response.id,
+        type: 2,
+        firstname: response.name,
+        lastname: response.name,
+        email: response.email ? response.email : `${response.id}@facebook.com`,
+      };
+      await jwtService.socialSignIn(payload);
+    } else {
+      console.error("Facebook login failed:", response);
+    }
   };
 
   const login = useGoogleLogin({
@@ -145,29 +149,13 @@ function jwtSignInTab() {
         </Button>
       </div>
 
-      {/* <FacebookLogin
-        appId="801534445416008"
-        autoLoad
-        callback={responseFacebook}
-        className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-        render={(renderProps) => (
-          <Button
-            variant="contained"
-            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-            aria-label="Log In"
-            onClick={() => renderProps.click()}
-          >
-            <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
-            Log In with Facebook
-          </Button>
-        )}
-      /> */}
       <div className="flex justify-center mt-8">
         <div className="w-full">
           <FacebookLogin
             appId="801534445416008"
-            autoLoad
-            onClick={responseFacebook}
+            // autoLoad
+            testusers={true}
+            callback={responseFacebook}
             className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
