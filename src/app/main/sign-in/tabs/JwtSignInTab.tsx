@@ -145,23 +145,6 @@ function jwtSignInTab() {
         </Button>
       </div>
 
-      {/* <FacebookLogin
-        appId="801534445416008"
-        autoLoad
-        callback={responseFacebook}
-        className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-        render={(renderProps) => (
-          <Button
-            variant="contained"
-            className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
-            aria-label="Log In"
-            onClick={() => renderProps.click()}
-          >
-            <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
-            Log In with Facebook
-          </Button>
-        )}
-      /> */}
       <div className="flex justify-center mt-8">
         <div className="w-full">
           <FacebookLogin
