@@ -15,6 +15,7 @@ interface IProps {
   name: string;
   label?: string;
   formik?: FormikProps<unknown>;
+  value?: string;
   // props: TextFieldProps;
 }
 
@@ -34,7 +35,7 @@ const StyledSelect = styled(Select)(({ theme }) => ({
       },
     },
     "& .MuiSelect-select": {
-      padding: "2px 14px",
+      padding: "0px 14px",
       minHeight: "48px",
       display: "flex",
       alignItems: "center",
@@ -85,7 +86,7 @@ function SelectField({
           MenuProps={{
             sx: {
               "& .MuiList-root": {
-                paddingBottom: "2rem",
+                // paddingBottom: "2rem",
               },
             },
           }}
@@ -102,6 +103,11 @@ function SelectField({
         ) : null}
       </div>
       <span className="">{formik?.errors[name] && formik?.touched[name]}</span>
+      <span className="inline-block text-red pt-[5px]">
+        {formik?.errors[name ?? ""] &&
+          formik?.touched[name ?? ""] &&
+          formik?.errors[name ?? ""]}
+      </span>
     </div>
   );
 }

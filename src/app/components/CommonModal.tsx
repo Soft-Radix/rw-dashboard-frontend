@@ -5,6 +5,8 @@ import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
+import CustomButton from "./custom_button";
+import { red } from "@mui/material/colors";
 
 const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
@@ -21,11 +23,19 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
 }));
 
 type ModalType = {
-  open: boolean;
-  handleToggle: () => void;
+  open?: boolean;
+  handleToggle: (e: React.FormEvent) => void;
   modalTitle: string;
   children: ReactNode;
   maxWidth?: string;
+  DeleteModal?: boolean;
+  btnTitle?: string;
+  closeTitle?: string;
+  disabled?: boolean;
+  onSubmit?: () => void;
+  bgColor?: string;
+  headerBgColor?: string;
+  titleColor?: string;
 };
 
 export default function CommonModal({
@@ -33,7 +43,15 @@ export default function CommonModal({
   open,
   handleToggle,
   children,
+  btnTitle,
+  closeTitle,
+  DeleteModal = false,
   maxWidth = "387",
+  onSubmit,
+  disabled,
+  bgColor,
+  headerBgColor,
+  titleColor,
 }: ModalType) {
   return (
     <StylesDialog
@@ -43,37 +61,61 @@ export default function CommonModal({
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
         },
+
+        ".muiltr-5gnc0a-MuiPaper-root-MuiDialog-paper": {
+          backgroundColor: bgColor || "white",
+        },
       }}
     >
-      <div className="p-16 flex justify-between w-full items-center bg-[#2C334C]">
-        <Typography className="text-[16px] font-medium" color="#fff">
-          {modalTitle}
-        </Typography>
-        <IconButton>
-          <CrossIcon
-            className="cursor-pointer"
-            color="#fff"
-            onClick={handleToggle}
-          />
+      {!DeleteModal ? (
+        <div
+          className={`p-16 flex justify-between w-full items-center ${
+            headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"
+          } `}
+        >
+          <Typography
+            className={`text-[16px] font-semibold" ${
+              titleColor ? "text-black" : "text-white"
+            }`}
+          >
+            {modalTitle}
+          </Typography>
+          <IconButton>
+            <CrossIcon
+              className="cursor-pointer"
+              color="#fff"
+              onClick={handleToggle}
+            />
+          </IconButton>
+        </div>
+      ) : (
+        <IconButton
+          className="flex items-center justify-end pt-20 pr-20 rounded-none "
+          onClick={handleToggle}
+        >
+          <CrossIcon className="cursor-pointer" color="#9DA0A6" />
         </IconButton>
-      </div>
-      <div className="p-20">{children}</div>
+      )}
+      <div className="p-20 pb-0">{children}</div>
 
-      <div className="flex p-20 pt-10">
+      <div className="flex p-20 pt-20">
         <Button
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
+          onClick={onSubmit}
+          disabled={disabled}
         >
-          Save
+          {btnTitle}
         </Button>
         <Button
           variant="outlined"
+          disabled={disabled}
           color="secondary"
           className="w-[156px] h-[48px] text-[18px] ml-14"
           onClick={handleToggle}
         >
-          Cancel
+          {closeTitle}
         </Button>
       </div>
     </StylesDialog>

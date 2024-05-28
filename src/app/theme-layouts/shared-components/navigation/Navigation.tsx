@@ -20,6 +20,8 @@ function Navigation(props: NavigationProps) {
 
   const navigation = useSelector(selectNavigation);
 
+  const data = useSelector((store) => store);
+
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down("lg"));
 
   const dispatch = useAppDispatch();
@@ -30,7 +32,6 @@ function Navigation(props: NavigationProps) {
         dispatch(navbarCloseMobile());
       }
     }
-
     return (
       <FuseNavigation
         className={clsx("navigation flex-1", className)}

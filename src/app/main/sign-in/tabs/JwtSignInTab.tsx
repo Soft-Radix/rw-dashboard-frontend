@@ -1,28 +1,23 @@
+import React, { useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
+import { logIn } from "app/store/Auth";
 import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useAppDispatch } from "app/store/store";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
-import { z } from "zod";
-
-/**
- * Form Validation Schema
- */
-const schema = z.object({
-  email: z
-    .string()
-    .email("You must enter a valid email")
-    .nonempty("You must enter an email"),
-  password: z
-    .string()
-    .min(4, "Password is too short - must be at least 4 chars.")
-    .nonempty("Please enter your password."),
-});
+import { loginSchema } from "src/formSchema";
+import toast from "react-hot-toast";
+import { useAuth0 } from "@auth0/auth0-react";
+import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
+import jwt_decode from "jwt-decode";
+import FacebookLogin from "react-facebook-login";
+import { Console } from "console";
 
 type FormType = {
   email: string;
@@ -30,14 +25,18 @@ type FormType = {
   remember?: boolean;
 };
 
-const defaultValues = {
-  email: "",
-  password: "",
-  remember: true,
-};
-
 function jwtSignInTab() {
   const { jwtService } = useAuth();
+  const { loginWithRedirect } = useAuth0();
+  // State to track loading
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const onSubmit = useCallback(async (formData) => {
+    const { email, password } = formData;
+    setIsLoading(true);
+    await jwtService.signIn({ email, password });
+    setIsLoading(false);
+  }, []);
 
   //* initialise useformik hook
   const formik = useFormik({
@@ -45,132 +44,148 @@ function jwtSignInTab() {
       email: "",
       password: "",
     },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {
-      onSubmit(values);
+    validationSchema: loginSchema,
+    onSubmit,
+  });
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    formik.handleSubmit();
+  };
+
+  const responseFacebook = async (response) => {
+    console.log(response);
+    if (response.id) {
+      const payload = {
+        id: response.id,
+        type: 2,
+        firstname: response.name,
+        lastname: response.name,
+        email: response.email ? response.email : `${response.id}@facebook.com`,
+      };
+      await jwtService.socialSignIn(payload);
+    } else {
+      console.error("Facebook login failed:", response);
+    }
+  };
+
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse);
+      // Use the token to fetch user details from Google's API
+      fetch("https://www.googleapis.com/oauth2/v3/userinfo", {
+        headers: {
+          Authorization: `Bearer ${tokenResponse.access_token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((user) => {
+          console.log(user);
+          const payload = {
+            id: user.sub,
+            type: 1,
+            firstname: user.name,
+            lastname: user.name,
+            email: user.email,
+          };
+          // onLogin(user);
+          jwtService.socialSignIn(payload);
+        })
+        .catch((error) => console.error("Error fetching user info:", error));
     },
   });
 
-  const { control, formState, handleSubmit, setValue, setError } =
-    useForm<FormType>({
-      mode: "onChange",
-      defaultValues,
-      resolver: zodResolver(schema),
-    });
-
-  const { isValid, dirtyFields, errors } = formState;
-
-  useEffect(() => {
-    setValue("email", "admin@fusetheme.com", {
-      shouldDirty: true,
-      shouldValidate: true,
-    });
-    setValue("password", "admin", { shouldDirty: true, shouldValidate: true });
-  }, [setValue]);
-
-  function onSubmit(formData: FormType) {
-    const { email, password } = formData;
-
-    jwtService
-      .signIn({
-        email,
-        password,
-      })
-      .catch(
-        (
-          error: AxiosError<
-            {
-              type:
-                | "email"
-                | "password"
-                | "remember"
-                | `root.${string}`
-                | "root";
-              message: string;
-            }[]
-          >
-        ) => {
-          const errorData = error.response.data;
-
-          errorData.forEach((err) => {
-            setError(err.type, {
-              type: "manual",
-              message: err.message,
-            });
-          });
-        }
-      );
-  }
-
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
-      <InputField
-        formik={formik}
-        name="email"
-        label="Email Address"
-        placeholder="Enter Email Address"
-      />
-      <InputField
-        formik={formik}
-        name="password"
-        label="Password"
-        type="password"
-        placeholder="Enter Password"
-      />
-      <Link
-        className="text-[16px] font-medium !no-underline w-fit"
-        to="/forgot-password"
-      >
-        Forgot Password
-      </Link>
-      <Button
-        variant="contained"
-        color="secondary"
-        className="mt-28 w-full h-[50px] text-[18px] font-bold"
-        aria-label="Log In"
-        size="large"
-        onClick={() => formik.handleSubmit()}
-      >
-        Log In
-      </Button>
-
-      <div className="mt-12 flex items-center">
-        <div className="mt-px flex-auto border-t" />
+      <form onSubmit={handleSubmit}>
+        <InputField
+          formik={formik}
+          name="email"
+          label="Email Address"
+          placeholder="Enter Email Address"
+          // inputRef={input => input && input.focus()}
+        />
+        <InputField
+          formik={formik}
+          name="password"
+          label="Password"
+          type="password"
+          placeholder="Enter Password"
+        />
+        <Link
+          className="text-[16px] font-medium !no-underline w-fit inline-block mt-10"
+          to="/forgot-password"
+        >
+          Forgot Password
+        </Link>
+        <Button
+          variant="contained"
+          color="secondary"
+          className="mt-28 w-full h-[50px] text-[18px] font-bold"
+          aria-label="Log In"
+          size="large"
+          type="submit"
+          disabled={isLoading}
+        >
+          Log In
+        </Button>
+      </form>
+      <div className="flex items-center mt-12">
+        <div className="flex-auto mt-px border-t" />
         <Typography className="mx-8" color="text.secondary">
           Or continue with
         </Typography>
-        <div className="mt-px flex-auto border-t" />
+        <div className="flex-auto mt-px border-t" />
       </div>
-      <div className="mt-16 flex justify-center">
+      <div className="flex justify-center mt-16">
         <Button
           variant="contained"
           className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
+          onClick={() => login()}
         >
           <img src="assets/icons/google.svg" alt="" className="mr-14" />
           Log In with Google
         </Button>
       </div>
-      <div className="mt-8 flex justify-center">
+
+      <div className="flex justify-center mt-8">
+        <div className="w-full">
+          <FacebookLogin
+            appId="801534445416008"
+            // autoLoad
+            testusers={true}
+            callback={responseFacebook}
+            className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
+            icon={
+              <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
+            }
+            cssClass="facebook-login-btn flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
+            textButton="&nbsp;&nbsp; Log In with Facebook"
+          />
+        </div>
+      </div>
+
+      {/* <div className="flex justify-center mt-8">
         <Button
           variant="contained"
-          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+          className=" w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
+          onClick={() => loginWithRedirect()}
         >
           <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
           Log In with Facebook
         </Button>
-      </div>
-      <div className="mt-20 flex items-center cursor-pointer justify-center">
+      </div> */}
+      <div className="flex items-center justify-center mt-20 cursor-pointer gap-6">
         <Typography color="text.secondary">New User?</Typography>
         <Typography color="secondary.main">
-          <Link className="ml-2 !no-underline font-bold " to="/sign-up">
-            Create Account
-          </Link>
+          {/* <Link className="ml-2 !no-underline font-bold " to="/sign-up"> */}
+          Create Account
+          {/* </Link> */}
         </Typography>
       </div>
     </div>
   );
 }
-
-export default jwtSignInTab;
+export default React.memo(jwtSignInTab);

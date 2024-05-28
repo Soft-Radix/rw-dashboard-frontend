@@ -1,50 +1,66 @@
-import { useState, useEffect, useCallback } from 'react';
-import axios, { AxiosError, AxiosResponse } from 'axios';
-import jwtDecode, { JwtPayload } from 'jwt-decode';
-import _ from '@lodash';
-import { PartialDeep } from 'type-fest';
-
+import { useState, useEffect, useCallback } from "react";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import jwtDecode, { JwtPayload } from "jwt-decode";
+import _ from "@lodash";
+import { PartialDeep } from "type-fest";
+import { useAppDispatch } from "app/store/store";
+import { logIn, sociallogIn } from "app/store/Auth";
+import { getLocalStorage } from "src/utils";
+import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
 const defaultAuthConfig = {
-	tokenStorageKey: 'jwt_access_token',
-	signInUrl: 'api/auth/sign-in',
-	signUpUrl: 'api/auth/sign-up',
-	tokenRefreshUrl: 'api/auth/refresh',
-	getUserUrl: 'api/auth/user',
-	updateUserUrl: 'api/auth/user',
-	updateTokenFromHeader: false
+  tokenStorageKey: "jwt_access_token",
+  signInUrl: "api/auth/sign-in",
+  signUpUrl: "api/auth/sign-up",
+  tokenRefreshUrl: "api/auth/refresh",
+  getUserUrl: "api/auth/user",
+  updateUserUrl: "api/auth/user",
+  updateTokenFromHeader: false,
 };
 
 export type JwtAuthProps<T> = {
-	config: {
-		tokenStorageKey: string;
-		signInUrl: string;
-		signUpUrl: string;
-		tokenRefreshUrl: string;
-		getUserUrl: string;
-		updateUserUrl: string;
-		/**
-		 * If the response auth header contains a new access token, update the token
-		 * in the Authorization header of the successful responses
-		 */
-		updateTokenFromHeader: boolean;
-	};
-	onSignedIn?: (U: T) => void;
-	onSignedUp?: (U: T) => void;
-	onSignedOut?: () => void;
-	onUpdateUser?: (U: T) => void;
-	onError?: (error: AxiosError) => void;
+  config: {
+    tokenStorageKey: string;
+    signInUrl: string;
+    signUpUrl: string;
+    tokenRefreshUrl: string;
+    getUserUrl: string;
+    updateUserUrl: string;
+    /**
+     * If the response auth header contains a new access token, update the token
+     * in the Authorization header of the successful responses
+     */
+    updateTokenFromHeader: boolean;
+  };
+  onSignedIn?: (U: T) => void;
+  onSignedUp?: (U: T) => void;
+  onSignedOut?: () => void;
+  onUpdateUser?: (U: T) => void;
+  onError?: (error: AxiosError) => void;
 };
 
-export type JwtAuth<User, SignInPayload, SignUpPayload> = {
-	user: User;
-	isAuthenticated: boolean;
-	isLoading: boolean;
-	signIn: (U: SignInPayload) => Promise<AxiosResponse<User, AxiosError>>;
-	signOut: () => void;
-	signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
-	updateUser: (U: PartialDeep<User>) => void;
-	refreshToken: () => void;
-	setIsLoading: (isLoading: boolean) => void;
+type SignInPayload = {
+  email?: string;
+  password?: string;
+};
+type SocialSignInPayload = {
+  email: string;
+  id: string;
+  type: number;
+  firstname: string;
+  lastname: string;
+};
+export type JwtAuth<User, SignUpPayload> = {
+  user: User;
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  signIn: (U: SignInPayload) => void;
+  socialSignIn: (U: SocialSignInPayload) => void;
+  autoSignIng: () => void;
+  signOut: () => void;
+  signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
+  updateUser: (U: PartialDeep<User>) => void;
+  refreshToken: () => void;
+  setIsLoading: (isLoading: boolean) => void;
 };
 
 /**
@@ -57,304 +73,407 @@ export type JwtAuth<User, SignInPayload, SignUpPayload> = {
  * It uses Axios interceptors to sign out the user if the refresh token is invalid or expired
  */
 
-const useJwtAuth = <User, SignInPayload, SignUpPayload>(
-	props: JwtAuthProps<User>
-): JwtAuth<User, SignInPayload, SignUpPayload> => {
-	const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } = props;
+const useJwtAuth = <User, SignUpPayload>(
+  props: JwtAuthProps<User>
+): JwtAuth<User, SignUpPayload> => {
+  const {
+    config,
+    onSignedIn,
+    onSignedOut,
+    onSignedUp,
+    onError,
+    onUpdateUser,
+  } = props;
+  const dispatch = useAppDispatch();
+  // Merge default config with the one from the props
+  const authConfig = _.defaults(config, defaultAuthConfig);
 
-	// Merge default config with the one from the props
-	const authConfig = _.defaults(config, defaultAuthConfig);
+  const [user, setUser] = useState<User>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-	const [user, setUser] = useState<User>(null);
-	const [isLoading, setIsLoading] = useState(true);
-	const [isAuthenticated, setIsAuthenticated] = useState(false);
+  /**
+   * Set session
+   */
+  const setSession = useCallback((accessToken: string, userDetail?: User) => {
+    if (accessToken) {
+      localStorage.setItem(authConfig.tokenStorageKey, accessToken);
+      localStorage.setItem("userDetail", JSON.stringify(userDetail));
+      axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
+    }
+  }, []);
 
-	/**
-	 * Set session
-	 */
-	const setSession = useCallback((accessToken: string) => {
-		if (accessToken) {
-			localStorage.setItem(authConfig.tokenStorageKey, accessToken);
-			axios.defaults.headers.common.Authorization = `Bearer ${accessToken}`;
-		}
-	}, []);
+  const resetSession = useCallback(() => {
+    localStorage.removeItem(authConfig.tokenStorageKey);
+    delete axios.defaults.headers.common.Authorization;
+    localStorage.removeItem("userDetail");
+    // localStorage.clear();
+  }, []);
 
-	const resetSession = useCallback(() => {
-		localStorage.removeItem(authConfig.tokenStorageKey);
-		delete axios.defaults.headers.common.Authorization;
-	}, []);
+  /**
+   * Get access token from local storage
+   */
+  const getAccessToken = useCallback(() => {
+    return localStorage.getItem(authConfig.tokenStorageKey);
+  }, []);
 
-	/**
-	 * Get access token from local storage
-	 */
-	const getAccessToken = useCallback(() => {
-		return localStorage.getItem(authConfig.tokenStorageKey);
-	}, []);
+  /**
+   * Handle sign-in success
+   */
+  const handleSignInSuccess = useCallback(
+    (userData: User, accessToken: string) => {
+      setSession(accessToken, userData);
+      setIsAuthenticated(true);
+      setUser(userData);
+      onSignedIn(userData);
+    },
+    []
+  );
+  /**
+   * Handle sign-up success
+   */
 
-	/**
-	 * Handle sign-in success
-	 */
-	const handleSignInSuccess = useCallback((userData: User, accessToken: string) => {
-		setSession(accessToken);
+  const handleSignUpSuccess = useCallback(
+    (userData: User, accessToken: string) => {
+      setSession(accessToken, userData);
+      setIsAuthenticated(true);
 
-		setIsAuthenticated(true);
+      setUser(userData);
 
-		setUser(userData);
+      onSignedUp(userData);
+    },
+    []
+  );
 
-		onSignedIn(userData);
-	}, []);
-	/**
-	 * Handle sign-up success
-	 */
+  /**
+   * Handle sign-in failure
+   */
+  const handleSignInFailure = useCallback((error: AxiosError) => {
+    resetSession();
 
-	const handleSignUpSuccess = useCallback((userData: User, accessToken: string) => {
-		setSession(accessToken);
+    setIsAuthenticated(false);
+    setUser(null);
 
-		setIsAuthenticated(true);
+    handleError(error);
+  }, []);
 
-		setUser(userData);
+  /**
+   * Handle sign-up failure
+   */
+  const handleSignUpFailure = useCallback((error: AxiosError) => {
+    resetSession();
 
-		onSignedUp(userData);
-	}, []);
+    setIsAuthenticated(false);
+    setUser(null);
 
-	/**
-	 * Handle sign-in failure
-	 */
-	const handleSignInFailure = useCallback((error: AxiosError) => {
-		resetSession();
+    handleError(error);
+  }, []);
 
-		setIsAuthenticated(false);
-		setUser(null);
+  /**
+   * Handle error
+   */
+  const handleError = useCallback((error: AxiosError) => {
+    onError(error);
+  }, []);
 
-		handleError(error);
-	}, []);
+  /**
+   * Check if the access token is valid
+   */
+  const isTokenValid = useCallback((accessToken: string) => {
+    if (accessToken) {
+      try {
+        const decoded = jwtDecode<JwtPayload>(accessToken);
+        const currentTime = Date.now() / 1000;
+        return decoded.exp > currentTime;
+      } catch (error) {
+        return false;
+      }
+    }
+    return false;
+  }, []);
 
-	/**
-	 * Handle sign-up failure
-	 */
-	const handleSignUpFailure = useCallback((error: AxiosError) => {
-		resetSession();
+  /**
+   * Check if the access token exist and is valid on mount
+   * If it is, set the user and isAuthenticated states
+   * If not, clear the session
+   */
+  useEffect(() => {
+    const attemptAutoLogin = async () => {
+      const accessToken = getAccessToken();
+      const userData = getLocalStorage("userDetail");
 
-		setIsAuthenticated(false);
-		setUser(null);
+      if (!!accessToken) {
+        handleSignInSuccess(userData, accessToken);
+      } else {
+        resetSession();
+        return false;
+      }
+    };
 
-		handleError(error);
-	}, []);
+    if (!isAuthenticated) {
+      attemptAutoLogin().then(() => {
+        setIsLoading(false);
+      });
+    }
+  }, [
+    isTokenValid,
+    setSession,
+    handleSignInSuccess,
+    handleSignInFailure,
+    handleError,
+    getAccessToken,
+    isAuthenticated,
+  ]);
 
-	/**
-	 * Handle error
-	 */
-	const handleError = useCallback((error: AxiosError) => {
-		onError(error);
-	}, []);
+  /**
+   * Sign in
+   */
+  const signIn = async (credentials: SignInPayload) => {
+    let response = await dispatch(
+      logIn({ email: credentials?.email, password: credentials?.password })
+    );
+    console.warn(response, "response");
 
-	/**
-	 * Check if the access token is valid
-	 */
-	const isTokenValid = useCallback((accessToken: string) => {
-		if (accessToken) {
-			try {
-				const decoded = jwtDecode<JwtPayload>(accessToken);
-				const currentTime = Date.now() / 1000;
-				return decoded.exp > currentTime;
-			} catch (error) {
-				return false;
-			}
-		}
-		return false;
-	}, []);
+    if (response?.payload?.status) {
+      // debugger;
+      const userData = response?.payload.data?.user;
+      dispatch(setInitialState(userData));
+      const accessToken = response?.payload.data?.access_token;
+      const signin = response?.payload.data?.user?.is_signed;
+      const link = response?.payload.data?.user?.subscription_and_docusign;
+      console.log(
+        response?.payload.data?.data?.access_token?.user.projects,
+        "response?.payload.data"
+      );
 
-	/**
-	 * Check if the access token exist and is valid on mount
-	 * If it is, set the user and isAuthenticated states
-	 * If not, clear the session
-	 */
-	useEffect(() => {
-		const attemptAutoLogin = async () => {
-			const accessToken = getAccessToken();
-			if (isTokenValid(accessToken)) {
-				try {
-					setIsLoading(true);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(userData.subscription_and_docusign)
+      );
+      if (response?.payload.data?.user?.role == "admin") {
+        handleSignInSuccess(userData, accessToken);
+        window.location.reload();
+      } else {
+        if (signin == 1) {
+          if (response?.payload.data?.user.projects.length == 0) {
+            window.location.href = "/sign-document";
+          } else {
+            handleSignInSuccess(userData, accessToken);
+            window.location.reload();
+          }
+        } else {
+          localStorage.setItem("response", JSON.stringify(response?.payload));
+          window.location.href = "/verification/" + accessToken;
+        }
+      }
+      // handleSignInSuccess(userData, accessToken);
+      // window.location.reload();
+    }
+    return response;
+  };
 
-					const response: AxiosResponse<User> = await axios.get(authConfig.getUserUrl, {
-						headers: { Authorization: `Bearer ${accessToken}` }
-					});
+  const socialSignIn = async (credentials: SocialSignInPayload) => {
+    let response = await dispatch(
+      sociallogIn({
+        social_id: credentials?.id,
+        social_type: credentials?.type,
+        first_name: credentials?.firstname,
+        last_name: credentials?.lastname,
+        email: credentials?.email,
+      })
+    );
+    console.warn(response, "response");
 
-					const userData = response?.data;
+    if (response?.payload?.status) {
+      // debugger;
+      const userData = response?.payload.data?.user;
+      dispatch(setInitialState(userData));
+      const accessToken = response?.payload.data?.access_token;
+      const signin = response?.payload.data?.user?.is_signed;
+      const link = response?.payload.data?.user?.subscription_and_docusign;
+      console.log(
+        response?.payload.data?.data?.access_token?.user.projects,
+        "response?.payload.data"
+      );
 
-					handleSignInSuccess(userData, accessToken);
+      localStorage.setItem(
+        "userData",
+        JSON.stringify(userData?.subscription_and_docusign || [])
+      );
+      if (response?.payload.data?.user?.role == "admin") {
+        handleSignInSuccess(userData, accessToken);
+        window.location.reload();
+      } else {
+        if (signin == 1) {
+          if (response?.payload.data?.user.projects.length == 0) {
+            window.location.href = "/sign-document";
+          } else {
+            handleSignInSuccess(userData, accessToken);
+            window.location.reload();
+          }
+        } else {
+          localStorage.setItem("response", JSON.stringify(response?.payload));
+          window.location.href = "/verification/" + accessToken;
+        }
+      }
+      // handleSignInSuccess(userData, accessToken);
+      // window.location.reload();
+    }
+    return response;
+  };
 
-					return true;
-				} catch (error) {
-					const axiosError = error as AxiosError;
+  const autoSignIng = () => {
+    let response = getLocalStorage("response");
 
-					handleSignInFailure(axiosError);
-					return false;
-				}
-			} else {
-				resetSession();
-				return false;
-			}
-		};
+    if (
+      response?.user?.is_signed &&
+      response.user?.subscription_and_docusign.length == 0
+    ) {
+      const userData = response?.user;
+      dispatch(setInitialState(userData));
+      const accessToken = response?.access_token;
+      if (response.user.projects?.length > 0) {
+        handleSignInSuccess(userData, accessToken);
+        window.location.reload();
+      }
+    }
+  };
 
-		if (!isAuthenticated) {
-			attemptAutoLogin().then(() => {
-				setIsLoading(false);
-			});
-		}
-	}, [
-		isTokenValid,
-		setSession,
-		handleSignInSuccess,
-		handleSignInFailure,
-		handleError,
-		getAccessToken,
-		isAuthenticated
-	]);
+  /**
+   * Sign up
+   */
+  const signUp = useCallback((data: SignUpPayload) => {
+    const response = axios.post(authConfig.signUpUrl, data);
 
-	/**
-	 * Sign in
-	 */
-	const signIn = async (credentials: SignInPayload) => {
-		const response = axios.post(authConfig.signInUrl, credentials);
+    response.then(
+      (res: AxiosResponse<{ user: User; access_token: string }>) => {
+        const userData = res?.data?.user;
+        const accessToken = res?.data?.access_token;
 
-		response.then(
-			(res: AxiosResponse<{ user: User; access_token: string }>) => {
-				const userData = res?.data?.user;
-				const accessToken = res?.data?.access_token;
+        handleSignUpSuccess(userData, accessToken);
 
-				handleSignInSuccess(userData, accessToken);
+        return userData;
+      },
+      (error) => {
+        const axiosError = error as AxiosError;
 
-				return userData;
-			},
-			(error) => {
-				const axiosError = error as AxiosError;
+        handleSignUpFailure(axiosError);
 
-				handleSignInFailure(axiosError);
+        return axiosError;
+      }
+    );
 
-				return axiosError;
-			}
-		);
+    return response;
+  }, []);
 
-		return response;
-	};
+  /**
+   * Sign out
+   */
+  const signOut = useCallback(() => {
+    resetSession();
 
-	/**
-	 * Sign up
-	 */
-	const signUp = useCallback((data: SignUpPayload) => {
-		const response = axios.post(authConfig.signUpUrl, data);
+    setIsAuthenticated(false);
+    setUser(null);
 
-		response.then(
-			(res: AxiosResponse<{ user: User; access_token: string }>) => {
-				const userData = res?.data?.user;
-				const accessToken = res?.data?.access_token;
+    onSignedOut();
+  }, []);
 
-				handleSignUpSuccess(userData, accessToken);
+  /**
+   * Update user
+   */
+  const updateUser = useCallback(async (userData: PartialDeep<User>) => {
+    try {
+      const response: AxiosResponse<User, PartialDeep<User>> = await axios.put(
+        authConfig.updateUserUrl,
+        userData
+      );
+      const updatedUserData = response?.data;
 
-				return userData;
-			},
-			(error) => {
-				const axiosError = error as AxiosError;
+      onUpdateUser(updatedUserData);
 
-				handleSignUpFailure(axiosError);
+      return null;
+    } catch (error) {
+      const axiosError = error as AxiosError;
 
-				return axiosError;
-			}
-		);
+      handleError(axiosError);
+      return axiosError;
+    }
+  }, []);
 
-		return response;
-	}, []);
+  /**
+   * Refresh access token
+   */
+  const refreshToken = async () => {
+    setIsLoading(true);
 
-	/**
-	 * Sign out
-	 */
-	const signOut = useCallback(() => {
-		resetSession();
+    console.log("accessToken4544", "accessToken4544");
 
-		setIsAuthenticated(false);
-		setUser(null);
+    try {
+      const response: AxiosResponse<string> = await axios.post(
+        authConfig.tokenRefreshUrl
+      );
 
-		onSignedOut();
-	}, []);
+      const accessToken = response?.headers?.["New-Access-Token"] as string;
 
-	/**
-	 * Update user
-	 */
-	const updateUser = useCallback(async (userData: PartialDeep<User>) => {
-		try {
-			const response: AxiosResponse<User, PartialDeep<User>> = await axios.put(
-				authConfig.updateUserUrl,
-				userData
-			);
+      if (accessToken) {
+        setSession(accessToken);
 
-			const updatedUserData = response?.data;
+        return accessToken;
+      }
+      return null;
+    } catch (error) {
+      const axiosError = error as AxiosError;
 
-			onUpdateUser(updatedUserData);
+      handleError(axiosError);
+      return axiosError;
+    }
+  };
 
-			return null;
-		} catch (error) {
-			const axiosError = error as AxiosError;
+  /**
+   * if a successful response contains a new Authorization header,
+   * updates the access token from it.
+   *
+   */
+  useEffect(() => {
+    if (authConfig.updateTokenFromHeader && isAuthenticated) {
+      axios.interceptors.response.use(
+        (response) => {
+          const newAccessToken = response?.headers?.[
+            "New-Access-Token"
+          ] as string;
 
-			handleError(axiosError);
-			return axiosError;
-		}
-	}, []);
+          if (newAccessToken) {
+            setSession(newAccessToken);
+          }
+          return response;
+        },
+        (error) => {
+          const axiosError = error as AxiosError;
 
-	/**
-	 * Refresh access token
-	 */
-	const refreshToken = async () => {
-		setIsLoading(true);
-		try {
-			const response: AxiosResponse<string> = await axios.post(authConfig.tokenRefreshUrl);
+          if (axiosError?.response?.status === 401) {
+            signOut();
+            // eslint-disable-next-line no-console
+            console.warn("Unauthorized request. User was signed out.");
+          }
+          return Promise.reject(axiosError);
+        }
+      );
+    }
+  }, [isAuthenticated]);
 
-			const accessToken = response?.headers?.['New-Access-Token'] as string;
-
-			if (accessToken) {
-				setSession(accessToken);
-				return accessToken;
-			}
-			return null;
-		} catch (error) {
-			const axiosError = error as AxiosError;
-
-			handleError(axiosError);
-			return axiosError;
-		}
-	};
-
-	/**
-	 * if a successful response contains a new Authorization header,
-	 * updates the access token from it.
-	 *
-	 */
-	useEffect(() => {
-		if (authConfig.updateTokenFromHeader && isAuthenticated) {
-			axios.interceptors.response.use(
-				(response) => {
-					const newAccessToken = response?.headers?.['New-Access-Token'] as string;
-
-					if (newAccessToken) {
-						setSession(newAccessToken);
-					}
-					return response;
-				},
-				(error) => {
-					const axiosError = error as AxiosError;
-
-					if (axiosError?.response?.status === 401) {
-						signOut();
-						// eslint-disable-next-line no-console
-						console.warn('Unauthorized request. User was signed out.');
-					}
-					return Promise.reject(axiosError);
-				}
-			);
-		}
-	}, [isAuthenticated]);
-
-	return { user, isAuthenticated, isLoading, signIn, signUp, signOut, updateUser, refreshToken, setIsLoading };
+  return {
+    user,
+    isAuthenticated,
+    isLoading,
+    signIn,
+    autoSignIng,
+    socialSignIn,
+    signUp,
+    signOut,
+    updateUser,
+    refreshToken,
+    setIsLoading,
+  };
 };
 
 export default useJwtAuth;

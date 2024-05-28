@@ -6,7 +6,7 @@ import { Typography } from "@mui/material";
 function AuthBox() {
   return (
     <Box
-      className="relative hidden h-full flex-auto items-center justify-center overflow-hidden p-64 md:flex lg:px-112"
+      className="relative items-center justify-center flex-auto hidden h-full p-64 overflow-hidden md:flex lg:px-112"
       sx={{
         backgroundColor: "primary.main",
       }}
@@ -50,15 +50,15 @@ function AuthBox() {
             backgroundColor: "secondary.main",
           }}
         />
-        <div className="text-7xl font-bold leading-none text-gray-100">
+        <div className="font-bold leading-none text-gray-100 text-7xl">
           <div className="mb-[5px] text-[60px]">Welcome to</div>
           <div className="text-[60px]">the RCW!</div>
         </div>
         <div className="mt-24 max-w-[467px] leading-6 tracking-tight text-white text-[18px]">
-          Embark on a journey with us, empowering your entrepreneurial spirit to
-          shape and cultivate your business from the ground up.
+          Take your business to the next level with a highly-skilled,
+          professionally trained virtual assistant.
         </div>
-        <div className="mt-32 flex items-center">
+        {/* <div className="flex items-center mt-32">
           <AvatarGroup
             sx={{
               "& .MuiAvatar-root": {
@@ -79,7 +79,7 @@ function AuthBox() {
             </Typography>{" "}
             <br /> people joined us
           </div>
-        </div>
+        </div> */}
       </div>
     </Box>
   );

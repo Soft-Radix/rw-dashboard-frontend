@@ -13,12 +13,13 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import { selectUser } from "src/app/auth/user/store/userSlice";
+import { getLocalStorage } from "src/utils";
 
 /**
  * The user menu.
  */
 function UserMenu() {
-  const user = useSelector(selectUser);
+  const user = getLocalStorage("userDetail");
   const { signOut } = useAuth();
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
 
@@ -37,15 +38,15 @@ function UserMenu() {
   return (
     <>
       <Button
-        className="min-h-40 min-w-40 p-0 md:px-16 md:py-6 flex gap-5"
+        className="flex gap-5 p-0 min-h-40 min-w-40 md:px-16 md:py-6"
         onClick={userMenuClick}
         color="inherit"
       >
-        {user.data.photoURL ? (
+        {user?.photoURL ? (
           <Avatar
             sx={{
               background: (theme) => theme.palette.background.default,
-              color: (theme) => theme.palette.text.secondary,
+              color: (theme) => theme.palette.text.primary,
             }}
             className="md:mx-4"
             alt="user photo"
@@ -60,15 +61,15 @@ function UserMenu() {
             }}
             className="md:mx-4"
           >
-            {user?.data?.displayName?.[0]}
+            {user?.first_name?.[0]}
           </Avatar>
         )}
-        <div className="mx-4 hidden flex-col items-start md:flex">
+        <div className="flex-col items-start hidden mx-4 md:flex">
           <Typography component="span" className="flex font-semibold">
-            {user.data.displayName}
+            {user.first_name}
           </Typography>
           <Typography
-            className="text-11 font-medium capitalize"
+            className="font-medium capitalize text-11"
             color="text.secondary"
           >
             {user.role?.toString()}

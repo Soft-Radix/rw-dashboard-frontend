@@ -104,7 +104,7 @@ a[role="button"] {
 }
 
 .MuiModal-root {
-  z-index: 9999;
+  z-index: 9998;
 }
 
 /* button styling */
@@ -116,7 +116,6 @@ a[role="button"] {
     background-color: transparent;
   }
 }
-
 /* Medium Devices, Desktops Only */
 @media only screen and (min-width: 992px) {
   ::-webkit-scrollbar {
@@ -219,4 +218,180 @@ input:-webkit-autofill:active {
       }
     }
   }
+}
+.common-inputField_v2 {
+  input {
+    border-radius: 12px !important;
+  }
+  .input_wrap {
+    .MuiInputBase-root {
+      border-radius: 12px;
+    }
+  }
+}
+.rbc-month-header {
+  @apply text-start text-[12px] text-[#757982] font-500 border-1 border-[#E7E8E9];
+
+  .rbc-header {
+    @apply py-10 text-left px-20 text-[12px];
+  }
+}
+
+.rbc-row-content {
+  .rbc-date-cell {
+    @apply text-left px-20 py-10 text-[12px] text-[#111827] font-500;
+  }
+}
+.rbc-row-bg {
+  .rbc-off-range-bg {
+    @apply bg-transparent;
+  }
+  .rbc-day-bg + .rbc-today {
+    @apply border-1 border-[#4F46E5] bg-transparent;
+  }
+
+  .rbc-off-range button {
+    @apply text-red-300;
+  }
+}
+.rbc-off-range .rbc-button-link {
+  @apply text-[#757982]; /* Set text color using regular CSS */
+}
+
+.today-cell {
+  background-color: #f0f0f0; /* Example background color */
+  position: relative;
+}
+.today-cell:after {
+  content: "Today";
+  position: absolute;
+  top: 9px;
+  right: 14px;
+  font-size: 12px;
+  font-weight: 500px;
+  color: #111827; /* Example text color */
+}
+
+.rbc-row-segment {
+  .rbc-event {
+    @apply bg-transparent;
+  }
+  .rbc-event.rbc-selected {
+    @apply bg-transparent;
+  }
+}
+.selected-slot {
+  background-color: #cceeff;
+  border-radius: 5px;
+}
+// .muiltr-7en360-MuiPaper-root-MuiDialog-paper {
+//   @apply bg-red-200 p-10 w-
+// }
+
+.edit_profile_btn {
+  @apply cursor-pointer flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center absolute right-[2rem] top-[2rem];
+}
+
+//  ---------
+.muiltr-ifakpp-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+  margin-top: 1rem !important;
+}
+.muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root {
+  padding: 4px;
+  min-width: 150px;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  padding: 12px 17px;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root.Mui-focusVisible,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root.Mui-focusVisible {
+  border-radius: 6px;
+  background-color: #e7e8e9;
+}
+.muiltr-1a5ugf8-MuiButtonBase-root-MuiMenuItem-root:hover,
+.muiltr-9dfjpo-MuiButtonBase-root-MuiMenuItem-root:hover {
+  border-radius: 6px;
+  background-color: #e7e8e9;
+}
+.MuiButtonBase-root:hover {
+  // background-color: transparent !important; /* Make sure to override with !important */
+}
+.common-inputField input {
+  min-height: 46px;
+}
+.common-inputField input::placeholder {
+  color: #111827;
+}
+
+.unit_discount .MuiInputBase-root {
+  border-radius: 0% !important;
+  border: none !important;
+  border-color: transparent !important;
+}
+
+.Pending {
+  color: #f0b402;
+  background-color: #ffeebb;
+}
+
+.Expired {
+  color: #f44336;
+  background-color: #f443362e;
+}
+.PauseD {
+  color: #4c87af;
+  background-color: #4ca8af2e;
+}
+
+.Completed {
+  color: #4caf50;
+  background-color: #4caf502e;
+}
+.Cancelled {
+  color: #af4c4c;
+  background-color: #af4c4c2e;
+}
+.common-inputField .input_wrap .MuiInputBase-input {
+  color: black !important;
+}
+.muiltr-m96d3a-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+  -webkit-box-shadow: none !important;
+  -webkit-text-fill-color: inherit !important;
+}
+
+.muiltr-qi5xzb .MuiPaper-root {
+  background-color: #fff !important;
+}
+
+.muiltr-1vbx1hi .MuiPaper-root {
+  background-color: #fff !important;
+}
+
+.muiltr-1ogds6z-MuiTableRow-root td {
+  padding-bottom: 32px !important;
+  padding-top: 26px !important;
+}
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-sizeSmall.whitespace-nowrap.font-500.muiltr-12112v9 {
+  padding-bottom: 32px !important;
+  padding-top: 26px !important;
+}
+.muiltr-1u9l49p-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26) !important;
+  box-shadow: none !important;
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+.muiltr-60c1p-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.buttonNew {
+  margin: 0px auto !important;
+}
+.facebook-login-btn:hover {
+  background-color: rgb(245, 245, 245) !important;
+  box-shadow: none !important;
 }

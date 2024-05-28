@@ -25,4 +25,16 @@ const BillingConfig = {
   ],
 };
 
+export const AdminBillingConfig = {
+  settings: {
+    layout: {},
+  },
+  routes: [
+    {
+      path: "admin/billings",
+      element: <Billing />,
+    },
+  ],
+};
+
 export default BillingConfig;

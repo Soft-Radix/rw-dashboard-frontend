@@ -51,39 +51,39 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
         position="static"
         elevation={0}
       >
-        <Toolbar className="min-h-48 p-0 md:min-h-64">
+        <Toolbar className="p-0 min-h-48 md:min-h-64">
           <div className="flex flex-1 px-16">
             {config.navbar.display && config.navbar.position === "left" && (
               <>
                 <Hidden lgDown>
                   {(config.navbar.style === "style-3" ||
                     config.navbar.style === "style-3-dense") && (
-                    <NavbarToggleButton className="mx-0 h-40 w-40 p-0" />
+                    <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
                   )}
 
                   {config.navbar.style === "style-1" && !navbar.open && (
-                    <NavbarToggleButton className="mx-0 h-40 w-40 p-0" />
+                    <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
                   )}
                 </Hidden>
 
                 <Hidden lgUp>
-                  <NavbarToggleButton className="mx-0 h-40 w-40 p-0 sm:mx-8" />
+                  <NavbarToggleButton className="w-40 h-40 p-0 mx-0 sm:mx-8" />
                 </Hidden>
               </>
             )}
 
-            <Hidden lgDown>
+            {/* <Hidden lgDown>
               <NavigationShortcuts />
-            </Hidden>
+            </Hidden> */}
           </div>
 
-          <div className="flex h-full items-center overflow-x-auto px-8">
-            <LanguageSwitcher />
-            <AdjustFontSize />
-            <FullScreenToggle />
-            <NavigationSearch />
-            <QuickPanelToggleButton />
+          <div className="flex items-center h-full px-8 overflow-x-auto">
             <Notifications />
+            {/* <LanguageSwitcher /> */}
+            {/* <AdjustFontSize /> */}
+            {/* <FullScreenToggle /> */}
+            {/* <NavigationSearch /> */}
+            {/* <QuickPanelToggleButton /> */}
             <UserMenu />
           </div>
 
@@ -91,12 +91,12 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
             <>
               <Hidden lgDown>
                 {!navbar.open && (
-                  <NavbarToggleButton className="mx-0 h-40 w-40 p-0" />
+                  <NavbarToggleButton className="w-40 h-40 p-0 mx-0" />
                 )}
               </Hidden>
 
               <Hidden lgUp>
-                <NavbarToggleButton className="mx-0 h-40 w-40 p-0 sm:mx-8" />
+                <NavbarToggleButton className="w-40 h-40 p-0 mx-0 sm:mx-8" />
               </Hidden>
             </>
           )}

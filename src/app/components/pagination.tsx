@@ -1,6 +1,12 @@
 import { Pagination, PaginationProps, styled } from "@mui/material";
+import React from "react";
 
-interface IProps extends PaginationProps {}
+interface IProps extends PaginationProps {
+  onPageChange?: (event: React.ChangeEvent<unknown>, page: number) => void;
+  currentPage?: number;
+  count?: number;
+  onChange?: any;
+}
 
 const StyledPagination = styled(Pagination)(({ theme }) => ({
   "& ul": {
@@ -34,8 +40,23 @@ const StyledPagination = styled(Pagination)(({ theme }) => ({
   },
 }));
 
-function CommonPagination({ ...rest }: IProps) {
-  return <StyledPagination count={1} {...rest} />;
+function CommonPagination({
+  onPageChange,
+  currentPage,
+  count,
+  ...rest
+}: IProps) {
+  // console.log("🚀 ~ count:", count);
+
+  return (
+    <StyledPagination
+      count={count}
+      page={currentPage}
+      onChange={onPageChange}
+      {...rest}
+      
+    />
+  );
 }
 
 export default CommonPagination;

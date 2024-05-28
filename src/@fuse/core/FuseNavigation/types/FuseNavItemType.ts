@@ -11,6 +11,7 @@ export type FuseNavItemType = {
   title?: string;
   translate?: string;
   auth?: string[] | string;
+  hideOption?: boolean;
   subtitle?: string;
   icon?: string | ReactNode;
   iconClass?: string;
@@ -25,6 +26,8 @@ export type FuseNavItemType = {
   badge?: FuseNavBadgeType;
   children?: FuseNavItemType[];
   hasPermission?: boolean;
+  customIcon?: any;
+  isProject?: boolean;
 };
 
 export type FuseFlatNavItemType = Omit<FuseNavItemType, "children" | "sx"> & {

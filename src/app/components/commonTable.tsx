@@ -1,4 +1,5 @@
 import {
+  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -7,30 +8,85 @@ import {
   TableRow,
   TableRowProps,
 } from "@mui/material";
-import { ReactNode } from "react";
+import { DownArrowBlack } from "public/assets/icons/projectsIcon";
+import { BaseSyntheticEvent, ReactNode } from "react";
+import { HeadIcon } from "public/assets/icons/clienIcon";
 
 interface IProps {
   children: ReactNode;
   headings: string[];
   headingRowProps?: TableRowProps;
+  useBorderDesign?: boolean;
+  isSorting?: boolean;
+  sortColumn?: string;
+  sortOrder?: string;
+  onSort?: (column: string) => void;
+  handleSelectAll?: () => void;
 }
-function CommonTable({ children, headings, headingRowProps }: IProps) {
+function CommonTable({
+  children,
+  headings,
+  headingRowProps,
+  useBorderDesign,
+  isSorting,
+  onSort,
+  handleSelectAll,
+}: IProps) {
+  // console.log("headings", headings);
   return (
     <TableContainer>
-      <Table size="small" aria-label="simple table" className="common_table">
-        <TableHead className="bg-[#F7F9FB] text-sm">
+      <Table
+        size="small"
+        aria-label="simple table"
+        className={`${useBorderDesign ? "border-design" : "common_table "}`}
+      >
+        <TableHead
+          className={`${isSorting && "cursor-pointer"} ${
+            useBorderDesign
+              ? "bg-[#F7F9FB] text-sm border-solid border-[#EDF2F6]"
+              : "bg-[#F7F9FB] text-sm border-b-2 border-solid border-[#EDF2F6]"
+          } `}
+        >
           <TableRow {...headingRowProps}>
             {headings.map((item, index) => (
               <TableCell
-                className={`th ${index === 0 ? "pl-20" : ""}`}
+                className={`th ${index === 0 ? "pl-20" : ""} w-[${
+                  100 / headings?.length
+                }%]`}
                 key={index}
                 align={
-                  headings.length - 1 === index || index === 0
-                    ? "left"
-                    : "center"
+                  headings.length === index || index === 0 ? "left" : "center"
                 }
+                onClick={() => {
+                  if (typeof onSort == "function") {
+                    onSort(item);
+                  } else null;
+                }}
               >
-                {item}
+                {isSorting ? (
+                  <div className="flex items-center">
+                    {index === 0 && (
+                      <Checkbox
+                        onClick={(e: BaseSyntheticEvent) => {
+                          e.stopPropagation();
+                          handleSelectAll();
+                        }}
+                        sx={{
+                          paddingLeft: 0, // Set paddingLeft to 0
+                          "&:hover": {
+                            backgroundColor: "transparent", // No hover background globally
+                          },
+                        }}
+                      />
+                    )}
+                    {index !== headings.length - 1 && (
+                      <HeadIcon className="mr-10" />
+                    )}{" "}
+                    {item}
+                  </div>
+                ) : (
+                  item
+                )}
               </TableCell>
             ))}
           </TableRow>

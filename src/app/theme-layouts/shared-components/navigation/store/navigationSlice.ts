@@ -1,25 +1,28 @@
-import {
-  createEntityAdapter,
-  createSelector,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
-import { AppThunk, RootStateType } from "app/store/types";
-import { PartialDeep } from "type-fest";
+import FuseNavItemModel from "@fuse/core/FuseNavigation/models/FuseNavItemModel";
 import {
   FuseFlatNavItemType,
   FuseNavItemType,
 } from "@fuse/core/FuseNavigation/types/FuseNavItemType";
+import FuseUtils from "@fuse/utils";
+import FuseNavigationHelper from "@fuse/utils/FuseNavigationHelper";
+import {
+  PayloadAction,
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from "@reduxjs/toolkit";
+import navigationConfig, {
+  adminNavigationConfig,
+} from "app/configs/navigationConfig";
+import { selectCurrentLanguageId } from "app/store/i18nSlice";
+import { AppThunk, RootStateType } from "app/store/types";
+import i18next from "i18next";
 import {
   selectUserRole,
   userSliceType,
 } from "src/app/auth/user/store/userSlice";
-import FuseNavigationHelper from "@fuse/utils/FuseNavigationHelper";
-import i18next from "i18next";
-import FuseNavItemModel from "@fuse/core/FuseNavigation/models/FuseNavItemModel";
-import FuseUtils from "@fuse/utils";
-import navigationConfig from "app/configs/navigationConfig";
-import { selectCurrentLanguageId } from "app/store/i18nSlice";
+import { getLocalStorage } from "src/utils";
+import { PartialDeep } from "type-fest";
 
 type AppRootStateType = RootStateType<[navigationSliceType, userSliceType]>;
 
@@ -27,10 +30,13 @@ const navigationAdapter = createEntityAdapter<FuseFlatNavItemType>();
 
 const emptyInitialState = navigationAdapter.getInitialState([]);
 
-const initialState = navigationAdapter.upsertMany(
-  emptyInitialState,
-  FuseNavigationHelper.flattenNavigation(navigationConfig)
-);
+// console.log("userDetail?.role", userDetail?.role);
+// const initialState = navigationAdapter.upsertMany(
+//   emptyInitialState,
+//   FuseNavigationHelper.flattenNavigation(
+//     userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
+//   )
+// );
 
 /**
  * Redux Thunk actions related to the navigation store state
@@ -124,7 +130,13 @@ export const {
 } = navigationAdapter.getSelectors(
   (state: AppRootStateType) => state.navigation
 );
-
+const userDetail = getLocalStorage("userDetail");
+const initialState = navigationAdapter.upsertMany(
+  emptyInitialState,
+  FuseNavigationHelper.flattenNavigation(
+    userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
+  )
+);
 /**
  * The navigation slice
  */
@@ -132,6 +144,18 @@ export const navigationSlice = createSlice({
   name: "navigation",
   initialState,
   reducers: {
+    setInitialState: (state, { payload }) => {
+      state = navigationAdapter.upsertMany(
+        emptyInitialState,
+        FuseNavigationHelper.flattenNavigation(
+          payload?.role === "admin"
+            ? adminNavigationConfig
+            : payload?.isAdd
+              ? payload?.customNavigation
+              : navigationConfig
+        )
+      );
+    },
     setNavigation(state, action: PayloadAction<FuseNavItemType[]>) {
       return navigationAdapter.setAll(
         state,
@@ -142,7 +166,8 @@ export const navigationSlice = createSlice({
   },
 });
 
-export const { setNavigation, resetNavigation } = navigationSlice.actions;
+export const { setNavigation, resetNavigation, setInitialState } =
+  navigationSlice.actions;
 
 export const selectNavigation = createSelector(
   [selectNavigationAll, selectUserRole, selectCurrentLanguageId],

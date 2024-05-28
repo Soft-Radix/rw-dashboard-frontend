@@ -2,26 +2,55 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { useFormik } from "formik";
-import { useState } from "react";
+import { forgotPassword, verifyOtp } from "app/store/Auth";
+import { AuthRootState } from "app/store/Auth/Interface";
+import { useAppDispatch } from "app/store/store";
+import { useEffect, useState } from "react";
 import OTPInput from "react-otp-input";
+import { useSelector } from "react-redux";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
+import { useCountdownTimer } from "./UseCountdownTimer";
 
 export default function OtpVerification() {
-  const [otp, setOtp] = useState("");
+  // const initialTime = 60;
+  const [otp, setOtp] = useState<string>("");
+  // State to track loading
 
-  //* initialise useformik hook
-  const formik = useFormik({
-    initialValues: {
-      password: "",
-      confirmPassword: "",
-    },
-    // validationSchema: validationSchemaProperty,
-    onSubmit: (values) => {},
-  });
+  const dispatch = useAppDispatch();
+  const store = useSelector((store: AuthRootState) => store);
+  const navigate: NavigateFunction = useNavigate();
+
+  const initialTime = 60; // Initial countdown time in seconds
+  const { timer, startTimer, resetTimer } = useCountdownTimer(initialTime);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  async function onSubmit() {
+    let data = {
+      email: store.auth?.email,
+      otp,
+    };
+    // console.log(data, "jj");
+    setIsLoading(true);
+    let { payload } = await dispatch(verifyOtp(data));
+    if (payload?.data?.status) {
+      setIsLoading(false);
+      navigate("/reset-password");
+    }
+  }
+  useEffect(() => {
+    startTimer(); // Start the countdown timer
+  }, []);
+
+  const resendOtp = async () => {
+    if (timer !== 0) return null;
+    await dispatch(forgotPassword({ email: store.auth.email }));
+    resetTimer(); // Reset the countdown timer
+    startTimer(); // Start the countdown timer
+  };
   return (
-    <div className="flex min-w-0 flex-1 flex-col items-center sm:flex-row sm:justify-center md:items-start md:justify-start">
-      <Paper className="h-full w-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none flex justify-center">
+    <div className="flex flex-col items-center flex-1 min-w-0 sm:flex-row sm:justify-center md:items-start md:justify-start">
+      <Paper className="flex justify-center w-full h-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none">
         <CardContent className="mx-auto max-w-420 sm:mx-0 sm:w-420">
           <div className="flex items-center">
             <img src="assets/icons/remote-icon.svg" alt="" />
@@ -30,7 +59,7 @@ export default function OtpVerification() {
           <Typography className="mt-96 text-[48px] font-bold leading-tight tracking-tight">
             OTP Verification
           </Typography>
-          <div className="mt-2 flex items-baseline font-medium">
+          <div className="flex items-baseline mt-2 font-medium">
             <Typography className="text-[18px] text-[#757982] mt-8 max-w-[480px]">
               Please enter one time password (OTP) that is sent to
               <span className="font-semibold"> info456@gmail.com</span>
@@ -52,17 +81,26 @@ export default function OtpVerification() {
               className="mt-40 w-full h-[50px] text-[18px] font-bold"
               aria-label="Log In"
               size="large"
-              onClick={() => formik.handleSubmit()}
+              onClick={onSubmit}
+              disabled={isLoading}
             >
               Submit
             </Button>
-            <div className="mt-28 flex items-center cursor-pointer justify-center">
-              <Typography color="text.secondary" className="font-medium">
-                Resend OTP in
+            <div className="flex items-center justify-center cursor-pointer mt-28">
+              <Typography
+                color="text.secondary"
+                className="font-medium"
+                onClick={resendOtp}
+              >
+                Resend OTP {timer !== 0 && "in"}
               </Typography>
-              <Typography color="secondary.main" className="font-bold ml-5">
-                00:24
-              </Typography>
+
+              {timer !== 0 && (
+                <Typography color="secondary.main" className="ml-5 font-bold">
+                  {Math.floor(timer / 60)}:
+                  {timer % 60 < 10 ? `0${timer % 60}` : timer % 60}
+                </Typography>
+              )}
             </div>
           </div>
         </CardContent>
