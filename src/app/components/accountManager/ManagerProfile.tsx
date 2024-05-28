@@ -30,26 +30,6 @@ import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import moment from "moment";
 
-const rows = [
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Suspended",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Pending",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Active",
-  },
-];
 // interface svgColor {
 //   color: string;
 // }
@@ -77,7 +57,6 @@ const ManagerProfile = () => {
   // Menu item click handler
   const handleMenuItemClick = (status) => {
     setSelectedItem(status);
-
     handleClose(); // Close the menu after handling the click
   };
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -88,8 +67,8 @@ const ManagerProfile = () => {
     if (!accountManager_id) return null;
     dispatch(getAccManagerInfo({ account_manager_id: accountManager_id }));
     return () => {
-      dispatch(resetFormManagrData());
       dispatch(changeFetchStatus());
+      dispatch(resetFormManagrData());
     };
   }, []);
 
