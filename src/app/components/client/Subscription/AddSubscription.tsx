@@ -300,9 +300,9 @@ export default function AddSubscription() {
     );
   };
   const today = new Date();
-  // Add one day to get tomorrow's date
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setDate(tomorrow.getDate() + 1); // Add one more day
   const yyyy = tomorrow.getFullYear();
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
@@ -821,7 +821,7 @@ export default function AddSubscription() {
     if (selectedDate <= today) {
       return {
         isValid: false,
-        error: "Billing Start Date must be greater than today",
+        error: "Billing Start Date must be greater than tomorrow",
       };
     }
 
@@ -1617,6 +1617,7 @@ export default function AddSubscription() {
                             id="filled-hidden-label-small"
                             defaultValue=""
                             variant="standard"
+                            type="number"
                             name="one_time_discount"
                             // value={details.one_time_discount}
                             value={
