@@ -51,7 +51,7 @@ export default function GroupAgentsList() {
   const itemsPerPage = 10;
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
-  const { agentGroupDetail, actionStatus } = useSelector(
+  const { agentGroupDetail, actionStatus, actionStatusEdit } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
   // console.log(agentGroupDetail.group_members, "girl");
@@ -170,7 +170,7 @@ export default function GroupAgentsList() {
                 variant="contained"
                 color="secondary"
                 className="w-[250px] h-[50px] text-[18px] font-700"
-                disabled={actionStatus}
+                disabled={actionStatusEdit}
               >
                 Save
               </Button>

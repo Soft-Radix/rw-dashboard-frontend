@@ -62,6 +62,7 @@ function AddGroupModel({
     if (payload?.data?.status) {
       resetForm();
       fetchAgentGroupList();
+      resetForm();
     }
   };
 
@@ -73,7 +74,11 @@ function AddGroupModel({
         delete_agent_ids: [],
       })
     );
-    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+    }));
+    // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
     // Handle the case when there is an id (e.g., updating an existing group)
   };
@@ -120,16 +125,27 @@ function AddGroupModel({
     if (!!agentGroupState?.successMsg) {
       dispatch(restAll());
       // fetchAgentGroupList;
-      setIsOpen((prev) => false);
+      setIsOpen(false);
     } else if (!!agentGroupState?.errorMsg) {
       dispatch(restAll());
     }
     formik.resetForm();
   }, [agentGroupState, filterMenu]);
+
+  const handleToggle = (e: React.MouseEvent) => {
+    // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+    }));
+    setCheckedItems([]);
+    setIsOpen((prev) => !prev);
+    formik.resetForm(); // Reset form values when closing the modal
+  };
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={handleToggle}
       modalTitle={isNewAgent ? "Add Agent" : "Add Group"}
       maxWidth="733"
       btnTitle="Save"

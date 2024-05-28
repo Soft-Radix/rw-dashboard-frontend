@@ -234,12 +234,17 @@ export default function Profile({
               </div>
               <div
                 className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
-                onClick={handleResetPassword}
+
                 // onClick={() => {
                 //   setIsOpenChangePassModal(true);
                 // }}
               >
-                <ArrowRightCircleIcon />
+                <div
+                  className="text-[#4F46E5] font-500 text-[14px] underline"
+                  onClick={handleResetPassword}
+                >
+                  Reset
+                </div>
               </div>
             </div>
           </div>

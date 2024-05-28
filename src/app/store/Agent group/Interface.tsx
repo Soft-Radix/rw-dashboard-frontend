@@ -39,6 +39,8 @@ export type initialStateProps = {
   searchAgentList: [];
   addagentList: [];
   actionStatusDisabled: boolean;
+  actionStatusEdit: boolean;
+  actionStatusGroupMember: boolean;
 };
 export interface AgentGroupRootState {
   agentGroup: initialStateProps; // Add other slices if needed

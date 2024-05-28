@@ -7,7 +7,7 @@ import {
   ProductDelete,
   ProductUpdate,
   ProjectUpdate,
-  ProjectAddDoc
+  ProjectAddDoc,
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 
@@ -38,7 +38,7 @@ export const projectAddDoc = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: `/project/add`,
       method: "post",
-      data: {name:payload.name},
+      data: { name: payload.name },
       headers: { Authorization: `Bearer ${payload.token}` },
     });
 
@@ -157,7 +157,6 @@ export const projectColumnUpdate: any = createAsyncThunk(
 export const projectColumnMove: any = createAsyncThunk(
   "project/column-move",
   async (payload: any) => {
-    console.log("🚀 ~ payload:", payload);
     const response = await ApiHelperFunction({
       url: `project/column-move`,
       method: "post",

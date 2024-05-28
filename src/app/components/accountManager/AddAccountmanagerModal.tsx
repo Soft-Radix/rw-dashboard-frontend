@@ -160,12 +160,11 @@ function AddAccountManagerModel({
       dispatch(restAll());
       setIsOpen(false);
       // fetchManagerList();
-      formik.resetForm();
     } else if (!!accmanagerState?.errorMsg) {
       dispatch(restAll());
     }
-    formik.resetForm();
-  }, [accmanagerState]);
+    // formik.resetForm();
+  }, [accmanagerState, isOpen]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -251,13 +250,14 @@ function AddAccountManagerModel({
         setpreviewUrl("");
       }
     }
-    formik.resetForm();
   }, [accManagerDetail, isOpen]);
 
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => {
+        setIsOpen((prev) => !prev), formik.resetForm();
+      }}
       modalTitle={
         isEditing == true ? "Edit Account Manager" : "Add Account Manager"
       }

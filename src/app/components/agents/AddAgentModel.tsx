@@ -146,7 +146,6 @@ function AddAgentModel({
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-    formik.resetForm();
   }, [agentState, isOpen]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -210,7 +209,9 @@ function AddAgentModel({
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => false)}
+      handleToggle={() => {
+        setIsOpen((prev) => false), formik.resetForm();
+      }}
       modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"
       btnTitle={"Save"}

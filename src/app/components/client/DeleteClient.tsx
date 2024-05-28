@@ -29,7 +29,7 @@ function DeleteClient({
   const { actionStatus } = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
   );
-  const { actionStatusDisabled } = useSelector(
+  const { actionStatusDisabled, actionStatusGroupMember } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
   const { actionStatusAttachment } = useSelector(
@@ -51,7 +51,8 @@ function DeleteClient({
           actionStatus ||
           actionStatusDisabled ||
           actionStatusAttachment ||
-          actionStatusClient
+          actionStatusClient ||
+          actionStatusGroupMember
         }
         onSubmit={onDelete}
         btnTitle="Yes"

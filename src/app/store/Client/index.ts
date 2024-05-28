@@ -327,7 +327,7 @@ export const initialState: initialStateProps = {
   errorMsg: "",
   list: [],
   clientDetail: {},
-  selectedColumn: ["Id", "Name", "Company Name", "Date", "Status", ""],
+  selectedColumn: ["Id", "Name", "Company Name", "Joining Date", "Status", ""],
   assignedAgentDetail: [],
   assignAccManagerDetail: [],
   total_records: 0,
@@ -486,7 +486,7 @@ export const clientSlice = createSlice({
         Id: 0,
         Name: 1,
         "Company Name": 2,
-        Date: 3,
+        "Joining Date": 3,
         Status: 4,
         "": -1, // Place "Actions" at the end
       };
@@ -499,7 +499,7 @@ export const clientSlice = createSlice({
             (item) => item !== payload
           );
         }
-        console.log("state", state.selectedColumn[0]);
+        // console.log("state", state.selectedColumn[0]);
       } else {
         state.selectedColumn.push(payload);
       }
