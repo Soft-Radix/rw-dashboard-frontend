@@ -126,7 +126,6 @@ function AddAccountManagerModel({
       formData.append("phone_number", String(values.phone_number)); // Convert number to string
       formData.append("email", values.email);
       formData.append("address", values.address);
-
       if (selectedImage) {
         formData.append("files", selectedImage);
       }
@@ -136,11 +135,11 @@ function AddAccountManagerModel({
       await dispatch(addAccManager({ formData }));
     }
     // console.log(payload, "payload");
-    setIsOpen(false);
-    fetchManagerList();
 
     if (payload?.data?.status) {
       resetForm();
+      fetchManagerList();
+      setIsOpen(false);
     }
   };
 
@@ -159,12 +158,13 @@ function AddAccountManagerModel({
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
       setIsOpen(false);
+      formik.resetForm();
       // fetchManagerList();
     } else if (!!accmanagerState?.errorMsg) {
-      dispatch(restAll());
+      setIsOpen(true);
+      // dispatch(restAll());
     }
-    // formik.resetForm();
-  }, [accmanagerState, isOpen]);
+  }, [accmanagerState]);
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -256,7 +256,10 @@ function AddAccountManagerModel({
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => !prev), formik.resetForm();
+        setIsOpen((prev) => !prev),
+          formik.resetForm(),
+          setpreviewUrl(""),
+          setSelectedImage(null);
       }}
       modalTitle={
         isEditing == true ? "Edit Account Manager" : "Add Account Manager"

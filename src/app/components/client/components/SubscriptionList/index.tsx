@@ -1,4 +1,4 @@
-import { TableCell, Theme } from "@mui/material";
+import { TableCell, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useEffect, useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
@@ -7,7 +7,11 @@ import CommonTable from "src/app/components/commonTable";
 import { TableRow } from "@mui/material";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import { Link, useParams } from "react-router-dom";
-import { ArrowRightCircleIcon } from "public/assets/icons/common";
+import {
+  ArrowRightCircleIcon,
+  NoSubscriptionData,
+  SucessSubCancel,
+} from "public/assets/icons/common";
 import CommonPagination from "src/app/components/pagination";
 import dotImg from "../../../../../../public/assets/icons/dots.svg";
 import LongMenu from "../../Subscription/Dropdown";
@@ -124,9 +128,21 @@ export default function SubscriptionList() {
               }}
             >
               <TableCell colSpan={7} align="center">
-                <span className="font-bold text-20 text-[#e4e4e4]">
-                  No Data Found
-                </span>
+                <div
+                  className="flex flex-col justify-center align-items-center gap-40"
+                  style={{ alignItems: "center" }}
+                >
+                  <NoSubscriptionData />
+                  <Typography className="text-[48px] text-center font-700 leading-normal">
+                    No data found !
+                    <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
+                      No data has been added yet. Please input the
+                    </p>
+                    <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
+                      necessary information to proceed.
+                    </p>
+                  </Typography>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
