@@ -1,4 +1,4 @@
-import { Button, TableCell, TableRow, Theme } from "@mui/material";
+import { Button, TableCell, TableRow, Theme, Tooltip } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
@@ -79,7 +79,7 @@ export default function ManageProducts() {
     }
   };
 
-  const totalPageCount = Math.ceil(list.length / itemsPerPage);
+  const totalPageCount = Math.ceil(list?.length / itemsPerPage);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -89,7 +89,7 @@ export default function ManageProducts() {
     // Handle any additional logic when the page changes, e.g., fetching data
   };
 
-  const currentRows = list.slice(
+  const currentRows = list?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -130,15 +130,19 @@ export default function ManageProducts() {
                     >
                       <TableCell
                         scope="row"
-                        className="w-[400px] break-words break-all"
+                        className="w-[400px] break-words break-all truncate max-w-[400px]"
                       >
+                        {/* <Tooltip title={item.name} enterDelay={500}> */}
                         {item.name}
+                        {/* </Tooltip> */}
                       </TableCell>
                       <TableCell
                         align="center"
-                        className="w-[400px] break-words break-all"
+                        className="w-[400px] break-words break-all truncate max-w-[400px]"
                       >
+                        {/* <Tooltip title={item.description} enterDelay={500}> */}
                         {item.description}
+                        {/* </Tooltip> */}
                       </TableCell>
 
                       <TableCell align="center" className="whitespace-nowrap">

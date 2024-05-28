@@ -36,6 +36,14 @@ const validationSchema = Yup.object({
       (value) => value && value.trim().length > 0
     ),
 
+  // unit_price: Yup.number()
+  //   .required("Unit Price is required")
+  //   .min(0.01, "Unit Price must be greater than 0")
+  //   .test(
+  //     "decimal-places",
+  //     "Only two decimal places are allowed",
+  //     (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+  //   ),
   unit_price: Yup.number()
     .required("Unit Price is required")
     .min(0.01, "Unit Price must be greater than 0")
@@ -43,6 +51,12 @@ const validationSchema = Yup.object({
       "decimal-places",
       "Only two decimal places are allowed",
       (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+    )
+
+    .test(
+      "max-length",
+      "Unit Price must have a maximum of 6 digits",
+      (value: any) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
     ),
 });
 function AddProduct({
