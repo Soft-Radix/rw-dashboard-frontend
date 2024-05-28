@@ -78,11 +78,9 @@ export default function Clients() {
 
   const handleSelectAll = () => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
-
     const allSelected = allRowIds.every((id: number) =>
       selectedIds.includes(id)
     );
-
     if (allSelected) {
       setSelectedIds(allRowIds); // Select all
     } else {
@@ -354,7 +352,7 @@ export default function Clients() {
 
       <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-sm pt-[2rem] ">
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem]  ">
             <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>
