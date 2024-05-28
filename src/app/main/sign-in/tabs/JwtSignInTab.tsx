@@ -49,7 +49,7 @@ function jwtSignInTab() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // formik.handleSubmit();
+    formik.handleSubmit();
   };
 
   const responseFacebook = (response) => {
@@ -169,12 +169,6 @@ function jwtSignInTab() {
             autoLoad
             callback={responseFacebook}
             className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
-            // render={(renderProps) => (
-            //   <div onClick={renderProps.onClick}>
-            //     <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
-            //     Log In with Facebook
-            //   </div>
-            // )}
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
