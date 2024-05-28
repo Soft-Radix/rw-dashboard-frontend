@@ -100,7 +100,7 @@ export default function Clients() {
     if (payload?.data?.status) {
       setfilters((prevFilters) => ({
         ...prevFilters,
-        // start: clientState.length - 1 == 0 ? 0 : prevFilters.start,
+        start: clientState?.list.length - 1 == 0 ? 0 : prevFilters.start,
       }));
       setIsOpenDeletedModal(false);
     }
