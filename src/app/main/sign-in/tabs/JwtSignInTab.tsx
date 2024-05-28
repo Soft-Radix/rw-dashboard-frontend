@@ -113,7 +113,7 @@ function jwtSignInTab() {
           placeholder="Enter Password"
         />
         <Link
-          className="text-[16px] font-medium !no-underline w-fit"
+          className="text-[16px] font-medium !no-underline w-fit inline-block mt-10"
           to="/forgot-password"
         >
           Forgot Password
@@ -160,7 +160,7 @@ function jwtSignInTab() {
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
-            cssClass="flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
+            cssClass="facebook-login-btn flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
             textButton="&nbsp;&nbsp; Log In with Facebook"
           />
         </div>
@@ -177,7 +177,7 @@ function jwtSignInTab() {
           Log In with Facebook
         </Button>
       </div> */}
-      <div className="flex items-center justify-center mt-20 cursor-pointer">
+      <div className="flex items-center justify-center mt-20 cursor-pointer gap-6">
         <Typography color="text.secondary">New User?</Typography>
         <Typography color="secondary.main">
           {/* <Link className="ml-2 !no-underline font-bold " to="/sign-up"> */}

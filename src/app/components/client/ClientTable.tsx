@@ -1,17 +1,16 @@
+import ListLoading from "@fuse/core/ListLoading";
 import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
+import { sortColumn } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
+import moment from "moment";
 import { ArrowRightCircleIcon } from "public/assets/icons/common";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
-import ListLoading from "@fuse/core/ListLoading";
-import moment from "moment";
-import { sortColumn } from "app/store/Client";
-import { useAppDispatch } from "app/store/store";
 import { sortList } from "src/utils";
-import Table from "material-ui/Table/Table";
 
 function ClientTable({
   clientState,
@@ -68,8 +67,8 @@ function ClientTable({
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
               : status
-                ? ["ID", "Name", "Company Name", "Date", "Status", ""]
-                : ["ID", "Name", "Company Name", "Date", ""]
+                ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
+                : ["ID", "Name", "Company Name", "Joining Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
@@ -143,7 +142,7 @@ function ClientTable({
                       {row.company_name}
                     </TableCell>
                   )}
-                  {renderCell("Date") && (
+                  {renderCell("Joining Date") && (
                     <TableCell
                       align="left"
                       className="whitespace-nowrap font-500"
@@ -151,13 +150,13 @@ function ClientTable({
                       {moment(row.created_at).format("ll")}
                     </TableCell>
                   )}
-                  {/* {status && renderCell("Status") && ( */}
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    <span
-                      className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                  {status && renderCell("Status") && (
+                    <TableCell
+                      align="left"
+                      className="whitespace-nowrap font-500"
+                    >
+                      <span
+                        className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
                         ${
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
@@ -169,11 +168,11 @@ function ClientTable({
                                   ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
                                   : ""
                         }`}
-                    >
-                      {row.subscription_status || "N/A"}
-                    </span>
-                  </TableCell>
-                  {/* )} */}
+                      >
+                        {row.subscription_status || "N/A"}
+                      </span>
+                    </TableCell>
+                  )}
 
                   <TableCell scope="row">
                     <Link to={`/admin/client/detail/${row.id}`}>
