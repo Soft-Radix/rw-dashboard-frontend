@@ -160,6 +160,8 @@ export const initialState: initialStateProps = {
   total_records: 0,
   addagentList: [],
   actionStatusDisabled: false,
+  actionStatusEdit: false,
+  actionStatusGroupMember: false,
 };
 
 /**
@@ -290,11 +292,11 @@ export const agentGroupSlice = createSlice({
       })
 
       .addCase(updateGroupName.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusEdit = true;
       })
       .addCase(updateGroupName.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        state.actionStatus = false;
+        state.actionStatusEdit = false;
         if (!response.status) {
           toast.error(response?.message);
         } else {
@@ -304,7 +306,7 @@ export const agentGroupSlice = createSlice({
         }
       })
       .addCase(updateGroupName.rejected, (state, action) => {
-        state.actionStatus = false;
+        state.actionStatusEdit = false;
       })
 
       .addCase(searchAgentGroup.pending, (state) => {
@@ -359,7 +361,7 @@ export const agentGroupSlice = createSlice({
         state.actionStatus = false;
       })
       .addCase(deleteAgentMemberGroup.pending, (state) => {
-        state.actionStatus = true;
+        state.actionStatusGroupMember = true;
       })
       .addCase(deleteAgentMemberGroup.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
@@ -371,7 +373,7 @@ export const agentGroupSlice = createSlice({
               (item) => item.id !== member_id
             );
 
-          state.actionStatus = false;
+          state.actionStatusGroupMember = false;
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);
@@ -379,7 +381,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(deleteAgentMemberGroup.rejected, (state, { error }) => {
         toast.error(error?.message);
-        state.actionStatus = false;
+        state.actionStatusGroupMember = false;
       });
   },
 });
