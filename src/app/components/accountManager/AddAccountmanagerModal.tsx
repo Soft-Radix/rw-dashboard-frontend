@@ -250,13 +250,13 @@ function AddAccountManagerModel({
         setpreviewUrl("");
       }
     }
-  }, [accManagerDetail, isOpen]);
+  }, [accManagerDetail]);
 
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => !prev), formik.resetForm();
+        setIsOpen((prev) => !prev), formik.resetForm(), setUploadedFiles([]);
       }}
       modalTitle={
         isEditing == true ? "Edit Account Manager" : "Add Account Manager"
