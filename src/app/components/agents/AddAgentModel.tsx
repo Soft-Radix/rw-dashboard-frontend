@@ -119,6 +119,7 @@ function AddAgentModel({
         setIsOpen(false);
         setUploadedFiles([]);
         setpreviewUrl("");
+        resetForm();
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -146,7 +147,7 @@ function AddAgentModel({
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentState, isOpen]);
+  }, [agentState]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -201,16 +202,20 @@ function AddAgentModel({
       }
       if (!isOpen) {
         setpreviewUrl("");
+        setUploadedFiles([]);
       }
     }
-    setUploadedFiles([]);
   }, [agentDetail, isOpen]);
   // console.log("uploadedFiles", uploadedFiles);
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => false), formik.resetForm();
+        setIsOpen((prev) => false),
+          formik.resetForm(),
+          setpreviewUrl(""),
+          setUploadedFiles([]);
+        setSelectedImage(null);
       }}
       modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"

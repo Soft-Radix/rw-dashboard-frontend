@@ -175,6 +175,8 @@ export const accManagerSlice = createSlice({
         const payload = action.payload as ApiResponse; // Assert type
         state.actionStatus = false;
         if (payload?.data?.status) {
+          // console.log("🚀check", payload?.data?.status);
+
           state.successMsg = payload?.data?.message;
           toast.success(payload?.data?.message);
         } else {
