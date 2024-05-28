@@ -52,18 +52,18 @@ function jwtSignInTab() {
     formik.handleSubmit();
   };
 
-  const responseFacebook = (response) => {
-    console.log(response);
-    const payload = {
-      id: response.id,
-      type: 2,
-      firstname: response.name,
-      lastname: response.name,
-      email: response.email ? response.email : `${response.id}@facebook.com`,
-    };
-    // onLogin(user);
-    jwtService.socialSignIn(payload);
-  };
+  // const responseFacebook = (response) => {
+  //   console.log(response);
+  //   const payload = {
+  //     id: response.id,
+  //     type: 2,
+  //     firstname: response.name,
+  //     lastname: response.name,
+  //     email: response.email ? response.email : `${response.id}@facebook.com`,
+  //   };
+  //   // onLogin(user);
+  //   jwtService.socialSignIn(payload);
+  // };
 
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => {
@@ -164,17 +164,17 @@ function jwtSignInTab() {
       /> */}
       <div className="flex justify-center mt-8">
         <div className="w-full">
-          <FacebookLogin
+          {/* <FacebookLogin
             appId="801534445416008"
             autoLoad
-            onClick={responseFacebook}
+            // onClick={responseFacebook}
             className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
             cssClass="flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
             textButton="&nbsp;&nbsp; Log In with Facebook"
-          />
+          /> */}
         </div>
       </div>
 
