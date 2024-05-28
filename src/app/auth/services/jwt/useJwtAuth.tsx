@@ -298,7 +298,7 @@ const useJwtAuth = <User, SignUpPayload>(
 
       localStorage.setItem(
         "userData",
-        JSON.stringify(userData.subscription_and_docusign)
+        JSON.stringify(userData?.subscription_and_docusign || [])
       );
       if (response?.payload.data?.user?.role == "admin") {
         handleSignInSuccess(userData, accessToken);

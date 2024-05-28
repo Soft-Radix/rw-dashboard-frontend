@@ -150,8 +150,8 @@ export const navigationSlice = createSlice({
         FuseNavigationHelper.flattenNavigation(
           payload?.role === "admin"
             ? adminNavigationConfig
-            : payload.isAdd
-              ? payload.customNavigation
+            : payload?.isAdd
+              ? payload?.customNavigation
               : navigationConfig
         )
       );
