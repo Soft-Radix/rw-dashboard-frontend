@@ -47,6 +47,22 @@ function InputField({
     };
   }, []);
 
+  const handleChange = (e) => {
+    let value = e.target.value;
+    if (type == "number") {
+      if (value == "") {
+        formik.setFieldValue(name, value);
+        return;
+      }
+      const regex = /^\d*\.?\d{0,2}$/;
+      if (regex.test(value)) {
+        formik.setFieldValue(name, value);
+      }
+    } else {
+      formik.setFieldValue(name, value);
+    }
+  };
+
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (
@@ -63,7 +79,8 @@ function InputField({
           inputProps={{
             min: 0,
           }}
-          onChange={(e) => formik.setFieldValue(name, e.target.value)}
+          // onChange={(e) => formik.setFieldValue(name, e.target.value)}
+          onChange={(e) => handleChange(e)}
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           value={formik?.values[name ?? ""]}
           error={!!(formik?.errors[name ?? ""] && formik?.touched[name ?? ""])}
@@ -90,7 +107,7 @@ function InputField({
 
       {!hideTopPadding && (
         <div>
-          <span className=" text-red pt-[5px]  ">
+          <span className=" text-red pt-[9px]  block ">
             {formik?.errors[name ?? ""] &&
               formik?.touched[name ?? ""] &&
               formik?.errors[name ?? ""]}

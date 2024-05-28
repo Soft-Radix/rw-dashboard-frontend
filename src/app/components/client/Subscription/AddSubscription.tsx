@@ -404,12 +404,96 @@ export default function AddSubscription() {
       subtotal: sum,
     }));
 
-    console.log("Updated extracted data:", extractedData);
     // setCustomList(deleteList);
   };
+
+  // const handleChange = (index: number) => (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   var mode = "";
+  //   var payment = null;
+  //   const newErrors = list?.map((item, i) => {
+  //     mode = item["billing_terms"]; // Assign value to mode
+  //     payment = item["no_of_payments"];
+  //     if (item.unit_price <= 0) {
+  //       return "Please add a unit price";
+  //     }
+  //     return "";
+  //   });
+  //   setUnitPriceError(newErrors);
+  //   const newQuantityErrors = list?.map((item, i) => {
+  //     if (item.quantity <= 0) {
+  //       return "Please add a Quantity"; // Populate the error message if unit price is 0
+  //     }
+  //     return ""; // Otherwise, set the error message to an empty string
+  //   });
+  //   setQuantityError(newQuantityErrors);
+
+  //   if (mode != "2" && (payment <= 0 || payment == null)) {
+  //     setPaymentError("Please Enter Payment greater than 0");
+  //   } else {
+  //     setPaymentError("");
+  //   }
+
+  //   const { value, name } = event.target;
+  //   if (
+  //     name == "billing_frequency" ||
+  //     name == "billing_terms" ||
+  //     name == "no_of_payments" ||
+  //     name == "billing_start_date"
+  //   ) {
+  //     if (name == "billing_start_date") {
+  //       const validation = validateBillingStartDate(value);
+
+  //       if (validation.isValid) {
+  //         // Handle valid date, e.g., update state or form data
+  //         setDateError(""); // Clear any previous error
+  //       } else {
+  //         console.error(validation.error);
+  //         setDateError(validation.error); // Set the error message to be displayed
+  //       }
+  //     }
+  //     setList((prevList) => {
+  //       return prevList?.map((item, i) => {
+  //         return {
+  //           ...item,
+  //           [name]: value,
+  //         };
+  //       });
+  //     });
+  //   } else {
+  //     setList((prevList) => {
+  //       const updatedList = [...prevList];
+  //       updatedList[index][name] = value;
+  //       // Calculate net price and update the net_price key in the list array
+  //       const netPrice = handleNetPrice(
+  //         updatedList[index].unit_discount || 0,
+  //         updatedList[index].unit_discount_type || 1,
+  //         updatedList[index].unit_price,
+  //         index,
+  //         updatedList[index].quantity
+  //       );
+  //       updatedList[index].net_price = netPrice
+  //         ? netPrice
+  //         : updatedList[index].unit_price;
+  //       return updatedList;
+  //     });
+  //   }
+  // };
+
   const handleChange = (index: number) => (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
+    const formatNumber = (value: string) => {
+      const numberValue = parseFloat(value);
+      if (isNaN(numberValue)) return value;
+      const parts = value.split(".");
+      if (parts.length == 2 && parts[1].length > 2) {
+        return `${parts[0]}.${parts[1].substring(0, 2)}`;
+      }
+      return value;
+    };
+
     var mode = "";
     var payment = null;
     const newErrors = list?.map((item, i) => {
@@ -436,13 +520,19 @@ export default function AddSubscription() {
     }
 
     const { value, name } = event.target;
+
+    let formattedValue = value;
+    if (!isNaN(Number(value))) {
+      formattedValue = formatNumber(value);
+    }
+
     if (
-      name == "billing_frequency" ||
-      name == "billing_terms" ||
-      name == "no_of_payments" ||
-      name == "billing_start_date"
+      name === "billing_frequency" ||
+      name === "billing_terms" ||
+      name === "no_of_payments" ||
+      name === "billing_start_date"
     ) {
-      if (name == "billing_start_date") {
+      if (name === "billing_start_date") {
         const validation = validateBillingStartDate(value);
 
         if (validation.isValid) {
@@ -457,14 +547,14 @@ export default function AddSubscription() {
         return prevList?.map((item, i) => {
           return {
             ...item,
-            [name]: value,
+            [name]: formattedValue,
           };
         });
       });
     } else {
       setList((prevList) => {
         const updatedList = [...prevList];
-        updatedList[index][name] = value;
+        updatedList[index][name] = formattedValue;
         // Calculate net price and update the net_price key in the list array
         const netPrice = handleNetPrice(
           updatedList[index].unit_discount || 0,
@@ -551,15 +641,48 @@ export default function AddSubscription() {
     }
     handleChange(index);
 
-    return quantity * price;
+    return (quantity * price).toFixed(2);
   };
 
-  const handleDetailsChange = (e: any) => {
+  // const handleDetailsChange = (e: any) => {
+  //   const { name, value } = e.target;
+  //   if (name == "title") {
+  //     setError("");
+  //   }
+  //   setDetails({ ...details, [name]: value });
+  // };
+
+  const handleDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+
+    // Helper function to ensure value has no more than 2 decimal places
+    const formatToTwoDecimals = (num: string) => {
+      const regex = /^\d+(\.\d{0,2})?$/;
+      if (regex.test(num)) {
+        return num;
+      } else {
+        // Limit input to 2 decimal places without altering the preceding digits
+        const parts = num.split(".");
+        if (parts.length > 1) {
+          return `${parts[0]}.${parts[1].substring(0, 2)}`;
+        } else {
+          return num;
+        }
+      }
+    };
+
+    let formattedValue = value;
+
+    // If the field needs to be formatted to 2 decimal places
+    if (name == "subtotal" || name == "one_time_discount") {
+      formattedValue = formatToTwoDecimals(value);
+    }
+
     if (name == "title") {
       setError("");
     }
-    setDetails({ ...details, [name]: value });
+
+    setDetails({ ...details, [name]: formattedValue });
   };
 
   const onDelete = () => {
@@ -571,6 +694,13 @@ export default function AddSubscription() {
     }
     setList(updatedList);
     setId(null);
+    setIsOpenDeletedModal(false);
+
+    setDisableDelete(false);
+  };
+
+  const onDeleteRecurring = () => {
+    setDisableDelete(true);
     setIsOpenDeletedModal(false);
     setRecurringShow(false);
     setDetails({
@@ -724,14 +854,27 @@ export default function AddSubscription() {
   }, [list]);
 
   useEffect(() => {
-    if (!isOpenAddModal || !isOpenDeletedModal) {
-      const actions = [];
-      list?.forEach((item) => {
-        actions.push("action");
-      });
-      setAction([...actions]);
+    if (!isLineModal && !isOpenDeletedModal) {
+      const actions = uniqueList.map(() => "action");
+      setAction(actions);
     }
-  }, [isOpenAddModal, isOpenDeletedModal]);
+  }, [isLineModal, isOpenDeletedModal]);
+
+  const subtotal = details?.subtotal;
+  const formattedSubtotal = !isNaN(Number(subtotal))
+    ? Number(subtotal).toFixed(2)
+    : "0.00";
+
+  let discountedSubtotal;
+
+  if (details.one_time_discount_type == 2) {
+    discountedSubtotal = details?.subtotal - details?.one_time_discount;
+  } else {
+    discountedSubtotal =
+      details.subtotal - (details?.subtotal * details?.one_time_discount) / 100;
+  }
+  const formattedDiscountedSubtotal = discountedSubtotal.toFixed(2);
+
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -835,7 +978,7 @@ export default function AddSubscription() {
                           // formik={formik}
                           name="unitDiscount"
                           defaultValue={"action"}
-                          value={Action[index]}
+                          value={Action[index] || "action"}
                           sx={{
                             height: "30px",
                             minWidth: 100,
@@ -1079,6 +1222,7 @@ export default function AddSubscription() {
                             defaultValue=""
                             name="unit_discount"
                             variant="standard"
+                            type="number"
                             size="small"
                             placeholder={
                               row.unit_discount_type == 2 ? "$00.00" : "%00.00"
@@ -1370,7 +1514,7 @@ export default function AddSubscription() {
               <div className="mb-10 flex justify-between">
                 <span className="text-para_light font-500">Subtotal</span>
                 <span className="inline-block ml-20 font-600">
-                  ${details.subtotal}
+                  ${formattedSubtotal}
                 </span>
               </div>
 
@@ -1545,12 +1689,13 @@ export default function AddSubscription() {
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
               <span className="text-para_light font-500">Due Now</span>
               <span className="inline-block ml-20 font-600">
-                {details.one_time_discount_type == 2
+                {/* {details.one_time_discount_type == 2
                   ? `$${details.subtotal - details.one_time_discount}`
                   : `$${
                       details.subtotal -
                       (details.subtotal * details.one_time_discount) / 100
-                    }`}
+                    }`} */}
+                ${formattedDiscountedSubtotal}
               </span>
             </li>
             <li className="border-b py-[2rem] bg-[#F7F9FB] flex justify-between px-[3rem]">
@@ -1559,7 +1704,8 @@ export default function AddSubscription() {
                 <span className="flex flex-col gap-5">
                   <span>
                     <span className="font-600">
-                      ${details.subtotal.toFixed(2)} / Month{" "}
+                      ${formattedSubtotal}/ Month{" "}
+                      {/* ${details.subtotal.toFixed(2)} / Month{" "} */}
                     </span>
                     starting 1 month after payment
                   </span>
@@ -1571,12 +1717,13 @@ export default function AddSubscription() {
                 Total -
               </span>
               <span className="inline-block ml-20 font-600">
-                {details.one_time_discount_type == 2
+                {/* {details.one_time_discount_type == 2
                   ? `$${details.subtotal - details.one_time_discount}`
                   : `$${
                       details.subtotal -
                       (details.subtotal * details.one_time_discount) / 100
-                    }`}
+                    }`} */}
+                ${formattedDiscountedSubtotal}
               </span>
             </li>
           </ul>
@@ -1590,6 +1737,7 @@ export default function AddSubscription() {
             disabled={
               list.length == 0 ||
               details.subtotal <= 0 ||
+              formattedDiscountedSubtotal <= 0 ||
               dateError != "" ||
               disable
                 ? true
@@ -1632,7 +1780,6 @@ export default function AddSubscription() {
           handleList={handleListFromChild}
           setId={setId}
           // fetchUpdateData={fetchUpdateData}
-
           id={id}
         />
       )}
@@ -1640,7 +1787,7 @@ export default function AddSubscription() {
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
         title={deleteItem}
-        onDelete={onDelete}
+        onDelete={id ? onDelete : onDeleteRecurring}
         description={deleteDescription}
         disable={disableDelete}
       />

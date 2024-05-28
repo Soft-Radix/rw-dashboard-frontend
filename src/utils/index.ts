@@ -10,7 +10,7 @@ type SelectProp = {
  */
 export const getLocalStorage = (item: string) => {
   let data = localStorage.getItem(item);
-   return data !== null && data !== undefined ? JSON.parse(data) : '{}';
+  return data !== null && data !== undefined ? JSON.parse(data) : "{}";
 };
 
 export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
@@ -78,10 +78,10 @@ export const BillingTermsOptions: SelectProp[] = [
 ];
 
 const columnKey = {
-  ID: "id",
+  Id: "id",
   Name: "first_name",
   ["Company Name"]: "company_name",
-  Date: "date",
+  ["Joining Date"]: "created_at",
   Status: "status",
 };
 

@@ -67,7 +67,7 @@ const validationSchema = Yup.object({
     then: (Schema) =>
       Schema.required("Number of Payments is required").min(
         1,
-        "Number of Payments must be greater than 0"
+        "Number of Payments must be greater th666an 0"
       ),
     otherwise: (Schema) => Schema.notRequired().nullable(),
   }),

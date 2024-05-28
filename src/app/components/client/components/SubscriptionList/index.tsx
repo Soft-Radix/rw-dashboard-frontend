@@ -69,7 +69,7 @@ export default function SubscriptionList() {
     fetchData();
   }, [dispatch]);
 
-  const totalPageCount = Math.ceil(rows.length / itemsPerPage);
+  const totalPageCount = Math.ceil(rows?.length / itemsPerPage);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
