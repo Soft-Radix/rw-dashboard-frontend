@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { Navigate } from "react-router";
 import { productAdd, productDetails, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
+import FuseLoading from "@fuse/core/FuseLoading";
 
 interface IProps {
   isOpen: boolean;
@@ -52,7 +53,6 @@ const validationSchema = Yup.object({
       "Only two decimal places are allowed",
       (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
     )
-
     .test(
       "max-length",
       "Unit Price must have a maximum of 6 digits",
@@ -69,6 +69,8 @@ function AddProduct({
   setId,
   id,
 }: IProps) {
+  const [loading, setLoading] = useState(true);
+
   const formik = useFormik({
     initialValues: {
       description: "",
@@ -127,6 +129,7 @@ function AddProduct({
     if (!id) return;
 
     const fetchDataDEtails = async () => {
+      setLoading(true);
       setDisable(true);
       try {
         const payload = {
@@ -143,6 +146,7 @@ function AddProduct({
             name: data.name || "",
           });
         }
+        setLoading(false);
         setDisable(false);
       } catch (error) {
         setDisable(false);
@@ -152,46 +156,57 @@ function AddProduct({
     fetchDataDEtails();
   }, [dispatch]);
 
-  return (
-    <CommonModal
-      open={isOpen}
-      handleToggle={() => {
-        setIsOpen((prev) => !prev);
-        setIsEditing(false);
-        setId(null);
-      }}
-      disabled={disabled}
-      modalTitle={isEditing == true ? "Edit Product" : "Add Product"}
-      maxWidth="730"
-      btnTitle="Save"
-      closeTitle="Cancel"
-      onSubmit={handleSave}
-    >
-      <div className="flex flex-col gap-20">
-        <InputField
-          name="name"
-          label="Name"
-          placeholder="Enter Name"
-          formik={formik}
-        />
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, [loading]);
 
-        <InputField
-          name="description"
-          label="Description"
-          placeholder="Enter Description"
-          multiline
-          formik={formik}
-          rows={4}
-        />
-        <InputField
-          name="unit_price"
-          label="Unit Price"
-          placeholder="Enter Price"
-          formik={formik}
-          type="number"
-        />
-      </div>
-    </CommonModal>
+  return (
+    <>
+      {loading && <FuseLoading />}
+      {!loading && (
+        <CommonModal
+          open={isOpen}
+          handleToggle={() => {
+            setIsOpen((prev) => !prev);
+            setIsEditing(false);
+            setId(null);
+          }}
+          disabled={disabled}
+          modalTitle={isEditing == true ? "Edit Product" : "Add Product"}
+          maxWidth="730"
+          btnTitle="Save"
+          closeTitle="Cancel"
+          onSubmit={handleSave}
+        >
+          <div className="flex flex-col gap-20">
+            <InputField
+              name="name"
+              label="Name"
+              placeholder="Enter Name"
+              formik={formik}
+            />
+
+            <InputField
+              name="description"
+              label="Description"
+              placeholder="Enter Description"
+              multiline
+              formik={formik}
+              rows={4}
+            />
+            <InputField
+              name="unit_price"
+              label="Unit Price"
+              placeholder="Enter Price"
+              formik={formik}
+              type="number"
+            />
+          </div>
+        </CommonModal>
+      )}
+    </>
   );
 }
 
