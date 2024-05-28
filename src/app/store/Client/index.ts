@@ -499,7 +499,7 @@ export const clientSlice = createSlice({
             (item) => item !== payload
           );
         }
-        console.log("state", state.selectedColumn[0]);
+        // console.log("state", state.selectedColumn[0]);
       } else {
         state.selectedColumn.push(payload);
       }

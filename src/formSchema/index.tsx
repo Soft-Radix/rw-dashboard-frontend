@@ -5,7 +5,16 @@ const noSpaceMessage = "No spaces allowed";
 const emailField = {
   email: Yup.string()
     .required("Email is required")
-    .email("Invalid email format"), // Check for a valid email structure
+    .email("Invalid email format")
+    .test(
+      "is-valid-email",
+      "Email must contain a dot and a domain",
+      (value) => {
+        // This will check if the email contains at least one dot after the '@'
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailPattern.test(value);
+      }
+    ), // Check for a valid email structure
 };
 
 /**

@@ -43,6 +43,7 @@ export default function Clients() {
     search: "",
   });
   const clientState = useSelector((store: ClientRootState) => store.client);
+
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
@@ -84,9 +85,9 @@ export default function Clients() {
     );
 
     if (allSelected) {
-      setSelectedIds(allRowIds); // Select all
-    } else {
       setSelectedIds([]); // Deselect all
+    } else {
+      setSelectedIds(allRowIds); // Select all
     }
   };
   const { actionStatusClient } = useSelector(
@@ -99,10 +100,15 @@ export default function Clients() {
       deletClient({ client_ids: selectedIds })
     );
     if (payload?.data?.status) {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        // start: clientState.length - 1 == 0 ? 0 : prevFilters.start,
+      }));
       setIsOpenDeletedModal(false);
     }
     setSelectedIds([]);
   };
+
   const fetchList = useCallback(() => {
     const payload = {
       ...filters,

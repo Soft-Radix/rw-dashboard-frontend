@@ -251,7 +251,6 @@ function AddAccountManagerModel({
         setpreviewUrl("");
       }
     }
-    formik.resetForm();
   }, [accManagerDetail, isOpen]);
 
   return (
