@@ -371,7 +371,7 @@ const useJwtAuth = <User, SignUpPayload>(
    */
   const signOut = useCallback(() => {
     resetSession();
-
+    localStorage.clear();
     setIsAuthenticated(false);
     setUser(null);
 
