@@ -37,6 +37,8 @@ import AgentOnBoardConfig from "../main/agentsOnBoard/AgentOnBoardConfig";
 import { AdminAccountManagerConfig } from "../pages/accountManager/accountConfig";
 import ManageProductsConfig from "../pages/manageProducts/manageProductConfig";
 import VerificationConfig from "../main/testing/VerificationConfig";
+import SucessConfig from "../main/subscriptionSuccess/SucessConfig";
+import CancelConfig from "../main/subscriptionCancel/CancelConfig";
 
 const commonRoutes = [
   {
@@ -71,6 +73,8 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   AdminAccountManagerConfig,
   ManageProductsConfig,
   VerificationConfig,
+  SucessConfig,
+  CancelConfig,
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [
@@ -95,6 +99,8 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   BillingConfig,
   SupportConfig,
   VerificationConfig,
+  SucessConfig,
+  CancelConfig,
 ];
 
 /**
