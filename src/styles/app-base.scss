@@ -20,7 +20,12 @@
 
 html {
   font-size: 62.5%;
-  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
+  font-family:
+    "Inter",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
   background-color: #121212;
 }
 
@@ -385,4 +390,8 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
 }
 .buttonNew {
   margin: 0px auto !important;
+}
+.facebook-login-btn:hover {
+  background-color: rgb(245, 245, 245) !important;
+  box-shadow: none !important;
 }
