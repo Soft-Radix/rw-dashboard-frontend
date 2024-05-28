@@ -40,6 +40,7 @@ export default function VerificationPage() {
   const [loading, setLoading] = useState(true);
   const { jwtService } = useAuth();
   const { token } = useParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   useEffect(() => {
     const redirect = async () => {
@@ -60,18 +61,13 @@ export default function VerificationPage() {
   }, [navigate, userData]);
 
   const handleButtonClick = (item) => {
-    // Open the document link in a new tab
-    // window.open(item.docusign_link, "_blank");
+    setIsLoading(true);
     window.location.href = item.docusign_link;
 
     setselectedId(item.id);
-    // Update userData.subscription_and_docusign if necessary
-    // userData = updatedList;
-
-    // Navigate if the list becomes empty
-    // if (updatedList.length == 0) {
-    //   navigate("/sign-document");
-    // }
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 12000);
   };
 
   useEffect(() => {
@@ -134,13 +130,22 @@ export default function VerificationPage() {
                       <Typography className="block text-[16px] font-medium text-center text-[#111827] mb-5">
                         {item.title}
                       </Typography>
-                      <Button
+                      {/* <Button
                         variant="contained"
                         onClick={() => handleButtonClick(item)}
                         color="secondary"
                         className="mt-5 px-5 h-[50px] py-3 text-[18px] font-bold leading-normal"
                         aria-label="Log In"
+                        size="large" */}
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        className="mt-28 w-full h-[50px] text-[18px] font-bold"
+                        aria-label="Log In"
                         size="large"
+                        type="submit"
+                        onClick={() => handleButtonClick(item)}
+                        disabled={isLoading}
                       >
                         Sign Document
                       </Button>

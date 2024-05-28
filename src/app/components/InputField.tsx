@@ -107,7 +107,7 @@ function InputField({
 
       {!hideTopPadding && (
         <div>
-          <span className=" text-red pt-[5px]  ">
+          <span className=" text-red pt-[9px]  block ">
             {formik?.errors[name ?? ""] &&
               formik?.touched[name ?? ""] &&
               formik?.errors[name ?? ""]}
