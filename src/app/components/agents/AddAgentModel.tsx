@@ -147,7 +147,7 @@ function AddAgentModel({
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentState, isOpen]);
+  }, [agentState]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -215,6 +215,7 @@ function AddAgentModel({
           formik.resetForm(),
           setpreviewUrl(""),
           setUploadedFiles([]);
+        setSelectedImage(null);
       }}
       modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"

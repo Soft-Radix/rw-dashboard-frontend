@@ -5,7 +5,7 @@ const noSpaceMessage = "No spaces allowed";
 const emailField = {
   email: Yup.string()
     .required("Email is required")
-    .email("Invalid email format")
+    .email("Please enter a valid email ")
     .test(
       "is-valid-email",
       "Email must contain a dot and a domain",
@@ -100,7 +100,7 @@ const editAgentSchema = Yup.object({
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
   email: Yup.string()
     .required("Email is required")
-    .email("Invalid email address"),
+    .email("Please Enter Valid email address"),
   phone_number: Yup.string()
     .required("Phone number is required")
     .max(10, "Phone number cannot exceed 10 digits")
@@ -133,7 +133,7 @@ const accManagerSchema = Yup.object({
   ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
-    .matches(/^\+?[1-9]\d{1,14}$/, {
+    .matches(/^\d{10}$/, {
       message: "Invalid phone number",
       excludeEmptyString: true,
     }), // ,

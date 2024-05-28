@@ -80,6 +80,8 @@ function AddGroupModel({
     }));
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
+    setCheckedItems([]);
+
     // Handle the case when there is an id (e.g., updating an existing group)
   };
 
@@ -126,10 +128,11 @@ function AddGroupModel({
       dispatch(restAll());
       // fetchAgentGroupList;
       setIsOpen(false);
+      formik.resetForm();
     } else if (!!agentGroupState?.errorMsg) {
-      dispatch(restAll());
+      setIsOpen(true);
+      // dispatch(restAll());
     }
-    formik.resetForm();
   }, [agentGroupState, filterMenu]);
 
   const handleToggle = (e: React.MouseEvent) => {
