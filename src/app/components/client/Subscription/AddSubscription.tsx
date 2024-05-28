@@ -302,7 +302,7 @@ export default function AddSubscription() {
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setDate(tomorrow.getDate() + 1); // Add one more day
+  tomorrow.setDate(tomorrow.getDate() + 2); // Add one more day
   const yyyy = tomorrow.getFullYear();
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
