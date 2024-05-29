@@ -63,7 +63,6 @@ function AddGroupModel({
     // console.log(payload, "payload");
 
     if (payload?.data?.status) {
-      resetForm();
       fetchAgentGroupList();
       resetForm();
     }
@@ -159,6 +158,8 @@ function AddGroupModel({
     }
   }, [checkedItems]);
 
+  console.log(isNewAgent, "isNewAgent");
+
   return (
     <CommonModal
       open={isOpen}
@@ -169,7 +170,7 @@ function AddGroupModel({
       closeTitle="Cancel"
       onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
       disabled={isNewAgent && agentGroupState.actionStatus}
-      isValid={isValid}
+      isValid={!!isNewAgent ? isValid : true}
     >
       <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (

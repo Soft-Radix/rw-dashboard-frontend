@@ -34,6 +34,7 @@ import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import DeleteClient from "src/app/components/client/DeleteClient";
 import { debounce } from "lodash";
 import { getAgentList } from "app/store/Agent";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AgentsGroup() {
   const group_id = useParams();
@@ -118,6 +119,7 @@ export default function AgentsGroup() {
 
   useEffect(() => {
     fetchAgentGroupList();
+    return () => {};
   }, [fetchAgentGroupList]);
   // useEffect(() => {
   //   if (agentGroupState) {
@@ -129,6 +131,10 @@ export default function AgentsGroup() {
 
   //   // console.log(filters, "filters");
   // }, [filters]);
+
+  if (agentGroupState?.status == "loading") {
+    return <ListLoading />;
+  }
 
   return (
     <>
@@ -160,7 +166,8 @@ export default function AgentsGroup() {
             headings={["ID", "Group Name", "Number of Agents", "Action"]}
           >
             {" "}
-            {agentGroupState?.list?.length === 0 ? (
+            {agentGroupState?.list?.length === 0 &&
+            agentGroupState?.status !== "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
