@@ -39,18 +39,15 @@ import {
 import { useSelector } from "react-redux";
 import { debounce } from "lodash";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AccountManager() {
   const accountManager_Id = useParams();
-  console.log(accountManager_Id, "kk");
 
   const dispatch = useAppDispatch();
   const accManagerState = useSelector(
     (state: RootState) => state.accManagerSlice
   );
-  //@ts-ignore
-  // console.log("accManage========rttState.", accManagerState?.list?.length > 0);
-  // console.log(accManagerState?.list?.data?.list, "managerList");
 
   const theme: Theme = useTheme();
   const formik = useFormik({
@@ -79,6 +76,7 @@ export default function AccountManager() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -136,6 +134,11 @@ export default function AccountManager() {
       console.error("Failed to delete agent group:", error);
     }
   };
+
+  if (accManagerState.status === "loading") {
+    return <ListLoading />;
+  }
+
   return (
     <>
       <TitleBar title="Account Manager">
@@ -163,7 +166,8 @@ export default function AccountManager() {
           <CommonTable
             headings={["ID", "First Name", "Last Name", "Email", "Status", ""]}
           >
-            {accManagerState?.list?.length === 0 ? (
+            {accManagerState?.list?.length === 0 &&
+            accManagerState.status != "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -239,8 +243,8 @@ export default function AccountManager() {
                         row.status === "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]"
                           : row.status === "Suspended"
-                            ? "text-[#F44336] bg-[#F443362E]"
-                            : "text-[#4CAF50] bg-[#4CAF502E]"
+                          ? "text-[#F44336] bg-[#F443362E]"
+                          : "text-[#4CAF50] bg-[#4CAF502E]"
                       }`}
                         >
                           {row.status || "Active"}

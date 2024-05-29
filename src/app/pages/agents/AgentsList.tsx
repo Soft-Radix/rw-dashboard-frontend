@@ -82,6 +82,7 @@ export default function AgentsList() {
   useEffect(() => {
     fetchAgentList();
   }, [filters]);
+
   return (
     <>
       <TitleBar title="Agents">
@@ -120,7 +121,8 @@ export default function AgentsList() {
               "",
             ]}
           >
-            {agentState?.list?.length === 0 ? (
+            {agentState?.list?.length === 0 &&
+            agentState.status != "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -207,8 +209,8 @@ export default function AgentsList() {
                     row.status === "Completed"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status === "In Progress"
-                        ? "text-[#F44336] bg-[#F443362E]"
-                        : "text-[#4CAF50] bg-[#4CAF502E]"
+                      ? "text-[#F44336] bg-[#F443362E]"
+                      : "text-[#4CAF50] bg-[#4CAF502E]"
                   }`}
                     >
                       {row.status || "Active"}
