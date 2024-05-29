@@ -185,12 +185,20 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         </label>
       </div>
       <div className="flex flex-col gap-20 mb-20">
-        <InputField
-          formik={formik}
-          name="first_name"
-          label="Name"
-          placeholder="Enter Name"
-        />
+        <div className="flex gap-30">
+          <InputField
+            formik={formik}
+            name="first_name"
+            label="First Name"
+            placeholder="Enter First Name"
+          />
+          <InputField
+            formik={formik}
+            name="last_name"
+            label="Last Name"
+            placeholder="Enter Last Name"
+          />
+        </div>
         <SelectField
           formik={formik}
           name="status"
