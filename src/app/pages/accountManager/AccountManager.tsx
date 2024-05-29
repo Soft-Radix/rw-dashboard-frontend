@@ -1,10 +1,18 @@
-import { Button, Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import {
+  Button,
+  Checkbox,
+  TableCell,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
 import {
   ArrowRightCircleIcon,
   DeleteIcon,
   EditIcon,
+  NoDataFound,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useCallback, useEffect, useState } from "react";
@@ -155,47 +163,78 @@ export default function AccountManager() {
           <CommonTable
             headings={["ID", "First Name", "Last Name", "Email", "Status", ""]}
           >
-            {accManagerState?.list?.length > 0 &&
-              accManagerState?.list?.map((row: any, index: number) => (
-                <TableRow
-                  key={index}
-                  sx={{
-                    "& td": {
-                      borderBottom: "1px solid #EDF2F6",
-                      paddingTop: "12px",
-                      paddingBottom: "12px",
-                      color: theme.palette.primary.main,
-                    },
-                  }}
-                >
-                  <TableCell scope="row" className="text-[14px] font-500">
-                    {row.id}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap text-[14px] font-500"
+            {accManagerState?.list?.length === 0 ? (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
                   >
-                    {row.first_name}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap text-[14px] font-500"
-                  >
-                    {row.last_name}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap text-[14px] font-500"
-                  >
-                    {row.email}
-                  </TableCell>
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
+                        No data has been added yet. Please input the
+                      </p>
+                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
+                        necessary information to proceed.
+                      </p>
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                {accManagerState?.list?.length > 0 &&
+                  accManagerState?.list?.map((row: any, index: number) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <TableCell scope="row" className="text-[14px] font-500">
+                        {row.id}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap text-[14px] font-500"
+                      >
+                        {row.first_name}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap text-[14px] font-500"
+                      >
+                        {row.last_name}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap text-[14px] font-500"
+                      >
+                        {row.email}
+                      </TableCell>
 
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap text-[14px] font-500"
-                  >
-                    <span
-                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap text-[14px] font-500"
+                      >
+                        <span
+                          className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                       ${
                         row.status === "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]"
@@ -203,29 +242,31 @@ export default function AccountManager() {
                             ? "text-[#F44336] bg-[#F443362E]"
                             : "text-[#4CAF50] bg-[#4CAF502E]"
                       }`}
-                    >
-                      {row.status || "Active"}
-                    </span>
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
-                  >
-                    <div className="flex items-center gap-10">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                          setIsDeleteId(row.id);
-                        }}
-                      />
-                      {/* <DeleteIcon onClick={() => deleteAccManger(row.id)} /> */}
-                      <Link to={`/admin/acc-manager/detail/${row.id}`}>
-                        <ArrowRightCircleIcon />
-                      </Link>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
+                        >
+                          {row.status || "Active"}
+                        </span>
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap text-[14px] font-500 cursor-pointer"
+                      >
+                        <div className="flex items-center gap-10">
+                          <DeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setIsDeleteId(row.id);
+                            }}
+                          />
+                          {/* <DeleteIcon onClick={() => deleteAccManger(row.id)} /> */}
+                          <Link to={`/admin/acc-manager/detail/${row.id}`}>
+                            <ArrowRightCircleIcon />
+                          </Link>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </>
+            )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
