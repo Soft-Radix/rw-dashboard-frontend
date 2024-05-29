@@ -17,6 +17,7 @@ import dotImg from "../../../../../../public/assets/icons/dots.svg";
 import LongMenu from "../../Subscription/Dropdown";
 import toast from "react-hot-toast";
 import { subscriptionListItem } from "app/store/Client";
+import svg from "../../../../../../public/assets/icons/Layer_1-2.svg";
 import { useAppDispatch } from "app/store/store";
 
 // const rows = [
@@ -132,15 +133,21 @@ export default function SubscriptionList() {
                   className="flex flex-col justify-center align-items-center gap-40"
                   style={{ alignItems: "center" }}
                 >
-                  <NoSubscriptionData />
+                  {/* <NoSubscriptionData /> */}
+                  <img
+                    src={svg}
+                    alt="NoSubscription"
+                    className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"
+                  />
+                  {/* {svg} */}
                   <Typography className="text-[48px] text-center font-700 leading-normal">
-                    No data found !
-                    <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
+                    No subscription found !
+                    {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
                       No data has been added yet. Please input the
-                    </p>
-                    <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
+                    </p> */}
+                    {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
                       necessary information to proceed.
-                    </p>
+                    </p> */}
                   </Typography>
                 </div>
               </TableCell>
