@@ -28,7 +28,7 @@ const validationSchema = Yup.object({
       "Name cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(50, "Name cannot be more than 50 characters"),
+    .max(50, "Name should be less than or equal to 50 characters"),
   description: Yup.string()
     .transform((value) => (value ? value.trim() : ""))
     .required("Description is required")
@@ -37,7 +37,7 @@ const validationSchema = Yup.object({
       "Description cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(500, "Description cannot be more than 500 characters"),
+    .max(500, "Description should be less than or equal to 500 characters "),
 
   // unit_price: Yup.number()
   //   .required("Unit Price is required")
