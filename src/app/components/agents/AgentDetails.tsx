@@ -320,7 +320,9 @@ export default function AgentDetails() {
                 <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
                     <div className="relative cursor-pointer ">
-                      {item.file.includes(".png" || ".jpg" || ".jpeg") ? (
+                      {item.file.includes(".png") ||
+                      item.file.includes(".jpg") ||
+                      item.file.includes(".jpeg") ? (
                         <>
                           <img
                             src={urlForImage + item.file}

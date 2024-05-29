@@ -323,7 +323,8 @@ export const agentGroupSlice = createSlice({
           let contactArray = state.agentGroupDetail.group_members.concat(
             response.data
           );
-          console.log(response.data, "contactArray");
+          // console.log("🚀 ~ .addCasegroup_members", state.agentGroupDetail.group_members)
+          // console.log(contactArray, "contactArray");
           state.agentGroupDetail.group_members = contactArray;
 
           // state.agentDetail.attachments = state.agentDetail.attachments.concat(
