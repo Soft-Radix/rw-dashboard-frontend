@@ -1,8 +1,15 @@
-import { Button, TableCell, TableRow, Theme, Tooltip } from "@mui/material";
+import {
+  Button,
+  TableCell,
+  TableRow,
+  Theme,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
-import { DeleteIcon, EditIcon } from "public/assets/icons/common";
+import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -175,61 +182,91 @@ export default function ManageProducts() {
           <CommonTable
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
-            <>
-              {currentRows?.map((item, index) => {
-                return (
-                  <>
-                    <TableRow
-                      sx={{
-                        "& td": {
-                          borderBottom: "1px solid #EDF2F6",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      <TableCell scope="row" className="w-[400px]  ">
-                        <Tooltip title={item.name} enterDelay={500}>
-                          <span>{truncateText(item.name, 5)}</span>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell align="center" className="w-[400px]  ">
-                        <Tooltip title={item.description} enterDelay={500}>
-                          <span>{truncateText(item.description, 5)}</span>
-                        </Tooltip>
-                      </TableCell>
+            {currentRows?.length === 0 ? (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
+                        No data has been added yet. Please input the
+                      </p>
+                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
+                        necessary information to proceed.
+                      </p>
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                {currentRows?.map((item, index) => {
+                  return (
+                    <>
+                      <TableRow
+                        sx={{
+                          "& td": {
+                            borderBottom: "1px solid #EDF2F6",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            color: theme.palette.primary.main,
+                          },
+                        }}
+                      >
+                        <TableCell scope="row" className="w-[400px]  ">
+                          <Tooltip title={item.name} enterDelay={500}>
+                            <span>{truncateText(item.name, 5)}</span>
+                          </Tooltip>
+                        </TableCell>
+                        <TableCell align="center" className="w-[400px]  ">
+                          <Tooltip title={item.description} enterDelay={500}>
+                            <span>{truncateText(item.description, 5)}</span>
+                          </Tooltip>
+                        </TableCell>
 
-                      <TableCell align="center" className="whitespace-nowrap">
-                        ${item.unit_price}
-                      </TableCell>
-                      <TableCell align="center" className="w-[1%]">
-                        <div className="flex gap-20 pe-20">
-                          <span className="p-2 cursor-pointer">
-                            <DeleteIcon
-                              onClick={() => {
-                                setIsOpenDeletedModal(true);
-                                setId(item.id);
-                              }}
-                            />
-                          </span>
-                          <span className="p-2 cursor-pointer">
-                            <EditIcon
-                              onClick={() => {
-                                setId(item.id);
-                                setIsOpenAddModal(true);
-                                setIsEditing(true);
-                              }}
-                            />
-                          </span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                );
-              })}
+                        <TableCell align="center" className="whitespace-nowrap">
+                          ${item.unit_price}
+                        </TableCell>
+                        <TableCell align="center" className="w-[1%]">
+                          <div className="flex gap-20 pe-20">
+                            <span className="p-2 cursor-pointer">
+                              <DeleteIcon
+                                onClick={() => {
+                                  setIsOpenDeletedModal(true);
+                                  setId(item.id);
+                                }}
+                              />
+                            </span>
+                            <span className="p-2 cursor-pointer">
+                              <EditIcon
+                                onClick={() => {
+                                  setId(item.id);
+                                  setIsOpenAddModal(true);
+                                  setIsEditing(true);
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  );
+                })}
 
-              {/* <TableCell align="center" className="w-[1%]">
+                {/* <TableCell align="center" className="w-[1%]">
                   <div className="flex gap-20 pe-20">
                     <span className="p-2 cursor-pointer">
                       <DeleteIcon
@@ -283,7 +320,8 @@ export default function ManageProducts() {
                   </div>
                 </TableCell>
               </TableRow> */}
-            </>
+              </>
+            )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
