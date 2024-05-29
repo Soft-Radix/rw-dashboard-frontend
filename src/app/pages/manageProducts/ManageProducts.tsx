@@ -11,7 +11,7 @@ import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
@@ -22,12 +22,47 @@ import { filterType } from "app/store/AccountManager/Interface";
 import { RootState } from "app/store/store";
 import { useSelector } from "react-redux";
 
-export const truncateText = (text, wordLimit) => {
-  const words = text.split(" ");
-  if (words?.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "...";
-  }
-  return text;
+// export const truncateText = (text, wordLimit) => {
+//   const words = text.split(" ");
+//   if (words?.length > wordLimit) {
+//     const truncatedText = words.slice(0, wordLimit).join(" ") + "...";
+//     return (
+//       <Tooltip title={text} enterDelay={500}>
+//         <span>{truncatedText}</span>
+//       </Tooltip>
+//     );
+//   }
+//   return text;
+// };
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
 };
 
 export default function ManageProducts() {
@@ -227,14 +262,19 @@ export default function ManageProducts() {
                         }}
                       >
                         <TableCell scope="row" className="w-[400px]  ">
-                          <Tooltip title={item.name} enterDelay={500}>
-                            <span>{truncateText(item.name, 5)}</span>
-                          </Tooltip>
+                          {/* <Tooltip title={item.name} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.name, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText text={item.name} maxWidth={400} />
                         </TableCell>
                         <TableCell align="center" className="w-[400px]  ">
-                          <Tooltip title={item.description} enterDelay={500}>
-                            <span>{truncateText(item.description, 5)}</span>
-                          </Tooltip>
+                          {/* <Tooltip title={item.description} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.description, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText
+                            text={item.description}
+                            maxWidth={400}
+                          />
                         </TableCell>
 
                         <TableCell align="center" className="whitespace-nowrap">
@@ -265,61 +305,6 @@ export default function ManageProducts() {
                     </>
                   );
                 })}
-
-                {/* <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon
-                        onClick={() => {
-                          setIsOpenAddModal(true);
-                          setIsEditing(true);
-                        }}
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell scope="row">Jone Doe</TableCell>
-                <TableCell align="center" className="whitespace-nowrap">
-                  Lorem Ipsum
-                </TableCell>
-
-                <TableCell align="center" className="whitespace-nowrap">
-                  $100
-                </TableCell>
-
-                <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon onClick={() => setIsOpenAddModal(true)} />
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow> */}
               </>
             )}
           </CommonTable>
