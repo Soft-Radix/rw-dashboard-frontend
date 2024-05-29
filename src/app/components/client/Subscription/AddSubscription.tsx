@@ -7,11 +7,13 @@ import {
   TableRow,
   TextField,
   Theme,
+  Tooltip,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useField, useFormik } from "formik";
 import { DownArrowIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import toast from "react-hot-toast";
@@ -45,15 +47,67 @@ import { addsubscription, subscriptionList } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
 
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
+
 const validationSchema = Yup.array().of(
   Yup.object().shape({
     title: Yup.string().required("Title is required"),
     unit_price: Yup.number()
       .required("Unit Price is required")
-      .min(0.01, "Unit Price must be greater than 0"),
+      .min(0.01, "Unit Price must be greater than 0")
+      .test(
+        "decimal-places",
+        "Only two decimal places are allowed",
+        (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+      )
+      .test(
+        "max-length",
+        "Unit Price must be less than or equal to 6 digits",
+        (value: any) =>
+          value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+      ),
     quantity: Yup.number()
       .required("Quantity is required")
-      .min(1, "Quantity must be greater than 0"),
+      .min(0.01, "Quantity must be greater than 0")
+      .test(
+        "decimal-places",
+        "Only two decimal places are allowed",
+        (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+      )
+      .test(
+        "max-length",
+        "Quantity must be less than or equal to 6 digits",
+        (value: any) =>
+          value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+      ),
   })
 );
 
@@ -489,10 +543,9 @@ export default function AddSubscription() {
       const numberValue = parseFloat(value);
       if (isNaN(numberValue)) return value;
       const parts = value.split(".");
-      if (parts.length == 2 && parts[1].length > 2) {
-        return `${parts[0]}.${parts[1].substring(0, 2)}`;
-      }
-      return value;
+      let integerPart = parts[0].slice(0, 6); // Limit integer part to 6 digits
+      let decimalPart = parts.length > 1 ? parts[1].substring(0, 2) : "";
+      return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
     };
 
     var mode = "";
@@ -519,11 +572,16 @@ export default function AddSubscription() {
     } else {
       setPaymentError("");
     }
-
+    const formatQuantity = (value: string) => {
+      // Remove any non-digit characters and limit to 6 digits
+      return value.replace(/\D/g, "").slice(0, 6);
+    };
     const { value, name } = event.target;
 
     let formattedValue = value;
-    if (!isNaN(Number(value))) {
+    if (name == "quantity") {
+      formattedValue = formatQuantity(value);
+    } else if (!isNaN(Number(value))) {
       formattedValue = formatNumber(value);
     }
 
@@ -645,38 +703,33 @@ export default function AddSubscription() {
     return (quantity * price).toFixed(2);
   };
 
-  // const handleDetailsChange = (e: any) => {
-  //   const { name, value } = e.target;
-  //   if (name == "title") {
-  //     setError("");
-  //   }
-  //   setDetails({ ...details, [name]: value });
-  // };
-
   const handleDetailsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    // Helper function to ensure value has no more than 2 decimal places
-    const formatToTwoDecimals = (num: string) => {
-      const regex = /^\d+(\.\d{0,2})?$/;
+    // Helper function to ensure value has no more than 2 decimal places and max 6 digits
+    const formatToTwoDecimalsAndMaxSixDigits = (num: string) => {
+      // Ensure that the total number of digits does not exceed 6
+      if (num.length > 6 && !num.includes(".")) {
+        return num.slice(0, 6);
+      }
+
+      const regex = /^\d{0,6}(\.\d{0,2})?$/;
       if (regex.test(num)) {
         return num;
       } else {
         // Limit input to 2 decimal places without altering the preceding digits
         const parts = num.split(".");
-        if (parts.length > 1) {
-          return `${parts[0]}.${parts[1].substring(0, 2)}`;
-        } else {
-          return num;
-        }
+        const integerPart = parts[0].slice(0, 6);
+        const decimalPart = parts.length > 1 ? parts[1].substring(0, 2) : "";
+        return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
       }
     };
 
     let formattedValue = value;
 
-    // If the field needs to be formatted to 2 decimal places
+    // If the field needs to be formatted to 2 decimal places and max 6 digits
     if (name == "subtotal" || name == "one_time_discount") {
-      formattedValue = formatToTwoDecimals(value);
+      formattedValue = formatToTwoDecimalsAndMaxSixDigits(value);
     }
 
     if (name == "title") {
@@ -965,7 +1018,7 @@ export default function AddSubscription() {
                       scope="row"
                       className="font-500 whitespace-nowrap"
                     >
-                      {row.name}
+                      <TruncateText text={row.name} maxWidth={200} />
                     </TableCell>
                     <TableCell
                       scope="row"
@@ -1047,7 +1100,7 @@ export default function AddSubscription() {
                       align="center"
                       className="font-500 whitespace-nowrap"
                     >
-                      {row.description}
+                      <TruncateText text={row.description} maxWidth={200} />
                     </TableCell>
                     <TableCell
                       align="center"
