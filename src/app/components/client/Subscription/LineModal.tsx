@@ -289,7 +289,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
           formik={formik}
           name="billing_terms"
           label="Billing Terms"
-          placeholder="Fixed number of payments"
+          placeholder="Select"
           sx={{
             border: "0.5px solid #9DA0A6",
             "& .radioIcon": { display: "none" },
