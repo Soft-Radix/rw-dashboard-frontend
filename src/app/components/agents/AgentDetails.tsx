@@ -42,27 +42,8 @@ import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
 
-let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
-const rows = [
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Suspended",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Pending",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Active",
-  },
-];
+// let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
+
 // const resetForm
 
 export default function AgentDetails() {

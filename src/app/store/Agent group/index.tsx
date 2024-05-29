@@ -148,7 +148,7 @@ export const searchAgentGroup = createAsyncThunk(
  * The initial state of the auth slice.
  */
 export const initialState: initialStateProps = {
-  status: "idle",
+  status: "loading",
   fetchStatus: "loading",
   actionStatus: false,
   successMsg: "",
@@ -262,7 +262,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(getAgentGroupList.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        state.status = "idle";
+
         if (!response.status) {
           toast.error(response?.message);
         } else {
@@ -272,6 +272,7 @@ export const agentGroupSlice = createSlice({
             10
           );
         }
+        state.status = "idle";
       })
       .addCase(getAgentGroupList.rejected, (state, action) => {
         state.status = "idle";
