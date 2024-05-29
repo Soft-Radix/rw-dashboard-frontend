@@ -123,7 +123,7 @@ function CustomLineModal({
               // }}
             >
               <TableCell scope="row" className="font-500">
-                <div className="py-2 flex ">
+                <div className="py-2 flex " style={{ alignItems: "center" }}>
                   <Checkbox onChange={(e) => handleSelect(e, row)} />
                   <TruncateText text={row.name} maxWidth={200} />
                   {/* {row.name} */}
