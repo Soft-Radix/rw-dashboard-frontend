@@ -24,6 +24,8 @@ import {
   MonthlyOptions,
   StyledMenuItem,
   UnitDiscount,
+  getAdjusted,
+  getAdjustedTime,
 } from "src/utils";
 import DropdownMenu from "../../Dropdown";
 import InputField from "../../InputField";
@@ -165,6 +167,7 @@ export default function AddSubscription() {
   const [quantityError, setQuantityError] = useState<string[]>([]);
   const [paymentError, setPaymentError] = useState("");
   const [disableDelete, setDisableDelete] = useState(false);
+  const [frequencyMode, setFrequencyMode] = useState(0);
   const location: Location = useLocation();
   const [id, setId] = useState();
   const navigate: NavigateFunction = useNavigate();
@@ -371,6 +374,7 @@ export default function AddSubscription() {
     const billingTerms = arg[0].billing_terms;
     const noOfPayments = arg[0].no_of_payments;
     const billingStartDate = arg[0].billing_start_date;
+    setFrequencyMode(billingFrequency);
     if (billingStartDate >= tomorrowStr) {
       const validation = validateBillingStartDate(billingStartDate);
 
@@ -602,6 +606,7 @@ export default function AddSubscription() {
           setDateError(validation.error); // Set the error message to be displayed
         }
       }
+
       setList((prevList) => {
         return prevList?.map((item, i) => {
           return {
@@ -929,6 +934,15 @@ export default function AddSubscription() {
   }
   const formattedDiscountedSubtotal = discountedSubtotal.toFixed(2);
 
+  let frequencyModeValue;
+  useEffect(() => {
+    frequencyModeValue = getAdjustedTime(Number(frequencyMode));
+  }, [frequencyMode]);
+  console.log(
+    "🚀 ~ useEffect ~ frequencyModeValue:",
+    frequencyModeValue,
+    frequencyMode
+  );
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -1360,6 +1374,7 @@ export default function AddSubscription() {
                             event: React.ChangeEvent<HTMLInputElement>
                           ) => {
                             handleChange(index)(event);
+                            setFrequencyMode(Number(event.target.value));
                           }}
                         >
                           {MonthlyOptions?.map((item) => (
@@ -1759,10 +1774,14 @@ export default function AddSubscription() {
                 <span className="flex flex-col gap-5">
                   <span>
                     <span className="font-600">
-                      ${formattedSubtotal}/ Month{" "}
+                      ${formattedSubtotal} {frequencyMode != 0 && "/"}{" "}
+                      {getAdjusted(Number(frequencyMode))}{" "}
                       {/* ${details.subtotal.toFixed(2)} / Month{" "} */}
                     </span>
-                    starting 1 month after payment
+                    {frequencyMode != 1 && frequencyMode != 0
+                      ? `starting ${getAdjustedTime(Number(frequencyMode))}
+                    after payment`
+                      : null}
                   </span>
                 </span>
               </div>
