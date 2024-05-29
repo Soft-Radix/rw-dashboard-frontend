@@ -138,9 +138,10 @@ function AddAccountManagerModel({
 
     if (payload?.data?.status) {
       resetForm();
-      fetchManagerList();
+
       setIsOpen(false);
     }
+    fetchManagerList();
   };
 
   const formik = useFormik({

@@ -5,7 +5,7 @@ const noSpaceMessage = "No spaces allowed";
 const emailField = {
   email: Yup.string()
     .required("Email is required")
-    .email("Please enter a valid email ")
+    .email("Please enter valid email address")
     .test(
       "is-valid-email",
       "Email must contain a dot and a domain",
@@ -75,6 +75,23 @@ const addClientSchema = Yup.object({
   ...emailField,
   company_name: Yup.string().required("Compnay name is required"),
 });
+const editClientSchema = Yup.object({
+  first_name: Yup.string()
+    .required("First name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  last_name: Yup.string()
+    .required("Last name is required")
+    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+  ...emailField,
+  phone_number: Yup.string()
+    .required("Phone number is required")
+    .max(10, "Phone number must be 10 digits long.")
+    .matches(/^\d{10}$/, {
+      message: "Invalid phone number",
+      excludeEmptyString: true,
+    }),
+  company_name: Yup.string().required("Compnay name is required"),
+});
 
 const addAgentSchema = Yup.object({
   first_name: Yup.string()
@@ -98,12 +115,10 @@ const editAgentSchema = Yup.object({
     .required("Last name is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
-  email: Yup.string()
-    .required("Email is required")
-    .email("Please Enter Valid email address"),
+  ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
-    .max(10, "Phone number cannot exceed 10 digits")
+    .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
       message: "Invalid phone number",
       excludeEmptyString: true,
@@ -134,7 +149,7 @@ const accManagerSchema = Yup.object({
   phone_number: Yup.string()
     .required("Phone number is required")
     .matches(/^\d{10}$/, {
-      message: "Invalid phone number",
+      message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,
     }), // ,
   address: Yup.string().required("Address is required"),
@@ -151,4 +166,5 @@ export {
   editAgentSchema,
   AgentGroupSchema,
   accManagerSchema,
+  editClientSchema,
 };

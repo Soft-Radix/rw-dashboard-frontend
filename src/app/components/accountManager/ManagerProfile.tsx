@@ -224,7 +224,7 @@ const ManagerProfile = () => {
                       <span className="text-[1.8rem] text-title font-500 w-max">
                         Address
                       </span>
-                      <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
+                      <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                         <img
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
