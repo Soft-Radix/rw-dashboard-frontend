@@ -21,6 +21,7 @@ import CommonPagination from "src/app/components/pagination";
 import { filterType } from "app/store/AccountManager/Interface";
 import { RootState } from "app/store/store";
 import { useSelector } from "react-redux";
+import ListLoading from "@fuse/core/ListLoading";
 
 // export const truncateText = (text, wordLimit) => {
 //   const words = text.split(" ");
@@ -78,6 +79,7 @@ export default function ManageProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(true);
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -95,7 +97,7 @@ export default function ManageProducts() {
     try {
       //@ts-ignore
       const res = await dispatch(productList(payload));
-
+      setLoading(false);
       setList(res?.payload?.data?.data?.list);
       const currentRows = res?.payload?.data?.data?.list?.slice(
         (currentPage - 1) * itemsPerPage,
@@ -105,6 +107,7 @@ export default function ManageProducts() {
         setCurrentPage(currentPage - 1);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -196,6 +199,9 @@ export default function ManageProducts() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
+  // if (loading == true) {
+  //   return <ListLoading />;
+  // }
 
   return (
     <div>
@@ -217,7 +223,7 @@ export default function ManageProducts() {
           <CommonTable
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
-            {currentRows?.length === 0 ? (
+            {currentRows?.length === 0 && !loading ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -244,6 +250,12 @@ export default function ManageProducts() {
                       </p>
                     </Typography>
                   </div>
+                </TableCell>
+              </TableRow>
+            ) : loading ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (

@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { subscriptionListItem } from "app/store/Client";
 import svg from "../../../../../../public/assets/icons/Layer_1-2.svg";
 import { useAppDispatch } from "app/store/store";
+import ListLoading from "@fuse/core/ListLoading";
 
 // const rows = [
 //   {
@@ -51,6 +52,7 @@ export default function SubscriptionList() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [rows, setRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   const { client_id } = useParams();
@@ -66,8 +68,10 @@ export default function SubscriptionList() {
         //@ts-ignore
         const res = await dispatch(subscriptionListItem(payload));
         setRows(res?.payload?.data?.data?.list);
+        setLoading(false);
         // toast.success(res?.payload?.data?.message);
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching data:", error);
       }
     };
@@ -102,6 +106,9 @@ export default function SubscriptionList() {
       return "Cancelled";
     }
   };
+  if (loading == true) {
+    return <ListLoading />;
+  }
   return (
     <>
       {/* no subscription start */}
