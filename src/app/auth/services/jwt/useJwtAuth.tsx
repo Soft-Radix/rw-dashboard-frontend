@@ -256,6 +256,10 @@ const useJwtAuth = <User, SignUpPayload>(
       } else {
         if (signin == 1) {
           if (response?.payload.data?.user.projects.length == 0) {
+            localStorage.setItem(
+              "response",
+              JSON.stringify(response?.payload?.data)
+            );
             window.location.href = "/sign-document";
           } else {
             handleSignInSuccess(userData, accessToken);
@@ -306,6 +310,7 @@ const useJwtAuth = <User, SignUpPayload>(
       } else {
         if (signin == 1) {
           if (response?.payload.data?.user.projects.length == 0) {
+            localStorage.setItem("response", JSON.stringify(response?.payload));
             window.location.href = "/sign-document";
           } else {
             handleSignInSuccess(userData, accessToken);
@@ -371,7 +376,7 @@ const useJwtAuth = <User, SignUpPayload>(
    */
   const signOut = useCallback(() => {
     resetSession();
-    localStorage.clear();
+    // localStorage.clear();
     setIsAuthenticated(false);
     setUser(null);
 

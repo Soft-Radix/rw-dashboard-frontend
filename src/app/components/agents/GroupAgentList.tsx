@@ -5,6 +5,7 @@ import {
   TableCell,
   TableRow,
   Theme,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useFormik } from "formik";
@@ -12,6 +13,7 @@ import {
   ArrowRightCircleIcon,
   DeleteIcon,
   EditIcon,
+  NoDataFound,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
@@ -196,9 +198,21 @@ export default function GroupAgentsList() {
                   }}
                 >
                   <TableCell colSpan={7} align="center">
-                    <span className="font-bold text-20 text-[#e4e4e4]">
-                      No Data Found
-                    </span>
+                    <div
+                      className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                      style={{ alignItems: "center" }}
+                    >
+                      <NoDataFound />
+                      <Typography className="text-[24px] text-center font-600 leading-normal">
+                        No data found !
+                        <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
+                          No data has been added yet. Please input the
+                        </p>
+                        <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
+                          necessary information to proceed.
+                        </p>
+                      </Typography>
+                    </div>
                   </TableCell>
                 </TableRow>
               ) : (

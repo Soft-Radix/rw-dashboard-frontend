@@ -116,6 +116,8 @@ export default function SignDocuement() {
         const payload = {
           token: Userresponse.access_token,
         };
+
+        console.log("====payload====", payload);
         //@ts-ignore
         const res = await dispatch(RefreshToken(payload));
         // localStorage.setItem(
