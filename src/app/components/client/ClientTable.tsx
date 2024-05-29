@@ -26,6 +26,7 @@ function ClientTable({
   setfilters,
   filters,
   status = true,
+  isAllSelected = false,
 }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -42,6 +43,7 @@ function ClientTable({
 
   const renderCell = (cellId: string): boolean => {
     const { selectedColumn } = clientState ?? {};
+
     // If there's no selectedColumn or it's empty, always return true
     if (!selectedColumn || selectedColumn.length === 0) {
       return true;
@@ -81,6 +83,7 @@ function ClientTable({
           sortOrder={sortOrder}
           onSort={sortData}
           handleSelectAll={handleSelectAll}
+          isAllSelected={isAllSelected}
         >
           {clientState?.list?.length == 0 ? (
             <TableRow

@@ -171,7 +171,7 @@ export default function GroupAgentsList() {
                 type="submit" // Use type="submit" to submit the form
                 variant="contained"
                 color="secondary"
-                className="w-[250px] h-[50px] text-[18px] font-700"
+                className="w-[250px] h-[50px] text-[18px] font-700 mb-[10px]"
                 disabled={actionStatusEdit}
               >
                 Save
