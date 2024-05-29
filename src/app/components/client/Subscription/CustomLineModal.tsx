@@ -111,17 +111,7 @@ function CustomLineModal({
       <div className="flex flex-col gap-20 mb-20 border-1 border-[#D9D9D9] rounded-[10px] overflow-hidden">
         <CommonTable headings={["Name", "Description", "Unit Price"]}>
           {list?.map((row, index) => (
-            <TableRow
-              key={index}
-              // sx={{
-              //     "& td": {
-              //         borderBottom: "1px solid #EDF2F6",
-              //         paddingTop: "12px",
-              //         paddingBottom: "12px",
-              //         color: theme.palette.primary.main,
-              //     },
-              // }}
-            >
+            <TableRow key={index}>
               <TableCell scope="row" className="font-500">
                 <div className="py-2 flex " style={{ alignItems: "center" }}>
                   <Checkbox onChange={(e) => handleSelect(e, row)} />
