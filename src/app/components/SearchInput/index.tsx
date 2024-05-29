@@ -22,7 +22,7 @@ function SearchInput({ name, placeholder, onChange }: IProps) {
       <SearchIcon
         width={18}
         height={18}
-        className="absolute left-[2rem] sm:left-10 top-[50%] translate-y-[-50%] text-para_light"
+        className="absolute left-[2rem] sm:left-10 top-[44%] translate-y-[-50%] text-para_light"
       />
     </div>
   );
