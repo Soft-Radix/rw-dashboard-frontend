@@ -140,7 +140,7 @@ export default function SubscriptionList() {
                     className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"
                   />
                   {/* {svg} */}
-                  <Typography className="text-[48px] text-center font-700 leading-normal">
+                  <Typography className="text-[24px] text-center font-700 leading-normal">
                     No subscription found !
                     {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
                       No data has been added yet. Please input the
