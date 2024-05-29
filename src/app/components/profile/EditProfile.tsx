@@ -14,7 +14,7 @@ import SelectField from "../selectField";
 import { ClientType } from "app/store/Client/Interface";
 import { updateProfile } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
-import { addClientSchema } from "src/formSchema";
+import { addClientSchema, editClientSchema } from "src/formSchema";
 
 type profileState = {
   value: string;
@@ -110,7 +110,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       country_code: "+1",
       address: "",
     },
-    validationSchema: addClientSchema,
+    validationSchema: editClientSchema,
     onSubmit,
   });
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -150,7 +150,9 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => {
+        setIsOpen((prev) => !prev), setSelectedImage(null);
+      }}
       modalTitle="Edit Profile"
       maxWidth="733"
       btnTitle={"Save"}
@@ -183,12 +185,20 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         </label>
       </div>
       <div className="flex flex-col gap-20 mb-20">
-        <InputField
-          formik={formik}
-          name="first_name"
-          label="Name"
-          placeholder="Enter Name"
-        />
+        <div className="flex gap-20">
+          <InputField
+            formik={formik}
+            name="first_name"
+            label="First Name"
+            placeholder="Enter First Name"
+          />
+          <InputField
+            formik={formik}
+            name="last_name"
+            label="Last Name"
+            placeholder="Enter Last Name"
+          />
+        </div>
         <SelectField
           formik={formik}
           name="status"

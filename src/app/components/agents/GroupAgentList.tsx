@@ -28,6 +28,7 @@ import SearchInput from "src/app/components/SearchInput";
 import InputField from "../InputField";
 import { useAppDispatch } from "app/store/store";
 import {
+  addAgentInagentGroup,
   changeFetchStatus,
   deleteAgentMemberGroup,
   getAgentGroupInfo,
@@ -41,6 +42,7 @@ import {
   UpdateAgentGroupPayload,
 } from "app/store/Agent group/Interface";
 import DeleteClient from "../client/DeleteClient";
+import { filterType } from "app/store/Client/Interface";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
@@ -50,6 +52,12 @@ export default function GroupAgentsList() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
+
   const itemsPerPage = 10;
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
@@ -87,6 +95,7 @@ export default function GroupAgentsList() {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
+      dispatch(addAgentInagentGroup({ ...filterMenu, group_id }));
       setIsDeleteId(null);
     } catch (error) {
       console.error("Failed to delete agent group:", error);
@@ -96,15 +105,11 @@ export default function GroupAgentsList() {
     initialValues: {
       group_name: "",
     },
-    // validationSchema: validationSchemaProperty,
     onSubmit,
   });
-  // useEffect(()=>{
-  //   formik.setValues()
-  // })
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+
   // const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   useEffect(() => {
     if (!group_id) return null;
@@ -171,7 +176,7 @@ export default function GroupAgentsList() {
                 type="submit" // Use type="submit" to submit the form
                 variant="contained"
                 color="secondary"
-                className="w-[250px] h-[50px] text-[18px] font-700"
+                className="w-[250px] h-[50px] text-[18px] font-700 mb-[10px]"
                 disabled={actionStatusEdit}
               >
                 Save

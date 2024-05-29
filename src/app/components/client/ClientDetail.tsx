@@ -435,7 +435,7 @@ export default function ClientDetail() {
   }
   return (
     <>
-      <TitleBar title="SearchInput" minHeight="min-h-[80px]">
+      <TitleBar title="Client" minHeight="min-h-[80px]">
         {paramValue == "subscription" && (
           <Button
             variant="outlined"

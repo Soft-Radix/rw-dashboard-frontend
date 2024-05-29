@@ -34,6 +34,7 @@ function AddGroupModel({
   isOpen,
   setIsOpen,
   isNewAgent,
+
   fetchAgentGroupList,
 }: IProps) {
   const agentGroupState = useSelector(
@@ -45,7 +46,9 @@ function AddGroupModel({
   // console.log(addagentList, "pp");
   const [checked, setChecked] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
+
   const [searchText, setSearchText] = useState("");
+  const [isValid, setisValid] = useState<boolean>(false);
   // console.log(agentGroupState, "ggfsd");
   const { group_id } = useParams();
   // console.log(id, "asss");
@@ -78,6 +81,9 @@ function AddGroupModel({
       ...prevFilters,
       search: "",
     }));
+    if (checkedItems.length! == 0) {
+      setisValid(true);
+    }
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
     setCheckedItems([]);
@@ -145,6 +151,14 @@ function AddGroupModel({
     setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
   };
+  useEffect(() => {
+    if (checkedItems.length > 0) {
+      setisValid(true);
+    } else {
+      setisValid(false);
+    }
+  }, [checkedItems]);
+
   return (
     <CommonModal
       open={isOpen}
@@ -154,10 +168,8 @@ function AddGroupModel({
       btnTitle="Save"
       closeTitle="Cancel"
       onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
-      disabled={
-        (isNewAgent && checkedItems.length === 0) ||
-        agentGroupState.actionStatus
-      }
+      disabled={isNewAgent && agentGroupState.actionStatus}
+      isValid={isValid}
     >
       <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (

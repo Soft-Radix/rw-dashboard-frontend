@@ -46,6 +46,7 @@ export default function Clients() {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isAllSelected, setisAllSelected] = useState(false);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -69,12 +70,18 @@ export default function Clients() {
   };
 
   const handleCheckboxChange = (rowId: number) => {
-    setSelectedIds(
-      (prev) =>
-        prev.includes(rowId)
-          ? prev.filter((id) => id !== rowId) // Deselect
-          : [...prev, rowId] // Select
-    );
+    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+    let selectedId = selectedIds.includes(rowId)
+      ? [...selectedIds.filter((id) => id !== rowId)]
+      : [...selectedIds, rowId];
+
+    if (allRowIds.length == selectedId.length) {
+      setSelectedIds(allRowIds);
+      setisAllSelected(true);
+    } else {
+      setSelectedIds(selectedId); // Select all
+      setisAllSelected(false);
+    }
   };
 
   const handleSelectAll = () => {
@@ -84,10 +91,13 @@ export default function Clients() {
     );
     if (allSelected) {
       setSelectedIds([]); // Deselect all
+      setisAllSelected(false);
     } else {
+      setisAllSelected(true);
       setSelectedIds(allRowIds); // Select all
     }
   };
+
   const { actionStatusClient } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -189,6 +199,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          isAllSelected={isAllSelected}
         />
       ),
       actionBtn: ClientTabButton,
