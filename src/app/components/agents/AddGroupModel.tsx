@@ -48,7 +48,7 @@ function AddGroupModel({
   const [checkedItems, setCheckedItems] = useState([]);
 
   const [searchText, setSearchText] = useState("");
-  const [isValid, setisValid] = useState<boolean>(true);
+  const [isValid, setisValid] = useState<boolean>(false);
   // console.log(agentGroupState, "ggfsd");
   const { group_id } = useParams();
   // console.log(id, "asss");
@@ -153,9 +153,9 @@ function AddGroupModel({
   };
   useEffect(() => {
     if (checkedItems.length > 0) {
-      setisValid(false);
-    } else {
       setisValid(true);
+    } else {
+      setisValid(false);
     }
   }, [checkedItems]);
 
