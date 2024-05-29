@@ -14,6 +14,7 @@ import CancelButtonPage from "./CancelButtonPage";
 import ItemTable from "./ItemTable";
 import PaymentSubscriptio from "./PaymentSubscriptio";
 import SubLogTable from "./SubLogTable";
+import { subscriptionDetails } from "app/store/Client";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -87,17 +88,19 @@ export default function SubscriptionDetails() {
     fetchData();
   }, [dispatch]);
 
+  console.log("======rows===", rows);
+
   const StatusMapping = (status) => {
     if (status == 0) {
-      return "Review";
+      return "Pending";
     } else if (status == 1) {
-      return "Progress";
-    } else if (status == 2) {
-      return "Pause";
-    } else if (status == 3) {
       return "Completed";
+    } else if (status == 2) {
+      return "Paused";
+    } else if (status == 3) {
+      return "Expired";
     } else if (status == 4) {
-      return "cancelled";
+      return "Cancelled";
     }
   };
 
@@ -142,33 +145,38 @@ export default function SubscriptionDetails() {
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                          {/* {rows?.userName} */}
+                          {rows?.userName ? rows?.userName : "N/A"}
                         </span>
                         <Button
                           variant="outlined"
-                          // className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
-                          //   rows?.status
-                          // )}`}
+                          className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
+                            rows?.status
+                          )}`}
                         >
                           {/* {`${
-                            rows.status == 0 || rows.status == 1 ? "In " : ""
-                          }${StatusMapping(rows.status)}`} */}
-                          kkjkj
+                            // rows?.status == 0 || rows?.status == 1 ? "In " : ""
+                          } */}
+                          {StatusMapping(rows?.status)}
+                          {/* kkjkj */}
                         </Button>
                       </div>
                       <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-8 ">
-                        <div className="flex items-center pr-20">
+                        <div className="flex items-center pr-20 gap-2">
                           <span>
                             <Timericon />
                           </span>
-                          {/* <span>{rows.subscription_start_date}</span> */}
+                          <span>
+                            {rows?.subscription_start_date
+                              ? rows?.subscription_start_date
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="flex">
                           <img
                             src="../assets/icons/ic_outline-email.svg"
                             className="mr-4"
                           />
-                          <span>info456@gmail.com</span>
+                          <span>{rows?.email ? rows?.email : "N/A"}</span>
                         </div>
                         <div className="flex items-center sm:px-20">
                           <span>
@@ -177,7 +185,7 @@ export default function SubscriptionDetails() {
                               className="mr-4"
                             />{" "}
                           </span>
-                          <span>+1 2513652150</span>
+                          <span>{rows?.phone ? rows?.phone : "N/A"}</span>
                         </div>
                       </div>
 
@@ -191,7 +199,9 @@ export default function SubscriptionDetails() {
                               src="../assets/icons/tech.svg"
                               className="mr-4"
                             />
-                            Tech 23.com
+                            <span>
+                              {rows?.company_name ? rows?.company_name : "N/A"}
+                            </span>
                           </span>
                         </div>
                         <div className="flex flex-col pr-10 gap-7 ">
@@ -204,7 +214,9 @@ export default function SubscriptionDetails() {
                                 src="../assets/icons/loaction.svg"
                                 className="mr-4"
                               />
-                              Tech 23.com
+                              <span>
+                                {rows?.address ? rows?.address : "N/A"}
+                              </span>
                             </span>
                           </div>
                         </div>

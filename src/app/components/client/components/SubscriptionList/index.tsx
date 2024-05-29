@@ -203,10 +203,11 @@ export default function SubscriptionList() {
                   <TableCell align="left" className="w-[1%]">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
-
-                        <ArrowRightCircleIcon />
-                        {/* </Link> */}
+                        <Link
+                          to={`/admin/client/subscription-detail/${row.id}`}
+                        >
+                          <ArrowRightCircleIcon />
+                        </Link>
                       </span>
                     </div>
                   </TableCell>
