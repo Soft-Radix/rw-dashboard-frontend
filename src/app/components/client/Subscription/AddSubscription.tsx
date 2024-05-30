@@ -824,12 +824,20 @@ export default function AddSubscription() {
       return ""; // Otherwise, set the error message to an empty string
     });
     setQuantityError(newQuantityErrors);
-
+    console.log(
+      "=======",
+      !recurringShow ||
+        (recurringShow &&
+          details.one_time_discount_name != "" &&
+          details.one_time_discount_name.length <= 50)
+    );
     if (
       details.title != "" &&
+      (!recurringShow ||
+        (recurringShow &&
+          details.one_time_discount_name != "" &&
+          details.one_time_discount_name.length <= 50)) &&
       details.title.length <= 50 &&
-      nameError != "" &&
-      error != "" &&
       newErrors.every((error) => error == "") &&
       paymentError == "" &&
       newQuantityErrors.every((error) => error == "")
