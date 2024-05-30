@@ -91,7 +91,8 @@ const addClientSchema = Yup.object({
   ...emailField,
   company_name: Yup.string()
     .required("Compnay name is required")
-    .matches(/^\S+$/, noSpaceMessage),
+
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 const editClientSchema = Yup.object({
   first_name: Yup.string()
@@ -108,7 +109,10 @@ const editClientSchema = Yup.object({
       message: "Invalid phone number",
       excludeEmptyString: true,
     }),
-  company_name: Yup.string().required("Compnay name is required"),
+  company_name: Yup.string()
+    .required("Compnay name is required")
+
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 
 const editAgentSchema = Yup.object({
@@ -136,7 +140,6 @@ const editAgentSchema = Yup.object({
     }),
   address: Yup.string()
     .required("Address is required")
-
     .test("no-initial-space", noSpaceMessage, noInitialSpace),
 });
 // const AgentGroupSchema = Yup.object({
