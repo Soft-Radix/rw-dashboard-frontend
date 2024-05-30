@@ -56,7 +56,7 @@ export const TruncateText = ({ text, maxWidth }) => {
           maxWidth: `${maxWidth}px`,
           overflow: "hidden",
           textOverflow: "ellipsis",
-          display: "inline-block",
+          // display: "inline-block",
           whiteSpace: "nowrap",
         }}
       >
@@ -209,7 +209,7 @@ export default function ManageProducts() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          className="h-[36px] text-[16px] flex gap-8 font-[600]"
           aria-label="Add Tasks"
           size="large"
           onClick={() => setIsOpenAddModal(true)}
@@ -284,9 +284,15 @@ export default function ManageProducts() {
                         </TableCell>
 
                         <TableCell align="center" className="whitespace-nowrap">
-                          ${item.unit_price}
+                          <p style={{ lineHeight: "15px" }}>
+                            ${item.unit_price}
+                          </p>
                         </TableCell>
-                        <TableCell align="center" className="w-[1%]">
+                        <TableCell
+                          align="center"
+                          className="w-[1%]"
+                          style={{ paddingTop: "23px", paddingBottom: "39px" }}
+                        >
                           <div className="flex gap-20 pe-20">
                             <span className="p-2 cursor-pointer">
                               <DeleteIcon
