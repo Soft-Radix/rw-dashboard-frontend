@@ -139,10 +139,26 @@ const columnKey = {
   Status: "status",
 };
 
+// export const sortList = (column: string, isAsc: boolean, list: any) => {
+//   const sortedRows = [...list].sort((a, b) => {
+//     if (a[columnKey[column]] < b[columnKey[column]]) return isAsc ? -1 : 1;
+//     if (a[columnKey[column]] > b[columnKey[column]]) return isAsc ? 1 : -1;
+//     return 0;
+//   });
+//   return sortedRows;
+// };
+
 export const sortList = (column: string, isAsc: boolean, list: any) => {
   const sortedRows = [...list].sort((a, b) => {
-    if (a[columnKey[column]] < b[columnKey[column]]) return isAsc ? -1 : 1;
-    if (a[columnKey[column]] > b[columnKey[column]]) return isAsc ? 1 : -1;
+    const aValue = a[columnKey[column]]
+      ? a[columnKey[column]].toString().toLowerCase()
+      : "";
+    const bValue = b[columnKey[column]]
+      ? b[columnKey[column]].toString().toLowerCase()
+      : "";
+
+    if (aValue < bValue) return isAsc ? -1 : 1;
+    if (aValue > bValue) return isAsc ? 1 : -1;
     return 0;
   });
   return sortedRows;
