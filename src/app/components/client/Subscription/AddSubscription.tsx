@@ -824,13 +824,7 @@ export default function AddSubscription() {
       return ""; // Otherwise, set the error message to an empty string
     });
     setQuantityError(newQuantityErrors);
-    console.log(
-      "=======",
-      !recurringShow ||
-        (recurringShow &&
-          details.one_time_discount_name != "" &&
-          details.one_time_discount_name.length <= 50)
-    );
+
     if (
       details.title != "" &&
       (!recurringShow ||

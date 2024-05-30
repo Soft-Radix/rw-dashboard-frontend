@@ -39,7 +39,7 @@ function DeleteProduct({
             Delete Product
           </Typography>
           <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-            Are you sure you want to delete this product ?
+            Are you sure you want to delete this product?
           </Typography>
         </div>
       </CommonModal>
