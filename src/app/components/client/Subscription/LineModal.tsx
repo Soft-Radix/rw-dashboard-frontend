@@ -376,31 +376,36 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
             </label>
             <br />
           </div>
+          {formik.values.is_delay_in_billing == 1 && (
+            <>
+              <div className=" mb-[1rem]">
+                <label className="text-[16px] font-medium leading-[20px]">
+                  Billing Start Date ( Date of first payment )
+                </label>
+              </div>
 
-          <div className=" mb-[1rem]">
-            <label className="text-[16px] font-medium leading-[20px]">
-              Billing Start Date ( Date of first payment )
-            </label>
-          </div>
-
-          <input
-            type="date"
-            id="billing_start_date"
-            name="billing_start_date"
-            // min={new Date().toISOString().split("T")[0]}
-            min={tomorrowStr}
-            value={formik.values.billing_start_date || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
-          />
-          {formik.touched.billing_start_date &&
-          formik.errors.billing_start_date ? (
-            <div className="text-red-600">
-              {formik.errors.billing_start_date}
-            </div>
-          ) : null}
-          {dateError ? <div className="text-red-600">{dateError}</div> : null}
+              <input
+                type="date"
+                id="billing_start_date"
+                name="billing_start_date"
+                // min={new Date().toISOString().split("T")[0]}
+                min={tomorrowStr}
+                value={formik.values.billing_start_date || ""}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
+              />
+              {formik.touched.billing_start_date &&
+              formik.errors.billing_start_date ? (
+                <div className="text-red-600">
+                  {formik.errors.billing_start_date}
+                </div>
+              ) : null}
+              {dateError ? (
+                <div className="text-red-600">{dateError}</div>
+              ) : null}
+            </>
+          )}
           {/* <DateInput /> */}
         </div>
       </div>
