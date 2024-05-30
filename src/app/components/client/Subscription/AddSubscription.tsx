@@ -928,7 +928,7 @@ export default function AddSubscription() {
       try {
         const payload = {
           start: 0,
-          limit: 10,
+          limit: -1,
           search: "",
         };
         const res = await dispatch(subscriptionList(payload));
@@ -975,6 +975,25 @@ export default function AddSubscription() {
   useEffect(() => {
     frequencyModeValue = getAdjustedTime(Number(frequencyMode));
   }, [frequencyMode]);
+
+  const inputRef = useRef(null);
+  useEffect(() => {
+    const handleWheel = (event: WheelEvent) => {
+      if (inputRef.current && inputRef.current.type === "number") {
+        event.preventDefault();
+      }
+    };
+
+    if (inputRef.current) {
+      inputRef.current.addEventListener("wheel", handleWheel);
+    }
+
+    return () => {
+      if (inputRef.current) {
+        inputRef.current.removeEventListener("wheel", handleWheel);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -1475,6 +1494,7 @@ export default function AddSubscription() {
                         <>
                           <div className="relative">
                             <InputField
+                              inputRef={inputRef}
                               name={"no_of_payments"}
                               placeholder={"0"}
                               type="number"
@@ -1726,6 +1746,7 @@ export default function AddSubscription() {
                         </div>
                         <div className="flex-1">
                           <TextField
+                            ref={inputRef}
                             hiddenLabel
                             id="filled-hidden-label-small"
                             defaultValue=""
@@ -1790,13 +1811,14 @@ export default function AddSubscription() {
                 </>
               )}
               {!recurringShow && (
-                <p
+                <span
                   color="secondary"
                   className="text-[#4f46e5] font-500 cursor-pointer"
+                  style={{ width: "fit-content" }}
                   onClick={() => setRecurringShow(true)}
                 >
                   +Add discount
-                </p>
+                </span>
               )}
               {/*  {/* with discount end */}
             </li>

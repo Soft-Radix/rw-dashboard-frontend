@@ -235,6 +235,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
   const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+  
   useEffect(() => {
     if (formik.values?.billing_start_date) {
       const validation = validateBillingStartDate(
@@ -254,6 +255,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
       setDateError("");
     }
   }, [formik]);
+
   return (
     <CommonModal
       open={isOpen}

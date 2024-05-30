@@ -288,11 +288,7 @@ export default function ManageProducts() {
                             ${item.unit_price}
                           </p>
                         </TableCell>
-                        <TableCell
-                          align="center"
-                          className="w-[1%]"
-                          style={{ paddingTop: "23px", paddingBottom: "39px" }}
-                        >
+                        <TableCell align="center" className="w-[1%]">
                           <div className="flex gap-20 pe-20">
                             <span className="p-2 cursor-pointer">
                               <DeleteIcon
