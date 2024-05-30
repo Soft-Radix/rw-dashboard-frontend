@@ -35,6 +35,7 @@ export default function AssignedAccountManager({
   // console.log(assignAccManagerDetail, "popopff");
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [defaultAccManagerId, setDefaultAccManagerId] = useState(null);
 
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const unassignAccManager = async (id: any) => {
@@ -59,14 +60,18 @@ export default function AssignedAccountManager({
       console.error("Failed to delete agent group:", error);
     }
   };
-  const defaultAddAccManager = (id) =>
-    // if(default)
+  const handleDefaultAccManagerChange = (id) => {
+    // Update the state with the ID of the selected default account manager
+    setDefaultAccManagerId(id);
+
+    // Dispatch your action here if needed
     dispatch(
       defaultAccManagerList({
         client_id: client_id,
         account_manager_id: id,
       })
     );
+  };
 
   // console.log(assignAccManagerDetail.length, "length");
   // console.log(totalPageCount, "totalPageCount");
@@ -116,7 +121,6 @@ export default function AssignedAccountManager({
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      
                     </Typography>
                   </div>
                 </TableCell>
@@ -168,10 +172,16 @@ export default function AssignedAccountManager({
                     >
                       <FormControlLabel
                         onClick={() =>
-                          defaultAddAccManager(row.account_manager_id)
+                          handleDefaultAccManagerChange(row.account_manager_id)
                         }
                         value="Mark as default"
-                        control={<Radio checked={row.is_default === 1} />}
+                        control={
+                          <Radio
+                            checked={
+                              defaultAccManagerId === row.account_manager_id
+                            }
+                          />
+                        }
                         label="Mark as default"
                       />
                     </TableCell>

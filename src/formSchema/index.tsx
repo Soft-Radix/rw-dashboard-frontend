@@ -52,25 +52,28 @@ const resetPassSchema = Yup.object({
 const changePasswordByAdmin = Yup.object({
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+    .min(6, "Password must be at least 6 characters long")
+    .matches(/^\S+$/, noSpaceMessage), // Minimum 6 characters
 
   cnfPassword: Yup.string()
     .required("Confirm Password is required") // Field is required
-    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match")
+    .matches(/^\S+$/, noSpaceMessage), // Must match the password field
 });
 
 const changePasswordByClient = Yup.object({
   old_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
-
+    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
+    .matches(/^\S+$/, noSpaceMessage),
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
-
+    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
+    .matches(/^\S+$/, noSpaceMessage),
   cnfPassword: Yup.string()
     .required("Confirm password is required") // Field is required
-    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match") // Must match the password field
+    .matches(/^\S+$/, noSpaceMessage),
 });
 
 const addClientSchema = Yup.object({
@@ -85,7 +88,9 @@ const addClientSchema = Yup.object({
     .max(20, maxLengthLastMessage),
 
   ...emailField,
-  company_name: Yup.string().required("Compnay name is required"),
+  company_name: Yup.string()
+    .required("Compnay name is required")
+    .matches(/^\S+$/, noSpaceMessage),
 });
 const editClientSchema = Yup.object({
   first_name: Yup.string()
