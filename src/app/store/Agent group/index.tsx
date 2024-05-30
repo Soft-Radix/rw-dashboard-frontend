@@ -341,6 +341,7 @@ export const agentGroupSlice = createSlice({
       })
 
       .addCase(addAgentInagentGroup.pending, (state) => {
+        state.status = "loading";
         state.actionStatus = true;
       })
       .addCase(addAgentInagentGroup.fulfilled, (state, action) => {
@@ -351,6 +352,7 @@ export const agentGroupSlice = createSlice({
         state.searchAgentList = data.list;
         // console.log(state.searchAgentList, "serch");
         state.actionStatus = false;
+        state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
           state.total_records = calculatePageNumber(
@@ -361,6 +363,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
         state.actionStatus = false;
+        state.status = "idle";
       })
       .addCase(deleteAgentMemberGroup.pending, (state) => {
         state.actionStatusGroupMember = true;

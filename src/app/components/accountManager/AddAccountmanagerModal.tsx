@@ -262,7 +262,7 @@ function AddAccountManagerModel({
       btnTitle={"Save"}
       disabled={actionStatus}
       onSubmit={formik.handleSubmit}
-      closeTitle="Cancel"
+      closeTitle="Close"
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -294,7 +294,7 @@ function AddAccountManagerModel({
             formik={formik}
             name="first_name"
             label="First Name"
-            placeholder="Enter your First Name"
+            placeholder="Enter First Name"
           />
           <InputField
             formik={formik}

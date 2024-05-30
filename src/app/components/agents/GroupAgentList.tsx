@@ -44,6 +44,7 @@ import {
 import DeleteClient from "../client/DeleteClient";
 import { filterType } from "app/store/Client/Interface";
 import { AgentGroupSchema } from "src/formSchema";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
@@ -52,6 +53,8 @@ export default function GroupAgentsList() {
   const { group_id } = useParams();
   const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
+  const [currentRows, setCurrentRows] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
@@ -115,7 +118,12 @@ export default function GroupAgentsList() {
   // const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   useEffect(() => {
     if (!group_id) return null;
-    dispatch(getAgentGroupInfo({ group_id }));
+    const fetchData = async () => {
+      setLoading(true);
+      await dispatch(getAgentGroupInfo({ group_id }));
+      setLoading(false);
+    };
+    fetchData();
     // console.log(group_id, "groupid");
     return () => {
       dispatch(changeFetchStatus());
@@ -141,13 +149,28 @@ export default function GroupAgentsList() {
     // Handle any additional logic when the page changes, e.g., fetching data
   };
 
-  const currentRows = agentGroupDetail?.group_members
-    ? agentGroupDetail.group_members.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    : [];
+  useEffect(() => {
+    const data = agentGroupDetail?.group_members
+      ? agentGroupDetail.group_members.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      : [];
+    setCurrentRows([...data]);
+  }, [agentGroupDetail, group_id]);
+  console.log(
+    "🚀 ~ GroupAgentsList ~ agentGroupDetail:",
+    agentGroupDetail.group_members
+  );
 
+  if (agentGroupDetail?.fetchStatus == "loading") {
+    return <ListLoading />;
+  }
+  // useEffect(() => {
+  //   if (loading) {
+  //     <ListLoading />;
+  //   }
+  // }, []);
   return (
     <>
       <TitleBar title="Agents Groups">
@@ -201,7 +224,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               {" "}
-              {currentRows?.length === 0 ? (
+              {currentRows?.length === 0 && !loading ? (
                 <TableRow
                   sx={{
                     "& td": {
