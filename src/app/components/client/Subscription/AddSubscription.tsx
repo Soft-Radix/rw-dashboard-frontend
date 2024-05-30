@@ -163,6 +163,7 @@ export default function AddSubscription() {
   const [Action, setAction] = useState([]);
   const [recurringShow, setRecurringShow] = useState(false);
   const [error, setError] = useState("");
+  const [nameError, setNameError] = useState("");
   const [unitPriceError, setUnitPriceError] = useState<string[]>([]);
   const [quantityError, setQuantityError] = useState<string[]>([]);
   const [paymentError, setPaymentError] = useState("");
@@ -661,6 +662,7 @@ export default function AddSubscription() {
       setPaymentError("");
     }
   }, [list]);
+
   const handleSubTotal = () => {
     let sum = 0;
     let unitDiscount = 0;
@@ -737,12 +739,37 @@ export default function AddSubscription() {
       formattedValue = formatToTwoDecimalsAndMaxSixDigits(value);
     }
 
+    if (formattedValue.trim() === "" && formattedValue !== "") {
+      return;
+    }
     if (name == "title") {
-      setError("");
+      if (formattedValue.trim() === "") {
+        setError("Title is required");
+      } else if (formattedValue.length > 50) {
+        setError("Title should be less than or equal to 50 characters");
+      } else {
+        setError("");
+      }
+    }
+
+    if (recurringShow && name == "one_time_discount_name") {
+      if (formattedValue.trim() === "") {
+        setNameError("Discount name is required");
+      } else if (formattedValue.length > 50) {
+        setNameError(
+          "Discount name should be less than or equal to 50 characters"
+        );
+      } else {
+        setNameError("");
+      }
     }
 
     setDetails({ ...details, [name]: formattedValue });
+
+    // setDetails({ ...details, [name]: formattedValue });
   };
+
+  const validateTitle = () => {};
 
   const onDelete = () => {
     setDisableDelete(true);
@@ -797,9 +824,20 @@ export default function AddSubscription() {
       return ""; // Otherwise, set the error message to an empty string
     });
     setQuantityError(newQuantityErrors);
-
+    console.log(
+      "=======",
+      !recurringShow ||
+        (recurringShow &&
+          details.one_time_discount_name != "" &&
+          details.one_time_discount_name.length <= 50)
+    );
     if (
       details.title != "" &&
+      (!recurringShow ||
+        (recurringShow &&
+          details.one_time_discount_name != "" &&
+          details.one_time_discount_name.length <= 50)) &&
+      details.title.length <= 50 &&
       newErrors.every((error) => error == "") &&
       paymentError == "" &&
       newQuantityErrors.every((error) => error == "")
@@ -850,6 +888,11 @@ export default function AddSubscription() {
     }
     if (details.title == "") {
       setError("Title is required");
+    }
+    if (recurringShow) {
+      if (details.one_time_discount_name == "") {
+        setNameError("Discount name is required");
+      }
     }
   };
   // const uniqueList = [];
@@ -990,7 +1033,9 @@ export default function AddSubscription() {
                 //   ),
                 // }}
               />
-              <p className="text-right text-red pt-[5px]">{error}</p>
+              <p className="text-left text-red pt-[5px] ml-20 text-[11px]">
+                {error}
+              </p>
             </div>
             {SubButton()}
           </div>
@@ -1026,7 +1071,7 @@ export default function AddSubscription() {
                   >
                     <TableCell
                       scope="row"
-                      className="font-500 whitespace-nowrap"
+                      className="font-500 whitespace-nowrap pl-[20px]"
                     >
                       <TruncateText text={row.name} maxWidth={200} />
                     </TableCell>
@@ -1095,7 +1140,7 @@ export default function AddSubscription() {
                               setId(row.id);
                               setDeleteItem("Delete Line Item");
                               SetDeleteDescription(
-                                "Are you sure you want to delete this line item ?"
+                                "Are you sure you want to delete this line item?"
                               );
                             }}
                           >
@@ -1599,54 +1644,60 @@ export default function AddSubscription() {
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex">
-                      <TextField
-                        hiddenLabel
-                        className="me-20 justify-center w-[30rem] pe-6"
-                        id="filled-hidden-label-small"
-                        defaultValue=""
-                        name="one_time_discount_name"
-                        value={details.one_time_discount_name}
-                        onChange={handleDetailsChange}
-                        variant="standard"
-                        placeholder="XYZ Name"
-                        sx={{
-                          pl: 2,
-                          backgroundColor: "#F6F6F6",
-                          borderRadius: "8px",
-                          minHeight: "48px",
-                          border: "0.5px solid #9DA0A6", // Show border when focused
-                          height: "48px",
+                      <div className="relative">
+                        <TextField
+                          hiddenLabel
+                          className="me-20 justify-center w-[30rem] pe-6"
+                          id="filled-hidden-label-small"
+                          defaultValue=""
+                          name="one_time_discount_name"
+                          value={details.one_time_discount_name}
+                          onChange={handleDetailsChange}
+                          variant="standard"
+                          placeholder="XYZ Name"
+                          sx={{
+                            pl: 2,
+                            backgroundColor: "#F6F6F6",
+                            borderRadius: "8px",
+                            minHeight: "48px",
+                            border: "0.5px solid #9DA0A6", // Show border when focused
+                            height: "48px",
 
-                          "&:focus-within": {
-                            border: "1px solid blue", // Show border when focused
-                          },
-                          "& .MuiInputBase-input": {
-                            textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                            border: "none", // Hide the border of the input element
-                            padding: "0px",
-                            paddingTop: "0px",
-                          },
-                          "& .MuiInput-underline:before": {
-                            border: "none !important", // Hide the underline (if using underline variant)
-                          },
-                          "& .MuiInput-underline:after": {
-                            borderBottom: "none !important", // Hide the underline (if using underline variant)
-                          },
-                        }}
-                        // InputProps={{
-                        //   endAdornment: (
-                        //     <InputAdornment position="start">
-                        //       <Link to="#">
-                        //         <img
-                        //           src={penIcon}
-                        //           alt="pen-icon"
-                        //           className="h-[2.5rem] w-[2.5rem]"
-                        //         />{" "}
-                        //       </Link>{" "}
-                        //     </InputAdornment>
-                        //   ),
-                        // }}
-                      />
+                            "&:focus-within": {
+                              border: "1px solid blue", // Show border when focused
+                            },
+                            "& .MuiInputBase-input": {
+                              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
+                              border: "none", // Hide the border of the input element
+                              padding: "0px",
+                              paddingTop: "0px",
+                            },
+                            "& .MuiInput-underline:before": {
+                              border: "none !important", // Hide the underline (if using underline variant)
+                            },
+                            "& .MuiInput-underline:after": {
+                              borderBottom: "none !important", // Hide the underline (if using underline variant)
+                            },
+                          }}
+                          // InputProps={{
+                          //   endAdornment: (
+                          //     <InputAdornment position="start">
+                          //       <Link to="#">
+                          //         <img
+                          //           src={penIcon}
+                          //           alt="pen-icon"
+                          //           className="h-[2.5rem] w-[2.5rem]"
+                          //         />{" "}
+                          //       </Link>{" "}
+                          //     </InputAdornment>
+                          //   ),
+                          // }}
+                        />
+                        <span className="text-left text-[11px] text-red pt-[5px] absolute left-0 top-[92%]">
+                          {nameError}
+                        </span>
+                      </div>
+
                       <div
                         className="border-[0.5px] w-max border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
                      justify-center gap-10"

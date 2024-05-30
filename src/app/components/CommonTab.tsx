@@ -51,7 +51,7 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
         </div>
         <div>{tabs.find((tab) => tab.id === activeTab)?.actionBtn()}</div>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 pb-1">
         {tabs.find((tab) => tab.id === activeTab)?.content}
       </div>
     </div>

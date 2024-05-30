@@ -52,11 +52,16 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const location: Location = useLocation();
-  const { clientDetail, actionStatus, fetchStatus, assignAccManagerDetail } =
-    useSelector((store: ClientRootState) => store?.client);
+  const {
+    clientDetail,
+    actionStatus,
+    fetchStatus,
+    assignAccManagerDetail,
+  } = useSelector((store: ClientRootState) => store?.client);
   // console.log(assignAccManagerDetail, "detailsffffs");
   const { role } = useSelector((store: any) => store?.user);
   const { searchAgentList } = useSelector(
@@ -451,7 +456,7 @@ export default function ClientDetail() {
             }}
           >
             <PlusIcon color={theme.palette.secondary.main} />
-            Add Subscription
+            Add a subscription
           </Button>
         )}
       </TitleBar>
