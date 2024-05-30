@@ -98,12 +98,12 @@ export default function ClientDetail() {
         agent_ids: checkedItems,
       })
     );
-    dispatch(
-      GetAssignAgentsInfo({
-        client_id,
-        agentfilterMenu,
-      })
-    );
+    // dispatch(
+    //   GetAssignAgentsInfo({
+    //     client_id,
+    //     agentfilterMenu,
+    //   })
+    // );
     handleClose();
     setIsOpenEditModal(false);
 
@@ -218,6 +218,9 @@ export default function ClientDetail() {
       })
     );
   };
+  const unAssignAgent=()=>{
+    
+  }
 
   useEffect(() => {
     callAgentApi();

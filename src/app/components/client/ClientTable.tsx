@@ -104,7 +104,6 @@ function ClientTable({
                   <NoDataFound />
                   <Typography className="text-[24px] text-center font-600 leading-normal">
                     No data found !
-                   
                   </Typography>
                 </div>
               </TableCell>
@@ -172,7 +171,7 @@ function ClientTable({
                       className="whitespace-nowrap font-500"
                     >
                       <span
-                        className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                        className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
                         ${
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
