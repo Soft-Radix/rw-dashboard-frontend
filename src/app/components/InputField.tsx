@@ -105,7 +105,7 @@ function InputField({
         )}
       </div>
 
-      {!hideTopPadding && (
+      {!hideTopPadding && name != "group_name" && (
         <div>
           <span className=" text-red pt-[9px]  block ">
             {formik?.errors[name ?? ""] &&
