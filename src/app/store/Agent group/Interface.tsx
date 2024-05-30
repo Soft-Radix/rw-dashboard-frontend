@@ -9,6 +9,7 @@ export interface AgentGroupType {
   members_count?: number;
   group_members?: any[];
   actionStatus?: boolean;
+  fetchStatus?: string;
 }
 
 export interface filterType {

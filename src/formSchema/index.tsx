@@ -136,6 +136,7 @@ const editAgentSchema = Yup.object({
     }),
   address: Yup.string()
     .required("Address is required")
+
     .test("no-initial-space", noSpaceMessage, noInitialSpace),
 });
 // const AgentGroupSchema = Yup.object({
@@ -168,7 +169,7 @@ const accManagerSchema = Yup.object({
     }), // ,
   address: Yup.string()
     .required("Address is required")
-    .matches(/^\S+$/, noSpaceMessage),
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 
 export {
