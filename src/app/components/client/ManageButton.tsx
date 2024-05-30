@@ -44,7 +44,7 @@ export default function ManageButton() {
       <Button
         onClick={handleClick}
         variant="contained"
-        className="bg-[#F6F6F6] min-w-[250px] min-h-[45px] rounded-[8px] flex items-center justify-between text-[12px] font-400 text-[#757982]"
+        className="bg-[#F6F6F6] min-w-[250px] min-h-[45px] rounded-[8px] flex items-center justify-between  font-400 text-[#757982]"
         sx={{ border: isOpen ? "1px solid #4F46E5" : "none" }}
       >
         Manage Columns

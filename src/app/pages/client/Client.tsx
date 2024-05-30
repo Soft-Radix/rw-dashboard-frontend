@@ -173,6 +173,10 @@ export default function Clients() {
             "& .MuiInput-underline:after": {
               borderBottom: "none !important", // Hide the underline (if using underline variant)
             },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#757982", // Change placeholder color here
+              opacity: 1, // Override opacity
+            },
           }}
           InputProps={{
             startAdornment: (

@@ -4,10 +4,11 @@ const noSpaceMessage = "No spaces allowed";
 const maxWords = 20;
 const tooManyWordsMessage = `First name can have a maximum of ${maxWords} words`;
 const maxLengthFirstMessage =
-  "First name should be less than or equal to 20 characters";
+  "First name should be less than or equal to 20 characters.";
 const maxLengthLastMessage =
-  "Last name should be less than or equal to 20 characters";
-const maxLengthGroupMessage = "This field can have a maximum of 30 characters";
+  "Last name should be less than or equal to 20 characters.";
+const maxLengthGroupMessage =
+  "It should be less than or equal to 30 characters.";
 const noInitialSpace = (value) => !value.startsWith(" ");
 
 const emailField = {
@@ -165,7 +166,9 @@ const accManagerSchema = Yup.object({
       message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,
     }), // ,
-  address: Yup.string().required("Address is required"),
+  address: Yup.string()
+    .required("Address is required")
+    .matches(/^\S+$/, noSpaceMessage),
 });
 
 export {
