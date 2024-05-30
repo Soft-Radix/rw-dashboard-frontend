@@ -112,7 +112,7 @@ function CustomLineModal({
         <CommonTable headings={["Name", "Description", "Unit Price"]}>
           {list?.map((row, index) => (
             <TableRow key={index}>
-              <TableCell scope="row" className="font-500">
+              <TableCell scope="row" className="font-500 px-[6px]">
                 <div className="py-2 flex " style={{ alignItems: "center" }}>
                   <Checkbox onChange={(e) => handleSelect(e, row)} />
                   <TruncateText text={row.name} maxWidth={200} />

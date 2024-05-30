@@ -1058,13 +1058,12 @@ export default function AddSubscription() {
                         paddingTop: "12px",
                         paddingBottom: "12px",
                         color: theme.palette.primary.main,
-                        textAlign: "center",
                       },
                     }}
                   >
                     <TableCell
                       scope="row"
-                      className="font-500 whitespace-nowrap"
+                      className="font-500 whitespace-nowrap pl-[20px]"
                     >
                       <TruncateText text={row.name} maxWidth={200} />
                     </TableCell>
