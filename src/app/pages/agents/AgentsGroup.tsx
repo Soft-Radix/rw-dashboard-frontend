@@ -64,11 +64,7 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-  const [filterss, setfilterss] = useState<filterType>({
-    start: 0,
-    limit: 10,
-    search: "",
-  });
+
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
     setfilters((prevFilters) => {
@@ -121,20 +117,10 @@ export default function AgentsGroup() {
     fetchAgentGroupList();
     return () => {};
   }, [fetchAgentGroupList]);
-  // useEffect(() => {
-  //   if (agentGroupState) {
-  //     setValues: agentGroupState.group_name;
-  //   }
-  // });
-  // useEffect(() => {
-  //   dispatch(getAgentList({ filters, group_id: group_id }));
 
-  //   // console.log(filters, "filters");
-  // }, [filters]);
-
-  if (agentGroupState?.status == "loading") {
-    return <ListLoading />;
-  }
+  // if (agentGroupState?.status == "loading") {
+  //   return <ListLoading />;
+  // }
 
   return (
     <>
@@ -196,6 +182,12 @@ export default function AgentsGroup() {
                   </div>
                 </TableCell>
               </TableRow>
+            ) : agentGroupState.status === "loading" ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
+                </TableCell>
+              </TableRow>
             ) : (
               <>
                 {agentGroupState?.list?.map((row, index) => {
@@ -212,7 +204,9 @@ export default function AgentsGroup() {
                         },
                       }}
                     >
-                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell scope="row" className="px-[20px]">
+                        {row.id}
+                      </TableCell>
                       <TableCell align="center" className="whitespace-nowrap">
                         {row.group_name}
                       </TableCell>

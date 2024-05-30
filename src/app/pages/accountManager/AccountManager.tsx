@@ -106,14 +106,6 @@ export default function AccountManager() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
-  // if (payload?.data?.status) {
-  //   setManagerFilterMenu((prevFilters) => ({
-  //     ...prevFilters,
-  //     start: assignAccManagerDetail.length - 1 == 0 ? 0 : prevFilters.start,
-  //   }));
-  //   dispatch(
-  //     getAccManagerList({ ...managerfilterMenu, client_id: client_id })
-  //   );
 
   const deleteAccManagerList = async (id: any) => {
     if (!!accManagerState.actionStatus || !id) return;
@@ -135,9 +127,9 @@ export default function AccountManager() {
     }
   };
 
-  if (accManagerState.status === "loading") {
-    return <ListLoading />;
-  }
+  // if (accManagerState.status === "loading") {
+  //   return <ListLoading />;
+  // }
 
   return (
     <>
@@ -196,6 +188,12 @@ export default function AccountManager() {
                   </div>
                 </TableCell>
               </TableRow>
+            ) : accManagerState.status === "loading" ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
+                </TableCell>
+              </TableRow>
             ) : (
               <>
                 {accManagerState?.list?.length > 0 &&
@@ -211,7 +209,10 @@ export default function AccountManager() {
                         },
                       }}
                     >
-                      <TableCell scope="row" className="text-[14px] font-500">
+                      <TableCell
+                        scope="row"
+                        className="text-[14px] font-500 px-[20px]"
+                      >
                         {row.id}
                       </TableCell>
                       <TableCell
@@ -243,8 +244,8 @@ export default function AccountManager() {
                         row.status === "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]"
                           : row.status === "Suspended"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : "text-[#4CAF50] bg-[#4CAF502E]"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : "text-[#4CAF50] bg-[#4CAF502E]"
                       }`}
                         >
                           {row.status || "Active"}
@@ -292,7 +293,7 @@ export default function AccountManager() {
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteAccManagerList(deleteId)}
         heading={"Delete Account Manager"}
-        description={"Are you sure you want to delete this Account Manager  ? "}
+        description={"Are you sure you want to delete this Account Manager? "}
       />
     </>
   );
