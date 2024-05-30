@@ -165,7 +165,7 @@ export default function AgentsList() {
                     },
                   }}
                 >
-                  <TableCell scope="row" className="font-500">
+                  <TableCell scope="row" className="font-500 pl-[20px]">
                     {row.id}
                   </TableCell>
                   <TableCell
@@ -204,8 +204,8 @@ export default function AgentsList() {
                     row.status === "Completed"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status === "In Progress"
-                      ? "text-[#F44336] bg-[#F443362E]"
-                      : "text-[#4CAF50] bg-[#4CAF502E]"
+                        ? "text-[#F44336] bg-[#F443362E]"
+                        : "text-[#4CAF50] bg-[#4CAF502E]"
                   }`}
                     >
                       {row.status || "Active"}

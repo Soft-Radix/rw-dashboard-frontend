@@ -120,6 +120,7 @@ function AddAccountManagerModel({
           account_manager_id: accountManager_id,
         })
       );
+      setIsOpen((prev) => !prev);
     } else {
       formData.append("first_name", values.first_name);
       formData.append("last_name", values.last_name);
@@ -138,10 +139,9 @@ function AddAccountManagerModel({
 
     if (payload?.data?.status) {
       resetForm();
-
-      setIsOpen(false);
     }
     fetchManagerList();
+    setIsOpen((prev) => !prev);
   };
 
   const formik = useFormik({
@@ -158,22 +158,14 @@ function AddAccountManagerModel({
   useEffect(() => {
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
-      setIsOpen(false);
-      formik.resetForm();
+      setIsOpen((prev) => !prev), formik.resetForm();
       // fetchManagerList();
     } else if (!!accmanagerState?.errorMsg) {
-      setIsOpen(true);
+      setIsOpen((prev) => !prev);
       // dispatch(restAll());
     }
   }, [accmanagerState]);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    setIsOpen(true);
-  };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const handleMenuItemClick = (data: ClientType) => {
     if (data.userName === "All") {
@@ -252,6 +244,7 @@ function AddAccountManagerModel({
       }
     }
   }, [accManagerDetail, isOpen]);
+  console.log("🚀 ~ isOpen:", isOpen);
 
   return (
     <CommonModal

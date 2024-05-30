@@ -139,7 +139,7 @@ export default function AgentDetails() {
           <Grid item xs={12} sm={12} md={9} className="">
             <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
               <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
-                <div className="flex gap-40 flex-wrap">
+                <div className="flex gap-40">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                     {/* <img src="../assets/images/pages/agent/luis_.jpg" /> */}
                     <img
@@ -442,7 +442,7 @@ export default function AgentDetails() {
           setIsOpen={setIsOpenDeletedModal}
           onDelete={() => handleDeleteAttachment(deleteId)}
           heading={"Delete Attachment"}
-          description={"Are you sure you want to delete this attachment ? "}
+          description={"Are you sure you want to delete this attachment? "}
         />
       </div>
     </>

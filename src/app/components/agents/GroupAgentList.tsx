@@ -43,6 +43,7 @@ import {
 } from "app/store/Agent group/Interface";
 import DeleteClient from "../client/DeleteClient";
 import { filterType } from "app/store/Client/Interface";
+import { AgentGroupSchema } from "src/formSchema";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
@@ -105,6 +106,7 @@ export default function GroupAgentsList() {
     initialValues: {
       group_name: "",
     },
+    validationSchema: AgentGroupSchema,
     onSubmit,
   });
 
@@ -283,7 +285,7 @@ export default function GroupAgentsList() {
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteGroup(deleteId)}
         heading={"Delete Agent"}
-        description={"Are you sure you want to delete this Agent  ? "}
+        description={"Are you sure you want to delete this Agent? "}
       />
     </>
   );
