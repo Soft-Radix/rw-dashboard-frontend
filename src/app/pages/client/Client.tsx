@@ -349,7 +349,7 @@ export default function Clients() {
           {selectedIds?.length > 0 && (
             <Button
               variant="contained"
-              className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
+              className="h-[40px] text-[16px] font-600 flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
               aria-label="delete"
               size="large"
               onClick={() => setIsOpenDeletedModal(true)}
