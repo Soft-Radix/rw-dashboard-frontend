@@ -938,11 +938,7 @@ export default function AddSubscription() {
   useEffect(() => {
     frequencyModeValue = getAdjustedTime(Number(frequencyMode));
   }, [frequencyMode]);
-  console.log(
-    "🚀 ~ useEffect ~ frequencyModeValue:",
-    frequencyModeValue,
-    frequencyMode
-  );
+
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -1173,7 +1169,10 @@ export default function AddSubscription() {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
+                    <TableCell
+                      align="center"
+                      className="border-solid whitespace-nowrap font-500 border-1"
+                    >
                       <div className="relative">
                         <InputField
                           name={"unit_price"}
@@ -1193,15 +1192,15 @@ export default function AddSubscription() {
                           ) => {
                             handleChange(index)(event);
                           }}
-                          className="m-auto common-inputField w-max"
+                          className="m-auto common-inputField w-max "
                           inputProps={{
                             className: "ps-[1rem] max-w-[90px] m-auto ",
+                            placeholderTextColor: "#111827 !important",
                           }}
                           hideTopPadding={true}
                           sx={{
-                            "&  .MuiInputBase-input": {
+                            "& .MuiInputBase-input": {
                               border: "0.5px solid #9DA0A6",
-                              height: 44,
                               "::placeholder": {
                                 color: "#111827 !important", // Set placeholder color
                                 opacity: 1,
