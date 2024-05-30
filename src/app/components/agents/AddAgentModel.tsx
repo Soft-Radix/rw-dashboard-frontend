@@ -242,7 +242,7 @@ function AddAgentModel({
           htmlFor="file-input" // The label triggers the file input when clicked
           className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer"
         >
-          <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+          <span className="absolute bottom-[-2px] right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
             <FuseSvgIcon className="text-white" size={20}>
               heroicons-outline:camera
             </FuseSvgIcon>
