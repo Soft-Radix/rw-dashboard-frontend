@@ -572,7 +572,7 @@ export const clientSlice = createSlice({
       .addCase(getClientList.fulfilled, (state, action) => {
         const response = action.payload?.data;
         state.status = "idle";
-        if (!response.status) {
+        if (!response?.status) {
           toast.error(response?.message);
         } else {
           state.list = response?.data?.list || [];
@@ -770,7 +770,11 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
-  clientSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  updateSelectedColumn,
+  sortColumn,
+} = clientSlice.actions;
 
 export default clientSlice.reducer;

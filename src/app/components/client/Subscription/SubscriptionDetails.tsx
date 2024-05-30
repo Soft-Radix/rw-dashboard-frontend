@@ -15,6 +15,8 @@ import ItemTable from "./ItemTable";
 import PaymentSubscriptio from "./PaymentSubscriptio";
 import SubLogTable from "./SubLogTable";
 import { subscriptionDetails } from "app/store/Client";
+import { getAdjustedDate } from "src/utils";
+import moment from "moment";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -88,8 +90,6 @@ export default function SubscriptionDetails() {
     fetchData();
   }, [dispatch]);
 
-  console.log("======rows===", rows);
-
   const StatusMapping = (status) => {
     if (status == 0) {
       return "Pending";
@@ -104,6 +104,11 @@ export default function SubscriptionDetails() {
     }
   };
 
+  const FutureDate = getAdjustedDate(
+    new Date(rows?.subscription_start_date),
+    Number(rows?.billing_frequency)
+  );
+  console.log("🚀 ~ FutureDate:", FutureDate);
   return (
     <>
       <TitleBar title="Subscriptions Details"></TitleBar>
@@ -228,8 +233,43 @@ export default function SubscriptionDetails() {
 
               <Grid item lg={12} className="basis-full mt-[30px]"></Grid>
             </Grid>
-            <PaymentSubscriptio />
+            <Typography
+              variant="h6"
+              className="mb-4 text-[20px] font-600 text-[#0A0F18] py-20 px-20"
+            >
+              Credit card
+            </Typography>
+            {/* <PaymentSubscriptio /> */}
             <Grid container spacing="26px" className="">
+              <Grid item lg={6} className="basis-full">
+                {" "}
+                {/* <PaymentSubscriptio />
+                 */}
+                <div className=" ">
+                  <div
+                    className="p-16 pe-20 rounded-[10px] bg-bgGrey basis-full lg:basis-[calc(50%_-_16px)]"
+                    // key={index}
+                  >
+                    <div className="flex items-center gap-[1.8rem]">
+                      <div className="w-[86px] h-[68px] rounded-8 bg-white flex items-center justify-center shrink-0">
+                        <img
+                          src="/assets/images/pages/billing/visa.svg"
+                          className="max-w-[64px]"
+                          alt="visa"
+                        />
+                      </div>
+                      <div className="flex items-start justify-between gap-10 grow">
+                        <div>
+                          <h4 className="text-title text-xl font-700 mb-8">
+                            **** **** **** 2020
+                          </h4>
+                          <p className="text-lg text-title_light">Visa</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Grid>
               <Grid item lg={6} className="basis-full">
                 <Link to="/change-password" className="contents">
                   <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey">
@@ -241,8 +281,10 @@ export default function SubscriptionDetails() {
                         Last payment amount and date
                       </Typography>
                       <p className="text-para_light">
-                        <span className="text-secondary">$230</span>, Feb 23,
-                        2024
+                        <span className="text-secondary">
+                          ${rows?.total_price}
+                        </span>
+                        , {rows?.subscription_start_date}
                       </p>
                     </div>
                     <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
@@ -261,7 +303,10 @@ export default function SubscriptionDetails() {
                       Next payment amount and date
                     </Typography>
                     <p className="text-para_light">
-                      <span className="text-secondary">$230</span>, Feb 23, 2024
+                      <span className="text-secondary">
+                        ${rows?.total_price},{" "}
+                      </span>
+                      {!FutureDate ? "Paid" : moment(FutureDate).format("LL")}
                     </p>
                   </div>
                   <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
@@ -273,7 +318,7 @@ export default function SubscriptionDetails() {
           </Box>
         </div>
       </div>
-      <ItemTable />
+      <ItemTable row={rows} />
       <SubLogTable />
       <AddAgentModel
         isOpen={isOpenAddModal}

@@ -1,4 +1,5 @@
 import { MenuItem, styled } from "@mui/material";
+import { addMonths, addYears } from "date-fns";
 
 type SelectProp = {
   value: string;
@@ -55,6 +56,59 @@ export const MonthlyOptions: SelectProp[] = [
   { value: "5", label: "Annually" },
   // { value: "Add weekly and bi-weekly", label: "Add weekly and bi-weekly" },
 ];
+
+export function getLabelByValue(value: string): string {
+  const option = MonthlyOptions.find((option) => option.value == value);
+  return option ? option.label : "--";
+}
+
+export function getAdjustedDate(date: Date, value: any): Date {
+  switch (value) {
+    case 1:
+      return null;
+    case 2:
+      return addMonths(date, 1);
+    case 3:
+      return addMonths(date, 3);
+    case 4:
+      return addMonths(date, 6);
+    case 5:
+      return addYears(date, 1);
+    default:
+  }
+}
+
+export function getAdjustedTime(value: any): string {
+  switch (value) {
+    case 1:
+      return "";
+    case 2:
+      return "1 month";
+    case 3:
+      return "3 months";
+    case 4:
+      return "6 months";
+    case 5:
+      return "1 year";
+    default:
+  }
+}
+export function getAdjusted(value: any): string {
+  switch (value) {
+    case 1:
+      return "One time";
+    case 2:
+      return "Month";
+    case 3:
+      return "Quarterly";
+    case 4:
+      return "Semi annually";
+    case 5:
+      return "Annually";
+    default:
+  }
+}
+
 export const EmployOptions: SelectProp[] = [
   { value: "1", label: "One time" },
   { value: "2", label: "Monthly" },
