@@ -56,10 +56,10 @@ function CommonTable({
                   100 / headings?.length
                 }%]`}
                 key={index}
-                // align={
-                //   headings.length === index || index === 0 ? "left" : "center"
-                // }
-                align ={"center"}
+                align={
+                  headings.length === index || index === 0 ? "left" : "center"
+                }
+                // align ={"center"}
               >
                 {isSorting ? (
                   <div className="flex items-center">
