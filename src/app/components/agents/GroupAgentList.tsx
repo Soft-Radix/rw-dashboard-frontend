@@ -186,12 +186,13 @@ export default function GroupAgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <form onSubmit={formik.handleSubmit}>
-            <div className="p-[2rem]   flex items-end gap-20 flex-col sm:flex-row w-full">
+            <div className="p-[2rem] flex items-end gap-20 flex-col sm:flex-row w-full">
               {/* Use formik.handleSubmit as the onSubmit handler */}
               <div className="relative">
                 <InputField
                   formik={formik}
                   name="group_name"
+                  id="group_name"
                   label="Group Name"
                 />
                 <div className="absolute left-0 top-[97%]">

@@ -163,7 +163,7 @@ const editAgentSchema = Yup.object({
     .required("Phone number is required")
     .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
-      message: "Invalid phone number",
+      message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,
     }),
   address: Yup.string()
@@ -190,6 +190,15 @@ const AgentGroupSchema = Yup.object({
     )
     .max(30, "Group name cannot be longer than 30 characters"),
 });
+const AddAgentGroupSchema = Yup.object({
+  group_names: Yup.string()
+    .required("Group name is required")
+    .matches(
+      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+      "Group name should only contain letters and single spaces between words, with no initial spaces"
+    )
+    .max(30, "Group name cannot be longer than 30 characters"),
+});
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
@@ -202,7 +211,7 @@ const accManagerSchema = Yup.object({
     .required("Last name is required")
     .matches(
       /^[A-Za-z]+$/,
-      "First name should only contain letters and no spaces"
+      "Last name should only contain letters and no spaces"
     )
     .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
@@ -232,4 +241,5 @@ export {
   AgentGroupSchema,
   accManagerSchema,
   editClientSchema,
+  AddAgentGroupSchema,
 };
