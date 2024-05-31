@@ -171,19 +171,13 @@ const noInitialSpaceMessage = "Group name cannot start with a space";
 const AgentGroupSchema = Yup.object({
   group_name: Yup.string()
     .required("Group name is required")
-    .matches(
-      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
-      "Group name cannot start with a space"
-    )
+    .matches(/^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/, "No spaces allowed")
     .max(30, "Group name should be less than or equal to 30 characters"),
 });
 const AddAgentGroupSchema = Yup.object({
   group_names: Yup.string()
     .required("Group name is required")
-    .matches(
-      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
-      "Group name should only contain letters and single spaces between words, with no initial spaces"
-    )
+    .matches(/^[A-Za-z0-9]+(?: [A-Za-z0-9]+)*$/, "No spaces allowed")
     .max(30, "Group name should be less than or equal to 30 characters"),
 });
 const accManagerSchema = Yup.object({
