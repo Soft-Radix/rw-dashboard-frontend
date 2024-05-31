@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { AgentGroupSchema } from "src/formSchema";
+import { AddAgentGroupSchema, AgentGroupSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import { debounce } from "lodash";
@@ -57,9 +57,9 @@ function AddGroupModel({
   // const {searchAgentList}=useSelector(store:roo)
 
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    // console.log(values, "valauuuu");
-
-    const { payload } = await dispatch(addAgentGroup(values));
+    const { payload } = await dispatch(
+      addAgentGroup({ group_name: values?.group_names })
+    );
     // console.log(payload, "payload");
 
     if (payload?.data?.status) {
@@ -106,9 +106,9 @@ function AddGroupModel({
 
   const formik = useFormik({
     initialValues: {
-      group_name: "",
+      group_names: "",
     },
-    validationSchema: AgentGroupSchema,
+    validationSchema: AddAgentGroupSchema,
     onSubmit,
   });
   const debouncedSearch = debounce((searchValue) => {
@@ -142,10 +142,10 @@ function AddGroupModel({
 
   const handleToggle = (e: React.MouseEvent) => {
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
-    setFilterMenu((prevFilters) => ({
-      ...prevFilters,
-      search: "",
-    }));
+    // setFilterMenu((prevFilters) => ({
+    //   ...prevFilters,
+    //   search: "",
+    // }));
     setCheckedItems([]);
     setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
@@ -158,7 +158,7 @@ function AddGroupModel({
     }
   }, [checkedItems]);
 
-  console.log(isNewAgent, "isNewAgent");
+  console.log(formik.errors, "formik");
 
   return (
     <CommonModal
@@ -216,7 +216,8 @@ function AddGroupModel({
         ) : (
           <InputField
             formik={formik}
-            name="group_name"
+            name="group_names"
+            id="group_names"
             label="Group Name"
             placeholder="Enter Group Name"
           />

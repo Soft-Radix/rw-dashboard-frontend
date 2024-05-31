@@ -22,7 +22,7 @@ function DeleteProduct({
     <>
       <CommonModal
         open={isOpen}
-        handleToggle={() => setIsOpen((prev) => !prev)}
+        handleToggle={() => setIsOpen(false)}
         modalTitle="Delete Product"
         maxWidth="310"
         DeleteModal={true}

@@ -266,11 +266,28 @@ function AddAgentModel({
         </div>
         <div className="flex gap-20 sm:flex-row flex-col">
           <InputField
+            type="number"
             formik={formik}
             name="phone_number"
             label="Phone Number"
             placeholder="Enter Phone Number"
-            sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
+            sx={{
+              backgroundColor: "#F6F6F6",
+              borderRadius: "8px",
+              "& input[type=number]": {
+                "-moz-appearance": "textfield", // Firefox
+                "&::-webkit-outer-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+                "&::-webkit-inner-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+              },
+            }}
           />
           <InputField
             formik={formik}

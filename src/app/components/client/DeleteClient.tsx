@@ -43,7 +43,7 @@ function DeleteClient({
     <>
       <CommonModal
         open={isOpen}
-        handleToggle={() => setIsOpen((prev) => !prev)}
+        handleToggle={() => setIsOpen(false)}
         modalTitle="Add Client"
         maxWidth="310"
         DeleteModal={true}

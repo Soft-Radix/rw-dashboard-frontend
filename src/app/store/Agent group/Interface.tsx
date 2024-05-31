@@ -1,6 +1,7 @@
 export interface AgentGroupType {
   group_id?: number;
   group_name?: string;
+  group_names?: string;
   id?: number;
   deleted_at?: string;
   createdAt?: string;

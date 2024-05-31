@@ -26,7 +26,7 @@ function DeleteModal({
     <>
       <CommonModal
         open={isOpen}
-        handleToggle={() => setIsOpen((prev) => !prev)}
+        handleToggle={() => setIsOpen(false)}
         modalTitle="Delete Line Item"
         maxWidth="310"
         DeleteModal={true}

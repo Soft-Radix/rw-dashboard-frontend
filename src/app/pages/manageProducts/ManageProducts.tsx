@@ -125,12 +125,17 @@ export default function ManageProducts() {
       };
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
-      setDisable(false);
+
       fetchData();
       setIsOpenDeletedModal(false);
+
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
+      // toast.dismiss();
       setIsDeleteId(null);
+      setTimeout(() => {
+        setDisable(false);
+      }, 500);
     } catch (error) {
       setDisable(false);
       console.error("Error fetching data:", error);
@@ -146,6 +151,7 @@ export default function ManageProducts() {
       setId(null);
       fetchData();
       toast.success(res?.payload?.data?.message);
+      // toast.dismiss();
     } catch (error) {
       console.error("Error fetching data:", error);
     }

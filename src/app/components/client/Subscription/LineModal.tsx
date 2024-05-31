@@ -57,7 +57,8 @@ const validationSchema = Yup.object({
       "Name cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(50, "Name should be less than or equal to 50 characters"),
+    .max(50, "Name should be less than or equal to 50 characters")
+    .matches(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces"),
   description: Yup.string()
     .transform((value) => (value ? value.trim() : ""))
     .required("Description is required")
@@ -66,7 +67,11 @@ const validationSchema = Yup.object({
       "Description cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(500, "Description should be less than or equal to 500 characters "),
+    .max(500, "Description should be less than or equal to 500 characters ")
+    .matches(
+      /^[A-Za-z\s]+$/,
+      "Description can only contain letters and spaces"
+    ),
 
   unit_price: Yup.number()
     .required("Unit Price is required")
@@ -235,7 +240,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
   const tomorrowStr = `${yyyy}-${mm}-${dd}`;
-  
+
   useEffect(() => {
     if (formik.values?.billing_start_date) {
       const validation = validateBillingStartDate(
