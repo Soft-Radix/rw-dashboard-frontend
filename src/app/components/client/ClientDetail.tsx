@@ -134,12 +134,12 @@ export default function ClientDetail() {
   });
   const [agentfilterMenu, setAgentFilterMenu] = useState<filterType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
   const [managerfilterMenu, setManagerFilterMenu] = useState<filterType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
   const [checkedItems, setCheckedItems] = useState([]);
@@ -218,9 +218,7 @@ export default function ClientDetail() {
       })
     );
   };
-  const unAssignAgent=()=>{
-    
-  }
+  const unAssignAgent = () => {};
 
   useEffect(() => {
     callAgentApi();

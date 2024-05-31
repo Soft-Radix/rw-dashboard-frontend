@@ -48,6 +48,7 @@ import { ClientRootState } from "app/store/Client/Interface";
 import { addsubscription, subscriptionList } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
+import { NumericFormat } from "react-number-format";
 
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -700,7 +701,7 @@ export default function AddSubscription() {
 
         return netPrice.toFixed(2);
       } else if (mode == "2") {
-        const netPrice = quantity * (price - discount);
+        const netPrice = quantity * price - discount;
 
         return netPrice.toFixed(2);
       }
@@ -717,7 +718,7 @@ export default function AddSubscription() {
     const formatToTwoDecimalsAndMaxSixDigits = (num: string) => {
       // Ensure that the total number of digits does not exceed 6
       if (num.length > 6 && !num.includes(".")) {
-        return num.slice(0, 6);
+        return num?.slice(0, 6);
       }
 
       const regex = /^\d{0,6}(\.\d{0,2})?$/;
@@ -726,8 +727,8 @@ export default function AddSubscription() {
       } else {
         // Limit input to 2 decimal places without altering the preceding digits
         const parts = num.split(".");
-        const integerPart = parts[0].slice(0, 6);
-        const decimalPart = parts.length > 1 ? parts[1].substring(0, 2) : "";
+        const integerPart = parts[0]?.slice(0, 6);
+        const decimalPart = parts?.length > 1 ? parts[1].substring(0, 2) : "";
         return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
       }
     };
@@ -977,24 +978,25 @@ export default function AddSubscription() {
   }, [frequencyMode]);
 
   const inputRef = useRef(null);
+
   useEffect(() => {
-    const handleWheel = (event: WheelEvent) => {
-      if (inputRef.current && inputRef.current.type === "number") {
-        event.preventDefault();
+    const handleWheel = (event) => {
+      const activeElement = document.activeElement as HTMLInputElement;
+      if (
+        activeElement.tagName === "INPUT" &&
+        activeElement.type === "number" &&
+        activeElement.classList.contains("noscroll")
+      ) {
+        activeElement.blur();
       }
     };
 
-    if (inputRef.current) {
-      inputRef.current.addEventListener("wheel", handleWheel);
-    }
+    document.addEventListener("wheel", handleWheel);
 
     return () => {
-      if (inputRef.current) {
-        inputRef.current.removeEventListener("wheel", handleWheel);
-      }
+      document.removeEventListener("wheel", handleWheel);
     };
-  }, []);
-
+  }, [list]);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
@@ -1115,6 +1117,20 @@ export default function AddSubscription() {
                             "& .MuiSelect-select": {
                               minHeight: "0rem !important",
                             },
+                            "& .MuiOutlinedInput-notchedOutline": {
+                              borderColor: "transparent",
+                              border: "0.5px solid #9DA0A6",
+                            },
+                            "&:hover .MuiOutlinedInput-notchedOutline": {
+                              borderWidth: "1px",
+                              border: "0.5px solid #9DA0A6",
+                            },
+                            "&.Mui-focused": {
+                              "& .MuiOutlinedInput-notchedOutline": {
+                                borderWidth: "1px",
+                                border: "0.5px solid #9DA0A6",
+                              },
+                            },
                           }}
                           displayEmpty
                           inputProps={{ "aria-label": "Without label" }}
@@ -1174,40 +1190,34 @@ export default function AddSubscription() {
                       align="center"
                       className="border-solid whitespace-nowrap font-500 border-1 "
                     >
-                      <div className="relative">
-                        <InputField
-                          name={"quantity"}
+                      <div className="relative common-inputField">
+                        <input
+                          name="quantity"
                           type="number"
-                          formik={formik}
-                          placeholder={"0"}
-                          className="m-auto common-inputField w-max "
-                          inputProps={{
-                            className: "ps-[1rem] max-w-[90px] m-auto ",
-                            placeholderTextColor: "#111827 !important",
-                          }}
-                          hideTopPadding={true}
+                          ref={inputRef}
+                          // hidden
+                          defaultValue=""
+                          placeholder="0"
                           value={
-                            row.quantity != 0 ||
-                            row.quantity != "" ||
-                            row.quantity != null
+                            row.quantity !== 0 && row.quantity !== ""
                               ? row.quantity
                               : ""
                           }
-                          onChange={(
-                            event: React.ChangeEvent<HTMLInputElement>
-                          ) => {
-                            handleChange(index)(event);
+                          onChange={(event) => handleChange(index)(event)}
+                          className="m-auto common-inputField w-max noscroll"
+                          min={0}
+                          style={{
+                            padding: "0.25rem 14px",
+                            maxWidth: "111px",
+                            margin: "auto",
+                            border: "0.5px solid #9DA0A6",
+                            borderRadius: "7px",
+                            color: "#111827",
+                            minWidth: "46px",
                           }}
-                          sx={{
-                            "& .MuiInputBase-input": {
-                              border: "0.5px solid #9DA0A6",
-                              "::placeholder": {
-                                color: "#111827 !important", // Set placeholder color
-                                opacity: 1,
-                              },
-                            },
-                          }}
+                          onWheel={(event) => event.currentTarget.blur()}
                         />
+
                         {quantityError[index] && (
                           <span
                             style={{
@@ -1231,8 +1241,30 @@ export default function AddSubscription() {
                       align="center"
                       className="border-solid whitespace-nowrap font-500 border-1"
                     >
-                      <div className="relative">
-                        <InputField
+                      <div className="relative common-inputField">
+                        <input
+                          name="unit_price"
+                          type="number"
+                          value={
+                            row.unit_price != 0 && row.unit_price != ""
+                              ? row.unit_price
+                              : ""
+                          }
+                          onChange={(event) => handleChange(index)(event)}
+                          className="m-auto common-inputField w-max noscroll"
+                          placeholder="$00.00"
+                          style={{
+                            padding: "0.25rem 14px",
+                            maxWidth: "111px",
+                            margin: "auto",
+                            border: "0.5px solid #9DA0A6",
+                            borderRadius: "7px",
+                            color: "#111827",
+                            minWidth: "46px",
+                          }}
+                          min={0}
+                        />
+                        {/* <InputField
                           name={"unit_price"}
                           type="number"
                           placeholder={"$00.00"}
@@ -1254,6 +1286,7 @@ export default function AddSubscription() {
                           inputProps={{
                             className: "ps-[1rem] max-w-[90px] m-auto ",
                             placeholderTextColor: "#111827 !important",
+                            min: 0,
                           }}
                           hideTopPadding={true}
                           sx={{
@@ -1265,7 +1298,7 @@ export default function AddSubscription() {
                               },
                             },
                           }}
-                        />
+                        /> */}
                         {unitPriceError[index] && (
                           <span
                             style={{
@@ -1294,8 +1327,8 @@ export default function AddSubscription() {
                         className=" min-h-[48px] border-[0.5px] border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
                      justify-center gap-10"
                       >
-                        <div className="unit_discount">
-                          <Select
+                        <div className="  border-r-1 border-solid border-[#9DA0A6] ">
+                          <SelectField
                             // formik={formik}
                             name="unit_discount_type"
                             defaultValue={"1"}
@@ -1315,18 +1348,8 @@ export default function AddSubscription() {
                             // }
                             sx={{
                               height: "46px",
-                              "& .MuiInputBase-root": {
-                                borderRadius: 60,
-
-                                minHeight: "0px !important",
-                              },
                               "&.MuiSelect-selectMenu": {
                                 paddingRight: "0px !important", // Adjust padding for the select menu
-                                border: "none",
-                                borderRadius: "0",
-                              },
-                              "& .MuiSelect-select": {
-                                minHeight: "0rem !important",
                               },
                             }}
                           >
@@ -1338,57 +1361,33 @@ export default function AddSubscription() {
                                 {item.label}
                               </StyledMenuItem>
                             ))}
-                          </Select>
+                          </SelectField>
                         </div>
-                        <div className="flex-1">
-                          <TextField
-                            hiddenLabel
+                        <div className="flex-1 common-inputField">
+                          <input
+                            hidden
                             id="filled-hidden-label-small"
                             defaultValue=""
                             name="unit_discount"
-                            variant="standard"
                             type="number"
-                            size="small"
                             placeholder={
                               row.unit_discount_type == 2 ? "$00.00" : "%00.00"
                             }
-                            value={
-                              row.unit_discount
-                                ? row.unit_discount != 0 ||
-                                  row.unit_discount != ""
-                                  ? row.unit_discount
-                                  : ""
-                                : ""
-                            }
-                            inputProps={{
-                              min: 0, // Set the minimum value here
-                            }}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ) => {
-                              handleChange(index)(event);
-                            }}
-                            sx={{
+                            value={row.unit_discount || ""}
+                            onChange={(event) => handleChange(index)(event)}
+                            className="noscroll"
+                            style={{
                               width: "80px",
-
-                              "& .MuiInputBase-input": {
-                                textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                                border: "none", // Hide the border of the input element
-                                padding: 0,
-                                paddingTop: 0,
-                                "::placeholder": {
-                                  color: "#111827 !important", // Set placeholder color
-                                  opacity: 1,
-                                },
-                              },
-                              "& .MuiInput-underline:before": {
-                                borderBottom: "none !important", // Hide the underline (if using underline variant)
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottom: "none !important", // Hide the underline (if using underline variant)
-                              },
+                              paddingBottom: "0px",
+                              display: "flex",
+                              alignItems: "center",
+                              textDecoration: "none",
+                              border: "none",
+                              borderBottom: "none",
+                              color: "#111827",
                             }}
-                          ></TextField>
+                            min={0}
+                          />
                         </div>
                       </div>
                     </TableCell>
@@ -1492,40 +1491,26 @@ export default function AddSubscription() {
                       row.billing_terms == null ||
                       row.billing_terms == "" ? (
                         <>
-                          <div className="relative">
-                            <InputField
-                              inputRef={inputRef}
-                              name={"no_of_payments"}
-                              placeholder={"0"}
+                          <div className="relative common-inputField">
+                            <input
+                              id="filled-hidden-label-small"
+                              defaultValue=""
+                              name="no_of_payments"
+                              placeholder="0"
                               type="number"
-                              // value={row.unit_price}
-                              value={
-                                row.no_of_payments != 0 ||
-                                row.no_of_payments != "" ||
-                                row.no_of_payments != null
-                                  ? row.no_of_payments
-                                  : ""
-                              }
-                              onChange={(
-                                event: React.ChangeEvent<HTMLInputElement>
-                              ) => {
-                                handleChange(index)(event);
+                              value={row.no_of_payments || ""}
+                              onChange={(event) => handleChange(index)(event)}
+                              className="m-auto common-inputField w-max noscroll"
+                              style={{
+                                padding: "0.25rem 14px",
+                                maxWidth: "111px",
+                                margin: "auto",
+                                border: "0.5px solid #9DA0A6",
+                                borderRadius: "7px",
+                                color: "#111827",
+                                minWidth: "46px",
                               }}
-                              className="m-auto common-inputField w-max"
-                              inputProps={{
-                                className: "ps-[1rem] max-w-[90px] m-auto ",
-                              }}
-                              hideTopPadding={true}
-                              sx={{
-                                "&  .MuiInputBase-input": {
-                                  border: "0.5px solid #9DA0A6",
-                                  height: 44,
-                                  "::placeholder": {
-                                    color: "#111827 !important", // Set placeholder color
-                                    opacity: 1,
-                                  },
-                                },
-                              }}
+                              min={0}
                             />
                             {paymentError && (
                               <span
@@ -1547,7 +1532,9 @@ export default function AddSubscription() {
                           </div>
                         </>
                       ) : (
-                        <InputField
+                        <TextField
+                          id="filled-hidden-label-small"
+                          defaultValue=""
                           name={"no_of_payments"}
                           placeholder={"0"}
                           type="number"
@@ -1557,8 +1544,8 @@ export default function AddSubscription() {
                           className="m-auto common-inputField w-max"
                           inputProps={{
                             className: "ps-[1rem] max-w-[90px] m-auto ",
+                            min: 0,
                           }}
-                          hideTopPadding={true}
                           sx={{
                             "&  .MuiInputBase-input": {
                               border: "0.5px solid #9DA0A6",
@@ -1744,50 +1731,32 @@ export default function AddSubscription() {
                             ))}
                           </SelectField>
                         </div>
-                        <div className="flex-1">
-                          <TextField
-                            ref={inputRef}
-                            hiddenLabel
+                        <div className="flex-1 common-inputField">
+                          <input
                             id="filled-hidden-label-small"
                             defaultValue=""
-                            variant="standard"
-                            type="number"
                             name="one_time_discount"
-                            // value={details.one_time_discount}
-                            value={
-                              details.one_time_discount != 0
-                                ? details.one_time_discount
-                                : null
-                            }
-                            onChange={handleDetailsChange}
-                            size="small"
+                            type="number"
                             placeholder={
                               details.one_time_discount_type == 2
                                 ? "$00"
                                 : "%00"
                             }
-                            sx={{
+                            value={details.one_time_discount || ""}
+                            className="noscroll"
+                            onChange={handleDetailsChange}
+                            style={{
                               width: "60px",
                               paddingBottom: "0px",
                               display: "flex",
                               alignItems: "center",
-                              "& .MuiInputBase-input": {
-                                textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                                border: "none",
-                                paddingBottom: "0px", // Hide the border of the input element
-                                "::placeholder": {
-                                  color: "#111827 !important", // Set placeholder color
-                                  opacity: 1,
-                                },
-                              },
-                              "& .MuiInput-underline:before": {
-                                borderBottom: "none !important", // Hide the underline (if using underline variant)
-                              },
-                              "& .MuiInput-underline:after": {
-                                borderBottom: "none !important", // Hide the underline (if using underline variant)
-                              },
+                              textDecoration: "none",
+                              border: "none",
+                              borderBottom: "none",
+                              color: "#111827",
                             }}
-                          ></TextField>
+                            min={0}
+                          />
                         </div>
                       </div>
                     </div>

@@ -1,6 +1,7 @@
 import { FormLabel, TextField, TextFieldProps } from "@mui/material";
 import { FormikProps } from "formik";
 import { useEffect, useRef, useState } from "react";
+import { NumericFormat } from "react-number-format";
 
 interface CustomButtonProps {
   // className?: string;
@@ -28,7 +29,7 @@ function InputField({
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
   const handleEyeToggle = () => {
-    setIsType(isType === "text" ? "password" : "text");
+    setIsType(isType == "text" ? "password" : "text");
   };
   const inputRef = useRef(null);
 
@@ -40,10 +41,10 @@ function InputField({
     };
 
     const inputElement = inputRef.current;
-    inputElement.addEventListener("wheel", handleWheel);
+    inputElement?.addEventListener("wheel", handleWheel);
 
     return () => {
-      inputElement.removeEventListener("wheel", handleWheel);
+      inputElement?.removeEventListener("wheel", handleWheel);
     };
   }, []);
 
@@ -62,7 +63,6 @@ function InputField({
       formik.setFieldValue(name, value);
     }
   };
-
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (
@@ -71,22 +71,33 @@ function InputField({
         </FormLabel>
       )}
       <div className={`input_wrap ${inputClass}`}>
-        <TextField
-          ref={inputRef}
-          name={name}
-          type={isType}
-          disabled={disabled}
-          inputProps={{
-            min: 0,
-          }}
-          // onChange={(e) => formik.setFieldValue(name, e.target.value)}
-          onChange={(e) => handleChange(e)}
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          value={formik?.values[name ?? ""]}
-          error={!!(formik?.errors[name ?? ""] && formik?.touched[name ?? ""])}
-          {...rest}
-          className={rest.className}
-        />
+        {type == "number" ? (
+          <NumericFormat
+            onChange={(e) => handleChange(e)}
+            value={formik?.values[name ?? ""]}
+            decimalScale={2}
+            allowNegative={false}
+            allowLeadingZeros={false}
+            className={"w-full p-[14px]"}
+          />
+        ) : (
+          <TextField
+            ref={inputRef}
+            name={name}
+            type={isType}
+            disabled={disabled}
+            inputProps={{
+              min: type === "number" ? 0 : undefined,
+            }}
+            onChange={(e) => handleChange(e)}
+            value={formik?.values[name ?? ""]}
+            error={
+              !!(formik?.errors[name ?? ""] && formik?.touched[name ?? ""])
+            }
+            {...rest}
+            className={rest.className}
+          />
+        )}
         {type === "password" && (
           <span
             className="password_icon"

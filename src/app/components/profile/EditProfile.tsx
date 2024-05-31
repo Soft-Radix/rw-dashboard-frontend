@@ -223,6 +223,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         />
         <InputField
           formik={formik}
+          type="number"
           name="phone_number"
           label="Phone Number"
           placeholder="Enter Phone Number"

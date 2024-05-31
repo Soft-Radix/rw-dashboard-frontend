@@ -136,7 +136,7 @@ const columnKey = {
   Name: "first_name",
   ["Company Name"]: "company_name",
   ["Joining Date"]: "created_at",
-  Status: "status",
+  Status: "subscription_status",
 };
 
 // export const sortList = (column: string, isAsc: boolean, list: any) => {
