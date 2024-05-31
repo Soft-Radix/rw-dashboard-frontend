@@ -212,7 +212,7 @@ export default function AgentsList() {
                   <TableCell align="left" className="w-[1%] font-500">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        <Link to={`/admin/agent-detail/${row.id}`}>
+                        <Link to={`/admin/agents/agent-detail/${row.id}`}>
                           <ArrowRightCircleIcon />
                         </Link>
                       </span>

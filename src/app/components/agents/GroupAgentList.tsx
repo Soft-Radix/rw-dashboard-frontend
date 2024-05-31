@@ -68,6 +68,7 @@ export default function GroupAgentsList() {
   const { agentGroupDetail, actionStatus, actionStatusEdit } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
+
   // console.log(agentGroupDetail.group_members, "girl");
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
     const newData: UpdateAgentGroupPayload = {
@@ -150,24 +151,35 @@ export default function GroupAgentsList() {
   };
 
   useEffect(() => {
-    const data = agentGroupDetail?.group_members
-      ? agentGroupDetail.group_members.slice(
+    const currentRows1 =
+      (agentGroupDetail?.group_members &&
+        agentGroupDetail.group_members.slice(
           (currentPage - 1) * itemsPerPage,
           currentPage * itemsPerPage
-        )
-      : [];
-    setCurrentRows([...data]);
-  }, [agentGroupDetail, group_id]);
-  console.log("🚀 ~ GroupAgentsList ~ agentGroupDetail:", agentGroupDetail);
+        )) ||
+      [];
+    setCurrentRows([...currentRows1]);
+    if (currentRows1.length == 0 && currentPage > 1) {
+      if (currentPage == 1) {
+        setCurrentPage(1);
+      } else {
+        setCurrentPage(currentPage - 1);
+      }
+    }
+  }, [agentGroupDetail, group_id, currentPage]);
+
+  const currentRows1 =
+    (agentGroupDetail?.group_members &&
+      agentGroupDetail.group_members.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      )) ||
+    [];
 
   if (agentGroupDetail?.fetchStatus == "loading" || loading == true) {
     return <ListLoading />;
   }
-  // useEffect(() => {
-  //   if (loading) {
-  //     <ListLoading />;
-  //   }
-  // }, []);
+
   return (
     <>
       <TitleBar title="Agents Groups">
@@ -222,7 +234,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               {" "}
-              {currentRows?.length == 0 && !loading ? (
+              {currentRows1?.length == 0 && !loading ? (
                 <TableRow
                   sx={{
                     "& td": {
@@ -247,7 +259,7 @@ export default function GroupAgentsList() {
                 </TableRow>
               ) : (
                 <>
-                  {currentRows?.map((row: any, index) => (
+                  {currentRows1?.map((row: any, index) => (
                     <TableRow
                       key={index}
                       sx={{

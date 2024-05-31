@@ -233,7 +233,7 @@ export default function AgentDetails() {
                     </div>
 
                     <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
-                      <div className="flex pr-10 gap-32 sm:flex-row flex-col">
+                      <div className="flex pr-10 gap-32 lg1:flex-row flex-col">
                         <div className="flex flex-col gap-5">
                           <span className="text-[#111827] text-[18px] font-500">
                             Email Address
