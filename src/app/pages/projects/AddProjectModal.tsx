@@ -82,6 +82,7 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
     setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
   };
+  // console.log(isOpen, "checking");
   return (
     <CommonModal
       open={isOpen}
