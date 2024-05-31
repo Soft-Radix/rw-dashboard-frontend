@@ -1216,6 +1216,7 @@ module.exports = {
       sm: "600px",
       md: "960px",
       lg: "1280px",
+      lg1: "1450px",
       xl: "1920px",
       print: { raw: "print" },
     },
