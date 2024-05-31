@@ -186,7 +186,7 @@ const AgentGroupSchema = Yup.object({
     .required("Group name is required")
     .matches(
       /^[A-Za-z]+(?: [A-Za-z]+)*$/,
-      "Group name should only contain letters and single spaces between words, with no initial spaces"
+      "Group name cannot start with a space"
     )
     .max(30, "Group name cannot be longer than 30 characters"),
 });
