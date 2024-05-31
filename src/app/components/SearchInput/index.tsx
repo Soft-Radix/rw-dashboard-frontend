@@ -63,12 +63,18 @@ function SearchInput({
               <SearchIcon className="" />
             </InputAdornment>
           ),
-          endAdornment: inputValue !== "" && (
+          endAdornment: (
             <InputAdornment position="end">
-              <CrossGreyIcon
-                className="cursor-pointer fill-[#c2cad2] h-[14px]"
-                onClick={handleInputClear}
-              />
+              {inputValue !== "" ? (
+                <CrossGreyIcon
+                  className="cursor-pointer fill-[#c2cad2] h-[14px]"
+                  onClick={handleInputClear}
+                />
+              ) : (
+                // Render an empty icon to occupy space when inputValue is empty
+                <div style={{ width: "24px" }} />
+              )}
+              {/* You can add more icons conditionally here */}
             </InputAdornment>
           ),
         }}
