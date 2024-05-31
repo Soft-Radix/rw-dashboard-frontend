@@ -47,6 +47,7 @@ export default function AgentsList() {
   });
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
@@ -71,6 +72,7 @@ export default function AgentsList() {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setInputValue(value);
     debouncedSearch(value);
   };
   const fetchAgentList = useCallback(() => {
@@ -81,6 +83,14 @@ export default function AgentsList() {
   useEffect(() => {
     fetchAgentList();
   }, [filters]);
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
 
   return (
     <>
@@ -100,12 +110,13 @@ export default function AgentsList() {
 
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <div className="h-24" />
           <div className="p-[2rem]">
             <SearchInput
               name="search"
               placeholder="Search Agents"
               onChange={handleSearchChange}
+              handleInputClear={handleInputClear}
+              inputValue={inputValue}
             />
           </div>
 

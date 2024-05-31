@@ -71,12 +71,14 @@ export default function AccountManager() {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setInputValue(value);
     debouncedSearch(value);
   };
 
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+  const [inputValue, setInputValue] = useState("");
 
   const [filters, setfilters] = useState<filterType>({
     start: 0,
@@ -128,9 +130,14 @@ export default function AccountManager() {
     }
   };
 
-  // if (accManagerState.status === "loading") {
-  //   return <ListLoading />;
-  // }
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
 
   return (
     <>
@@ -152,8 +159,10 @@ export default function AccountManager() {
           <div className="p-[2rem]">
             <SearchInput
               name="search"
-              placeholder="Search Account Manger agents"
+              placeholder="Search Account Manger"
               onChange={(e) => handleSearchChange(e)}
+              handleInputClear={handleInputClear}
+              inputValue={inputValue}
             />
           </div>
           <CommonTable

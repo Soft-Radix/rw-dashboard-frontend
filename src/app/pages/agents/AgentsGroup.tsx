@@ -59,6 +59,7 @@ export default function AgentsGroup() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -108,6 +109,7 @@ export default function AgentsGroup() {
   }, 300);
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setInputValue(value);
     debouncedSearch(value);
   };
   const fetchAgentGroupList = useCallback(() => {
@@ -119,9 +121,14 @@ export default function AgentsGroup() {
     return () => {};
   }, [fetchAgentGroupList]);
 
-  // if (agentGroupState?.status == "loading") {
-  //   return <ListLoading />;
-  // }
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
 
   return (
     <>
@@ -147,6 +154,8 @@ export default function AgentsGroup() {
               name="search"
               placeholder="Search agents group"
               onChange={handleSearchChange}
+              handleInputClear={handleInputClear}
+              inputValue={inputValue}
             />
           </div>
           <CommonTable

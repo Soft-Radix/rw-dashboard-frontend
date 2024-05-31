@@ -158,7 +158,7 @@ export default function GroupAgentsList() {
       : [];
     setCurrentRows([...data]);
   }, [agentGroupDetail, group_id]);
-  console.log("🚀 ~ GroupAgentsList ~ agentGroupDetail:", agentGroupDetail);
+  // console.log("🚀 ~ GroupAgentsList ~ agentGroupDetail:", agentGroupDetail);
 
   if (agentGroupDetail?.fetchStatus == "loading" || loading == true) {
     return <ListLoading />;
