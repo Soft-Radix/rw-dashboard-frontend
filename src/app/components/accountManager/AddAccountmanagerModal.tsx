@@ -244,7 +244,7 @@ function AddAccountManagerModel({
       }
     }
   }, [accManagerDetail, isOpen]);
-  console.log("🚀 ~ isOpen:", isOpen);
+  // console.log("🚀 ~ isOpen:", isOpen);
 
   return (
     <CommonModal
@@ -305,7 +305,7 @@ function AddAccountManagerModel({
         </div>
         <div className="flex gap-20 sm:flex-row flex-col">
           <InputField
-            type="number  "
+            type="number"
             formik={formik}
             name="phone_number"
             label="Phone Number"

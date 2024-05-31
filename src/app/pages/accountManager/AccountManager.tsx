@@ -152,7 +152,7 @@ export default function AccountManager() {
           <div className="p-[2rem]">
             <SearchInput
               name="search"
-              placeholder="Search Account Manger "
+              placeholder="Search Account Manger agents"
               onChange={(e) => handleSearchChange(e)}
             />
           </div>
