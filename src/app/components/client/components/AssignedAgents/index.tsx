@@ -122,7 +122,7 @@ export default function AssignedAgents({
                     sx={{
                       "& td": {
                         borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
+                        paddingTop: "26px",
                         paddingBottom: "12px",
                         color: theme.palette.primary.main,
                       },
@@ -167,8 +167,8 @@ export default function AssignedAgents({
                      row.status === "Unassign"
                        ? "text-secondary bg-secondary_bg"
                        : row.status === "Unassigned"
-                         ? "text-[#F44336] bg-[#F443362E]"
-                         : "text-[#4F46E5] bg-[#EDEDFC]"
+                       ? "text-[#F44336] bg-[#F443362E]"
+                       : "text-[#4F46E5] bg-[#EDEDFC]"
                    }`}
                       >
                         {row.status ? row.status : "Unassign"}
