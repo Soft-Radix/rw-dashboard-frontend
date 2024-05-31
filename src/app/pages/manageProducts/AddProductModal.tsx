@@ -28,7 +28,8 @@ const validationSchema = Yup.object({
       "Name cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(50, "Name should be less than or equal to 50 characters"),
+    .max(50, "Name should be less than or equal to 50 characters")
+    .matches(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces"),
   description: Yup.string()
     .transform((value) => (value ? value.trim() : ""))
     .required("Description is required")
@@ -37,8 +38,35 @@ const validationSchema = Yup.object({
       "Description cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(500, "Description should be less than or equal to 500 characters "),
+    .max(500, "Description should be less than or equal to 500 characters ")
+    .matches(
+      /^[A-Za-z\s]+$/,
+      "Description can only contain letters and spaces"
+    ),
 
+  unit_price: Yup.string()
+    .required("Unit Price is required")
+    .test(
+      "is-valid-number",
+      "Unit Price must be a valid number without + or - symbols",
+      (value) => value !== undefined && /^[^+-]*\d*\.?\d{0,2}$/.test(value)
+    )
+    .test(
+      "decimal-places",
+      "Only two decimal places are allowed",
+      (value) => value === undefined || /^\d*\.?\d{0,2}$/.test(value)
+    )
+    .test(
+      "max-length",
+      "Unit Price must be less than or equal to 6 digits",
+      (value) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+    )
+    .test(
+      "is-greater-than-zero",
+      "Unit Price must be greater than 0",
+      (value) => value !== undefined && parseFloat(value) > 0
+    )
+    .transform((value) => (value ? String(parseFloat(value)) : null)),
   // unit_price: Yup.number()
   //   .required("Unit Price is required")
   //   .min(0.01, "Unit Price must be greater than 0")
@@ -46,20 +74,17 @@ const validationSchema = Yup.object({
   //     "decimal-places",
   //     "Only two decimal places are allowed",
   //     (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+  //   )
+  //   .test(
+  //     "max-length",
+  //     "Unit Price must be less than or equal to 6 digits",
+  //     (value: any) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+  //   )
+  //   .test(
+  //     "is-valid-number",
+  //     "Unit Price must be a valid number without + or - symbols",
+  //     (value) => value !== undefined && /^\d+(\.\d{1,2})?$/.test(value)
   //   ),
-  unit_price: Yup.number()
-    .required("Unit Price is required")
-    .min(0.01, "Unit Price must be greater than 0")
-    .test(
-      "decimal-places",
-      "Only two decimal places are allowed",
-      (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
-    )
-    .test(
-      "max-length",
-      "Unit Price must be less than or equal to 6 digits",
-      (value: any) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
-    ),
 });
 function AddProduct({
   isOpen,
