@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import ManageButton from "src/app/components/client/ManageButton";
 import { useLocation } from "react-router";
+import { CrossGreyIcon } from "public/assets/icons/common";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -47,6 +48,7 @@ export default function Clients() {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [isAllSelected, setisAllSelected] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -61,11 +63,13 @@ export default function Clients() {
     setfilters((prevFilters) => ({
       ...prevFilters,
       search: searchValue,
+      start: 0,
     }));
   }, 300); // Adjust the delay as needed (300ms in this example)
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setInputValue(value);
     debouncedSearch(value);
   };
 
@@ -143,7 +147,14 @@ export default function Clients() {
   useEffect(() => {
     setActive(query[query.length - 1]);
   }, [search]);
-
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
   const ClientTabButton = () => {
     return (
       <div className="flex flex-col gap-10 sm:flex-row">
@@ -151,6 +162,7 @@ export default function Clients() {
           hiddenLabel
           id="filled-hidden-label-small"
           defaultValue=""
+          value={inputValue}
           variant="standard"
           placeholder="Search Client"
           onChange={handleSearchChange}
@@ -182,6 +194,14 @@ export default function Clients() {
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon className="p-2" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                <CrossGreyIcon
+                  className="mr-16 p-1 cursor-pointer fill-[#c2cad2] h-[14px]"
+                  onClick={handleInputClear}
+                />
               </InputAdornment>
             ),
           }}
