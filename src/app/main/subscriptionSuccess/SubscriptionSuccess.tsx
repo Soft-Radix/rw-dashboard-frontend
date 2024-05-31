@@ -36,25 +36,25 @@ export default function SubscriptionSuccess() {
 
   return (
     <>
-      <div className="flex justify-center items-center flex-col h-screen gap-60 px-28 ">
+      <div className="flex justify-center items-center flex-col min-h-screen gap-60 px-28 pt-60 pb-60">
         <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
         <CircleLeft1Icon className=" hidden sm:block absolute bottom-0 left-0 z-[-1]" />
         <CircleLeft2Icon className="hidden sm:block absolute bottom-[28px] left-0 z-[-1]" />
 
         <img src="assets/icons/remote-icon.svg" alt="" />
 
-        <div className="bg-[#fff] sm:min-w-[50%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md ">
+        <div className="bg-[#fff] w-[60%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md ">
           <div
             className="flex flex-col justify-center  gap-40"
             style={{ alignItems: "center" }}
           >
             <SucessSubscription />
-            <Typography className="text-[48px] text-center font-700 leading-normal">
+            <Typography className="text-[24px] text-center font-600 leading-normal">
               Subscription Successful!
-              <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
+              <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
                 Your subscription has been activated, granting you access
               </p>
-              <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
+              <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
                 to all the services and benefits included.
               </p>
             </Typography>
