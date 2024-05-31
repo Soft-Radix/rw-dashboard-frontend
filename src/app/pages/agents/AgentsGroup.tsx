@@ -102,6 +102,7 @@ export default function AgentsGroup() {
     // Update the search filter here
     setfilters((prevFilters) => ({
       ...prevFilters,
+      start: 0,
       search: searchValue,
     }));
   }, 300);
@@ -172,7 +173,6 @@ export default function AgentsGroup() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                     
                     </Typography>
                   </div>
                 </TableCell>
