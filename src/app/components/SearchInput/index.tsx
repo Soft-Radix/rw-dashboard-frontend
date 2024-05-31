@@ -1,8 +1,7 @@
 import React from "react";
-import InputField from "../InputField";
+import { InputAdornment, TextField } from "@mui/material";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { CrossGreyIcon } from "public/assets/icons/common";
-import { InputAdornment, TextField } from "@mui/material";
 
 interface IProps {
   name: string;
@@ -11,6 +10,7 @@ interface IProps {
   handleInputClear?: any;
   inputValue?: string;
 }
+
 function SearchInput({
   name,
   placeholder,
@@ -19,7 +19,7 @@ function SearchInput({
   inputValue,
 }: IProps) {
   return (
-    <div className="w-full mb-3 sm:mb-0 sm:w-max">
+    <div className="w-full mb-3 sm:mb-0 sm:w-max" style={{ width: "286px" }}>
       <TextField
         hiddenLabel
         id="filled-hidden-label-small"
@@ -32,76 +32,47 @@ function SearchInput({
         className="flex items-center justify-center"
         sx={{
           height: "50px",
-          pl: 2,
           pr: 2,
-          width: "286px",
-          // border: "1px solid blue",
           backgroundColor: "#F6F6F6",
           borderRadius: "8px",
-          border: "1px solid transparent", // Show border when focused
+          border: "1px solid transparent",
           "&:focus-within": {
-            border: "1px solid blue", // Show border when focused
+            border: "1px solid blue",
           },
           "& .MuiInputBase-input": {
-            textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-            border: "none", // Hide the border of the input element
+            border: "none",
+            paddingLeft: "8px", // Adjust left padding of the input
+          },
+          "& .MuiInputAdornment-root": {
+            marginLeft: "8px", // Adjust left margin of the adornment (icon)
           },
           "& .MuiInput-underline:before": {
-            border: "none !important", // Hide the underline (if using underline variant)
+            border: "none !important",
           },
           "& .MuiInput-underline:after": {
-            borderBottom: "none !important", // Hide the underline (if using underline variant)
+            borderBottom: "none !important",
           },
           "& .MuiInputBase-input::placeholder": {
-            color: "#757982", // Change placeholder color here
-            opacity: 1, // Override opacity
+            color: "#757982",
+            opacity: 1,
           },
         }}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon className="pl-2" />
+              <SearchIcon className="" />
             </InputAdornment>
           ),
-          endAdornment: inputValue != "" && (
+          endAdornment: inputValue !== "" && (
             <InputAdornment position="end">
               <CrossGreyIcon
-                className="  cursor-pointer fill-[#c2cad2] h-[14px]"
+                className="cursor-pointer fill-[#c2cad2] h-[14px]"
                 onClick={handleInputClear}
               />
             </InputAdornment>
           ),
         }}
-
-        // <InputField
-        //   name={name}
-        //   placeholder={placeholder}
-        //   // className="common-inputField_v2 "
-        //   inputProps={{
-        //     className: "ps-[4rem] w-full sm:w-[227px] ",
-        //   }}
-        //   onChange={onChange}
-        //   InputProps={{
-        //     startAdornment: (
-        //       <InputAdornment position="start">
-        //         <SearchIcon className="p-2" />
-        //       </InputAdornment>
-        //     ),
-        //     endAdornment: (
-        //       <InputAdornment position="end">
-        //         <CrossGreyIcon
-        //           className="mr-16 p-1 cursor-pointer fill-[#c2cad2] h-[14px]"
-        //           // onClick={handleInputClear}
-        //         />
-        //       </InputAdornment>
-        //     ),
-        //   }}
       />
-      {/* <SearchIcon
-        width={18}
-        height={18}
-        className="absolute left-[2rem] sm:left-10 top-[44%] translate-y-[-50%] text-para_light"
-      /> */}
     </div>
   );
 }

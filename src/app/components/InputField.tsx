@@ -79,7 +79,9 @@ function InputField({
             decimalScale={2}
             allowNegative={false}
             allowLeadingZeros={false}
-            className={"w-full p-[14px] !placeholder-[#8a8d94] "}
+            className={
+              "w-full p-[14px] !placeholder-[#a3a6ad] font-400 border-1 border-[#f6f6f6] focus:border-[#4f46e5] focus:outline-none"
+            }
             placeholder={rest?.placeholder}
           />
         ) : (
