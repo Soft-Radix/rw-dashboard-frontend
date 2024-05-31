@@ -19,7 +19,7 @@ const AdminAgentsConfig = {
       element: <AgentsList />,
     },
     {
-      path: "admin/agent-detail/:agent_id",
+      path: "admin/agents/agent-detail/:agent_id",
       element: <AgentDetails />,
     },
     {
