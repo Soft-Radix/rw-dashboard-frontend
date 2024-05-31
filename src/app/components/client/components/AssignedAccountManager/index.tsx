@@ -10,7 +10,7 @@ import { useTheme } from "@mui/styles";
 import { defaultAccManagerList, deleteAccManagerList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
@@ -73,6 +73,13 @@ export default function AssignedAccountManager({
     );
   };
 
+  useEffect(() => {
+    if (assignAccManagerDetail.length > 0) {
+      // Set the first element's account_manager_id as the default checked
+      setDefaultAccManagerId(assignAccManagerDetail[0].account_manager_id);
+    }
+  }, [assignAccManagerDetail]);
+
   // console.log(assignAccManagerDetail.length, "length");
   // console.log(totalPageCount, "totalPageCount");
 
@@ -93,39 +100,26 @@ export default function AssignedAccountManager({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable
-            headings={[
-              "Account Manager",
-              "Account Manager Id",
-              "Assigned date",
-              "",
-              "",
-            ]}
-          >
-            {assignAccManagerDetail?.length === 0 ? (
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "26px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell colSpan={7} align="center">
-                  <div
-                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
-                    style={{ alignItems: "center" }}
-                  >
-                    <NoDataFound />
-                    <Typography className="text-[24px] text-center font-600 leading-normal">
-                      No data found !
-                    </Typography>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
+          {assignAccManagerDetail?.length === 0 ? (
+            <div
+              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+              style={{ alignItems: "center" }}
+            >
+              <NoDataFound />
+              <Typography className="text-[24px] text-center font-600 leading-normal">
+                No data found !
+              </Typography>
+            </div>
+          ) : (
+            <CommonTable
+              headings={[
+                "Account Manager",
+                "Account Manager Id",
+                "Assigned date",
+                "",
+                "",
+              ]}
+            >
               <>
                 {assignAccManagerDetail.map((row, index) => (
                   <TableRow
@@ -133,7 +127,7 @@ export default function AssignedAccountManager({
                     sx={{
                       "& td": {
                         borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
+                        paddingTop: "26px",
                         paddingBottom: "12px",
                         color: theme.palette.primary.main,
                       },
@@ -180,6 +174,10 @@ export default function AssignedAccountManager({
                             checked={
                               defaultAccManagerId === row.account_manager_id
                             }
+                            // checked={
+                            //   index === 0 ||
+                            //   defaultAccManagerId === row.account_manager_id
+                            // }
                           />
                         }
                         label="Mark as default"
@@ -209,8 +207,8 @@ export default function AssignedAccountManager({
                   </TableRow>
                 ))}
               </>
-            )}
-          </CommonTable>
+            </CommonTable>
+          )}
           <div className="flex justify-end py-14 px-[3rem]">
             {/* {assignAccManagerDetail?.length > 0 && ( */}
             <CommonPagination

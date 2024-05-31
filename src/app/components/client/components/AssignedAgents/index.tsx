@@ -24,14 +24,14 @@ export default function AssignedAgents({
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [filters, setfilters] = useState<filterAgentType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
 
@@ -90,31 +90,20 @@ export default function AssignedAgents({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
-            {assignedAgentDetail?.length === 0 ? (
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell colSpan={7} align="center">
-                  <div
-                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
-                    style={{ alignItems: "center" }}
-                  >
-                    <NoDataFound />
-                    <Typography className="text-[24px] text-center font-600 leading-normal">
-                      No data found !
-                    </Typography>
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
+          {assignedAgentDetail?.length === 0 ? (
+            <div
+              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+              style={{ alignItems: "center" }}
+            >
+              <NoDataFound />
+              <Typography className="text-[24px] text-center font-600 leading-normal">
+                No data found !
+              </Typography>
+            </div>
+          ) : (
+            <CommonTable
+              headings={["Agents", "Agents Id", "Assigned Date", ""]}
+            >
               <>
                 {assignedAgentDetail?.map((row, index) => (
                   <TableRow
@@ -177,8 +166,8 @@ export default function AssignedAgents({
                   </TableRow>
                 ))}
               </>
-            )}
-          </CommonTable>
+            </CommonTable>
+          )}
           <div className="flex justify-end py-14 px-[3rem]">
             {/* {assignedAgentDetail?.length >= 0 && ( */}
             <CommonPagination
