@@ -155,14 +155,14 @@ export default function AssignedAccountManager({
                     </TableCell>
                     <TableCell
                       align="center"
-                      className="whitespace-nowrap font-500"
+                      className="whitespace-nowrap font-500 "
                     >
                       {row.id}
                     </TableCell>
 
                     <TableCell
                       align="center"
-                      className="whitespace-nowrap font-500"
+                      className="whitespace-nowrap font-500 custom"
                     >
                       {row.assigned_date_time}
                     </TableCell>

@@ -13,7 +13,7 @@ const noInitialSpace = (value) => !value.startsWith(" ");
 
 const emailField = {
   email: Yup.string()
-    .required("Email is required")
+    .required("Email Address is required")
     .email("Please enter valid email address")
     .test(
       "is-valid-email",
@@ -80,27 +80,45 @@ const changePasswordByClient = Yup.object({
 const addClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
-    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .matches(
+      /^[A-Za-z]+$/,
+      "First name should only contain letters and no spaces"
+    ) // Disallow spaces
     .max(20, maxLengthFirstMessage),
 
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .matches(
+      /^[A-Za-z]+$/,
+      "Last name should only contain letters and no spaces"
+    ) // Disallow spaces
     .max(20, maxLengthLastMessage),
 
   ...emailField,
   company_name: Yup.string()
     .required("Compnay name is required")
-
+    .matches(
+      /^\S.*\S$|^\S$/,
+      "Company name must not start or end with a space and should not be empty"
+    )
     .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 const editClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
+    .matches(
+      /^[A-Za-z]+$/,
+      "First name should only contain letters and no spaces"
+    ) // Disallow spaces
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    .matches(
+      /^[A-Za-z]+$/,
+      "Last name should only contain letters and no spaces"
+    ) // Disallow spaces
+    .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
@@ -112,6 +130,10 @@ const editClientSchema = Yup.object({
   company_name: Yup.string()
     .required("Compnay name is required")
 
+    .matches(
+      /^\S.*\S$|^\S$/,
+      "Company name must not start or end with a space and should not be empty"
+    )
     .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 
@@ -119,7 +141,10 @@ const editAgentSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^\S+$/, noSpaceMessage)
+    .matches(
+      /^[A-Za-z]+$/,
+      "First name should only contain letters and no spaces"
+    )
     .max(20, maxLengthFirstMessage),
   // .test("max-words", tooManyWordsMessage, (value) => {
   //   return value.split(" ").filter((word) => word).length <= maxWords;
@@ -127,7 +152,10 @@ const editAgentSchema = Yup.object({
   last_name: Yup.string()
     .required("Last name is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^\S+$/, noSpaceMessage)
+    .matches(
+      /^[A-Za-z]+$/,
+      "Last name should only contain letters and no spaces"
+    )
     .max(20, maxLengthLastMessage),
 
   ...emailField,
@@ -140,7 +168,12 @@ const editAgentSchema = Yup.object({
     }),
   address: Yup.string()
     .required("Address is required")
-    .test("no-initial-space", noSpaceMessage, noInitialSpace),
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(
+      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+      "Address should only contain letters and no initial spaces"
+    )
+    .max(30, "Address should be less than or equal to 30 characters"),
 });
 // const AgentGroupSchema = Yup.object({
 //   group_name: Yup.string()
@@ -151,17 +184,26 @@ const noInitialSpaceMessage = "Group name cannot start with a space";
 const AgentGroupSchema = Yup.object({
   group_name: Yup.string()
     .required("Group name is required")
-    .matches(/^\S[\s\S]*$/, noInitialSpaceMessage)
-    .max(30, maxLengthGroupMessage),
+    .matches(
+      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+      "Group name should only contain letters and single spaces between words, with no initial spaces"
+    )
+    .max(30, "Group name cannot be longer than 30 characters"),
 });
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
-    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .matches(
+      /^[A-Za-z]+$/,
+      "First name should only contain letters and no spaces"
+    ) // Disallow spaces
     .max(20, maxLengthFirstMessage),
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(/^\S+$/, noSpaceMessage)
+    .matches(
+      /^[A-Za-z]+$/,
+      "First name should only contain letters and no spaces"
+    )
     .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
   phone_number: Yup.string()
@@ -172,7 +214,11 @@ const accManagerSchema = Yup.object({
     }), // ,
   address: Yup.string()
     .required("Address is required")
-    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
+    .matches(
+      /^[A-Za-z]+(?: [A-Za-z]+)*$/,
+      "Address should only contain letters and no initial spaces"
+    )
+    .max(30, "Address should be less than or equal to 30 characters"),
 });
 
 export {

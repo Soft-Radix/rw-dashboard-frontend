@@ -158,10 +158,10 @@ function AddAccountManagerModel({
   useEffect(() => {
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
-      setIsOpen((prev) => !prev), formik.resetForm();
+      setIsOpen(false), formik.resetForm();
       // fetchManagerList();
     } else if (!!accmanagerState?.errorMsg) {
-      setIsOpen((prev) => !prev);
+      setIsOpen(true);
       // dispatch(restAll());
     }
   }, [accmanagerState]);
