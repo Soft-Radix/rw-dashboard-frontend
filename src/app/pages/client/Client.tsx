@@ -58,19 +58,30 @@ export default function Clients() {
     setAnchorEl(null);
   };
   // Debounce function to delay executing the search
-  const debouncedSearch = debounce((searchValue) => {
-    // Update the search filter here
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      search: searchValue,
-      start: 0,
-    }));
-  }, 300); // Adjust the delay as needed (300ms in this example)
+  // const debouncedSearch = debounce((searchValue) => {
+  //   // Update the search filter here
+  //   setfilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     search: searchValue,
+  //     start: 0,
+  //   }));
+  // }, 300); // Adjust the delay as needed (300ms in this example)
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        search: inputValue,
+        start: 0,
+      }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, 500]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);
-    debouncedSearch(value);
+    // debouncedSearch(value);
   };
 
   const handleCheckboxChange = (rowId: number) => {
@@ -169,7 +180,7 @@ export default function Clients() {
           className="flex items-center justify-center"
           sx={{
             height: "50px",
-            pl: 2,
+            pl: 1,
             width: "286px",
             pr: 2,
             // border: "1px solid blue",
@@ -197,7 +208,7 @@ export default function Clients() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon className="pl-2" />
+                <SearchIcon className="pl-1" />
               </InputAdornment>
             ),
             endAdornment: inputValue != "" && (

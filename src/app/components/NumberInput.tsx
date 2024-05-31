@@ -96,13 +96,13 @@ export default function NumberInput({
     //   </span>
     // </div>
 
-    <div>
+    <div className="common-inputField">
       <label className="inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
         {label}
       </label>
 
-      <StyledInputRoot>
-        <StyledInputElement
+      {/* <StyledInputRoot> */}
+      {/* <input
           type="number"
           disabled={disable}
           placeholder="0"
@@ -111,8 +111,33 @@ export default function NumberInput({
           onChange={(e) => {
             formik ? formik.setFieldValue(name, e.target.value) : null;
           }}
-        />
-        {/* <StyledButton
+        /> */}
+
+      <input
+        type="number"
+        id="filled-hidden-label-small"
+        defaultValue=""
+        placeholder="0"
+        className="noscroll"
+        value={value}
+        onChange={(e) => {
+          formik ? formik.setFieldValue(name, e.target.value) : null;
+        }}
+        style={{
+          width: "300px",
+          paddingBottom: "0px",
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+          // border: "none",
+          borderBottom: "none",
+          color: "#111827",
+          padding: "0px 14px",
+          border: "0.5px solid #9DA0A6",
+        }}
+        min={0}
+      />
+      {/* <StyledButton
           onClick={() => {
             formik.setFieldValue(name, value + 1);
           }}
@@ -128,7 +153,7 @@ export default function NumberInput({
         >
           <img src={arrowDown} alt="arrow" className="w-[10px] max-w-none" />
         </StyledButton> */}
-      </StyledInputRoot>
+      {/* </StyledInputRoot> */}
       <span className="inline-block text-red pt-[5px]">
         {formik?.errors[name ?? ""] &&
           formik?.touched[name ?? ""] &&
