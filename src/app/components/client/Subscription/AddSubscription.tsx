@@ -1743,6 +1743,7 @@ export default function AddSubscription() {
                                 : "%00"
                             }
                             value={details.one_time_discount || ""}
+                            className="noscroll"
                             onChange={handleDetailsChange}
                             style={{
                               width: "60px",
