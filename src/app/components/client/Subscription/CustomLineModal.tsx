@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import CommonModal from "../../CommonModal";
 import InputField from "../../InputField";
 import {
@@ -8,6 +8,7 @@ import {
   TableCell,
   TableRow,
   Theme,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import { EmployOptions, StyledMenuItem } from "src/utils";
@@ -26,6 +27,36 @@ interface IProps {
   customList?: any[];
   setCustomList?: Dispatch<SetStateAction<any[]>>;
 }
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
 
 const tableTiltles = ["Name", "Description", "Unit Price"];
 
@@ -80,26 +111,16 @@ function CustomLineModal({
       <div className="flex flex-col gap-20 mb-20 border-1 border-[#D9D9D9] rounded-[10px] overflow-hidden">
         <CommonTable headings={["Name", "Description", "Unit Price"]}>
           {list?.map((row, index) => (
-            <TableRow
-              key={index}
-              // sx={{
-              //     "& td": {
-              //         borderBottom: "1px solid #EDF2F6",
-              //         paddingTop: "12px",
-              //         paddingBottom: "12px",
-              //         color: theme.palette.primary.main,
-              //     },
-              // }}
-            >
-              <TableCell scope="row" className="font-500">
-                <div className="py-2">
+            <TableRow key={index}>
+              <TableCell scope="row" className="font-500 px-[6px]">
+                <div className="py-2 flex " style={{ alignItems: "center" }}>
                   <Checkbox onChange={(e) => handleSelect(e, row)} />
-
-                  {row.name}
+                  <TruncateText text={row.name} maxWidth={200} />
+                  {/* {row.name} */}
                 </div>
               </TableCell>
               <TableCell align="center" className="font-500">
-                {row.description}
+                <TruncateText text={row.description} maxWidth={200} />
               </TableCell>
               <TableCell align="center" className="whitespace-nowrap font-500">
                 {row.unit_price}

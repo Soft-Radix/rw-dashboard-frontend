@@ -28,6 +28,7 @@ import SearchInput from "src/app/components/SearchInput";
 import InputField from "../InputField";
 import { useAppDispatch } from "app/store/store";
 import {
+  addAgentInagentGroup,
   changeFetchStatus,
   deleteAgentMemberGroup,
   getAgentGroupInfo,
@@ -41,6 +42,9 @@ import {
   UpdateAgentGroupPayload,
 } from "app/store/Agent group/Interface";
 import DeleteClient from "../client/DeleteClient";
+import { filterType } from "app/store/Client/Interface";
+import { AgentGroupSchema } from "src/formSchema";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
@@ -49,7 +53,15 @@ export default function GroupAgentsList() {
   const { group_id } = useParams();
   const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
+  const [currentRows, setCurrentRows] = useState<any>([]);
+  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
+
   const itemsPerPage = 10;
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
@@ -87,6 +99,7 @@ export default function GroupAgentsList() {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
+      dispatch(addAgentInagentGroup({ ...filterMenu, group_id }));
       setIsDeleteId(null);
     } catch (error) {
       console.error("Failed to delete agent group:", error);
@@ -96,19 +109,21 @@ export default function GroupAgentsList() {
     initialValues: {
       group_name: "",
     },
-    // validationSchema: validationSchemaProperty,
+    validationSchema: AgentGroupSchema,
     onSubmit,
   });
-  // useEffect(()=>{
-  //   formik.setValues()
-  // })
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+
   // const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   useEffect(() => {
     if (!group_id) return null;
-    dispatch(getAgentGroupInfo({ group_id }));
+    const fetchData = async () => {
+      setLoading(true);
+      await dispatch(getAgentGroupInfo({ group_id }));
+      setLoading(false);
+    };
+    fetchData();
     // console.log(group_id, "groupid");
     return () => {
       dispatch(changeFetchStatus());
@@ -134,13 +149,28 @@ export default function GroupAgentsList() {
     // Handle any additional logic when the page changes, e.g., fetching data
   };
 
-  const currentRows = agentGroupDetail?.group_members
-    ? agentGroupDetail.group_members.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )
-    : [];
+  useEffect(() => {
+    const data = agentGroupDetail?.group_members
+      ? agentGroupDetail.group_members.slice(
+          (currentPage - 1) * itemsPerPage,
+          currentPage * itemsPerPage
+        )
+      : [];
+    setCurrentRows([...data]);
+  }, [agentGroupDetail, group_id]);
+  console.log(
+    "🚀 ~ GroupAgentsList ~ agentGroupDetail:",
+    agentGroupDetail.group_members
+  );
 
+  if (agentGroupDetail?.fetchStatus == "loading") {
+    return <ListLoading />;
+  }
+  // useEffect(() => {
+  //   if (loading) {
+  //     <ListLoading />;
+  //   }
+  // }, []);
   return (
     <>
       <TitleBar title="Agents Groups">
@@ -159,19 +189,27 @@ export default function GroupAgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <form onSubmit={formik.handleSubmit}>
-            <div className="p-[2rem]  sm:w-1/3 flex items-end gap-20 flex-col sm:flex-row w-full">
-              {" "}
+            <div className="p-[2rem]   flex items-end gap-20 flex-col sm:flex-row w-full">
               {/* Use formik.handleSubmit as the onSubmit handler */}
-              <InputField
-                formik={formik}
-                name="group_name"
-                label="Group Name"
-              />
+              <div className="relative">
+                <InputField
+                  formik={formik}
+                  name="group_name"
+                  label="Group Name"
+                />
+                <div className="absolute left-0 top-[97%]">
+                  <span className=" text-red pt-[9px]  block ">
+                    {formik?.errors.group_name &&
+                      formik?.touched.group_name &&
+                      formik?.errors.group_name}
+                  </span>
+                </div>
+              </div>
               <Button
                 type="submit" // Use type="submit" to submit the form
                 variant="contained"
                 color="secondary"
-                className="w-[250px] h-[50px] text-[18px] font-700"
+                className="w-[169px] text-[18px] font-700 "
                 disabled={actionStatusEdit}
               >
                 Save
@@ -179,14 +217,14 @@ export default function GroupAgentsList() {
             </div>
           </form>
           <>
-            <div className="px-20 text-[20px] font-600 text-[#0A0F18] py-10 mb-20">
+            <div className="px-20 text-[20px] font-600 text-[#0A0F18] pb-10 pt-20 mb-20">
               All agents list assigned to this group
             </div>
             <CommonTable
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               {" "}
-              {currentRows?.length === 0 ? (
+              {currentRows?.length === 0 && !loading ? (
                 <TableRow
                   sx={{
                     "& td": {
@@ -205,12 +243,6 @@ export default function GroupAgentsList() {
                       <NoDataFound />
                       <Typography className="text-[24px] text-center font-600 leading-normal">
                         No data found !
-                        <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                          No data has been added yet. Please input the
-                        </p>
-                        <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                          necessary information to proceed.
-                        </p>
                       </Typography>
                     </div>
                   </TableCell>
@@ -229,7 +261,9 @@ export default function GroupAgentsList() {
                         },
                       }}
                     >
-                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell scope="row" className="px-20">
+                        {row.id}
+                      </TableCell>
                       <TableCell align="center" className="whitespace-nowrap">
                         {row.first_name}
                       </TableCell>
@@ -283,7 +317,7 @@ export default function GroupAgentsList() {
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteGroup(deleteId)}
         heading={"Delete Agent"}
-        description={"Are you sure you want to delete this Agent  ? "}
+        description={"Are you sure you want to delete this Agent? "}
       />
     </>
   );

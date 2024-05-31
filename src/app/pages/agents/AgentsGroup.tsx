@@ -34,6 +34,7 @@ import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import DeleteClient from "src/app/components/client/DeleteClient";
 import { debounce } from "lodash";
 import { getAgentList } from "app/store/Agent";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AgentsGroup() {
   const group_id = useParams();
@@ -63,11 +64,7 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-  const [filterss, setfilterss] = useState<filterType>({
-    start: 0,
-    limit: 10,
-    search: "",
-  });
+
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
     setfilters((prevFilters) => {
@@ -118,17 +115,12 @@ export default function AgentsGroup() {
 
   useEffect(() => {
     fetchAgentGroupList();
+    return () => {};
   }, [fetchAgentGroupList]);
-  // useEffect(() => {
-  //   if (agentGroupState) {
-  //     setValues: agentGroupState.group_name;
-  //   }
-  // });
-  // useEffect(() => {
-  //   dispatch(getAgentList({ filters, group_id: group_id }));
 
-  //   // console.log(filters, "filters");
-  // }, [filters]);
+  // if (agentGroupState?.status == "loading") {
+  //   return <ListLoading />;
+  // }
 
   return (
     <>
@@ -160,7 +152,8 @@ export default function AgentsGroup() {
             headings={["ID", "Group Name", "Number of Agents", "Action"]}
           >
             {" "}
-            {agentGroupState?.list?.length === 0 ? (
+            {agentGroupState?.list?.length === 0 &&
+            agentGroupState?.status !== "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -179,14 +172,15 @@ export default function AgentsGroup() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                        No data has been added yet. Please input the
-                      </p>
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                        necessary information to proceed.
-                      </p>
+                     
                     </Typography>
                   </div>
+                </TableCell>
+              </TableRow>
+            ) : agentGroupState.status === "loading" ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (
@@ -205,7 +199,9 @@ export default function AgentsGroup() {
                         },
                       }}
                     >
-                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell scope="row" className="px-[20px]">
+                        {row.id}
+                      </TableCell>
                       <TableCell align="center" className="whitespace-nowrap">
                         {row.group_name}
                       </TableCell>

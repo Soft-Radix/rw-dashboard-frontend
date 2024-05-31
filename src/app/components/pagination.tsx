@@ -1,4 +1,7 @@
 import { Pagination, PaginationProps, styled } from "@mui/material";
+// import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+
 import React from "react";
 
 interface IProps extends PaginationProps {
@@ -49,13 +52,30 @@ function CommonPagination({
   // console.log("🚀 ~ count:", count);
 
   return (
-    <StyledPagination
-      count={count}
-      page={currentPage}
-      onChange={onPageChange}
-      {...rest}
-      
-    />
+    // <StyledPagination
+    //   count={count}
+    //   page={currentPage}
+    //   onChange={onPageChange}
+    //   {...rest}
+    // />
+    <Stack spacing={2}>
+      <Pagination
+        count={count}
+        siblingCount={0}
+        boundaryCount={1}
+        page={currentPage}
+        onChange={onPageChange}
+        sx={{
+          "& .Mui-selected": {
+            borderColor: "#4f46e5",
+            background: "#fff",
+          },
+        }}
+        {...rest}
+        variant="outlined"
+        shape="rounded"
+      />
+    </Stack>
   );
 }
 

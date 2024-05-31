@@ -449,14 +449,14 @@ export const defaultAccManagerList = createAsyncThunk(
       method: "post",
       data: payload,
     });
-    dispatch(
-      getAssignAccMangerInfo({
-        client_id: payload.client_id,
-        start: 0,
-        limit: 10,
-        search: "",
-      })
-    );
+    // dispatch(
+    //   getAssignAccMangerInfo({
+    //     client_id: payload.client_id,
+    //     start: 0,
+    //     limit: 10,
+    //     search: "",
+    //   })
+    // );
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
@@ -572,7 +572,7 @@ export const clientSlice = createSlice({
       .addCase(getClientList.fulfilled, (state, action) => {
         const response = action.payload?.data;
         state.status = "idle";
-        if (!response.status) {
+        if (!response?.status) {
           toast.error(response?.message);
         } else {
           state.list = response?.data?.list || [];

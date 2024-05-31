@@ -38,7 +38,7 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
                 activeTab === tab.id
                   ? "border-b-[3px] border-secondary text-secondary"
                   : "border-b border-transparent text-para_light"
-              } py-2 pr-[10px] focus:outline-none text-[1.8rem] font-500`}
+              } py-2  focus:outline-none text-[1.8rem] font-500`}
               onClick={() => {
                 navigate(`${location.pathname}?type=${tab.id}`);
                 setActiveTab(tab.id);
@@ -51,7 +51,7 @@ const TabComponent: React.FC<TabProps> = ({ tabs, setActive }) => {
         </div>
         <div>{tabs.find((tab) => tab.id === activeTab)?.actionBtn()}</div>
       </div>
-      <div className="mt-4">
+      <div className="mt-4 pb-1">
         {tabs.find((tab) => tab.id === activeTab)?.content}
       </div>
     </div>

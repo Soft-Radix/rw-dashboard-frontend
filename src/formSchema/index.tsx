@@ -1,11 +1,20 @@
 import * as Yup from "yup";
 
 const noSpaceMessage = "No spaces allowed";
+const maxWords = 20;
+const tooManyWordsMessage = `First name can have a maximum of ${maxWords} words`;
+const maxLengthFirstMessage =
+  "First name should be less than or equal to 20 characters.";
+const maxLengthLastMessage =
+  "Last name should be less than or equal to 20 characters.";
+const maxLengthGroupMessage =
+  "It should be less than or equal to 30 characters.";
+const noInitialSpace = (value) => !value.startsWith(" ");
 
 const emailField = {
   email: Yup.string()
     .required("Email is required")
-    .email("Please enter a valid email ")
+    .email("Please enter valid email address")
     .test(
       "is-valid-email",
       "Email must contain a dot and a domain",
@@ -44,39 +53,48 @@ const resetPassSchema = Yup.object({
 const changePasswordByAdmin = Yup.object({
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+    .min(6, "Password must be at least 6 characters long")
+    .matches(/^\S+$/, noSpaceMessage), // Minimum 6 characters
 
   cnfPassword: Yup.string()
     .required("Confirm Password is required") // Field is required
-    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match")
+    .matches(/^\S+$/, noSpaceMessage), // Must match the password field
 });
 
 const changePasswordByClient = Yup.object({
   old_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
-
+    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
+    .matches(/^\S+$/, noSpaceMessage),
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
-
+    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
+    .matches(/^\S+$/, noSpaceMessage),
   cnfPassword: Yup.string()
     .required("Confirm password is required") // Field is required
-    .oneOf([Yup.ref("new_password"), null], "Passwords must match"), // Must match the password field
+    .oneOf([Yup.ref("new_password"), null], "Passwords must match") // Must match the password field
+    .matches(/^\S+$/, noSpaceMessage),
 });
 
 const addClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .max(20, maxLengthFirstMessage),
+
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
-  ...emailField,
-  company_name: Yup.string().required("Compnay name is required"),
-});
+    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .max(20, maxLengthLastMessage),
 
-const addAgentSchema = Yup.object({
+  ...emailField,
+  company_name: Yup.string()
+    .required("Compnay name is required")
+
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
+});
+const editClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
@@ -84,26 +102,38 @@ const addAgentSchema = Yup.object({
     .required("Last name is required")
     .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
   ...emailField,
-});
+  phone_number: Yup.string()
+    .required("Phone number is required")
+    .max(10, "Phone number must be 10 digits long.")
+    .matches(/^\d{10}$/, {
+      message: "Invalid phone number",
+      excludeEmptyString: true,
+    }),
+  company_name: Yup.string()
+    .required("Compnay name is required")
 
-const noInitialSpace = (value) =>
-  !value || value.trim().length === value.length;
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
+});
 
 const editAgentSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    .matches(/^\S+$/, noSpaceMessage)
+    .max(20, maxLengthFirstMessage),
+  // .test("max-words", tooManyWordsMessage, (value) => {
+  //   return value.split(" ").filter((word) => word).length <= maxWords;
+  // }), // Disallow spaces
   last_name: Yup.string()
     .required("Last name is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
-  email: Yup.string()
-    .required("Email is required")
-    .email("Please Enter Valid email address"),
+    .matches(/^\S+$/, noSpaceMessage)
+    .max(20, maxLengthLastMessage),
+
+  ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
-    .max(10, "Phone number cannot exceed 10 digits")
+    .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
       message: "Invalid phone number",
       excludeEmptyString: true,
@@ -121,23 +151,28 @@ const noInitialSpaceMessage = "Group name cannot start with a space";
 const AgentGroupSchema = Yup.object({
   group_name: Yup.string()
     .required("Group name is required")
-    .matches(/^\S[\s\S]*$/, noInitialSpaceMessage),
+    .matches(/^\S[\s\S]*$/, noInitialSpaceMessage)
+    .max(30, maxLengthGroupMessage),
 });
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    .matches(/^\S+$/, noSpaceMessage) // Disallow spaces
+    .max(20, maxLengthFirstMessage),
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(/^\S+$/, noSpaceMessage), // Disallow spaces
+    .matches(/^\S+$/, noSpaceMessage)
+    .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
   phone_number: Yup.string()
     .required("Phone number is required")
     .matches(/^\d{10}$/, {
-      message: "Invalid phone number",
+      message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,
     }), // ,
-  address: Yup.string().required("Address is required"),
+  address: Yup.string()
+    .required("Address is required")
+    .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 
 export {
@@ -145,10 +180,10 @@ export {
   forgotPasswordSchema,
   resetPassSchema,
   addClientSchema,
-  addAgentSchema,
   changePasswordByAdmin,
   changePasswordByClient,
   editAgentSchema,
   AgentGroupSchema,
   accManagerSchema,
+  editClientSchema,
 };

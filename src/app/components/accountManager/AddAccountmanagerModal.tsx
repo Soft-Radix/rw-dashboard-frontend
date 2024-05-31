@@ -120,6 +120,7 @@ function AddAccountManagerModel({
           account_manager_id: accountManager_id,
         })
       );
+      setIsOpen((prev) => !prev);
     } else {
       formData.append("first_name", values.first_name);
       formData.append("last_name", values.last_name);
@@ -138,9 +139,9 @@ function AddAccountManagerModel({
 
     if (payload?.data?.status) {
       resetForm();
-      fetchManagerList();
-      setIsOpen(false);
     }
+    fetchManagerList();
+    setIsOpen((prev) => !prev);
   };
 
   const formik = useFormik({
@@ -157,22 +158,14 @@ function AddAccountManagerModel({
   useEffect(() => {
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
-      setIsOpen(false);
-      formik.resetForm();
+      setIsOpen((prev) => !prev), formik.resetForm();
       // fetchManagerList();
     } else if (!!accmanagerState?.errorMsg) {
-      setIsOpen(true);
+      setIsOpen((prev) => !prev);
       // dispatch(restAll());
     }
   }, [accmanagerState]);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    setIsOpen(true);
-  };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const handleMenuItemClick = (data: ClientType) => {
     if (data.userName === "All") {
@@ -251,6 +244,7 @@ function AddAccountManagerModel({
       }
     }
   }, [accManagerDetail, isOpen]);
+  console.log("🚀 ~ isOpen:", isOpen);
 
   return (
     <CommonModal
@@ -268,7 +262,7 @@ function AddAccountManagerModel({
       btnTitle={"Save"}
       disabled={actionStatus}
       onSubmit={formik.handleSubmit}
-      closeTitle="Cancel"
+      closeTitle="Close"
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -287,7 +281,7 @@ function AddAccountManagerModel({
           htmlFor="file-input" // The label triggers the file input when clicked
           className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer"
         >
-          <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+          <span className="absolute bottom-[-2px] right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
             <FuseSvgIcon className="text-white" size={20}>
               heroicons-outline:camera
             </FuseSvgIcon>
@@ -300,7 +294,7 @@ function AddAccountManagerModel({
             formik={formik}
             name="first_name"
             label="First Name"
-            placeholder="Enter your First Name"
+            placeholder="Enter First Name"
           />
           <InputField
             formik={formik}

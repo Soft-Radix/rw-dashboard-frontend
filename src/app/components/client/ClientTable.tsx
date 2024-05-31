@@ -26,6 +26,7 @@ function ClientTable({
   setfilters,
   filters,
   status = true,
+  isAllSelected = false,
 }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -42,6 +43,7 @@ function ClientTable({
 
   const renderCell = (cellId: string): boolean => {
     const { selectedColumn } = clientState ?? {};
+
     // If there's no selectedColumn or it's empty, always return true
     if (!selectedColumn || selectedColumn.length === 0) {
       return true;
@@ -73,14 +75,15 @@ function ClientTable({
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
               : status
-                ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
-                : ["ID", "Name", "Company Name", "Joining Date", ""]
+              ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
+              : ["ID", "Name", "Company Name", "Joining Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
           sortOrder={sortOrder}
           onSort={sortData}
           handleSelectAll={handleSelectAll}
+          isAllSelected={isAllSelected}
         >
           {clientState?.list?.length == 0 ? (
             <TableRow
@@ -101,12 +104,6 @@ function ClientTable({
                   <NoDataFound />
                   <Typography className="text-[24px] text-center font-600 leading-normal">
                     No data found !
-                    <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                      No data has been added yet. Please input the
-                    </p>
-                    <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                      necessary information to proceed.
-                    </p>
                   </Typography>
                 </div>
               </TableCell>
@@ -174,17 +171,17 @@ function ClientTable({
                       className="whitespace-nowrap font-500"
                     >
                       <span
-                        className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                        className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
                         ${
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subscription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subscription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subscription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subscription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subscription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                       >
                         {row.subscription_status || "N/A"}

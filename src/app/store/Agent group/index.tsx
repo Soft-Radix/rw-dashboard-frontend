@@ -114,7 +114,7 @@ export const addAgentInagentGroup = createAsyncThunk(
 );
 export const deleteAgentMemberGroup = createAsyncThunk(
   "agent-group-member/delete",
-  async (payload: deleteAgentGroupType) => {
+  async (payload: deleteAgentGroupType, { dispatch }) => {
     const response = await ApiHelperFunction({
       url: "agent-group-member/delete",
       method: "post",
@@ -148,7 +148,7 @@ export const searchAgentGroup = createAsyncThunk(
  * The initial state of the auth slice.
  */
 export const initialState: initialStateProps = {
-  status: "idle",
+  status: "loading",
   fetchStatus: "loading",
   actionStatus: false,
   successMsg: "",
@@ -262,7 +262,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(getAgentGroupList.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        state.status = "idle";
+
         if (!response.status) {
           toast.error(response?.message);
         } else {
@@ -272,6 +272,7 @@ export const agentGroupSlice = createSlice({
             10
           );
         }
+        state.status = "idle";
       })
       .addCase(getAgentGroupList.rejected, (state, action) => {
         state.status = "idle";
@@ -340,6 +341,7 @@ export const agentGroupSlice = createSlice({
       })
 
       .addCase(addAgentInagentGroup.pending, (state) => {
+        state.status = "loading";
         state.actionStatus = true;
       })
       .addCase(addAgentInagentGroup.fulfilled, (state, action) => {
@@ -350,6 +352,7 @@ export const agentGroupSlice = createSlice({
         state.searchAgentList = data.list;
         // console.log(state.searchAgentList, "serch");
         state.actionStatus = false;
+        state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
           state.total_records = calculatePageNumber(
@@ -360,6 +363,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
         state.actionStatus = false;
+        state.status = "idle";
       })
       .addCase(deleteAgentMemberGroup.pending, (state) => {
         state.actionStatusGroupMember = true;

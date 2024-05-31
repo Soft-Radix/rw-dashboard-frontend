@@ -46,6 +46,7 @@ export default function Clients() {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isAllSelected, setisAllSelected] = useState(false);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -69,12 +70,18 @@ export default function Clients() {
   };
 
   const handleCheckboxChange = (rowId: number) => {
-    setSelectedIds(
-      (prev) =>
-        prev.includes(rowId)
-          ? prev.filter((id) => id !== rowId) // Deselect
-          : [...prev, rowId] // Select
-    );
+    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+    let selectedId = selectedIds.includes(rowId)
+      ? [...selectedIds.filter((id) => id !== rowId)]
+      : [...selectedIds, rowId];
+
+    if (allRowIds.length == selectedId.length) {
+      setSelectedIds(allRowIds);
+      setisAllSelected(true);
+    } else {
+      setSelectedIds(selectedId); // Select all
+      setisAllSelected(false);
+    }
   };
 
   const handleSelectAll = () => {
@@ -84,10 +91,13 @@ export default function Clients() {
     );
     if (allSelected) {
       setSelectedIds([]); // Deselect all
+      setisAllSelected(false);
     } else {
+      setisAllSelected(true);
       setSelectedIds(allRowIds); // Select all
     }
   };
+
   const { actionStatusClient } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -163,6 +173,10 @@ export default function Clients() {
             "& .MuiInput-underline:after": {
               borderBottom: "none !important", // Hide the underline (if using underline variant)
             },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#757982", // Change placeholder color here
+              opacity: 1, // Override opacity
+            },
           }}
           InputProps={{
             startAdornment: (
@@ -189,6 +203,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          isAllSelected={isAllSelected}
         />
       ),
       actionBtn: ClientTabButton,
@@ -334,7 +349,7 @@ export default function Clients() {
           {selectedIds?.length > 0 && (
             <Button
               variant="contained"
-              className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
+              className="h-[40px] text-[16px] font-600 flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
               aria-label="delete"
               size="large"
               onClick={() => setIsOpenDeletedModal(true)}

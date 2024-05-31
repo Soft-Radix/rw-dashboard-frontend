@@ -39,18 +39,15 @@ import {
 import { useSelector } from "react-redux";
 import { debounce } from "lodash";
 import DeleteClient from "src/app/components/client/DeleteClient";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AccountManager() {
   const accountManager_Id = useParams();
-  console.log(accountManager_Id, "kk");
 
   const dispatch = useAppDispatch();
   const accManagerState = useSelector(
     (state: RootState) => state.accManagerSlice
   );
-  //@ts-ignore
-  // console.log("accManage========rttState.", accManagerState?.list?.length > 0);
-  // console.log(accManagerState?.list?.data?.list, "managerList");
 
   const theme: Theme = useTheme();
   const formik = useFormik({
@@ -79,6 +76,7 @@ export default function AccountManager() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -108,14 +106,6 @@ export default function AccountManager() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
-  // if (payload?.data?.status) {
-  //   setManagerFilterMenu((prevFilters) => ({
-  //     ...prevFilters,
-  //     start: assignAccManagerDetail.length - 1 == 0 ? 0 : prevFilters.start,
-  //   }));
-  //   dispatch(
-  //     getAccManagerList({ ...managerfilterMenu, client_id: client_id })
-  //   );
 
   const deleteAccManagerList = async (id: any) => {
     if (!!accManagerState.actionStatus || !id) return;
@@ -136,6 +126,11 @@ export default function AccountManager() {
       console.error("Failed to delete agent group:", error);
     }
   };
+
+  // if (accManagerState.status === "loading") {
+  //   return <ListLoading />;
+  // }
+
   return (
     <>
       <TitleBar title="Account Manager">
@@ -163,7 +158,8 @@ export default function AccountManager() {
           <CommonTable
             headings={["ID", "First Name", "Last Name", "Email", "Status", ""]}
           >
-            {accManagerState?.list?.length === 0 ? (
+            {accManagerState?.list?.length === 0 &&
+            accManagerState.status != "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -182,14 +178,15 @@ export default function AccountManager() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                        No data has been added yet. Please input the
-                      </p>
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                        necessary information to proceed.
-                      </p>
+                     
                     </Typography>
                   </div>
+                </TableCell>
+              </TableRow>
+            ) : accManagerState.status === "loading" ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (
@@ -207,7 +204,10 @@ export default function AccountManager() {
                         },
                       }}
                     >
-                      <TableCell scope="row" className="text-[14px] font-500">
+                      <TableCell
+                        scope="row"
+                        className="text-[14px] font-500 px-[20px]"
+                      >
                         {row.id}
                       </TableCell>
                       <TableCell
@@ -288,7 +288,7 @@ export default function AccountManager() {
         setIsOpen={setIsOpenDeletedModal}
         onDelete={() => deleteAccManagerList(deleteId)}
         heading={"Delete Account Manager"}
-        description={"Are you sure you want to delete this Account Manager  ? "}
+        description={"Are you sure you want to delete this Account Manager? "}
       />
     </>
   );

@@ -19,6 +19,7 @@ import toast from "react-hot-toast";
 import { subscriptionListItem } from "app/store/Client";
 import svg from "../../../../../../public/assets/icons/Layer_1-2.svg";
 import { useAppDispatch } from "app/store/store";
+import ListLoading from "@fuse/core/ListLoading";
 
 // const rows = [
 //   {
@@ -51,6 +52,7 @@ export default function SubscriptionList() {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [rows, setRows] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const itemsPerPage = 10;
 
   const { client_id } = useParams();
@@ -66,8 +68,10 @@ export default function SubscriptionList() {
         //@ts-ignore
         const res = await dispatch(subscriptionListItem(payload));
         setRows(res?.payload?.data?.data?.list);
+        setLoading(false);
         // toast.success(res?.payload?.data?.message);
       } catch (error) {
+        setLoading(false);
         console.error("Error fetching data:", error);
       }
     };
@@ -102,6 +106,9 @@ export default function SubscriptionList() {
       return "Cancelled";
     }
   };
+  if (loading == true) {
+    return <ListLoading />;
+  }
   return (
     <>
       {/* no subscription start */}
@@ -115,44 +122,34 @@ export default function SubscriptionList() {
               
             </div> */}
       {/* no subscription end */}
-      <div className="bg-white rounded-lg shadow-sm">
-        <CommonTable headings={["ID", "Title", "Start Date", "Status", "", ""]}>
-          {currentRows?.length === 0 ? (
-            <TableRow
-              sx={{
-                "& td": {
-                  borderBottom: "1px solid #EDF2F6",
-                  paddingTop: "12px",
-                  paddingBottom: "12px",
-                  color: theme.palette.primary.main,
-                },
-              }}
-            >
-              <TableCell colSpan={7} align="center">
-                <div
-                  className="flex flex-col justify-center align-items-center gap-40"
-                  style={{ alignItems: "center" }}
-                >
-                  {/* <NoSubscriptionData /> */}
-                  <img
-                    src={svg}
-                    alt="NoSubscription"
-                    className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"
-                  />
-                  {/* {svg} */}
-                  <Typography className="text-[48px] text-center font-700 leading-normal">
-                    No subscription found !
-                    {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
-                      No data has been added yet. Please input the
-                    </p> */}
-                    {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
-                      necessary information to proceed.
-                    </p> */}
-                  </Typography>
-                </div>
-              </TableCell>
-            </TableRow>
-          ) : (
+
+      {currentRows?.length === 0 ? (
+        <div
+          className="flex flex-col justify-center align-items-center gap-40 bg-[#F7F9FB] m-20 mt-0 p-20"
+          style={{ alignItems: "center" }}
+        >
+          {/* <NoSubscriptionData /> */}
+          <img
+            src={svg}
+            alt="NoSubscription"
+            className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"
+          />
+          {/* {svg} */}
+          <Typography className="text-[24px] text-center font-700 leading-normal">
+            No subscription found !
+            {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-20">
+            No data has been added yet. Please input the
+          </p> */}
+            {/* <p className="text-[18px] font-400 text-[#757982] leading-4 pt-10">
+            necessary information to proceed.
+          </p> */}
+          </Typography>
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow-sm">
+          <CommonTable
+            headings={["ID", "Title", "Start Date", "Status", "", ""]}
+          >
             <>
               {currentRows?.map((row, index) => (
                 <TableRow
@@ -203,28 +200,29 @@ export default function SubscriptionList() {
                   <TableCell align="left" className="w-[1%]">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        {/* <Link to={`/admin/client/subscription-detail/${row.id}`}> */}
-
-                        <ArrowRightCircleIcon />
-                        {/* </Link> */}
+                        <Link
+                          to={`/admin/client/subscription-detail/${row.id}`}
+                        >
+                          <ArrowRightCircleIcon />
+                        </Link>
                       </span>
                     </div>
                   </TableCell>
                 </TableRow>
               ))}
             </>
-          )}
-        </CommonTable>
-        <div className="flex justify-end py-14 px-[3rem]">
-          {currentRows?.length > 0 && (
-            <CommonPagination
-              count={totalPageCount}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            />
-          )}
+          </CommonTable>
+          <div className="flex justify-end py-14 px-[3rem]">
+            {currentRows?.length > 0 && (
+              <CommonPagination
+                count={totalPageCount}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
       {/* <AddAgentModel isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
     </>
   );

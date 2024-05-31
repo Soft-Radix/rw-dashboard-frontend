@@ -188,7 +188,7 @@ export const accManagerSlice = createSlice({
         toast.error(error?.message);
         state.actionStatus = false;
       })
-      .addCase(getAccManagerList.pending, (state) => {
+      .addCase(getAccManagerList.pending, (state, action) => {
         state.status = "loading";
       })
       .addCase(getAccManagerList.fulfilled, (state, action) => {

@@ -223,7 +223,7 @@ function AddAgentModel({
       disabled={agentState.actionStatus}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
-      closeTitle={"Cancel"}
+      closeTitle={"Close"}
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -242,7 +242,7 @@ function AddAgentModel({
           htmlFor="file-input" // The label triggers the file input when clicked
           className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer"
         >
-          <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+          <span className="absolute bottom-[-2px] right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
             <FuseSvgIcon className="text-white" size={20}>
               heroicons-outline:camera
             </FuseSvgIcon>
@@ -310,7 +310,7 @@ function AddAgentModel({
                 />
               </label>
               <span>
-                <AttachmentUploadIcon />
+                <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
             {uploadedFiles.map((file, index) => (
@@ -318,7 +318,7 @@ function AddAgentModel({
                 key={index}
                 className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
               >
-                <div className="mr-4 text-[16px] text-[#4F46E5] py-5 w-full flex  items-center">
+                <div className="mr-4 text-[16px] text-[#111827] py-5 w-full flex  items-center">
                   <PreviewIcon />
                   {file.name}
                 </div>

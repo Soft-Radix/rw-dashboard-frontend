@@ -20,12 +20,7 @@
 
 html {
   font-size: 62.5%;
-  font-family:
-    "Inter",
-    Roboto,
-    Helvetica Neue,
-    Arial,
-    sans-serif;
+  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #121212;
 }
 
@@ -342,7 +337,7 @@ input:-webkit-autofill:active {
   color: #f44336;
   background-color: #f443362e;
 }
-.PauseD {
+.Paused {
   color: #4c87af;
   background-color: #4ca8af2e;
 }
@@ -355,6 +350,12 @@ input:-webkit-autofill:active {
   color: #af4c4c;
   background-color: #af4c4c2e;
 }
+
+.Progress {
+  color: #4f46e5;
+  background-color: #ededfc;
+}
+
 .common-inputField .input_wrap .MuiInputBase-input {
   color: black !important;
 }
@@ -394,4 +395,16 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
 .facebook-login-btn:hover {
   background-color: rgb(245, 245, 245) !important;
   box-shadow: none !important;
+}
+
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-sizeSmall.whitespace-nowrap.muiltr-12112v9 {
+  padding: 26px 16px 32px !important;
+}
+
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-sizeSmall.w-\[400px\].muiltr-12112v9 {
+  padding: 26px 16px 32px !important;
+}
+
+td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-sizeSmall.w-\[1\%\].muiltr-12112v9 {
+  padding: 26px 16px 32px !important;
 }

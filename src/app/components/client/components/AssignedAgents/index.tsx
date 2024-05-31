@@ -14,13 +14,19 @@ import UnassignedAgent from "./UnassignedAgent";
 import { getAgentList } from "app/store/Agent";
 import { filterAgentType } from "app/store/Agent/Interafce";
 import { NoDataFound } from "public/assets/icons/common";
+import { addAgentInagentGroup } from "app/store/Agent group";
+import { filterType } from "app/store/Agent group/Interface";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
   agentfilterMenu,
 }) {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [filters, setfilters] = useState<filterAgentType>({
@@ -56,7 +62,7 @@ export default function AssignedAgents({
           ...prevFilters,
           start: assignedAgentDetail.length - 1 == 0 ? 0 : prevFilters.start,
         }));
-        dispatch(getAgentList(filters));
+        dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -104,12 +110,6 @@ export default function AssignedAgents({
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                        No data has been added yet. Please input the
-                      </p>
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                        necessary information to proceed.
-                      </p>
                     </Typography>
                   </div>
                 </TableCell>
@@ -199,7 +199,7 @@ export default function AssignedAgents({
         isOpen={isOpenUnssignedModal}
         setIsOpen={setIsOpenUnassignedModal}
         onDelete={() => unassignAgent(deleteId)}
-        description={"Are you sure you want to unassign this agent ?"}
+        description={"Are you sure you want to unassign this agent?"}
       />
     </>
   );

@@ -49,14 +49,52 @@ const validateBillingStartDate = (dateString) => {
 };
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Name is required"),
-  description: Yup.string().required("Description is required"),
+  name: Yup.string()
+    .transform((value) => (value ? value.trim() : ""))
+    .required("Name is required")
+    .test(
+      "not-only-spaces",
+      "Name cannot be only spaces",
+      (value) => value && value.trim().length > 0
+    )
+    .max(50, "Name should be less than or equal to 50 characters"),
+  description: Yup.string()
+    .transform((value) => (value ? value.trim() : ""))
+    .required("Description is required")
+    .test(
+      "not-only-spaces",
+      "Description cannot be only spaces",
+      (value) => value && value.trim().length > 0
+    )
+    .max(500, "Description should be less than or equal to 500 characters "),
+
   unit_price: Yup.number()
     .required("Unit Price is required")
-    .min(0.01, "Unit Price must be greater than 0"),
+    .min(0.01, "Unit Price must be greater than 0")
+    .test(
+      "decimal-places",
+      "Only two decimal places are allowed",
+      (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+    )
+    .test(
+      "max-length",
+      "Unit Price must be less than or equal to 6 digits",
+      (value: any) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+    ),
+
   quantity: Yup.number()
     .required("Quantity is required")
-    .min(1, "Quantity must be greater than 0"),
+    .min(0.01, "Quantity must be greater than 0")
+    .test(
+      "decimal-places",
+      "Only two decimal places are allowed",
+      (value: any) => value === undefined || /^\d+(\.\d{1,2})?$/.test(value)
+    )
+    .test(
+      "max-length",
+      "Quantity must be less than or equal to 6 digits",
+      (value: any) => value === undefined || /^\d{1,6}(\.\d{1,2})?$/.test(value)
+    ),
   billing_frequency: Yup.string().required("Billing Frequency is required"),
   billing_terms: Yup.string().required("Billing Terms are required"),
 
@@ -197,6 +235,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
   const mm = String(tomorrow.getMonth() + 1).padStart(2, "0"); // Months start at 0!
   const dd = String(tomorrow.getDate()).padStart(2, "0");
   const tomorrowStr = `${yyyy}-${mm}-${dd}`;
+  
   useEffect(() => {
     if (formik.values?.billing_start_date) {
       const validation = validateBillingStartDate(
@@ -216,6 +255,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
       setDateError("");
     }
   }, [formik]);
+
   return (
     <CommonModal
       open={isOpen}
@@ -289,7 +329,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
           formik={formik}
           name="billing_terms"
           label="Billing Terms"
-          placeholder="Fixed number of payments"
+          placeholder="Select"
           sx={{
             border: "0.5px solid #9DA0A6",
             "& .radioIcon": { display: "none" },
@@ -338,31 +378,36 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
             </label>
             <br />
           </div>
+          {formik.values.is_delay_in_billing == 1 && (
+            <>
+              <div className=" mb-[1rem]">
+                <label className="text-[16px] font-medium leading-[20px]">
+                  Billing Start Date ( Date of first payment )
+                </label>
+              </div>
 
-          <div className=" mb-[1rem]">
-            <label className="text-[16px] font-medium leading-[20px]">
-              Billing Start Date ( Date of first payment )
-            </label>
-          </div>
-
-          <input
-            type="date"
-            id="billing_start_date"
-            name="billing_start_date"
-            // min={new Date().toISOString().split("T")[0]}
-            min={tomorrowStr}
-            value={formik.values.billing_start_date || ""}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
-          />
-          {formik.touched.billing_start_date &&
-          formik.errors.billing_start_date ? (
-            <div className="text-red-600">
-              {formik.errors.billing_start_date}
-            </div>
-          ) : null}
-          {dateError ? <div className="text-red-600">{dateError}</div> : null}
+              <input
+                type="date"
+                id="billing_start_date"
+                name="billing_start_date"
+                // min={new Date().toISOString().split("T")[0]}
+                min={tomorrowStr}
+                value={formik.values.billing_start_date || ""}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="w-full h-[48px] px-4 py-2 border border-gray-300 rounded-md"
+              />
+              {formik.touched.billing_start_date &&
+              formik.errors.billing_start_date ? (
+                <div className="text-red-600">
+                  {formik.errors.billing_start_date}
+                </div>
+              ) : null}
+              {dateError ? (
+                <div className="text-red-600">{dateError}</div>
+              ) : null}
+            </>
+          )}
           {/* <DateInput /> */}
         </div>
       </div>

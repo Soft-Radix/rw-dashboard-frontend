@@ -11,7 +11,7 @@ import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
@@ -21,13 +21,49 @@ import CommonPagination from "src/app/components/pagination";
 import { filterType } from "app/store/AccountManager/Interface";
 import { RootState } from "app/store/store";
 import { useSelector } from "react-redux";
+import ListLoading from "@fuse/core/ListLoading";
 
-export const truncateText = (text, wordLimit) => {
-  const words = text.split(" ");
-  if (words?.length > wordLimit) {
-    return words.slice(0, wordLimit).join(" ") + "...";
-  }
-  return text;
+// export const truncateText = (text, wordLimit) => {
+//   const words = text.split(" ");
+//   if (words?.length > wordLimit) {
+//     const truncatedText = words.slice(0, wordLimit).join(" ") + "...";
+//     return (
+//       <Tooltip title={text} enterDelay={500}>
+//         <span>{truncatedText}</span>
+//       </Tooltip>
+//     );
+//   }
+//   return text;
+// };
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          // display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
 };
 
 export default function ManageProducts() {
@@ -43,6 +79,7 @@ export default function ManageProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(true);
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
@@ -60,7 +97,7 @@ export default function ManageProducts() {
     try {
       //@ts-ignore
       const res = await dispatch(productList(payload));
-
+      setLoading(false);
       setList(res?.payload?.data?.data?.list);
       const currentRows = res?.payload?.data?.data?.list?.slice(
         (currentPage - 1) * itemsPerPage,
@@ -70,6 +107,7 @@ export default function ManageProducts() {
         setCurrentPage(currentPage - 1);
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -161,6 +199,9 @@ export default function ManageProducts() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
+  // if (loading == true) {
+  //   return <ListLoading />;
+  // }
 
   return (
     <div>
@@ -168,7 +209,7 @@ export default function ManageProducts() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          className="h-[36px] text-[16px] flex gap-8 font-[600]"
           aria-label="Add Tasks"
           size="large"
           onClick={() => setIsOpenAddModal(true)}
@@ -182,7 +223,7 @@ export default function ManageProducts() {
           <CommonTable
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
-            {currentRows?.length === 0 ? (
+            {currentRows?.length === 0 && !loading ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -201,14 +242,14 @@ export default function ManageProducts() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                        No data has been added yet. Please input the
-                      </p>
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                        necessary information to proceed.
-                      </p>
                     </Typography>
                   </div>
+                </TableCell>
+              </TableRow>
+            ) : loading ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (
@@ -227,18 +268,25 @@ export default function ManageProducts() {
                         }}
                       >
                         <TableCell scope="row" className="w-[400px]  ">
-                          <Tooltip title={item.name} enterDelay={500}>
-                            <span>{truncateText(item.name, 5)}</span>
-                          </Tooltip>
+                          {/* <Tooltip title={item.name} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.name, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText text={item.name} maxWidth={400} />
                         </TableCell>
                         <TableCell align="center" className="w-[400px]  ">
-                          <Tooltip title={item.description} enterDelay={500}>
-                            <span>{truncateText(item.description, 5)}</span>
-                          </Tooltip>
+                          {/* <Tooltip title={item.description} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.description, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText
+                            text={item.description}
+                            maxWidth={400}
+                          />
                         </TableCell>
 
                         <TableCell align="center" className="whitespace-nowrap">
-                          ${item.unit_price}
+                          <p style={{ lineHeight: "15px" }}>
+                            ${item.unit_price}
+                          </p>
                         </TableCell>
                         <TableCell align="center" className="w-[1%]">
                           <div className="flex gap-20 pe-20">
@@ -265,61 +313,6 @@ export default function ManageProducts() {
                     </>
                   );
                 })}
-
-                {/* <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon
-                        onClick={() => {
-                          setIsOpenAddModal(true);
-                          setIsEditing(true);
-                        }}
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell scope="row">Jone Doe</TableCell>
-                <TableCell align="center" className="whitespace-nowrap">
-                  Lorem Ipsum
-                </TableCell>
-
-                <TableCell align="center" className="whitespace-nowrap">
-                  $100
-                </TableCell>
-
-                <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon onClick={() => setIsOpenAddModal(true)} />
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow> */}
               </>
             )}
           </CommonTable>

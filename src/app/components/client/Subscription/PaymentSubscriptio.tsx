@@ -11,12 +11,12 @@ const cardsData = [
     name: "Visa",
     type: "visa",
   },
-  {
-    title: "Bank Accounts",
-    lastDigits: "1428",
-    name: "HDFC bank",
-    type: "bank",
-  },
+  // {
+  //   title: "Bank Accounts",
+  //   lastDigits: "1428",
+  //   name: "HDFC bank",
+  //   type: "bank",
+  // },
 ];
 
 function PaymentMethods() {
@@ -31,7 +31,7 @@ function PaymentMethods() {
         <div className="flex justify-between flex-wrap gap-y-[32px] flex-col sm:flex-row ">
           {cardsData.map((card, index) => (
             <>
-              <div className="sm:w-[49%]  ">
+              <div className=" ">
                 <Typography
                   variant="h6"
                   className="mb-4 text-[20px] font-600 text-[#0A0F18] py-20 px-20"

@@ -14,6 +14,9 @@ import CancelButtonPage from "./CancelButtonPage";
 import ItemTable from "./ItemTable";
 import PaymentSubscriptio from "./PaymentSubscriptio";
 import SubLogTable from "./SubLogTable";
+import { subscriptionDetails } from "app/store/Client";
+import { getAdjustedDate } from "src/utils";
+import moment from "moment";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -89,18 +92,23 @@ export default function SubscriptionDetails() {
 
   const StatusMapping = (status) => {
     if (status == 0) {
-      return "Review";
+      return "Pending";
     } else if (status == 1) {
-      return "Progress";
-    } else if (status == 2) {
-      return "Pause";
-    } else if (status == 3) {
       return "Completed";
+    } else if (status == 2) {
+      return "Paused";
+    } else if (status == 3) {
+      return "Expired";
     } else if (status == 4) {
-      return "cancelled";
+      return "Cancelled";
     }
   };
 
+  const FutureDate = getAdjustedDate(
+    new Date(rows?.subscription_start_date),
+    Number(rows?.billing_frequency)
+  );
+  console.log("🚀 ~ FutureDate:", FutureDate);
   return (
     <>
       <TitleBar title="Subscriptions Details"></TitleBar>
@@ -142,33 +150,38 @@ export default function SubscriptionDetails() {
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
-                          {/* {rows?.userName} */}
+                          {rows?.userName ? rows?.userName : "N/A"}
                         </span>
                         <Button
                           variant="outlined"
-                          // className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
-                          //   rows?.status
-                          // )}`}
+                          className={`h-20 rounded-3xl  border-none sm:min-h-24 leading-none ${StatusMapping(
+                            rows?.status
+                          )}`}
                         >
                           {/* {`${
-                            rows.status == 0 || rows.status == 1 ? "In " : ""
-                          }${StatusMapping(rows.status)}`} */}
-                          kkjkj
+                            // rows?.status == 0 || rows?.status == 1 ? "In " : ""
+                          } */}
+                          {StatusMapping(rows?.status)}
+                          {/* kkjkj */}
                         </Button>
                       </div>
                       <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-8 ">
-                        <div className="flex items-center pr-20">
+                        <div className="flex items-center pr-20 gap-2">
                           <span>
                             <Timericon />
                           </span>
-                          {/* <span>{rows.subscription_start_date}</span> */}
+                          <span>
+                            {rows?.subscription_start_date
+                              ? rows?.subscription_start_date
+                              : "N/A"}
+                          </span>
                         </div>
                         <div className="flex">
                           <img
                             src="../assets/icons/ic_outline-email.svg"
                             className="mr-4"
                           />
-                          <span>info456@gmail.com</span>
+                          <span>{rows?.email ? rows?.email : "N/A"}</span>
                         </div>
                         <div className="flex items-center sm:px-20">
                           <span>
@@ -177,7 +190,7 @@ export default function SubscriptionDetails() {
                               className="mr-4"
                             />{" "}
                           </span>
-                          <span>+1 2513652150</span>
+                          <span>{rows?.phone ? rows?.phone : "N/A"}</span>
                         </div>
                       </div>
 
@@ -191,7 +204,9 @@ export default function SubscriptionDetails() {
                               src="../assets/icons/tech.svg"
                               className="mr-4"
                             />
-                            Tech 23.com
+                            <span>
+                              {rows?.company_name ? rows?.company_name : "N/A"}
+                            </span>
                           </span>
                         </div>
                         <div className="flex flex-col pr-10 gap-7 ">
@@ -204,7 +219,9 @@ export default function SubscriptionDetails() {
                                 src="../assets/icons/loaction.svg"
                                 className="mr-4"
                               />
-                              Tech 23.com
+                              <span>
+                                {rows?.address ? rows?.address : "N/A"}
+                              </span>
                             </span>
                           </div>
                         </div>
@@ -216,8 +233,43 @@ export default function SubscriptionDetails() {
 
               <Grid item lg={12} className="basis-full mt-[30px]"></Grid>
             </Grid>
-            <PaymentSubscriptio />
+            <Typography
+              variant="h6"
+              className="mb-4 text-[20px] font-600 text-[#0A0F18] py-20 px-20"
+            >
+              Credit card
+            </Typography>
+            {/* <PaymentSubscriptio /> */}
             <Grid container spacing="26px" className="">
+              <Grid item lg={6} className="basis-full">
+                {" "}
+                {/* <PaymentSubscriptio />
+                 */}
+                <div className=" ">
+                  <div
+                    className="p-16 pe-20 rounded-[10px] bg-bgGrey basis-full lg:basis-[calc(50%_-_16px)]"
+                    // key={index}
+                  >
+                    <div className="flex items-center gap-[1.8rem]">
+                      <div className="w-[86px] h-[68px] rounded-8 bg-white flex items-center justify-center shrink-0">
+                        <img
+                          src="/assets/images/pages/billing/visa.svg"
+                          className="max-w-[64px]"
+                          alt="visa"
+                        />
+                      </div>
+                      <div className="flex items-start justify-between gap-10 grow">
+                        <div>
+                          <h4 className="text-title text-xl font-700 mb-8">
+                            **** **** **** 2020
+                          </h4>
+                          <p className="text-lg text-title_light">Visa</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Grid>
               <Grid item lg={6} className="basis-full">
                 <Link to="/change-password" className="contents">
                   <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey">
@@ -229,8 +281,10 @@ export default function SubscriptionDetails() {
                         Last payment amount and date
                       </Typography>
                       <p className="text-para_light">
-                        <span className="text-secondary">$230</span>, Feb 23,
-                        2024
+                        <span className="text-secondary">
+                          ${rows?.total_price}
+                        </span>
+                        , {rows?.subscription_start_date}
                       </p>
                     </div>
                     <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
@@ -249,7 +303,10 @@ export default function SubscriptionDetails() {
                       Next payment amount and date
                     </Typography>
                     <p className="text-para_light">
-                      <span className="text-secondary">$230</span>, Feb 23, 2024
+                      <span className="text-secondary">
+                        ${rows?.total_price},{" "}
+                      </span>
+                      {!FutureDate ? "Paid" : moment(FutureDate).format("LL")}
                     </p>
                   </div>
                   <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
@@ -261,7 +318,7 @@ export default function SubscriptionDetails() {
           </Box>
         </div>
       </div>
-      <ItemTable />
+      <ItemTable row={rows} />
       <SubLogTable />
       <AddAgentModel
         isOpen={isOpenAddModal}

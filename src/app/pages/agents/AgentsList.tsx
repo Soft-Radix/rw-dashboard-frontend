@@ -82,6 +82,7 @@ export default function AgentsList() {
   useEffect(() => {
     fetchAgentList();
   }, [filters]);
+
   return (
     <>
       <TitleBar title="Agents">
@@ -120,7 +121,8 @@ export default function AgentsList() {
               "",
             ]}
           >
-            {agentState?.list?.length === 0 ? (
+            {agentState?.list?.length === 0 &&
+            agentState.status != "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -139,12 +141,7 @@ export default function AgentsList() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-20">
-                        No data has been added yet. Please input the
-                      </p>
-                      <p className="text-[16px] font-300 text-[#757982] leading-4 pt-10">
-                        necessary information to proceed.
-                      </p>
+                      
                     </Typography>
                   </div>
                 </TableCell>
@@ -168,7 +165,7 @@ export default function AgentsList() {
                     },
                   }}
                 >
-                  <TableCell scope="row" className="font-500">
+                  <TableCell scope="row" className="font-500 pl-[20px]">
                     {row.id}
                   </TableCell>
                   <TableCell
