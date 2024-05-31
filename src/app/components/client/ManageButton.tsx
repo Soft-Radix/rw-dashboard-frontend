@@ -38,7 +38,6 @@ export default function ManageButton() {
   const handleToggleItem = (itemName: string) => () => {
     dispatch(updateSelectedColumn(itemName));
   };
-
   return (
     <div>
       <Button

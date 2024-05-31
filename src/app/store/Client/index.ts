@@ -473,7 +473,7 @@ export const clientSlice = createSlice({
     restAll: (state) => {
       state.successMsg = "";
       state.errorMsg = "";
-      state.selectedColumn = [];
+      // state.selectedColumn = [];
     },
     changeFetchStatus: (state) => {
       state.fetchStatus = "loading";
@@ -770,7 +770,11 @@ export const clientSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
-  clientSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  updateSelectedColumn,
+  sortColumn,
+} = clientSlice.actions;
 
 export default clientSlice.reducer;

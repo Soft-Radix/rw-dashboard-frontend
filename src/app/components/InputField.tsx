@@ -63,6 +63,7 @@ function InputField({
       formik.setFieldValue(name, value);
     }
   };
+
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (
@@ -78,7 +79,8 @@ function InputField({
             decimalScale={2}
             allowNegative={false}
             allowLeadingZeros={false}
-            className={"w-full p-[14px]"}
+            className={"w-full p-[14px] !placeholder-[#8a8d94] "}
+            placeholder={rest?.placeholder}
           />
         ) : (
           <TextField

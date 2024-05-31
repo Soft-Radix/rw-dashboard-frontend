@@ -128,14 +128,14 @@ export default function Clients() {
         active == "all"
           ? 0
           : active == "active"
-            ? 1
-            : active == "paused"
-              ? 2
-              : active == "cancel"
-                ? 3
-                : active == "pastDue"
-                  ? 4
-                  : null,
+          ? 1
+          : active == "paused"
+          ? 2
+          : active == "cancel"
+          ? 3
+          : active == "pastDue"
+          ? 4
+          : null,
     };
     dispatch(getClientList(payload));
   }, [dispatch, filters, active]);
@@ -157,7 +157,7 @@ export default function Clients() {
   };
   const ClientTabButton = () => {
     return (
-      <div className="flex flex-col gap-10 sm:flex-row">
+      <div className="flex flex-col gap-10 sm:flex-row relative">
         <TextField
           hiddenLabel
           id="filled-hidden-label-small"
@@ -166,8 +166,12 @@ export default function Clients() {
           variant="standard"
           placeholder="Search Client"
           onChange={handleSearchChange}
+          className="flex items-center justify-center"
           sx={{
+            height: "50px",
             pl: 2,
+            width: "286px",
+            pr: 2,
             // border: "1px solid blue",
             backgroundColor: "#F6F6F6",
             borderRadius: "8px",
@@ -193,13 +197,13 @@ export default function Clients() {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon className="p-2" />
+                <SearchIcon className="pl-2" />
               </InputAdornment>
             ),
-            endAdornment: (
+            endAdornment: inputValue != "" && (
               <InputAdornment position="end">
                 <CrossGreyIcon
-                  className="mr-16 p-1 cursor-pointer fill-[#c2cad2] h-[14px]"
+                  className=" cursor-pointer fill-[#c2cad2] h-[14px] "
                   onClick={handleInputClear}
                 />
               </InputAdornment>
