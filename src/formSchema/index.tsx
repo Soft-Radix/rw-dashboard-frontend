@@ -175,7 +175,7 @@ const AgentGroupSchema = Yup.object({
       /^[A-Za-z]+(?: [A-Za-z]+)*$/,
       "Group name cannot start with a space"
     )
-    .max(30, "Group name cannot be longer than 30 characters"),
+    .max(30, "Group name should be less than or equal to 30 characters"),
 });
 const AddAgentGroupSchema = Yup.object({
   group_names: Yup.string()
@@ -184,7 +184,7 @@ const AddAgentGroupSchema = Yup.object({
       /^[A-Za-z]+(?: [A-Za-z]+)*$/,
       "Group name should only contain letters and single spaces between words, with no initial spaces"
     )
-    .max(30, "Group name cannot be longer than 30 characters"),
+    .max(30, "Group name should be less than or equal to 30 characters"),
 });
 const accManagerSchema = Yup.object({
   first_name: Yup.string()
