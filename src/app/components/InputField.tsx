@@ -29,7 +29,7 @@ function InputField({
 }: CustomButtonProps & TextFieldProps) {
   const [isType, setIsType] = useState<string>(type);
   const handleEyeToggle = () => {
-    setIsType(isType === "text" ? "password" : "number" ? "number" : "text");
+    setIsType(isType == "text" ? "password" : "text");
   };
   const inputRef = useRef(null);
 
@@ -63,7 +63,6 @@ function InputField({
       formik.setFieldValue(name, value);
     }
   };
-
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (

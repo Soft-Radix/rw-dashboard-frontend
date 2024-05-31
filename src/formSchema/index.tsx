@@ -15,15 +15,11 @@ const emailField = {
   email: Yup.string()
     .required("Email Address is required")
     .email("Please enter valid email address")
-    .test(
-      "is-valid-email",
-      "Email must contain a dot and a domain",
-      (value) => {
-        // This will check if the email contains at least one dot after the '@'
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailPattern.test(value);
-      }
-    ), // Check for a valid email structure
+    .test("is-valid-email", "Please enter valid email address", (value) => {
+      // This will check if the email contains at least one dot after the '@'
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailPattern.test(value);
+    }), // Check for a valid email structure
 };
 
 /**
@@ -97,10 +93,7 @@ const addClientSchema = Yup.object({
   ...emailField,
   company_name: Yup.string()
     .required("Compnay name is required")
-    .matches(
-      /^\S.*\S$|^\S$/,
-      "Company name must not start or end with a space and should not be empty"
-    )
+    .matches(/^\S.*\S$|^\S$/, "No spaces allowed")
     .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 const editClientSchema = Yup.object({
@@ -130,10 +123,7 @@ const editClientSchema = Yup.object({
   company_name: Yup.string()
     .required("Compnay name is required")
 
-    .matches(
-      /^\S.*\S$|^\S$/,
-      "Company name must not start or end with a space and should not be empty"
-    )
+    .matches(/^\S.*\S$|^\S$/, "No spaces allowed")
     .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
 });
 
