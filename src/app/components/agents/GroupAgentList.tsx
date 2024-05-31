@@ -192,6 +192,7 @@ export default function GroupAgentsList() {
                 <InputField
                   formik={formik}
                   name="group_name"
+                  id="group_name"
                   label="Group Name"
                 />
                 <div className="absolute left-0 top-[97%]">

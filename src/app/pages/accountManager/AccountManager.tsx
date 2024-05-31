@@ -65,6 +65,7 @@ export default function AccountManager() {
     setfilters((prevFilters) => ({
       ...prevFilters,
       search: searchValue,
+      start: 0,
     }));
   }, 300); // Adjust the delay as needed (300ms in this example)
 
@@ -151,7 +152,7 @@ export default function AccountManager() {
           <div className="p-[2rem]">
             <SearchInput
               name="search"
-              placeholder="Search agents"
+              placeholder="Search Account Manger "
               onChange={(e) => handleSearchChange(e)}
             />
           </div>
@@ -178,7 +179,6 @@ export default function AccountManager() {
                     <NoDataFound />
                     <Typography className="text-[24px] text-center font-600 leading-normal">
                       No data found !
-                     
                     </Typography>
                   </div>
                 </TableCell>
