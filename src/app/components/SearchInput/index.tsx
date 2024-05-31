@@ -29,10 +29,12 @@ function SearchInput({
         variant="standard"
         placeholder={placeholder}
         onChange={onChange}
-        className="ps-[1rem] w-full sm:w-[300px] flex items-center justify-center"
+        className="flex items-center justify-center"
         sx={{
           height: "50px",
           pl: 2,
+          pr: 2,
+          width: "286px",
           // border: "1px solid blue",
           backgroundColor: "#F6F6F6",
           borderRadius: "8px",
@@ -58,13 +60,13 @@ function SearchInput({
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
-              <SearchIcon className="p-2" />
+              <SearchIcon className="pl-2" />
             </InputAdornment>
           ),
-          endAdornment: (
+          endAdornment: inputValue != "" && (
             <InputAdornment position="end">
               <CrossGreyIcon
-                className="mr-16 p-1 cursor-pointer fill-[#c2cad2] h-[14px]"
+                className="  cursor-pointer fill-[#c2cad2] h-[14px]"
                 onClick={handleInputClear}
               />
             </InputAdornment>

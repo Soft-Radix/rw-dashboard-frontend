@@ -112,7 +112,7 @@ export default function AssignedAgents({
                       "& td": {
                         borderBottom: "1px solid #EDF2F6",
                         paddingTop: "26px",
-                        paddingBottom: "12px",
+                        paddingBottom: "32px",
                         color: theme.palette.primary.main,
                       },
                     }}
