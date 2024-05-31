@@ -54,7 +54,7 @@ export default function GroupAgentsList() {
   const navigate = useNavigate();
   const [rows, setRows] = useState<any[]>([]);
   const [currentRows, setCurrentRows] = useState<any>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
@@ -158,12 +158,9 @@ export default function GroupAgentsList() {
       : [];
     setCurrentRows([...data]);
   }, [agentGroupDetail, group_id]);
-  console.log(
-    "🚀 ~ GroupAgentsList ~ agentGroupDetail:",
-    agentGroupDetail.group_members
-  );
+  console.log("🚀 ~ GroupAgentsList ~ agentGroupDetail:", agentGroupDetail);
 
-  if (agentGroupDetail?.fetchStatus == "loading") {
+  if (agentGroupDetail?.fetchStatus == "loading" || loading == true) {
     return <ListLoading />;
   }
   // useEffect(() => {
@@ -189,12 +186,13 @@ export default function GroupAgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <form onSubmit={formik.handleSubmit}>
-            <div className="p-[2rem]   flex items-end gap-20 flex-col sm:flex-row w-full">
+            <div className="p-[2rem] flex items-end gap-20 flex-col sm:flex-row w-full">
               {/* Use formik.handleSubmit as the onSubmit handler */}
               <div className="relative">
                 <InputField
                   formik={formik}
                   name="group_name"
+                  id="group_name"
                   label="Group Name"
                 />
                 <div className="absolute left-0 top-[97%]">
@@ -224,7 +222,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               {" "}
-              {currentRows?.length === 0 && !loading ? (
+              {currentRows?.length == 0 && !loading ? (
                 <TableRow
                   sx={{
                     "& td": {
