@@ -51,7 +51,10 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .trim()
+      .required("Name is required")
+      .min(1, "Name is required"),
   });
 
   const formik = useFormik({

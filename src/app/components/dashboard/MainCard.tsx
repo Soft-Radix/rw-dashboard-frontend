@@ -53,8 +53,12 @@ export default function MainCard({
     setAnchorEl(null);
   };
   const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .trim()
+      .required("Name is required")
+      .min(1, "Name is required"),
   });
+
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
@@ -249,7 +253,7 @@ export default function MainCard({
       </CommonModal>
       <ActionModal
         modalTitle="Delete Column"
-        modalSubTitle="Are you sure you want to delete this column ?"
+        modalSubTitle="Are you sure you want to delete this column?"
         open={openDeleteModal}
         handleToggle={toggleDeleteModal}
         type="delete"

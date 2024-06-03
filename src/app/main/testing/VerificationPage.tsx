@@ -127,7 +127,7 @@ export default function VerificationPage() {
                 <div className="flex justify-center align-items-center flex-col">
                   {list?.map((item, index) => (
                     <>
-                      <Typography className="block text-[16px] font-medium text-center text-[#111827] mb-5">
+                      <Typography className="block text-[16px] font-medium text-center text-[#111827] mt-20">
                         {item.title}
                       </Typography>
                       {/* <Button
@@ -140,7 +140,7 @@ export default function VerificationPage() {
                       <Button
                         variant="contained"
                         color="secondary"
-                        className="mt-28 w-full h-[50px] text-[18px] font-bold"
+                        className=" w-full h-[50px] text-[18px] font-bold"
                         aria-label="Log In"
                         size="large"
                         type="submit"

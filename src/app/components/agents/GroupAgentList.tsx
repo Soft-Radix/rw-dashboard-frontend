@@ -1,32 +1,6 @@
-import {
-  Button,
-  Checkbox,
-  Input,
-  TableCell,
-  TableRow,
-  Theme,
-  Typography,
-} from "@mui/material";
+import ListLoading from "@fuse/core/ListLoading";
+import { Button, TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  NoDataFound,
-} from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddGroupModel from "src/app/components/agents/AddGroupModel";
-import SearchInput from "src/app/components/SearchInput";
-import InputField from "../InputField";
-import { useAppDispatch } from "app/store/store";
 import {
   addAgentInagentGroup,
   changeFetchStatus,
@@ -34,19 +8,28 @@ import {
   getAgentGroupInfo,
   updateGroupName,
 } from "app/store/Agent group";
-import { useSelector } from "react-redux";
 import {
-  AgentGroupIDType,
   AgentGroupRootState,
   AgentGroupType,
   UpdateAgentGroupPayload,
 } from "app/store/Agent group/Interface";
-import DeleteClient from "../client/DeleteClient";
-import { filterType } from "app/store/Client/Interface";
-import { AgentGroupSchema } from "src/formSchema";
-import ListLoading from "@fuse/core/ListLoading";
-import { getAgentList } from "app/store/Agent";
 import { AgentRootState } from "app/store/Agent/Interafce";
+import { filterType } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
+import { useFormik } from "formik";
+import { DeleteIcon, NoDataFound } from "public/assets/icons/common";
+import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router";
+import { Link } from "react-router-dom";
+import TitleBar from "src/app/components/TitleBar";
+import AddGroupModel from "src/app/components/agents/AddGroupModel";
+import CommonTable from "src/app/components/commonTable";
+import CommonPagination from "src/app/components/pagination";
+import { AgentGroupSchema } from "src/formSchema";
+import InputField from "../InputField";
+import DeleteClient from "../client/DeleteClient";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);

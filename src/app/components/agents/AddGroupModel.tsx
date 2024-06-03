@@ -103,7 +103,7 @@ function AddGroupModel({
     limit: -1,
     search: "",
   });
-
+  const { start, limit, search } = filterMenu;
   const formik = useFormik({
     initialValues: {
       group_names: "",
@@ -124,9 +124,13 @@ function AddGroupModel({
     debouncedSearch(value);
   };
   // console.log(filterMenu, "ggg");
+
   useEffect(() => {
-    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
-  }, [filterMenu]);
+    if (isNewAgent) {
+      dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    }
+  }, [start, limit, search]);
+
   // console.log(checkedItems, "hhh");
   useEffect(() => {
     if (!!agentGroupState?.successMsg) {
