@@ -104,7 +104,7 @@ export default function CommonModal({
         <Button
           variant="contained"
           color="secondary"
-          className="w-[156px] h-[48px] text-[18px]"
+          className={`${disabled ? "btn-disable" : ""} w-[156px] h-[48px] text-[18px]`}
           onClick={onSubmit}
           disabled={!isValid || disabled}
         >
@@ -114,7 +114,7 @@ export default function CommonModal({
           variant="outlined"
           disabled={disabled}
           color="secondary"
-          className="w-[156px] h-[48px] text-[18px] ml-14"
+          className={`${disabled ? "btn-disable-light" : ""} w-[156px] h-[48px] text-[18px] ml-14`}
           onClick={handleToggle}
         >
           {closeTitle}
