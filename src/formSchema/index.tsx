@@ -117,7 +117,7 @@ const editClientSchema = Yup.object({
     .required("Phone number is required")
     .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
-      message: "Invalid phone number",
+      message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,
     }),
   company_name: Yup.string()
