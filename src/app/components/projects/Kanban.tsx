@@ -169,14 +169,16 @@ const Kanban = (props: IProps): JSX.Element => {
       <div className="px-20 mb-20">
         <FilterPage filterDesign={true} />
       </div>
-      <div className="flex gap-20 overflow-x-auto px-28 pb-28 items-start">
+      <div
+        className={`flex ${columnList?.length > 0 ? "gap-20" : ""} overflow-x-auto px-28 pb-28 items-start`}
+      >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex gap-20"
+                className={`flex  ${columnList?.length > 0 ? "gap-20" : ""}`}
               >
                 {columnList?.map((item, index) => (
                   <Draggable
