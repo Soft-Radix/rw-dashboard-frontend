@@ -349,7 +349,7 @@ export const agentGroupSlice = createSlice({
         // console.log(response, "findttt");
         const { data } = action.payload?.data;
         // console.log(data, "dgftdfdf");
-        state.searchAgentList = data.list;
+        state.searchAgentList = data?.list;
         // console.log(state.searchAgentList, "serch");
         state.actionStatus = false;
         state.status = "idle";
@@ -373,10 +373,9 @@ export const agentGroupSlice = createSlice({
         const { member_id } = action.meta?.arg;
         // console.log(group_id, "idd");
         if (payload?.data?.status) {
-          state.agentGroupDetail.group_members =
-            state.agentGroupDetail.group_members.filter(
-              (item) => item.id !== member_id
-            );
+          state.agentGroupDetail.group_members = state.agentGroupDetail.group_members.filter(
+            (item) => item.id !== member_id
+          );
 
           state.actionStatusGroupMember = false;
           toast.success(payload?.data?.message);
@@ -391,7 +390,11 @@ export const agentGroupSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
-  agentGroupSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  updateSelectedColumn,
+  sortColumn,
+} = agentGroupSlice.actions;
 
 export default agentGroupSlice.reducer;
