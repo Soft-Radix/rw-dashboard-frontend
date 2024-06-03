@@ -17,6 +17,10 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { getLocalStorage } from "src/utils";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import store from "./store/store";
 import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
 
 // import axios from 'axios';
@@ -45,6 +49,7 @@ const emotionCacheOptions = {
  */
 function App() {
   const dispatch = useDispatch<AppDispatch>();
+  const persistor = persistStore(store);
   useEffect(() => {
     const userDetail = getLocalStorage("userDetail");
     dispatch(setInitialState(userDetail));
@@ -61,6 +66,8 @@ function App() {
   const mainTheme = useSelector(selectMainTheme);
 
   return (
+    // <Provider store={store}>
+    //   <PersistGate loading={null} persistor={persistor}>
     <MockAdapterProvider>
       <CacheProvider
         value={createCache(emotionCacheOptions[langDirection] as Options)}
@@ -81,6 +88,8 @@ function App() {
         </FuseTheme>
       </CacheProvider>
     </MockAdapterProvider>
+    //   </PersistGate>
+    // </Provider>
   );
 }
 

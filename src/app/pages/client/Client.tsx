@@ -57,15 +57,6 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // Debounce function to delay executing the search
-  // const debouncedSearch = debounce((searchValue) => {
-  //   // Update the search filter here
-  //   setfilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     search: searchValue,
-  //     start: 0,
-  //   }));
-  // }, 300); // Adjust the delay as needed (300ms in this example)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -77,6 +68,10 @@ export default function Clients() {
     }, 500);
     return () => clearTimeout(timeoutId);
   }, [inputValue, 500]);
+
+  useEffect(() => {
+    setfilters({ start: 0, limit: 10, search: "" });
+  }, [active]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;

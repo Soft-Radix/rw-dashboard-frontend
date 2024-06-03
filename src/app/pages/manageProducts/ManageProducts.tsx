@@ -23,19 +23,6 @@ import { RootState } from "app/store/store";
 import { useSelector } from "react-redux";
 import ListLoading from "@fuse/core/ListLoading";
 
-// export const truncateText = (text, wordLimit) => {
-//   const words = text.split(" ");
-//   if (words?.length > wordLimit) {
-//     const truncatedText = words.slice(0, wordLimit).join(" ") + "...";
-//     return (
-//       <Tooltip title={text} enterDelay={500}>
-//         <span>{truncatedText}</span>
-//       </Tooltip>
-//     );
-//   }
-//   return text;
-// };
-
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef(null);
@@ -85,18 +72,12 @@ export default function ManageProducts() {
     limit: 10,
     search: "",
   });
-  const accManagerState = useSelector(
-    (state: RootState) => state.accManagerSlice
-  );
+  const accManagerState = useSelector((state: RootState) => state.client);
+
   const fetchData = async () => {
-    const payload = {
-      start: 0,
-      limit: 100,
-      search: "",
-    };
     try {
       //@ts-ignore
-      const res = await dispatch(productList(payload));
+      const res = await dispatch(productList(filters));
       setLoading(false);
       setList(res?.payload?.data?.data?.list);
       const currentRows = res?.payload?.data?.data?.list?.slice(
@@ -114,7 +95,11 @@ export default function ManageProducts() {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, id, isOpenAddModal]);
+  }, [filters]);
+
+  useEffect(() => {
+    fetchData();
+  }, [dispatch, isOpenAddModal]);
 
   const onDelete = async () => {
     setDisable(true);
@@ -141,7 +126,6 @@ export default function ManageProducts() {
       console.error("Error fetching data:", error);
     }
   };
-
   const fetchUpdateData = async (payload: any) => {
     setId(null);
     try {
@@ -158,35 +142,6 @@ export default function ManageProducts() {
   };
 
   const totalPageCount = Math.ceil(list?.length / itemsPerPage);
-
-  // const handlePageChange = (
-  //   event: React.ChangeEvent<unknown>,
-  //   page: number
-  // ) => {
-  //   setCurrentPage(page);
-  //   // Handle any additional logic when the page changes, e.g., fetching data
-  // };
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    // Handle any additional logic when the page changes, e.g., fetching data
-    let newPage = page;
-
-    // Check if the current page's rows are empty
-    const currentRows = list?.slice(
-      (page - 1) * itemsPerPage,
-      page * itemsPerPage
-    );
-
-    if (currentRows.length === 0) {
-      // If current rows are empty and not on the first page, go to the previous page
-      newPage = page - 1;
-    }
-
-    setCurrentPage(newPage);
-  };
 
   const currentRows = list?.slice(
     (currentPage - 1) * itemsPerPage,
@@ -324,9 +279,9 @@ export default function ManageProducts() {
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
-              count={totalPageCount}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
+              count={accManagerState?.total_records}
+              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
+              page={filters.start + 1}
             />
           </div>
         </div>

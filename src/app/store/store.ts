@@ -20,6 +20,8 @@ import { clientSlice } from "./Client";
 import { agentSlice } from "./Agent";
 import { agentGroupSlice } from "./Agent group";
 import { accManagerSlice } from "./AccountManager";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 /**
  * The dynamic middleware instance.
@@ -54,6 +56,15 @@ const staticReducers: ReducersMapObject = {
   i18n,
   [apiService.reducerPath]: apiService.reducer,
   auth: authSlice.reducer,
+  // client: persistReducer(
+  //   {
+  //     key: "client",
+  //     storage,
+  //     whitelist: ["selectedColumn"], // Add the field you want to persist
+  //     timeout: 10000,
+  //   },
+  //   clientSlice.reducer
+  // ),
   client: clientSlice.reducer,
   agent: agentSlice.reducer,
   agentGroup: agentGroupSlice.reducer,
