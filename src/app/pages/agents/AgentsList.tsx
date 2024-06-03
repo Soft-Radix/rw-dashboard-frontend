@@ -68,7 +68,7 @@ export default function AgentsList() {
       start: 0,
       search: searchValue,
     }));
-  }, 300);
+  }, 1500);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
