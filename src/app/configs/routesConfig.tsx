@@ -39,7 +39,7 @@ import ManageProductsConfig from "../pages/manageProducts/manageProductConfig";
 import VerificationConfig from "../main/testing/VerificationConfig";
 import SucessConfig from "../main/subscriptionSuccess/SucessConfig";
 import CancelConfig from "../main/subscriptionCancel/CancelConfig";
-import UploadKycConfig from "../main/uploadKYC/UploadKycConfig";
+import MyAgentsConfig from "../pages/myAgent/MyAgentsConfig";
 
 const commonRoutes = [
   {
@@ -76,13 +76,13 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   VerificationConfig,
   SucessConfig,
   CancelConfig,
-  UploadKycConfig,
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [
   ClientDashboardConfig,
   ProjectsConfig,
   TasksConfig,
+  MyAgentsConfig,
   SignOutConfig,
   SignInConfig,
   SignUpConfig,
@@ -103,7 +103,7 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   VerificationConfig,
   SucessConfig,
   CancelConfig,
-  UploadKycConfig,
+  AgentOnBoardConfig,
 ];
 
 /**

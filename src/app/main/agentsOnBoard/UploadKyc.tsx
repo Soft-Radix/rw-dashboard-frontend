@@ -6,18 +6,20 @@ import { setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
 import InputField from "src/app/components/InputField";
 import { resetPassSchema } from "src/formSchema";
+import Webcam from "react-webcam";
 import {
   CircleLeft1Icon,
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import { CameraIcon } from "public/assets/icons/welcome";
+import { Camera } from "public/assets/icons/common";
+import { useNavigation } from "react-router";
 
 type FormType = {
   cnfPassword: string;
@@ -30,6 +32,29 @@ export default function UploadKyc() {
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [frontID, setFrontID] = useState(null);
+  const [backID, setBackID] = useState(null);
+  const [webcamCapture, setWebcamCapture] = useState(null);
+  const webcamRef = React.useRef(null);
+  const handleFrontIDChange = (event) => {
+    setFrontID(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleBackIDChange = (event) => {
+    setBackID(URL.createObjectURL(event.target.files[0]));
+  };
+
+  const handleWebcamFrontCapture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setWebcamCapture(imageSrc);
+    setFrontID(imageSrc);
+  }, [webcamRef]);
+
+  const handleWebcamBackCapture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setWebcamCapture(imageSrc);
+    setBackID(imageSrc);
+  }, [webcamRef]);
 
   const store = useSelector((store: AuthRootState) => store.auth);
 
@@ -57,15 +82,12 @@ export default function UploadKyc() {
       navigate("/sign-in");
     }
   }
-  const title = [
-    {
-      description: " Upload Front ID Pic",
-    },
-    {
-      description: " Upload Back ID Pic",
-    },
-  ];
-  //
+
+  const handleButtonClick = () => {
+    // Navigate to '/photo-id' route
+    navigate("/photo-id");
+  };
+
   return (
     <>
       <div className="flex items-center flex-col gap-32 py-60 ">
@@ -83,27 +105,80 @@ export default function UploadKyc() {
               </p>
             </Typography>
             <div className="flex items-center justify-center gap-20 sm:flex-row flex-col py-32 ">
-              {title.map((data) => (
-                <div className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 px-60 gap-14">
-                  <CameraIcon />
-                  <Typography className="text-[16px] font-500 text-[#111827]">
-                    {data.description}
-                  </Typography>
-                </div>
-              ))}
+              <div className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60  gap-14 w-[266px] h-[206px]">
+                <button
+                  onClick={handleWebcamFrontCapture}
+                  className="  text-white px-4 py-2 "
+                >
+                  <Camera />
+                </button>
+
+                <label className=" cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleFrontIDChange}
+                  />
+                  {frontID ? (
+                    <img
+                      src={frontID}
+                      alt="Front ID"
+                      className="w-full max-w-xs max-h-[50px] "
+                    />
+                  ) : (
+                    <div className="w-full max-w-xs h-40  flex justify-center items-center">
+                      <Typography className="text-[16px] font-500 text-[#111827]">
+                        Upload Front ID Pic
+                      </Typography>
+                    </div>
+                  )}
+                </label>
+              </div>
+
+              <div className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 w-[266px] h-[206px] gap-14">
+                <button
+                  onClick={handleWebcamBackCapture}
+                  className="  text-white px-4 py-2 "
+                >
+                  <Camera />
+                </button>
+
+                <label className=" cursor-pointer">
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={handleBackIDChange}
+                  />
+                  {backID ? (
+                    <img
+                      src={backID}
+                      alt="Front ID"
+                      className="w-full max-w-xs max-h-[50px] "
+                    />
+                  ) : (
+                    <div className="w-full max-w-xs h-40  flex justify-center items-center">
+                      <Typography className="text-[16px] font-500 text-[#111827]">
+                        Upload Back ID Pic
+                      </Typography>
+                    </div>
+                  )}
+                </label>
+              </div>
             </div>
           </div>
         </div>
-        <Link to="/photo-id">
-          <Button
-            variant="contained"
-            color="secondary"
-            size="large"
-            className="text-[18px] font-700 min-w-[196px]"
-          >
-            Next
-          </Button>
-        </Link>
+        {/* <Link to="/photo-id"> */}
+        <Button
+          variant="contained"
+          color="secondary"
+          size="large"
+          className="text-[18px] font-700 min-w-[196px]"
+          disabled={!frontID || !backID}
+          onClick={handleButtonClick}
+        >
+          Next
+        </Button>
+        {/* </Link> */}
       </div>
     </>
   );
