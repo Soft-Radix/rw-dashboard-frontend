@@ -697,7 +697,7 @@ export const clientSlice = createSlice({
         // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
-        console.log(data?.total_records, "data?.total_records47474");
+        // console.log(data?.total_records, "data?.total_records47474");
 
         state.agentTotal_records = calculatePageNumber(data?.total_records, 10);
         // if (data.list.length === 0) {

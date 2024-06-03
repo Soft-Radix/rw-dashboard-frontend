@@ -65,7 +65,7 @@ export default function AgentsGroup() {
     limit: 10,
     search: "",
   });
-
+  const { limit, search, start } = filters;
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
     setfilters((prevFilters) => {
@@ -124,14 +124,13 @@ export default function AgentsGroup() {
     setInputValue(value);
     // debouncedSearch(value);
   };
-  const fetchAgentGroupList = useCallback(() => {
-    dispatch(getAgentGroupList(filters));
-  }, [filters]);
+  const fetchAgentGroupList = () => {
+    // dispatch(getAgentGroupList(filters));
+  };
 
   useEffect(() => {
-    fetchAgentGroupList();
-    return () => {};
-  }, [fetchAgentGroupList]);
+    dispatch(getAgentGroupList(filters));
+  }, [limit, start, search]);
 
   const handleInputClear = () => {
     setInputValue("");
