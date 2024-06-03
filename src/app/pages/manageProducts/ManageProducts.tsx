@@ -99,7 +99,14 @@ export default function ManageProducts() {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, isOpenAddModal, filters.start]);
+  }, [
+    dispatch,
+    isOpenAddModal,
+    filters.start,
+    filters.search,
+    filters.client_id,
+    filters.limit,
+  ]);
 
   const onDelete = async () => {
     setDisable(true);
