@@ -62,18 +62,29 @@ export default function AgentsList() {
     });
   };
   // Debounce function to delay executing the search
-  const debouncedSearch = debounce((searchValue) => {
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      start: 0,
-      search: searchValue,
-    }));
-  }, 1500);
+  // const debouncedSearch = debounce((searchValue) => {
+  //   setfilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     start: 0,
+  //     search: searchValue,
+  //   }));
+  // }, 300);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        search: inputValue,
+        start: 0,
+      }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, 500]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);
-    debouncedSearch(value);
+    // debouncedSearch(value);
   };
   const fetchAgentList = useCallback(() => {
     dispatch(getAgentList(filters));

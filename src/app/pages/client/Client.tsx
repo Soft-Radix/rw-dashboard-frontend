@@ -58,19 +58,30 @@ export default function Clients() {
     setAnchorEl(null);
   };
   // Debounce function to delay executing the search
-  const debouncedSearch = debounce((searchValue) => {
-    // Update the search filter here
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      search: searchValue,
-      start: 0,
-    }));
-  }, 300); // Adjust the delay as needed (300ms in this example)
+  // const debouncedSearch = debounce((searchValue) => {
+  //   // Update the search filter here
+  //   setfilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     search: searchValue,
+  //     start: 0,
+  //   }));
+  // }, 300); // Adjust the delay as needed (300ms in this example)
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        search: inputValue,
+        start: 0,
+      }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, 500]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);
-    debouncedSearch(value);
+    // debouncedSearch(value);
   };
 
   const handleCheckboxChange = (rowId: number) => {
@@ -168,44 +179,52 @@ export default function Clients() {
           onChange={handleSearchChange}
           className="flex items-center justify-center"
           sx={{
-            height: "50px",
-            pl: 2,
+            height: "45px",
+            pl: "5px", // Adjusted padding to accommodate the icon
             width: "286px",
             pr: 2,
-            // border: "1px solid blue",
             backgroundColor: "#F6F6F6",
             borderRadius: "8px",
-            border: "1px solid transparent", // Show border when focused
+            border: "1px solid transparent",
             "&:focus-within": {
-              border: "1px solid blue", // Show border when focused
+              border: "1px solid blue",
             },
             "& .MuiInputBase-input": {
-              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-              border: "none", // Hide the border of the input element
+              textDecoration: "none",
+              border: "none",
             },
             "& .MuiInput-underline:before": {
-              border: "none !important", // Hide the underline (if using underline variant)
+              border: "none !important",
             },
             "& .MuiInput-underline:after": {
-              borderBottom: "none !important", // Hide the underline (if using underline variant)
+              borderBottom: "none !important",
             },
             "& .MuiInputBase-input::placeholder": {
-              color: "#757982", // Change placeholder color here
-              opacity: 1, // Override opacity
+              color: "#757982",
+              opacity: 1,
+            },
+            "& .MuiInputAdornment-positionStart": {
+              // marginLeft: "8px", // Adjusted margin to position the icon
             },
           }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon className="pl-2" />
+                <SearchIcon />
               </InputAdornment>
             ),
-            endAdornment: inputValue != "" && (
+            endAdornment: (
               <InputAdornment position="end">
-                <CrossGreyIcon
-                  className=" cursor-pointer fill-[#c2cad2] h-[14px] "
-                  onClick={handleInputClear}
-                />
+                {inputValue !== "" ? (
+                  <CrossGreyIcon
+                    className="cursor-pointer fill-[#c2cad2] h-[14px]"
+                    onClick={handleInputClear}
+                  />
+                ) : (
+                  // Render an empty icon to occupy space when inputValue is empty
+                  <div style={{ width: "24px" }} />
+                )}
+                {/* You can add more icons conditionally here */}
               </InputAdornment>
             ),
           }}
