@@ -1,40 +1,25 @@
-import {
-  Button,
-  Checkbox,
-  TableCell,
-  TableRow,
-  Theme,
-  Typography,
-} from "@mui/material";
+import ListLoading from "@fuse/core/ListLoading";
+import { Button, TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  NoDataFound,
-} from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddGroupModel from "src/app/components/agents/AddGroupModel";
-import SearchInput from "src/app/components/SearchInput";
+import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import {
   AgentGroupRootState,
   filterType,
 } from "app/store/Agent group/Interface";
-import { useSelector } from "react-redux";
 import { useAppDispatch } from "app/store/store";
-import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
+import { useFormik } from "formik";
+import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
+import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import SearchInput from "src/app/components/SearchInput";
+import TitleBar from "src/app/components/TitleBar";
+import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import DeleteClient from "src/app/components/client/DeleteClient";
-import { debounce } from "lodash";
-import { getAgentList } from "app/store/Agent";
-import ListLoading from "@fuse/core/ListLoading";
+import CommonTable from "src/app/components/commonTable";
+import CommonPagination from "src/app/components/pagination";
 
 export default function AgentsGroup() {
   const group_id = useParams();
