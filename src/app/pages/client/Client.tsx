@@ -78,6 +78,10 @@ export default function Clients() {
     return () => clearTimeout(timeoutId);
   }, [inputValue, 500]);
 
+  useEffect(() => {
+    setfilters({ start: 0, limit: 10, search: "" });
+  }, [active]);
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);

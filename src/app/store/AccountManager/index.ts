@@ -295,7 +295,10 @@ export const accManagerSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, resetFormManagrData } =
-  accManagerSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  resetFormManagrData,
+} = accManagerSlice.actions;
 
 export default accManagerSlice.reducer;
