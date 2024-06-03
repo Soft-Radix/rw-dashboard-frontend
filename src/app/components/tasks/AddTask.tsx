@@ -28,10 +28,16 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 
 function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [dateTimeMenu, setDateTimeMenu] = useState<HTMLElement | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string>("Due Date & Time");
+
   const [priorityMenu, setPriorityMenu] = useState<HTMLElement | null>(null);
+  const [showReminder, setShowReminder] = useState<HTMLElement | null>(null);
+  const [selectedPriority, setSelectedPriority] = useState<string>("Priority");
   const [statusMenu, setStatusMenu] = useState<HTMLElement | null>(null);
   const [labelsMenu, setLabelsMenu] = useState<HTMLElement | null>(null);
+  const [selectedlabel, setSelectedlabel] = useState<string>("Labels");
   const [showLabelForm, setShowLabelForm] = useState<boolean>(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>("Status");
 
   const formik = useFormik({
     initialValues: {
@@ -71,12 +77,27 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const handleAddLabel = () => {
     setShowLabelForm(true);
   };
-  // useEffect(() => {
-  //   if (labelsMenuData) {
-  //     setShowLabelForm(false);
-  //   }
-  // }, [labelsMenuData]);
+  useEffect(() => {
+    if (labelsMenu) {
+      setShowLabelForm(false);
+    }
+  }, [labelsMenu]);
+  const handleStatusMenuClick = (event) => {
+    setStatusMenu(event.currentTarget);
+  };
 
+  const handleStatusMenuItemClick = (status) => {
+    setSelectedStatus(status);
+    setStatusMenu(null); // Close the dropdown menu after selection
+  };
+  const handlePriorityMenuClick = (data) => {
+    setSelectedPriority(data);
+    setPriorityMenu(null); // Close the dropdown priority menu after selection
+  };
+  // const handleLabelMenuClick = (data) => {
+  //   setSelectedPriority(data);
+  //   setPriorityMenu(null); // Close the dropdown priority menu after selection
+  // };
   return (
     <CommonModal
       open={isOpen}
@@ -109,7 +130,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             button={
               <CommonChip
                 onClick={(event) => setDateTimeMenu(event.currentTarget)}
-                label="Due Date & Time"
+                label={selectedDate}
                 icon={
                   <FuseSvgIcon size={20}>
                     material-outline:calendar_today
@@ -125,7 +146,11 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             }}
           >
             {dateTimeMenuData.map((item) => (
-              <StyledMenuItem onClick={() => setDateTimeMenu(null)}>
+              <StyledMenuItem
+                onClick={() => {
+                  setSelectedDate(item.label), setDateTimeMenu(null);
+                }}
+              >
                 {item.label}
               </StyledMenuItem>
             ))}
@@ -138,6 +163,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                   <FuseSvgIcon>material-outline:add_circle_outline</FuseSvgIcon>
                 }
                 className="min-w-[224px] mt-10"
+                // onClick={handleCalender}
               >
                 Custom Date
               </CustomButton>
@@ -149,7 +175,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             button={
               <CommonChip
                 onClick={(event) => setPriorityMenu(event.currentTarget)}
-                label="Priority"
+                label={selectedPriority}
                 icon={<PriorityIcon />}
               />
             }
@@ -161,7 +187,9 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             }}
           >
             {priorityMenuData.map((item) => (
-              <StyledMenuItem onClick={() => setPriorityMenu(null)}>
+              <StyledMenuItem
+                onClick={() => handlePriorityMenuClick(item.label)}
+              >
                 {item.label}
               </StyledMenuItem>
             ))}
@@ -173,7 +201,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             button={
               <CommonChip
                 onClick={(event) => setLabelsMenu(event.currentTarget)}
-                label="Labels"
+                label={selectedlabel}
                 icon={
                   <FuseSvgIcon size={20}>heroicons-outline:tag</FuseSvgIcon>
                 }
@@ -189,7 +217,11 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             {!showLabelForm ? (
               <>
                 {labelsMenuData.map((item) => (
-                  <StyledMenuItem onClick={() => setPriorityMenu(null)}>
+                  <StyledMenuItem
+                    onClick={() => {
+                      setSelectedlabel(item.label), setLabelsMenu(null);
+                    }}
+                  >
                     {item.label}
                   </StyledMenuItem>
                 ))}
@@ -233,7 +265,9 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                     // disabled={disabled}
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px] ml-14"
-                    // onClick={handleToggle}
+                    onClick={() => {
+                      setShowLabelForm(false);
+                    }}
                   >
                     Cancel
                   </Button>
@@ -243,14 +277,76 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
           </DropdownMenu>
         </div>
         <div className="flex gap-20">
-          <CommonChip label="Reminder" icon={<ReminderIcon />} />
+          <DropdownMenu
+            anchorEl={showReminder}
+            handleClose={() => setShowReminder(null)}
+            button={
+              <CommonChip
+                onClick={(event) => setShowReminder(event.currentTarget)}
+                label="Reminder"
+                icon={<ReminderIcon />}
+              />
+            }
+            popoverProps={{
+              open: !!showReminder,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
+          >
+            <div className="px-20  py-20">
+              <InputField
+                formik={formik}
+                name="date"
+                id="date"
+                label="Date"
+                placeholder="Enter Date"
+              />
+              <InputField
+                formik={formik}
+                name="time"
+                id="time"
+                label="Time"
+                placeholder="Enter Time"
+              />
+              <div className="mt-20">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  className="w-[156px] h-[48px] text-[18px]"
+                  // onClick={onSubmit}
+                >
+                  Save
+                </Button>
+                <Button
+                  variant="outlined"
+                  // disabled={disabled}
+                  color="secondary"
+                  className="w-[156px] h-[48px] text-[18px] ml-14"
+                  onClick={() => {
+                    setShowLabelForm(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </div>
+            {/* {priorityMenuData.map((item) => (
+              <StyledMenuItem
+                onClick={() => handlePriorityMenuClick(item.label)}
+              >
+                {item.label}
+              </StyledMenuItem> */}
+            {/* ))} */}
+          </DropdownMenu>
+          {/* <CommonChip label="Reminder" icon={<ReminderIcon />} /> */}
           <DropdownMenu
             anchorEl={statusMenu}
             handleClose={() => setStatusMenu(null)}
             button={
               <CommonChip
-                onClick={(event) => setStatusMenu(event.currentTarget)}
-                label="Status"
+                onClick={handleStatusMenuClick}
+                label={selectedStatus}
                 icon={<StatusIcon />}
               />
             }
@@ -261,11 +357,17 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
               },
             }}
           >
-            {statusMenuData.map((item) => (
-              <StyledMenuItem onClick={() => setStatusMenu(null)}>
-                {item.label}
-              </StyledMenuItem>
-            ))}
+            {statusMenuData.map((item) => {
+              return (
+                <StyledMenuItem
+                  key={item.label}
+                  onClick={() => handleStatusMenuItemClick(item.label)}
+                >
+                  {item.label}
+                </StyledMenuItem>
+              );
+              // console.log(item, "itezcfm");
+            })}
           </DropdownMenu>
         </div>
         <Grid container spacing={2}>
