@@ -23,19 +23,6 @@ import { RootState } from "app/store/store";
 import { useSelector } from "react-redux";
 import ListLoading from "@fuse/core/ListLoading";
 
-// export const truncateText = (text, wordLimit) => {
-//   const words = text.split(" ");
-//   if (words?.length > wordLimit) {
-//     const truncatedText = words.slice(0, wordLimit).join(" ") + "...";
-//     return (
-//       <Tooltip title={text} enterDelay={500}>
-//         <span>{truncatedText}</span>
-//       </Tooltip>
-//     );
-//   }
-//   return text;
-// };
-
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef(null);
@@ -112,7 +99,7 @@ export default function ManageProducts() {
 
   useEffect(() => {
     fetchData();
-  }, [dispatch, id, isOpenAddModal]);
+  }, [dispatch, isOpenAddModal]);
 
   const onDelete = async () => {
     setDisable(true);
@@ -155,27 +142,6 @@ export default function ManageProducts() {
   };
 
   const totalPageCount = Math.ceil(list?.length / itemsPerPage);
-
-  // const handlePageChange = (
-  //   event: React.ChangeEvent<unknown>,
-  //   page: number
-  // ) => {
-  //   setCurrentPage(page);
-  //   // Handle any additional logic when the page changes, e.g., fetching data
-  // };
-
-  // const checkPageNum = (e: any, pageNumber: number) => {
-  //   // console.log(pageNumber, "rr");
-  //   setfilters((prevFilters) => {
-  //     if (pageNumber !== prevFilters.start + 1) {
-  //       return {
-  //         ...prevFilters,
-  //         start: pageNumber - 1,
-  //       };
-  //     }
-  //     return prevFilters; // Return the unchanged filters if the condition is not met
-  //   });
-  // };
 
   const currentRows = list?.slice(
     (currentPage - 1) * itemsPerPage,
@@ -312,11 +278,6 @@ export default function ManageProducts() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* <CommonPagination
-              count={totalPageCount}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
-            /> */}
             <CommonPagination
               count={accManagerState?.total_records}
               onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
