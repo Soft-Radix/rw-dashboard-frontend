@@ -522,6 +522,9 @@ export const clientSlice = createSlice({
         return indexA - indexB;
       });
     },
+    updateResetColumn: (state, { payload }) => {
+      state.selectedColumn = payload;
+    },
   },
   extraReducers(builder) {
     builder
@@ -813,6 +816,7 @@ export const {
   changeFetchStatus,
   updateSelectedColumn,
   sortColumn,
+  updateResetColumn,
 } = clientSlice.actions;
 
 export default clientSlice.reducer;

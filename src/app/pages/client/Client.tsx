@@ -144,11 +144,11 @@ export default function Clients() {
           : null,
     };
     dispatch(getClientList(payload));
-  }, [dispatch, filters, active]);
+  }, [dispatch, filters.start, active]);
 
   useEffect(() => {
     fetchList();
-  }, [dispatch, filters, active]);
+  }, [dispatch, filters.start, active]);
 
   useEffect(() => {
     setActive(query[query.length - 1]);

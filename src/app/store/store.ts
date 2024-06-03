@@ -56,16 +56,15 @@ const staticReducers: ReducersMapObject = {
   i18n,
   [apiService.reducerPath]: apiService.reducer,
   auth: authSlice.reducer,
-  // client: persistReducer(
-  //   {
-  //     key: "client",
-  //     storage,
-  //     whitelist: ["selectedColumn"], // Add the field you want to persist
-  //     timeout: 10000,
-  //   },
-  //   clientSlice.reducer
-  // ),
-  client: clientSlice.reducer,
+  client: persistReducer(
+    {
+      key: "client",
+      storage,
+      whitelist: ["selectedColumn"], // Add the field you want to persist
+    },
+    clientSlice.reducer
+  ),
+  // client: clientSlice.reducer,
   agent: agentSlice.reducer,
   agentGroup: agentGroupSlice.reducer,
   accManagerSlice: accManagerSlice.reducer,
