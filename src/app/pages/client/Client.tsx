@@ -57,15 +57,6 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // Debounce function to delay executing the search
-  // const debouncedSearch = debounce((searchValue) => {
-  //   // Update the search filter here
-  //   setfilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     search: searchValue,
-  //     start: 0,
-  //   }));
-  // }, 300); // Adjust the delay as needed (300ms in this example)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
