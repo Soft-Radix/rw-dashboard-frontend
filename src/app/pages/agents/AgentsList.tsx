@@ -93,7 +93,8 @@ export default function AgentsList() {
 
   useEffect(() => {
     fetchAgentList();
-  }, [filters]);
+  }, [filters.limit, filters.search, filters.start]);
+
   const handleInputClear = () => {
     setInputValue("");
     setfilters((prevFilters) => ({
