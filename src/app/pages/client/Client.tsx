@@ -57,6 +57,13 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  useEffect(() => {
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+
+      start: 0,
+    }));
+  }, [active]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -69,16 +76,11 @@ export default function Clients() {
     return () => clearTimeout(timeoutId);
   }, [inputValue, 500]);
 
-  useEffect(() => {
-    setfilters({ start: 0, limit: 10, search: "" });
-  }, [active]);
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     setInputValue(value);
     // debouncedSearch(value);
   };
-
   const handleCheckboxChange = (rowId: number) => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
     let selectedId = selectedIds.includes(rowId)
@@ -144,15 +146,23 @@ export default function Clients() {
           : null,
     };
     dispatch(getClientList(payload));
-  }, [dispatch, filters.start, active]);
+  }, [dispatch, filters, active]);
 
   useEffect(() => {
     fetchList();
-  }, [dispatch, filters.start, active]);
+  }, [
+    dispatch,
+    filters.limit,
+    filters.client_id,
+    filters.search,
+    filters.start,
+    active,
+  ]);
 
   useEffect(() => {
     setActive(query[query.length - 1]);
   }, [search]);
+
   const handleInputClear = () => {
     setInputValue("");
     setfilters((prevFilters) => ({
