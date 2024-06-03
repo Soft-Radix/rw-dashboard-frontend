@@ -94,7 +94,7 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
       bgColor="white"
       titleColor="black"
       onSubmit={handleSave}
-      disabled={true}
+      disabled={disable}
     >
       <InputField
         formik={formik}
