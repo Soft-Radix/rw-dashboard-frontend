@@ -253,7 +253,7 @@ export default function MainCard({
       </CommonModal>
       <ActionModal
         modalTitle="Delete Column"
-        modalSubTitle="Are you sure you want to delete this column ?"
+        modalSubTitle="Are you sure you want to delete this column?"
         open={openDeleteModal}
         handleToggle={toggleDeleteModal}
         type="delete"
