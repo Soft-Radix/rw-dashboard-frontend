@@ -20,7 +20,12 @@
 
 html {
   font-size: 62.5%;
-  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
+  font-family:
+    "Inter",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
   background-color: #121212;
 }
 
@@ -380,16 +385,17 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
   padding-bottom: 32px !important;
   padding-top: 26px !important;
 }
-.muiltr-1u9l49p-MuiButtonBase-root-MuiButton-root.Mui-disabled {
+
+.btn-disable {
   color: rgba(0, 0, 0, 0.26) !important;
   box-shadow: none !important;
   background-color: rgba(0, 0, 0, 0.12) !important;
 }
-.muiltr-60c1p-MuiButtonBase-root-MuiButton-root.Mui-disabled {
-  color: rgba(0, 0, 0, 0.26);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+.btn-disable-light {
+  color: rgba(0, 0, 0, 0.26) !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
 }
-.buttonNew {
+.muiltr-60c1p-MuiButtonBase-root-MuiButton-root.Mui-disabled .buttonNew {
   margin: 0px auto !important;
 }
 .facebook-login-btn:hover {

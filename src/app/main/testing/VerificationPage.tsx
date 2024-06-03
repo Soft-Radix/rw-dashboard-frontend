@@ -127,7 +127,7 @@ export default function VerificationPage() {
                 <div className="flex justify-center align-items-center flex-col">
                   {list?.map((item, index) => (
                     <>
-                      <Typography className="block text-[16px] font-medium text-center text-[#111827] mb-5">
+                      <Typography className="block text-[16px] font-medium text-center text-[#111827] mb-2">
                         {item.title}
                       </Typography>
                       {/* <Button

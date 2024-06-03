@@ -8,11 +8,14 @@ import SelectField from "../selectField";
 import DropdownMenu from "../Dropdown";
 import { useFormik } from "formik";
 import ProjectMenuItems from "./ProjectMenuItems";
+import SearchInput from "../SearchInput";
 
 interface FilterDesign {
   filterDesign?: boolean;
 }
 const FilterPage = (props: FilterDesign) => {
+  const [inputValue, setInputValue] = useState("");
+
   const { filterDesign } = props;
 
   const formik = useFormik({
@@ -34,13 +37,28 @@ const FilterPage = (props: FilterDesign) => {
     setSelectMenuItems(value);
   };
 
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInputValue(value);
+    // debouncedSearch(value);
+  };
+
+  // const handleInputClear = () => {
+  //   setInputValue("");
+  //   setfilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     search: "",
+  //     start: 0,
+  //   }));
+  // };
+
   return (
     <div className="px-4 ">
       <div
         className="relative bg-[#ffff] py-5
       sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl"
       >
-        <div className="mb-3 sm:mb-0 w-full sm:w-auto">
+        {/* <div className="mb-3 sm:mb-0 w-full sm:w-auto">
           <InputField
             name="search"
             placeholder="Search Board"
@@ -52,7 +70,16 @@ const FilterPage = (props: FilterDesign) => {
           <SearchIcon
             width={18}
             height={18}
-            className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[50%] translate-y-[-50%] text-para_light"
+            className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[46%] translate-y-[-50%] text-para_light"
+          />
+        </div> */}
+        <div className="p-[2rem]">
+          <SearchInput
+            name="search"
+            placeholder="Search Board"
+            onChange={handleSearchChange}
+            // handleInputClear={handleInputClear}
+            inputValue={inputValue}
           />
         </div>
         <div className="w-full sm:w-auto flex  flex-row items-center justify-between gap-3 sm:gap-40 cursor-pointer">
