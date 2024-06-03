@@ -7,6 +7,7 @@ import { useAppDispatch } from "app/store/store";
 import { logIn, sociallogIn } from "app/store/Auth";
 import { getLocalStorage } from "src/utils";
 import { setInitialState } from "app/theme-layouts/shared-components/navigation/store/navigationSlice";
+import { updateResetColumn, updateSelectedColumn } from "app/store/Client";
 const defaultAuthConfig = {
   tokenStorageKey: "jwt_access_token",
   signInUrl: "api/auth/sign-in",
@@ -375,6 +376,16 @@ const useJwtAuth = <User, SignUpPayload>(
    * Sign out
    */
   const signOut = useCallback(() => {
+    dispatch(
+      updateResetColumn([
+        "Id",
+        "Name",
+        "Company Name",
+        "Joining Date",
+        "Status",
+        "",
+      ])
+    );
     resetSession();
     // localStorage.clear();
     setIsAuthenticated(false);

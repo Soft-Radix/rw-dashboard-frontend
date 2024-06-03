@@ -57,15 +57,13 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // Debounce function to delay executing the search
-  // const debouncedSearch = debounce((searchValue) => {
-  //   // Update the search filter here
-  //   setfilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     search: searchValue,
-  //     start: 0,
-  //   }));
-  // }, 300); // Adjust the delay as needed (300ms in this example)
+  useEffect(() => {
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+
+      start: 0,
+    }));
+  }, [active]);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -83,7 +81,6 @@ export default function Clients() {
     setInputValue(value);
     // debouncedSearch(value);
   };
-
   const handleCheckboxChange = (rowId: number) => {
     const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
     let selectedId = selectedIds.includes(rowId)
@@ -153,11 +150,19 @@ export default function Clients() {
 
   useEffect(() => {
     fetchList();
-  }, [dispatch, filters, active]);
+  }, [
+    dispatch,
+    filters.limit,
+    filters.client_id,
+    filters.search,
+    filters.start,
+    active,
+  ]);
 
   useEffect(() => {
     setActive(query[query.length - 1]);
   }, [search]);
+
   const handleInputClear = () => {
     setInputValue("");
     setfilters((prevFilters) => ({

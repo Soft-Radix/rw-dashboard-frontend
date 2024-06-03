@@ -1,5 +1,5 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { FormLabel, Grid, MenuItem, styled } from "@mui/material";
+import { Button, FormLabel, Grid, MenuItem, styled } from "@mui/material";
 import { useFormik } from "formik";
 import {
   AssignIcon,
@@ -10,7 +10,7 @@ import {
   StatusIcon,
   UploadIcon,
 } from "public/assets/icons/task-icons";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import CommonModal from "../CommonModal";
 import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
@@ -31,6 +31,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [priorityMenu, setPriorityMenu] = useState<HTMLElement | null>(null);
   const [statusMenu, setStatusMenu] = useState<HTMLElement | null>(null);
   const [labelsMenu, setLabelsMenu] = useState<HTMLElement | null>(null);
+  const [showLabelForm, setShowLabelForm] = useState<boolean>(false);
 
   const formik = useFormik({
     initialValues: {
@@ -67,13 +68,23 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     { label: "Medium Priority" },
     { label: "Responsive" },
   ];
+  const handleAddLabel = () => {
+    setShowLabelForm(true);
+  };
+  // useEffect(() => {
+  //   if (labelsMenuData) {
+  //     setShowLabelForm(false);
+  //   }
+  // }, [labelsMenuData]);
 
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen((prev) => !prev)}
+      handleToggle={() => setIsOpen(false)}
       modalTitle="Add Task"
       maxWidth="910"
+      btnTitle="Save"
+      closeTitle="Close"
     >
       <div className="flex flex-col gap-20">
         <InputField
@@ -175,24 +186,60 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
               },
             }}
           >
-            {labelsMenuData.map((item) => (
-              <StyledMenuItem onClick={() => setPriorityMenu(null)}>
-                {item.label}
-              </StyledMenuItem>
-            ))}
-            <div className="px-20">
-              <CustomButton
-                fullWidth
-                variant="contained"
-                color="secondary"
-                startIcon={
-                  <FuseSvgIcon>material-outline:add_circle_outline</FuseSvgIcon>
-                }
-                className="min-w-[224px] mt-10"
-              >
-                Custom Date
-              </CustomButton>
-            </div>
+            {!showLabelForm ? (
+              <>
+                {labelsMenuData.map((item) => (
+                  <StyledMenuItem onClick={() => setPriorityMenu(null)}>
+                    {item.label}
+                  </StyledMenuItem>
+                ))}
+                <div className="px-20">
+                  <CustomButton
+                    fullWidth
+                    variant="contained"
+                    color="secondary"
+                    startIcon={
+                      <FuseSvgIcon>
+                        material-outline:add_circle_outline
+                      </FuseSvgIcon>
+                    }
+                    className="min-w-[224px] mt-10"
+                    onClick={handleAddLabel}
+                  >
+                    Create New Label
+                  </CustomButton>
+                </div>
+              </>
+            ) : (
+              <div className="px-20  py-20">
+                <InputField
+                  formik={formik}
+                  name="newLabel"
+                  id="group_names"
+                  label="New Label"
+                  placeholder="Enter Group Name"
+                />
+                <div className="mt-20">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className="w-[156px] h-[48px] text-[18px]"
+                    // onClick={onSubmit}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    // disabled={disabled}
+                    color="secondary"
+                    className="w-[156px] h-[48px] text-[18px] ml-14"
+                    // onClick={handleToggle}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </DropdownMenu>
         </div>
         <div className="flex gap-20">
@@ -223,7 +270,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
         </div>
         <Grid container spacing={2}>
           <Grid item md={6}>
-            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
+            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 ">
               Voice Memo
             </FormLabel>
             <Grid container spacing={2}>
@@ -233,28 +280,60 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                   className="w-full"
                   label="Record voice memo"
                   icon={<MicIcon />}
+                  // variant="outlined"
+                  style={{ border: "0.5px solid #4F46E5" }}
                 />
               </Grid>
               <Grid item md={6}>
-                <CommonChip
-                  colorSecondary
-                  className="w-full"
-                  label="Upload File"
-                  icon={<UploadIcon />}
-                />
+                <label
+                  htmlFor="attachment"
+                  className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
+            justify-between cursor-pointer"
+                  // onClick={() => handleUploadFile()}
+                >
+                  <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
+                    Upload File
+                    <input
+                      type="file"
+                      style={{ display: "none" }}
+                      multiple={true}
+                      id="attachment"
+                      accept=".pdf,.png,.jpg,.jpeg"
+                      // onChange={handleUploadFile}
+                    />
+                  </label>
+                  <span>
+                    <img src={"../assets/images/logo/upload.png"} />
+                  </span>
+                </label>
               </Grid>
             </Grid>
           </Grid>
           <Grid item md={6}>
-            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
+            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 border-solid border-[#4F46E5]">
               File
             </FormLabel>
-            <CommonChip
-              colorSecondary
-              className="w-full"
-              label="Upload File"
-              icon={<UploadIcon />}
-            />
+            <label
+              htmlFor="attachment"
+              className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
+            justify-between cursor-pointer"
+              // onClick={() => handleUploadFile()}
+            >
+              <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
+                Upload File
+                <input
+                  type="file"
+                  style={{ display: "none" }}
+                  multiple={true}
+                  id="attachment"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  // onChange={handleUploadFile}
+                />
+              </label>
+              <span>
+                <img src={"../assets/images/logo/upload.png"} />
+              </span>
+            </label>
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -267,6 +346,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
               className="w-full"
               label="Record Your Screen"
               icon={<ScreenRecordingIcon />}
+              style={{ border: "0.5px solid #4F46E5" }}
             />
           </Grid>
         </Grid>

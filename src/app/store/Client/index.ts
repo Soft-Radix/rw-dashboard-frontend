@@ -522,9 +522,50 @@ export const clientSlice = createSlice({
         return indexA - indexB;
       });
     },
+    updateResetColumn: (state, { payload }) => {
+      state.selectedColumn = payload;
+    },
   },
   extraReducers(builder) {
     builder
+      .addCase(subscriptionListItem.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(subscriptionListItem.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.status = "idle";
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          state.list = response?.data?.list || [];
+          state.total_records = calculatePageNumber(
+            response?.data?.total_records,
+            10
+          );
+        }
+      })
+      .addCase(subscriptionListItem.rejected, (state, action) => {
+        state.status = "idle";
+      })
+      .addCase(productList.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(productList.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        state.status = "idle";
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          state.list = response?.data?.list || [];
+          state.total_records = calculatePageNumber(
+            response?.data?.total_records,
+            10
+          );
+        }
+      })
+      .addCase(productList.rejected, (state, action) => {
+        state.status = "idle";
+      })
       .addCase(addClient.pending, (state) => {
         state.actionStatus = true;
       })
@@ -656,7 +697,7 @@ export const clientSlice = createSlice({
         // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
-        console.log(data?.total_records, "data?.total_records47474");
+        // console.log(data?.total_records, "data?.total_records47474");
 
         state.agentTotal_records = calculatePageNumber(data?.total_records, 10);
         // if (data.list.length === 0) {
@@ -775,6 +816,7 @@ export const {
   changeFetchStatus,
   updateSelectedColumn,
   sortColumn,
+  updateResetColumn,
 } = clientSlice.actions;
 
 export default clientSlice.reducer;
