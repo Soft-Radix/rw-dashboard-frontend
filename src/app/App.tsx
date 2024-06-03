@@ -66,30 +66,30 @@ function App() {
   const mainTheme = useSelector(selectMainTheme);
 
   return (
-    // <Provider store={store}>
-    //   <PersistGate loading={null} persistor={persistor}>
-    <MockAdapterProvider>
-      <CacheProvider
-        value={createCache(emotionCacheOptions[langDirection] as Options)}
-      >
-        <FuseTheme theme={mainTheme} direction={langDirection}>
-          <AuthRouteProvider>
-            <FuseLayout layouts={themeLayouts} />
-            <Toaster
-              position="top-center"
-              reverseOrder={false}
-              toastOptions={{
-                style: {
-                  zIndex: 9999, // Set z-index to your desired value
-                },
-              }}
-            />
-          </AuthRouteProvider>
-        </FuseTheme>
-      </CacheProvider>
-    </MockAdapterProvider>
-    //   </PersistGate>
-    // </Provider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <MockAdapterProvider>
+          <CacheProvider
+            value={createCache(emotionCacheOptions[langDirection] as Options)}
+          >
+            <FuseTheme theme={mainTheme} direction={langDirection}>
+              <AuthRouteProvider>
+                <FuseLayout layouts={themeLayouts} />
+                <Toaster
+                  position="top-center"
+                  reverseOrder={false}
+                  toastOptions={{
+                    style: {
+                      zIndex: 9999, // Set z-index to your desired value
+                    },
+                  }}
+                />
+              </AuthRouteProvider>
+            </FuseTheme>
+          </CacheProvider>
+        </MockAdapterProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 
