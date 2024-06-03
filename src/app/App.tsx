@@ -17,6 +17,10 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "./store/store";
 import { getLocalStorage } from "src/utils";
 import { Auth0Provider } from "@auth0/auth0-react";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import store from "./store/store";
 import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
 
 // import axios from 'axios';
@@ -45,6 +49,7 @@ const emotionCacheOptions = {
  */
 function App() {
   const dispatch = useDispatch<AppDispatch>();
+  const persistor = persistStore(store);
   useEffect(() => {
     const userDetail = getLocalStorage("userDetail");
     dispatch(setInitialState(userDetail));
@@ -61,26 +66,30 @@ function App() {
   const mainTheme = useSelector(selectMainTheme);
 
   return (
-    <MockAdapterProvider>
-      <CacheProvider
-        value={createCache(emotionCacheOptions[langDirection] as Options)}
-      >
-        <FuseTheme theme={mainTheme} direction={langDirection}>
-          <AuthRouteProvider>
-            <FuseLayout layouts={themeLayouts} />
-            <Toaster
-              position="top-center"
-              reverseOrder={false}
-              toastOptions={{
-                style: {
-                  zIndex: 9999, // Set z-index to your desired value
-                },
-              }}
-            />
-          </AuthRouteProvider>
-        </FuseTheme>
-      </CacheProvider>
-    </MockAdapterProvider>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <MockAdapterProvider>
+          <CacheProvider
+            value={createCache(emotionCacheOptions[langDirection] as Options)}
+          >
+            <FuseTheme theme={mainTheme} direction={langDirection}>
+              <AuthRouteProvider>
+                <FuseLayout layouts={themeLayouts} />
+                <Toaster
+                  position="top-center"
+                  reverseOrder={false}
+                  toastOptions={{
+                    style: {
+                      zIndex: 9999, // Set z-index to your desired value
+                    },
+                  }}
+                />
+              </AuthRouteProvider>
+            </FuseTheme>
+          </CacheProvider>
+        </MockAdapterProvider>
+      </PersistGate>
+    </Provider>
   );
 }
 

@@ -20,6 +20,10 @@ import { subscriptionListItem } from "app/store/Client";
 import svg from "../../../../../../public/assets/icons/Layer_1-2.svg";
 import { useAppDispatch } from "app/store/store";
 import ListLoading from "@fuse/core/ListLoading";
+import { filterType } from "app/store/Client/Interface";
+import { filter } from "lodash";
+import { useSelector } from "react-redux";
+import { RootState } from "app/store/store";
 
 // const rows = [
 //   {
@@ -56,36 +60,47 @@ export default function SubscriptionList() {
   const itemsPerPage = 10;
 
   const { client_id } = useParams();
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+    // client_id: 0,
+  });
+  const subscriptionState = useSelector((state: RootState) => state.client);
+  const fetchData = async () => {
+    try {
+      const payload = {
+        client_id: client_id,
+        ...filters,
+      };
+      //@ts-ignore
+      const res = await dispatch(subscriptionListItem(payload));
+      setRows(res?.payload?.data?.data?.list);
+      setLoading(false);
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      setLoading(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const payload = {
-          client_id: client_id,
-          start: 0,
-          limit: 10,
-          search: "",
-        };
-        //@ts-ignore
-        const res = await dispatch(subscriptionListItem(payload));
-        setRows(res?.payload?.data?.data?.list);
-        setLoading(false);
-        // toast.success(res?.payload?.data?.message);
-      } catch (error) {
-        setLoading(false);
-        console.error("Error fetching data:", error);
-      }
-    };
     fetchData();
-  }, [dispatch]);
+  }, [dispatch, filters]);
 
   const totalPageCount = Math.ceil(rows?.length / itemsPerPage);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page);
-    // Handle any additional logic when the page changes, e.g., fetching data
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
 
   const currentRows = rows.slice(
@@ -215,9 +230,11 @@ export default function SubscriptionList() {
           <div className="flex justify-end py-14 px-[3rem]">
             {currentRows?.length > 0 && (
               <CommonPagination
-                count={totalPageCount}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
+                count={subscriptionState?.total_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={filters.start + 1}
               />
             )}
           </div>
