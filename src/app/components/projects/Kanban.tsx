@@ -148,6 +148,21 @@ const Kanban = (props: IProps): JSX.Element => {
       listData();
     }
   }, [id]);
+  // const handleAddTask = () => {
+  //   return (
+  //     <Button
+  //       variant="outlined"
+  //       color="secondary"
+  //       className="h-[40px] text-[16px] flex gap-8"
+  //       aria-label="Add Tasks"
+  //       size="large"
+  //       // onClick={() => setIsOpenAddModal(true)}
+  //       startIcon={<PlusIcon color={theme.palette.secondary.main} />}
+  //     >
+  //       Add Task
+  //     </Button>
+  //   );
+  // };
 
   return (
     <div>
@@ -181,6 +196,7 @@ const Kanban = (props: IProps): JSX.Element => {
                           isEmpty
                           id={item.id}
                           callListApi={listData}
+                          // handleAddTask={handleAddTask}
                         />
                       </div>
                     )}

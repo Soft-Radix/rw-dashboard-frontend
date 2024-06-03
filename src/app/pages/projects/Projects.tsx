@@ -39,7 +39,7 @@ export default function Projects() {
         <Typography className="text-[18px] font-bold sm:text-[20px]  capitalize">
           {name}
         </Typography>
-        <Button
+        {/* <Button
           variant="outlined"
           color="secondary"
           className="h-[40px] text-[16px] flex gap-8"
@@ -49,7 +49,7 @@ export default function Projects() {
           startIcon={<PlusIcon color={theme.palette.secondary.main} />}
         >
           Add Task
-        </Button>
+        </Button> */}
       </div>
       <div>
         <ProjectTabPanel />

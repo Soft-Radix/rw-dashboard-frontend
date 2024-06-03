@@ -47,7 +47,7 @@ export const getAgentGroupList = createAsyncThunk(
     return {
       data: response.data,
     };
-    addAgentGroup;
+   
   }
 );
 

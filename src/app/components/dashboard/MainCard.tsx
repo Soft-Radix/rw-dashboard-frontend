@@ -14,6 +14,7 @@ import { useDispatch } from "react-redux";
 import { deleteColumn, projectColumnUpdate } from "app/store/Projects";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
+import AddTaskModal from "../tasks/AddTask";
 
 type MainCardType = {
   id?: string | number;
@@ -40,6 +41,7 @@ export default function MainCard({
   };
   const dispatch = useDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
   const [disable, setDisabled] = useState(false);
 
@@ -162,20 +164,33 @@ export default function MainCard({
         </Typography>
         <div className="py-20 flex flex-col gap-14">
           {isEmpty ? (
-            <div className="bg-[#F7F9FB] p-14 rounded-md border flex items-center flex-col">
-              <Typography
-                color="primary.main"
-                className="text-[16px] font-semibold"
+            <>
+              <div className="bg-[#F7F9FB] p-14 rounded-md border flex items-center flex-col">
+                <Typography
+                  color="primary.main"
+                  className="text-[16px] font-semibold"
+                >
+                  No Task Yet!
+                </Typography>
+                <Typography
+                  color="primary.light"
+                  className="text-[12px] max-w-[180px] text-center mt-5"
+                >
+                  You don’t have any tasks yet in this Column
+                </Typography>
+              </div>
+              <Button
+                variant="contained"
+                color="secondary"
+                className="h-[40px] text-[16px] flex gap-8"
+                aria-label="Add Tasks"
+                size="large"
+                onClick={() => setIsOpenAddModal(true)}
+                startIcon={<PlusIcon color="white" />}
               >
-                No Task Yet!
-              </Typography>
-              <Typography
-                color="primary.light"
-                className="text-[12px] max-w-[180px] text-center mt-5"
-              >
-                You don’t have any tasks yet in this Column
-              </Typography>
-            </div>
+                Add Task
+              </Button>
+            </>
           ) : (
             <>
               {" "}
@@ -256,6 +271,7 @@ export default function MainCard({
         onDelete={handleDelete}
         disabled={disable}
       />
+      <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
     </div>
   );
 }
