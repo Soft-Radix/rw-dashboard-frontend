@@ -16,7 +16,7 @@ import {
   NoDataFound,
 } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
@@ -45,6 +45,8 @@ import DeleteClient from "../client/DeleteClient";
 import { filterType } from "app/store/Client/Interface";
 import { AgentGroupSchema } from "src/formSchema";
 import ListLoading from "@fuse/core/ListLoading";
+import { getAgentList } from "app/store/Agent";
+import { AgentRootState } from "app/store/Agent/Interafce";
 
 export default function GroupAgentsList() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
@@ -61,6 +63,11 @@ export default function GroupAgentsList() {
     limit: -1,
     search: "",
   });
+  const [filterPagination, setFilterPagination] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
 
   const itemsPerPage = 10;
   // console.log(group_id, "check");
@@ -68,6 +75,8 @@ export default function GroupAgentsList() {
   const { agentGroupDetail, actionStatus, actionStatusEdit } = useSelector(
     (store: AgentGroupRootState) => store?.agentGroup
   );
+  const { list } = useSelector((store: AgentRootState) => store.agent);
+  console.log("🚀 ~ GroupAgentsList ~ list:", list);
 
   // console.log(agentGroupDetail.group_members, "girl");
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
@@ -130,6 +139,12 @@ export default function GroupAgentsList() {
       dispatch(changeFetchStatus());
     };
   }, []);
+
+  // useEffect(() => {
+  //   dispatch(getAgentList({ ...filterPagination, group_id }));
+
+  //   // console.log(filters, "filters");
+  // }, [filterPagination.limit, filterPagination.search, filterPagination.start]);
 
   useEffect(() => {
     if (agentGroupDetail) {
