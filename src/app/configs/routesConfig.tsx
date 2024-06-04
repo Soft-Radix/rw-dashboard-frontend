@@ -82,6 +82,7 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   ClientDashboardConfig,
   ProjectsConfig,
   TasksConfig,
+
   MyAgentsConfig,
   SignOutConfig,
   SignInConfig,
