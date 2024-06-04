@@ -33,11 +33,12 @@ import SearchInput from "src/app/components/SearchInput";
 import { debounce } from "lodash";
 import { filterType } from "app/store/Client/Interface";
 import { GetAssignAgentsInfo } from "app/store/Client";
+import { ClientRootState } from "app/store/Projects/Interface";
 
 export default function Myagents() {
-  const agentState = useSelector((store: AgentRootState) => store.agent);
+  const agentState = useSelector((store: ClientRootState) => store.client);
   // console.log(agentState, "as");
-
+  console.log("======agentState==,", agentState?.assignedAgentDetail);
   const dispatch = useAppDispatch();
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const [filters, setfilters] = useState<filterType>({
@@ -49,172 +50,6 @@ export default function Myagents() {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState("");
-  const agentState1 = {
-    list: [
-      {
-        id: 497,
-        user_id: 419,
-        agent_id: 273,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "dfsfds dsfdf",
-        assigned_date_time: "June 3, 2024",
-        first_name: "dfsfds",
-        last_name: "dsfdf",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 496,
-        user_id: 419,
-        agent_id: 274,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "regd fdggd",
-        assigned_date_time: "June 3, 2024",
-        first_name: "regd",
-        last_name: "fdggd",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 495,
-        user_id: 419,
-        agent_id: 275,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "sadasd sadsd",
-        assigned_date_time: "June 3, 2024",
-        first_name: "sadasd",
-        last_name: "sadsd",
-        user_image: "Users/275/1716900300894-rcw.png",
-        status: "Active",
-      },
-      {
-        id: 493,
-        user_id: 419,
-        agent_id: 278,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "NewAgent fsfsf",
-        assigned_date_time: "June 3, 2024",
-        first_name: "NewAgent",
-        last_name: "fsfsf",
-        status: "Active",
-        user_image: null,
-      },
-      {
-        id: 492,
-        user_id: 419,
-        agent_id: 292,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "dsad dsad",
-        assigned_date_time: "June 3, 2024",
-        first_name: "dsad",
-        last_name: "dsad",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 491,
-        user_id: 419,
-        agent_id: 311,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "xass ass",
-        assigned_date_time: "June 3, 2024",
-        first_name: "xass",
-        last_name: "ass",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 490,
-        user_id: 419,
-        agent_id: 310,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "nvxm cxcc",
-        assigned_date_time: "June 3, 2024",
-        first_name: "nvxm",
-        last_name: "cxcc",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 489,
-        user_id: 419,
-        agent_id: 312,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "rtr ass",
-        assigned_date_time: "June 3, 2024",
-        first_name: "rtr",
-        last_name: "ass",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 488,
-        user_id: 419,
-        agent_id: 314,
-        type: 1,
-        assigned_date: 1717420362,
-        deleted_at: null,
-        created_at: "2024-06-03T13:12:42.000Z",
-        updated_at: "2024-06-03T13:12:42.000Z",
-        userName: "jmhmhghghh csfd",
-        assigned_date_time: "June 3, 2024",
-        first_name: "jmhmhghghh",
-        last_name: "csfd",
-        user_image: null,
-        status: "Active",
-      },
-      {
-        id: 487,
-        user_id: 419,
-        agent_id: 322,
-        type: 1,
-        assigned_date: 1717420261,
-        deleted_at: null,
-        created_at: "2024-06-03T13:11:01.000Z",
-        updated_at: "2024-06-03T13:11:01.000Z",
-        userName: "xzasdfghhjklpi uiuytrqe",
-        assigned_date_time: "June 3, 2024",
-        first_name: "xzasdfghhjklpi",
-        last_name: "uiuytrqe",
-        user_image: "Users/322/1717047783625-rcw.jpg",
-        status: "Active",
-      },
-    ],
-    total_records: 19,
-    filtered_records: 10,
-  };
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
@@ -259,7 +94,7 @@ export default function Myagents() {
 
   useEffect(() => {
     fetchAgentList();
-  }, [filters]);
+  }, [filters.limit, filters.client_id, filters.search, filters.start]);
   const handleInputClear = () => {
     setInputValue("");
     setfilters((prevFilters) => ({
@@ -268,6 +103,10 @@ export default function Myagents() {
       start: 0,
     }));
   };
+
+  if (agentState?.fetchStatus == "loading") {
+    return <ListLoading />;
+  }
 
   return (
     <>
@@ -296,7 +135,7 @@ export default function Myagents() {
               "",
             ]}
           >
-            {agentState1?.list?.length === 0 ? (
+            {agentState?.assignedAgentDetail?.length === 0 ? (
               // &&
               // agentState.status != "loading"
               <TableRow
@@ -328,7 +167,7 @@ export default function Myagents() {
                 </TableCell>
               </TableRow>
             ) : (
-              agentState1.list.map((row, index) => (
+              agentState?.assignedAgentDetail?.map((row, index) => (
                 <TableRow
                   key={index}
                   sx={{
@@ -389,7 +228,7 @@ export default function Myagents() {
                   <TableCell align="left" className="w-[1%] font-500">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        <Link to={`/my-agents/detail/${row.id}`}>
+                        <Link to={`/my-agents/detail/${row?.agent_id}`}>
                           <ArrowRightCircleIcon />
                         </Link>
                       </span>
@@ -401,9 +240,9 @@ export default function Myagents() {
           </CommonTable>
 
           <div className="flex justify-end py-14 px-[3rem]">
-            {agentState1?.list.length > 0 && (
+            {agentState?.assignedAgentDetail.length > 0 && (
               <CommonPagination
-                count={agentState1?.total_records}
+                count={agentState?.agentTotal_records}
                 onChange={(e, PageNumber: number) =>
                   checkPageNum(e, PageNumber)
                 }
