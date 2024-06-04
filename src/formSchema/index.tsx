@@ -159,8 +159,8 @@ const editAgentSchema = Yup.object({
   address: Yup.string()
     .required("Address is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space")
-    .max(30, "Address should be less than or equal to 30 characters"),
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
+  // .max(30, "Address should be less than or equal to 30 characters"),
 });
 // const AgentGroupSchema = Yup.object({
 //   group_name: Yup.string()
@@ -204,8 +204,8 @@ const accManagerSchema = Yup.object({
     }), // ,
   address: Yup.string()
     .required("Address is required")
-    .matches(/^[^\s].*$/, "Address should not start with a space")
-    .max(30, "Address should be less than or equal to 30 characters"),
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
+  // .max(30, "Address should be less than or equal to 30 characters"),
 });
 
 export {

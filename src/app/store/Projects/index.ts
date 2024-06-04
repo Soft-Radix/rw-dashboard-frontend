@@ -182,6 +182,8 @@ export const initialState: initialStateProps = {
   clientDetail: {},
   selectedColumn: [],
   total_records: 0,
+  assignedAgentDetail: [],
+  agentTotal_records: 0,
 };
 
 /**

@@ -162,7 +162,7 @@ function jwtSignInTab() {
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
-            cssClass="facebook-login-btn flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
+            cssClass="facebook-login-btn flex items-center justify-center mx-auto w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
             textButton="&nbsp;&nbsp; Log In with Facebook"
           />
         </div>

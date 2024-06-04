@@ -30,6 +30,7 @@ const validationSchema = Yup.object({
     )
     .max(50, "Name should be less than or equal to 50 characters")
     .matches(/^[A-Za-z\s]+$/, "Name can only contain letters and spaces"),
+
   description: Yup.string()
     .transform((value) => (value ? value.trim() : ""))
     .required("Description is required")
@@ -38,7 +39,7 @@ const validationSchema = Yup.object({
       "Description cannot be only spaces",
       (value) => value && value.trim().length > 0
     )
-    .max(500, "Description should be less than or equal to 500 characters ")
+    .max(500, "Description should be less than or equal to 500 characters")
     .matches(
       /^[A-Za-z\s]+$/,
       "Description can only contain letters and spaces"
