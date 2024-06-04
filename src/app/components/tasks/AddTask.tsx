@@ -1,5 +1,13 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
-import { Button, FormLabel, Grid, MenuItem, styled } from "@mui/material";
+import {
+  Button,
+  FormLabel,
+  Grid,
+  Hidden,
+  MenuItem,
+  Typography,
+  styled,
+} from "@mui/material";
 import { useFormik } from "formik";
 import {
   AssignIcon,
@@ -10,12 +18,13 @@ import {
   StatusIcon,
   UploadIcon,
 } from "public/assets/icons/task-icons";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import CommonModal from "../CommonModal";
 import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
 import CommonChip from "../chip";
 import CustomButton from "../custom_button";
+import { CrossGreyIcon } from "public/assets/icons/common";
 
 interface IProps {
   isOpen: boolean;
@@ -38,6 +47,9 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [selectedlabel, setSelectedlabel] = useState<string>("Labels");
   const [showLabelForm, setShowLabelForm] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("Status");
+  const [isRecording, setIsRecording] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [showVideo, setShowVideo] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -94,10 +106,141 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     setSelectedPriority(data);
     setPriorityMenu(null); // Close the dropdown priority menu after selection
   };
-  // const handleLabelMenuClick = (data) => {
-  //   setSelectedPriority(data);
-  //   setPriorityMenu(null); // Close the dropdown priority menu after selection
+  const videoRef = useRef(null);
+
+  // const handleRecordClick = async () => {
+  //   try {
+  //     const stream = await navigator.mediaDevices.getDisplayMedia({
+  //       video: true,
+  //       // screen: true,
+  //       audio: false,
+  //     });
+
+  //     const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp8")
+  //       ? "video/webm; codecs=vp8"
+  //       : "video/webm";
+
+  //     const mediaRecorder = new MediaRecorder(stream, {
+  //       mimeType: mime,
+  //     });
+
+  //     const chunks = [];
+  //     mediaRecorder.addEventListener("dataavailable", (e) => {
+  //       if (e.data.size > 0) {
+  //         chunks.push(e.data);
+  //       }
+  //     });
+
+  //     mediaRecorder.addEventListener("stop", () => {
+  //       setIsRecording((prevState) => !prevState);
+  //       const blob = new Blob(chunks, {
+  //         type: chunks[0].type,
+  //       });
+  //       const url = URL.createObjectURL(blob);
+
+  //       if (videoRef.current) {
+  //         videoRef.current.src = url;
+  //       }
+
+  //       // const a = document.createElement("a");
+  //       // a.href = url;
+  //       // a.download = "video.webm";
+  //       // a.click();
+  //     });
+
+  //     // Start the recorder manually
+  //     mediaRecorder.start();
+  //   } catch (error) {
+  //     console.error("Error accessing screen:", error);
+  //   }
   // };
+
+  const handleRecordClick = async () => {
+    let stream;
+
+    try {
+      stream = await navigator.mediaDevices.getDisplayMedia({
+        video: true,
+        audio: false,
+      });
+      setIsRecording(true);
+      const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp8")
+        ? "video/webm; codecs=vp8"
+        : "video/webm";
+
+      const mediaRecorder = new MediaRecorder(stream, {
+        mimeType: mime,
+      });
+
+      const chunks = [];
+      mediaRecorder.addEventListener("dataavailable", (e) => {
+        if (e.data.size > 0) {
+          chunks.push(e.data);
+        }
+      });
+
+      mediaRecorder.addEventListener("stop", () => {
+        const blob = new Blob(chunks, {
+          type: chunks[0].type,
+        });
+        const url = URL.createObjectURL(blob);
+
+        if (videoRef.current) {
+          videoRef.current.src = url;
+        }
+        setIsRecording(false);
+        setShowVideo(true);
+      });
+
+      mediaRecorder.addEventListener("error", (error) => {
+        console.error("MediaRecorder Error:", error);
+      });
+
+      // Listen for the stream's inactive event
+      stream.getVideoTracks()[0].oninactive = () => {
+        setIsRecording(false);
+        console.log("User clicked cancel or ended screen share");
+      };
+
+      // Start the recorder manually
+      mediaRecorder.start();
+    } catch (error) {
+      console.error("Error accessing screen:", error);
+    }
+
+    // Listen for the user's cancellation of screen sharing
+    if (!stream) {
+      setIsRecording(false);
+      console.log("User canceled screen share");
+    }
+  };
+  // useEffect(() => {
+  //   let timerInterval;
+
+  //   if (isRecording) {
+  //     const startTime = Date.now() - elapsedTime;
+  //     timerInterval = setInterval(() => {
+  //       const elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+  //       setElapsedTime(elapsedTimeSeconds);
+  //     }, 1000);
+  //   } else {
+  //     clearInterval(timerInterval);
+  //   }
+
+  //   return () => clearInterval(timerInterval);
+  // }, [isRecording, elapsedTime]);
+
+  const toggleRecording = () => {
+    // mediaRecorder.stop();
+    setShowVideo(true);
+    setIsRecording(false);
+  };
+
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = time % 60;
+    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+  };
   return (
     <CommonModal
       open={isOpen}
@@ -400,7 +543,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                       style={{ display: "none" }}
                       multiple={true}
                       id="attachment"
-                      accept=".pdf,.png,.jpg,.jpeg"
+                      accept="audio/*"
                       // onChange={handleUploadFile}
                     />
                   </label>
@@ -441,15 +584,66 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
         <Grid container spacing={2}>
           <Grid item md={6}>
             <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
-              Screen Recording
+              {showVideo ? "Record Your Screen Again" : "Screen Recording"}
             </FormLabel>
+
             <CommonChip
               colorSecondary
               className="w-full"
-              label="Record Your Screen"
-              icon={<ScreenRecordingIcon />}
+              label={
+                showVideo ? "Record you Screen Again" : "Record you Screen"
+              }
+              onClick={handleRecordClick}
+              icon={
+                <ScreenRecordingIcon
+                  className="record-btn"
+                  // onClick={handleRecordClick}
+                />
+              }
               style={{ border: "0.5px solid #4F46E5" }}
             />
+            <>
+              {/* {showVideo && !isRecording && ( */}
+              <div
+                className={`rounded-[7px] border-1 border-solid border-[#9DA0A6] mt-10 relative  block ${showVideo && !isRecording ? "" : "hidden"}`}
+              >
+                <video
+                  className="rounded-[7px] p-5 h-[120px] "
+                  width="450px"
+                  ref={videoRef}
+                  controls
+                />
+                <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                  <CrossGreyIcon
+                    className="h-20 w-20 p-4"
+                    fill="#757982"
+                    onClick={() => setShowVideo(false)}
+                  />
+                </div>
+              </div>
+              {/* )} */}
+              {isRecording && (
+                <div className="bg-[#FEECEB] border-[0.5px] border-[#F44336] my-10 rounded-[7px] flex items-center justify-between px-16 py-10">
+                  <Typography className="text-[#F44336] text-[16px] ">
+                    Stop Recording
+                  </Typography>
+                  <div className="flex items-center gap-10">
+                    <span id="timer" className="text-[#F44336] text-[16px]">
+                      {formatTime(elapsedTime)}
+                    </span>
+                    <img
+                      src="../assets/images/logo/play.svg"
+                      alt="play"
+                      onClick={toggleRecording}
+                    ></img>
+                    <img
+                      src="../assets/images/logo/pause.svg"
+                      alt="pause"
+                    ></img>
+                  </div>
+                </div>
+              )}
+            </>
           </Grid>
         </Grid>
       </div>
