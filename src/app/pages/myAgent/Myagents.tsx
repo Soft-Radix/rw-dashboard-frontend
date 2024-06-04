@@ -254,8 +254,7 @@ export default function Myagents() {
     // debouncedSearch(value);
   };
   const fetchAgentList = useCallback(() => {
-    // dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
-    // console.log(filters, "filters");
+    dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
   }, [filters]);
 
   useEffect(() => {
