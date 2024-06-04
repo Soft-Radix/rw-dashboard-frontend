@@ -7,10 +7,12 @@ import {
 } from "public/assets/icons/common";
 import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
+
 // import DueDate from "./DueDate";
 import { useState } from "react";
 // import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
 import DueDate from "../projects/DueDate";
+import { Link } from "react-router-dom";
 
 const rows = [
   {
@@ -132,16 +134,18 @@ function ThemePageTable(props) {
                 </span>
               </TableCell>
               <TableCell align="left" className="w-[1%]">
-                <div className="flex gap-20">
+                <div className="flex gap-20 items-center">
                   <span className="p-2 cursor-pointer">
                     <DeleteIcon />
                   </span>
                   <span className="p-2 cursor-pointer">
                     <EditIcon />
                   </span>
-                  <span className="p-2 cursor-pointer">
-                    <ArrowRightCircleIcon />
-                  </span>
+                  <Link to={`/tasks/detail/5`}>
+                    <span className="p-2 cursor-pointer">
+                      <ArrowRightCircleIcon />
+                    </span>
+                  </Link>
                 </div>
               </TableCell>
             </TableRow>

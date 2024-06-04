@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CommonTable from "../../commonTable";
 
 import { TableCell, TableRow, useTheme } from "@mui/material";
 import { useFormik } from "formik";
+import { getLabelByValue } from "src/utils";
 
 const rows = [
   {
@@ -34,10 +35,10 @@ const rows = [
     status: "Unassigned",
   },
 ];
-const ItemTable = () => {
+const ItemTable = ({ row }) => {
   const theme = useTheme();
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-
+  const [data, setData] = useState(row?.subscription_plans);
   const formik = useFormik({
     initialValues: {
       month: "",
@@ -46,6 +47,9 @@ const ItemTable = () => {
     // validationSchema: validationSchemaProperty,
     onSubmit: (values) => {},
   });
+  useEffect(() => {
+    setData(row?.subscription_plans);
+  }, [row]);
   return (
     <div className="bg-white rounded-lg shadow-sm py-[2rem] mx-28 mb-[3rem]">
       <div className="flex items-center justify-between  pb-24 px-[2rem] ">
@@ -54,7 +58,7 @@ const ItemTable = () => {
         </h5>
       </div>
       <CommonTable
-        headings={["Agents", "Task", "DueDate", "Status"]}
+        headings={["Product Name", "Frequency", "Unit Price", "Quantity"]}
         headingRowProps={{
           sx: {
             textAlign: "center",
@@ -65,7 +69,7 @@ const ItemTable = () => {
         }}
       >
         <>
-          {rows.map((row, index) => (
+          {data?.map((row, index) => (
             <TableRow
               key={index}
               sx={{
@@ -82,25 +86,16 @@ const ItemTable = () => {
                 scope="row"
                 className="flex items-center gap-8 font-500 flex-col sm:flex-row"
               >
-                <img
-                  src={`../assets/images/avatars/male-01.jpg`}
-                  className="w-[34px] rounded-full"
-                />
-                {row.name}
+                {row?.product_name ? row?.product_name : "---"}
               </TableCell>
               <TableCell align="center" className="font-500">
-                {row.task}
+                {getLabelByValue(row.billing_frequency)}
               </TableCell>
               <TableCell align="center" className="font-500">
-                ${row.DueDate}
+                $ {row?.unit_price ? row?.unit_price : "---"}
               </TableCell>
               <TableCell align="center" className="whitespace-nowrap font-500">
-                <span
-                  className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Unassigned" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#F0B402] bg-[#FFEEBB]"}`}
-                >
-                  {row.status}
-                </span>
+                {row?.quantity ? row?.quantity : "---"}
               </TableCell>
             </TableRow>
           ))}

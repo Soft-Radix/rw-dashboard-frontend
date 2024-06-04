@@ -120,13 +120,13 @@ function AddAccountManagerModel({
           account_manager_id: accountManager_id,
         })
       );
+      setIsOpen((prev) => !prev);
     } else {
       formData.append("first_name", values.first_name);
       formData.append("last_name", values.last_name);
       formData.append("phone_number", String(values.phone_number)); // Convert number to string
       formData.append("email", values.email);
       formData.append("address", values.address);
-
       if (selectedImage) {
         formData.append("files", selectedImage);
       }
@@ -136,12 +136,12 @@ function AddAccountManagerModel({
       await dispatch(addAccManager({ formData }));
     }
     // console.log(payload, "payload");
-    setIsOpen(false);
-    fetchManagerList();
 
     if (payload?.data?.status) {
       resetForm();
     }
+    fetchManagerList();
+    setIsOpen((prev) => !prev);
   };
 
   const formik = useFormik({
@@ -158,21 +158,14 @@ function AddAccountManagerModel({
   useEffect(() => {
     if (!!accmanagerState?.successMsg) {
       dispatch(restAll());
-      setIsOpen(false);
+      setIsOpen(false), formik.resetForm();
       // fetchManagerList();
     } else if (!!accmanagerState?.errorMsg) {
-      dispatch(restAll());
+      setIsOpen(true);
+      // dispatch(restAll());
     }
-    // formik.resetForm();
-  }, [accmanagerState, isOpen]);
+  }, [accmanagerState]);
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-    setIsOpen(true);
-  };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const handleMenuItemClick = (data: ClientType) => {
     if (data.userName === "All") {
@@ -251,12 +244,16 @@ function AddAccountManagerModel({
       }
     }
   }, [accManagerDetail, isOpen]);
+  // console.log("🚀 ~ isOpen:", isOpen);
 
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => !prev), formik.resetForm();
+        setIsOpen(false),
+          formik.resetForm(),
+          setpreviewUrl(""),
+          setSelectedImage(null);
       }}
       modalTitle={
         isEditing == true ? "Edit Account Manager" : "Add Account Manager"
@@ -265,7 +262,7 @@ function AddAccountManagerModel({
       btnTitle={"Save"}
       disabled={actionStatus}
       onSubmit={formik.handleSubmit}
-      closeTitle="Cancel"
+      closeTitle="Close"
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -284,7 +281,7 @@ function AddAccountManagerModel({
           htmlFor="file-input" // The label triggers the file input when clicked
           className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer"
         >
-          <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+          <span className="absolute bottom-[-2px] right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
             <FuseSvgIcon className="text-white" size={20}>
               heroicons-outline:camera
             </FuseSvgIcon>
@@ -297,7 +294,7 @@ function AddAccountManagerModel({
             formik={formik}
             name="first_name"
             label="First Name"
-            placeholder="Enter your First Name"
+            placeholder="Enter First Name"
           />
           <InputField
             formik={formik}
@@ -308,11 +305,28 @@ function AddAccountManagerModel({
         </div>
         <div className="flex gap-20 sm:flex-row flex-col">
           <InputField
+            type="number"
             formik={formik}
             name="phone_number"
             label="Phone Number"
             placeholder="Enter Phone Number"
-            sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
+            sx={{
+              backgroundColor: "#F6F6F6",
+              borderRadius: "8px",
+              "& input[type=number]": {
+                "-moz-appearance": "textfield", // Firefox
+                "&::-webkit-outer-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+                "&::-webkit-inner-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+              },
+            }}
           />
 
           <InputField

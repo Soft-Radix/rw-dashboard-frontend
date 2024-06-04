@@ -148,20 +148,37 @@ const Kanban = (props: IProps): JSX.Element => {
       listData();
     }
   }, [id]);
+  // const handleAddTask = () => {
+  //   return (
+  //     <Button
+  //       variant="outlined"
+  //       color="secondary"
+  //       className="h-[40px] text-[16px] flex gap-8"
+  //       aria-label="Add Tasks"
+  //       size="large"
+  //       // onClick={() => setIsOpenAddModal(true)}
+  //       startIcon={<PlusIcon color={theme.palette.secondary.main} />}
+  //     >
+  //       Add Task
+  //     </Button>
+  //   );
+  // };
 
   return (
     <div>
       <div className="px-20 mb-20">
         <FilterPage filterDesign={true} />
       </div>
-      <div className="flex gap-20 overflow-x-auto px-28 pb-28 items-start">
+      <div
+        className={`flex ${columnList?.length > 0 ? "gap-20" : ""} overflow-x-auto px-28 pb-28 items-start`}
+      >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className="flex gap-20"
+                className={`flex  ${columnList?.length > 0 ? "gap-20" : ""}`}
               >
                 {columnList?.map((item, index) => (
                   <Draggable
@@ -181,6 +198,7 @@ const Kanban = (props: IProps): JSX.Element => {
                           isEmpty
                           id={item.id}
                           callListApi={listData}
+                          // handleAddTask={handleAddTask}
                         />
                       </div>
                     )}

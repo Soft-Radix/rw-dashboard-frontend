@@ -38,7 +38,7 @@ function DeleteProject({
           Delete Project
         </Typography>
         <Typography className="text-[14px] font-400 text-[#757982] text-center px-28">
-          Are you sure you want to delete this project ?
+          Are you sure you want to delete this project?
         </Typography>
       </div>
     </CommonModal>

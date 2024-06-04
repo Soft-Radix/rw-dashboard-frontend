@@ -18,6 +18,7 @@ interface IProps {
   headingRowProps?: TableRowProps;
   useBorderDesign?: boolean;
   isSorting?: boolean;
+  isAllSelected?: boolean;
   sortColumn?: string;
   sortOrder?: string;
   onSort?: (column: string) => void;
@@ -31,6 +32,7 @@ function CommonTable({
   isSorting,
   onSort,
   handleSelectAll,
+  isAllSelected,
 }: IProps) {
   // console.log("headings", headings);
   return (
@@ -57,16 +59,13 @@ function CommonTable({
                 align={
                   headings.length === index || index === 0 ? "left" : "center"
                 }
-                onClick={() => {
-                  if (typeof onSort == "function") {
-                    onSort(item);
-                  } else null;
-                }}
+                // align ={"center"}
               >
                 {isSorting ? (
                   <div className="flex items-center">
                     {index === 0 && (
                       <Checkbox
+                        checked={isAllSelected}
                         onClick={(e: BaseSyntheticEvent) => {
                           e.stopPropagation();
                           handleSelectAll();
@@ -80,7 +79,14 @@ function CommonTable({
                       />
                     )}
                     {index !== headings.length - 1 && (
-                      <HeadIcon className="mr-10" />
+                      <HeadIcon
+                        className="mr-10"
+                        onClick={() => {
+                          if (typeof onSort == "function") {
+                            onSort(item);
+                          } else null;
+                        }}
+                      />
                     )}{" "}
                     {item}
                   </div>

@@ -40,6 +40,7 @@ export default function SignDocuement() {
   const userData = getLocalStorage("userData");
   const { jwtService } = useAuth();
   const [name, setName] = useState("");
+  const [disable, setDisable] = useState(false);
 
   const store = useSelector((store: AuthRootState) => store.auth);
   const Userresponse = getLocalStorage("response");
@@ -80,6 +81,7 @@ export default function SignDocuement() {
     }
   }
   const fetchData = async () => {
+    setDisable(true);
     const payload = {
       name: formik.values?.name,
       token: Userresponse.access_token,
@@ -98,10 +100,11 @@ export default function SignDocuement() {
         localData.user.projects = projects;
 
         localStorage.setItem("response", JSON.stringify(localData));
-
+        setDisable(false);
         redirect();
       }
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -116,6 +119,7 @@ export default function SignDocuement() {
         const payload = {
           token: Userresponse.access_token,
         };
+
         //@ts-ignore
         const res = await dispatch(RefreshToken(payload));
         // localStorage.setItem(
@@ -169,7 +173,7 @@ export default function SignDocuement() {
                 variant="contained"
                 color="secondary"
                 size="large"
-                // disabled={name == "" ? true : false}
+                disabled={disable}
                 className="text-[18px] font-500"
                 onClick={handleSubmit}
               >

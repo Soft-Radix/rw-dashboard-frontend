@@ -1,31 +1,25 @@
-import { Button, Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import ListLoading from "@fuse/core/ListLoading";
+import { Button, TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { useFormik } from "formik";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-} from "public/assets/icons/common";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
-import ImagesOverlap from "src/app/components/ImagesOverlap";
-import TitleBar from "src/app/components/TitleBar";
-import CommonTable from "src/app/components/commonTable";
-import CommonPagination from "src/app/components/pagination";
-import AddGroupModel from "src/app/components/agents/AddGroupModel";
-import SearchInput from "src/app/components/SearchInput";
+import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
 import {
   AgentGroupRootState,
   filterType,
 } from "app/store/Agent group/Interface";
-import { useSelector } from "react-redux";
 import { useAppDispatch } from "app/store/store";
-import { deleteAgentGroup, getAgentGroupList } from "app/store/Agent group";
+import { useFormik } from "formik";
+import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
+import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import SearchInput from "src/app/components/SearchInput";
+import TitleBar from "src/app/components/TitleBar";
+import AddGroupModel from "src/app/components/agents/AddGroupModel";
 import DeleteClient from "src/app/components/client/DeleteClient";
-import { debounce } from "lodash";
-import { getAgentList } from "app/store/Agent";
+import CommonTable from "src/app/components/commonTable";
+import CommonPagination from "src/app/components/pagination";
 
 export default function AgentsGroup() {
   const group_id = useParams();
@@ -50,16 +44,13 @@ export default function AgentsGroup() {
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState("");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
     search: "",
   });
-  const [filterss, setfilterss] = useState<filterType>({
-    start: 0,
-    limit: 10,
-    search: "",
-  });
+  const { limit, search, start } = filters;
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
     setfilters((prevFilters) => {
@@ -93,34 +84,47 @@ export default function AgentsGroup() {
     }
   };
   // Debounce function to delay executing the search
-  const debouncedSearch = debounce((searchValue) => {
-    // Update the search filter here
-    setfilters((prevFilters) => ({
-      ...prevFilters,
-      search: searchValue,
-    }));
-  }, 300);
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    debouncedSearch(value);
-  };
-  const fetchAgentGroupList = useCallback(() => {
-    dispatch(getAgentGroupList(filters));
-  }, [filters]);
+  // const debouncedSearch = debounce((searchValue) => {
+  //   // Update the search filter here
+  //   setfilters((prevFilters) => ({
+  //     ...prevFilters,
+  //     start: 0,
+  //     search: searchValue,
+  //   }));
+  // }, 300);
 
   useEffect(() => {
-    fetchAgentGroupList();
-  }, [fetchAgentGroupList]);
-  // useEffect(() => {
-  //   if (agentGroupState) {
-  //     setValues: agentGroupState.group_name;
-  //   }
-  // });
-  // useEffect(() => {
-  //   dispatch(getAgentList({ filters, group_id: group_id }));
+    const timeoutId = setTimeout(() => {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        search: inputValue,
+        start: 0,
+      }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, 500]);
 
-  //   // console.log(filters, "filters");
-  // }, [filters]);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setInputValue(value);
+    // debouncedSearch(value);
+  };
+  const fetchAgentGroupList = () => {
+    // dispatch(getAgentGroupList(filters));
+  };
+
+  useEffect(() => {
+    dispatch(getAgentGroupList(filters));
+  }, [limit, start, search]);
+
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
 
   return (
     <>
@@ -146,13 +150,16 @@ export default function AgentsGroup() {
               name="search"
               placeholder="Search agents group"
               onChange={handleSearchChange}
+              handleInputClear={handleInputClear}
+              inputValue={inputValue}
             />
           </div>
           <CommonTable
             headings={["ID", "Group Name", "Number of Agents", "Action"]}
           >
             {" "}
-            {agentGroupState?.list.length === 0 ? (
+            {agentGroupState?.list?.length === 0 &&
+            agentGroupState?.status !== "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -164,14 +171,26 @@ export default function AgentsGroup() {
                 }}
               >
                 <TableCell colSpan={7} align="center">
-                  <span className="font-bold text-20 text-[#e4e4e4]">
-                    No Data Found
-                  </span>
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : agentGroupState.status === "loading" ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
                 </TableCell>
               </TableRow>
             ) : (
               <>
-                {agentGroupState?.list.map((row, index) => {
+                {agentGroupState?.list?.map((row, index) => {
                   // console.log(row, "row");
                   return (
                     <TableRow
@@ -185,7 +204,9 @@ export default function AgentsGroup() {
                         },
                       }}
                     >
-                      <TableCell scope="row">{row.id}</TableCell>
+                      <TableCell scope="row" className="px-[20px]">
+                        {row.id}
+                      </TableCell>
                       <TableCell align="center" className="whitespace-nowrap">
                         {row.group_name}
                       </TableCell>

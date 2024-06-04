@@ -147,19 +147,19 @@ export default function Profile({
 
                 <div className="flex items-baseline justify-between w-full py-20 gap-31">
                   <div className="flex flex-col pr-10 gap-7 ">
-                    <span className="text-[1.8rem] text-title font-500 w-max">
+                    <span className="text-[20px] text-title font-500 w-max">
                       Status
                     </span>
-                    <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
+                    <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                       <img src="../assets/icons/circle.svg" className="mr-4" />
                       {clientDetail?.status || "N/A"}
                     </span>
                   </div>
                   <div className="flex flex-col items-start w-8/12 gap-7">
-                    <span className="text-[1.8rem] text-title font-500">
+                    <span className="text-[20px] text-title font-500">
                       Company Name
                     </span>
-                    <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
+                    <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                       <img src="../assets/icons/tech.svg" className="mr-4" />
                       {clientDetail?.company_name}
                     </span>
@@ -167,10 +167,10 @@ export default function Profile({
                 </div>
                 <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31">
                   <div className="flex flex-col pr-10 gap-7 ">
-                    <span className="text-[1.8rem] text-title font-500 w-max">
+                    <span className="text-[20px] text-title font-500 w-max">
                       Address
                     </span>
-                    <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
+                    <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                       <img
                         src="../assets/icons/loaction.svg"
                         className="mr-4"
@@ -187,7 +187,7 @@ export default function Profile({
         <Grid item lg={12} className="basis-full mt-[30px] flex gap-28">
           <div className="flex-1">
             <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
-              <div className="flex gap-[20px] items-end justify-center">
+              <div className="flex gap-[20px]  justify-center">
                 <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
                   <img src="../assets/icons/lock.svg" />
                 </div>
@@ -216,7 +216,7 @@ export default function Profile({
           </div>
           <div className="flex-1">
             <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg h-full">
-              <div className="flex gap-[20px] items-end justify-center">
+              <div className="flex gap-[20px] justify-center">
                 <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
                   <img src="../assets/icons/lock.svg" />
                 </div>

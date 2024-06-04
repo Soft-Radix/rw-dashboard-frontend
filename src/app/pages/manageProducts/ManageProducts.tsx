@@ -1,16 +1,57 @@
-import { Button, TableCell, TableRow, Theme } from "@mui/material";
+import {
+  Button,
+  TableCell,
+  TableRow,
+  Theme,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { productDelete, productList, productUpdate } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
-import { DeleteIcon, EditIcon } from "public/assets/icons/common";
+import { DeleteIcon, EditIcon, NoDataFound } from "public/assets/icons/common";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import TitleBar from "src/app/components/TitleBar";
 import CommonTable from "src/app/components/commonTable";
 import AddProduct from "./AddProductModal";
 import DeleteProduct from "./DeleteProductModal";
 import CommonPagination from "src/app/components/pagination";
+import { filterType } from "app/store/AccountManager/Interface";
+import { RootState } from "app/store/store";
+import { useSelector } from "react-redux";
+import ListLoading from "@fuse/core/ListLoading";
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          // display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
 
 export default function ManageProducts() {
   const [isOpenSupportDetail, setIsOpenDetailPage] = useState<boolean>(false);
@@ -25,25 +66,47 @@ export default function ManageProducts() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   const dispatch = useAppDispatch();
+  const [loading, setLoading] = useState(true);
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const accManagerState = useSelector((state: RootState) => state.client);
 
   const fetchData = async () => {
-    const payload = {
-      start: 0,
-      limit: 100,
-      search: "",
-    };
     try {
       //@ts-ignore
-      const res = await dispatch(productList(payload));
+      const res = await dispatch(productList(filters));
+      setLoading(false);
       setList(res?.payload?.data?.data?.list);
+      const currentRows = res?.payload?.data?.data?.list?.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage
+      );
+      if (currentRows.length === 0 && currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
 
+  // useEffect(() => {
+  //   fetchData();
+  // }, [filters.start]);
+
   useEffect(() => {
     fetchData();
-  }, [dispatch, id, isOpenAddModal]);
+  }, [
+    dispatch,
+    isOpenAddModal,
+    filters.start,
+    filters.search,
+    filters.client_id,
+    filters.limit,
+  ]);
 
   const onDelete = async () => {
     setDisable(true);
@@ -54,17 +117,22 @@ export default function ManageProducts() {
       };
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
-      setDisable(false);
+
       fetchData();
       setIsOpenDeletedModal(false);
+
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
+      // toast.dismiss();
+      setIsDeleteId(null);
+      setTimeout(() => {
+        setDisable(false);
+      }, 500);
     } catch (error) {
       setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
-
   const fetchUpdateData = async (payload: any) => {
     setId(null);
     try {
@@ -74,25 +142,34 @@ export default function ManageProducts() {
       setId(null);
       fetchData();
       toast.success(res?.payload?.data?.message);
+      // toast.dismiss();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const totalPageCount = Math.ceil(list.length / itemsPerPage);
+  const totalPageCount = Math.ceil(list?.length / itemsPerPage);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page);
-    // Handle any additional logic when the page changes, e.g., fetching data
-  };
-
-  const currentRows = list.slice(
+  const currentRows = list?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
+  };
+  // if (loading == true) {
+  //   return <ListLoading />;
+  // }
 
   return (
     <div>
@@ -100,7 +177,7 @@ export default function ManageProducts() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          className="h-[36px] text-[16px] flex gap-8 font-[600]"
           aria-label="Add Tasks"
           size="large"
           onClick={() => setIsOpenAddModal(true)}
@@ -114,82 +191,7 @@ export default function ManageProducts() {
           <CommonTable
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
-            <>
-              {currentRows?.map((item, index) => {
-                return (
-                  <>
-                    <TableRow
-                      sx={{
-                        "& td": {
-                          borderBottom: "1px solid #EDF2F6",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      <TableCell
-                        scope="row"
-                        className="w-[400px] break-words break-all"
-                      >
-                        {item.name}
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        className="w-[400px] break-words break-all"
-                      >
-                        {item.description}
-                      </TableCell>
-
-                      <TableCell align="center" className="whitespace-nowrap">
-                        ${item.unit_price}
-                      </TableCell>
-                      <TableCell align="center" className="w-[1%]">
-                        <div className="flex gap-20 pe-20">
-                          <span className="p-2 cursor-pointer">
-                            <DeleteIcon
-                              onClick={() => {
-                                setIsOpenDeletedModal(true);
-                                setId(item.id);
-                              }}
-                            />
-                          </span>
-                          <span className="p-2 cursor-pointer">
-                            <EditIcon
-                              onClick={() => {
-                                setId(item.id);
-                                setIsOpenAddModal(true);
-                                setIsEditing(true);
-                              }}
-                            />
-                          </span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  </>
-                );
-              })}
-
-              {/* <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon
-                        onClick={() => {
-                          setIsOpenAddModal(true);
-                          setIsEditing(true);
-                        }}
-                      />
-                    </span>
-                  </div>
-                </TableCell>
-              </TableRow>
+            {currentRows?.length === 0 && !loading ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -200,37 +202,93 @@ export default function ManageProducts() {
                   },
                 }}
               >
-                <TableCell scope="row">Jone Doe</TableCell>
-                <TableCell align="center" className="whitespace-nowrap">
-                  Lorem Ipsum
-                </TableCell>
-
-                <TableCell align="center" className="whitespace-nowrap">
-                  $100
-                </TableCell>
-
-                <TableCell align="center" className="w-[1%]">
-                  <div className="flex gap-20 pe-20">
-                    <span className="p-2 cursor-pointer">
-                      <DeleteIcon
-                        onClick={() => {
-                          setIsOpenDeletedModal(true);
-                        }}
-                      />
-                    </span>
-                    <span className="p-2 cursor-pointer">
-                      <EditIcon onClick={() => setIsOpenAddModal(true)} />
-                    </span>
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                    </Typography>
                   </div>
                 </TableCell>
-              </TableRow> */}
-            </>
+              </TableRow>
+            ) : loading ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render loader component */}
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                {currentRows?.map((item, index) => {
+                  return (
+                    <>
+                      <TableRow
+                        sx={{
+                          "& td": {
+                            borderBottom: "1px solid #EDF2F6",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            color: theme.palette.primary.main,
+                          },
+                        }}
+                      >
+                        <TableCell scope="row" className="w-[400px]  ">
+                          {/* <Tooltip title={item.name} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.name, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText text={item.name} maxWidth={400} />
+                        </TableCell>
+                        <TableCell align="center" className="w-[400px]  ">
+                          {/* <Tooltip title={item.description} enterDelay={500}> */}
+                          {/* <span>{truncateText(item.description, 5)}</span> */}
+                          {/* </Tooltip> */}
+                          <TruncateText
+                            text={item.description}
+                            maxWidth={400}
+                          />
+                        </TableCell>
+
+                        <TableCell align="center" className="whitespace-nowrap">
+                          <p style={{ lineHeight: "15px" }}>
+                            ${item.unit_price}
+                          </p>
+                        </TableCell>
+                        <TableCell align="center" className="w-[1%]">
+                          <div className="flex gap-20 pe-20">
+                            <span className="p-2 cursor-pointer">
+                              <DeleteIcon
+                                onClick={() => {
+                                  setIsOpenDeletedModal(true);
+                                  setId(item.id);
+                                }}
+                              />
+                            </span>
+                            <span className="p-2 cursor-pointer">
+                              <EditIcon
+                                onClick={() => {
+                                  setId(item.id);
+                                  setIsOpenAddModal(true);
+                                  setIsEditing(true);
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    </>
+                  );
+                })}
+              </>
+            )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
             <CommonPagination
-              count={totalPageCount}
-              currentPage={currentPage}
-              onPageChange={handlePageChange}
+              count={accManagerState?.total_records}
+              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
+              page={filters.start + 1}
             />
           </div>
         </div>

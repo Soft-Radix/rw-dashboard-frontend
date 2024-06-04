@@ -77,22 +77,20 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
   useEffect(() => {
     if (needsToBeOpened(location, item)) {
-      // console.log(item, "itemr");
       if (!open) {
         setOpen(!open);
       }
     }
-
-    // eslint-disable-next-line
   }, [location, item]);
   useEffect(() => {
     if (location.pathname.includes("/projects")) return;
-    if (
-      location.pathname !== "/admin/agents/groups" &&
-      location.pathname !== "/admin/agents/list"
-    ) {
-      setOpen(false);
-    }
+    if (!location.pathname.includes("/agents"))
+      if (
+        location.pathname !== "/admin/agents/groups" &&
+        location.pathname !== "/admin/agents/list"
+      ) {
+        setOpen(false);
+      }
   }, [location]);
 
   const component = item.url ? NavLinkAdapter : "li";

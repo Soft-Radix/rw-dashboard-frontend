@@ -42,27 +42,8 @@ import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
 
-let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
-const rows = [
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Suspended",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Pending",
-  },
-  {
-    id: "1542145611525",
-    name: "Web page design",
-    companyName: "Tech23.com",
-    status: "Active",
-  },
-];
+// let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
+
 // const resetForm
 
 export default function AgentDetails() {
@@ -158,7 +139,7 @@ export default function AgentDetails() {
           <Grid item xs={12} sm={12} md={9} className="">
             <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
               <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
-                <div className="flex gap-40 flex-wrap">
+                <div className="flex gap-40">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                     {/* <img src="../assets/images/pages/agent/luis_.jpg" /> */}
                     <img
@@ -252,7 +233,7 @@ export default function AgentDetails() {
                     </div>
 
                     <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
-                      <div className="flex pr-10 gap-32 sm:flex-row flex-col">
+                      <div className="flex pr-10 gap-32 lg1:flex-row flex-col">
                         <div className="flex flex-col gap-5">
                           <span className="text-[#111827] text-[18px] font-500">
                             Email Address
@@ -320,7 +301,9 @@ export default function AgentDetails() {
                 <div className="flex gap-10 py-5 flex-wrap ">
                   {agentDetail?.attachments?.map((item: any) => (
                     <div className="relative cursor-pointer ">
-                      {item.file.includes(".png" || ".jpg" || ".jpeg") ? (
+                      {item.file.includes(".png") ||
+                      item.file.includes(".jpg") ||
+                      item.file.includes(".jpeg") ? (
                         <>
                           <img
                             src={urlForImage + item.file}
@@ -407,6 +390,9 @@ export default function AgentDetails() {
                     onClick={() => handleUploadFile}
                   >
                     {/* <div className="bg-[#EDEDFC] px-20 mb-10 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"> */}
+                    <span>
+                      <img src={"../assets/images/logo/upload.png"} />
+                    </span>
                     <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
                       Upload File
                       <input
@@ -417,9 +403,7 @@ export default function AgentDetails() {
                         onChange={handleUploadFile}
                       />
                     </label>
-                    <span>
-                      <AttachmentUploadIcon />
-                    </span>
+
                     {/* </div> */}
                     {/* {uploadedFiles.map((file, index) => (
                       <div
@@ -459,7 +443,7 @@ export default function AgentDetails() {
           setIsOpen={setIsOpenDeletedModal}
           onDelete={() => handleDeleteAttachment(deleteId)}
           heading={"Delete Attachment"}
-          description={"Are you sure you want to delete this attachment ? "}
+          description={"Are you sure you want to delete this attachment? "}
         />
       </div>
     </>

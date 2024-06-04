@@ -22,6 +22,7 @@ import { useSelector } from "react-redux";
 import FuseLoading from "@fuse/core/FuseLoading";
 import ManageButton from "src/app/components/client/ManageButton";
 import { useLocation } from "react-router";
+import { CrossGreyIcon } from "public/assets/icons/common";
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
@@ -46,6 +47,8 @@ export default function Clients() {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [isAllSelected, setisAllSelected] = useState(false);
+  const [inputValue, setInputValue] = useState("");
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -54,27 +57,43 @@ export default function Clients() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  // Debounce function to delay executing the search
-  const debouncedSearch = debounce((searchValue) => {
-    // Update the search filter here
+  useEffect(() => {
     setfilters((prevFilters) => ({
       ...prevFilters,
-      search: searchValue,
+
+      start: 0,
     }));
-  }, 300); // Adjust the delay as needed (300ms in this example)
+  }, [active]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setfilters((prevFilters) => ({
+        ...prevFilters,
+        search: inputValue,
+        start: 0,
+      }));
+    }, 500);
+    return () => clearTimeout(timeoutId);
+  }, [inputValue, 500]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    debouncedSearch(value);
+    setInputValue(value);
+    // debouncedSearch(value);
   };
-
   const handleCheckboxChange = (rowId: number) => {
-    setSelectedIds(
-      (prev) =>
-        prev.includes(rowId)
-          ? prev.filter((id) => id !== rowId) // Deselect
-          : [...prev, rowId] // Select
-    );
+    const allRowIds = clientState?.list.map((row: ClientType) => row.id) || [];
+    let selectedId = selectedIds.includes(rowId)
+      ? [...selectedIds.filter((id) => id !== rowId)]
+      : [...selectedIds, rowId];
+
+    if (allRowIds.length == selectedId.length) {
+      setSelectedIds(allRowIds);
+      setisAllSelected(true);
+    } else {
+      setSelectedIds(selectedId); // Select all
+      setisAllSelected(false);
+    }
   };
 
   const handleSelectAll = () => {
@@ -84,10 +103,13 @@ export default function Clients() {
     );
     if (allSelected) {
       setSelectedIds([]); // Deselect all
+      setisAllSelected(false);
     } else {
+      setisAllSelected(true);
       setSelectedIds(allRowIds); // Select all
     }
   };
+
   const { actionStatusClient } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -128,46 +150,86 @@ export default function Clients() {
 
   useEffect(() => {
     fetchList();
-  }, [dispatch, filters, active]);
+  }, [
+    dispatch,
+    filters.limit,
+    filters.client_id,
+    filters.search,
+    filters.start,
+    active,
+  ]);
 
   useEffect(() => {
     setActive(query[query.length - 1]);
   }, [search]);
 
+  const handleInputClear = () => {
+    setInputValue("");
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      search: "",
+      start: 0,
+    }));
+  };
   const ClientTabButton = () => {
     return (
-      <div className="flex flex-col gap-10 sm:flex-row">
+      <div className="flex flex-col gap-10 sm:flex-row relative">
         <TextField
           hiddenLabel
           id="filled-hidden-label-small"
           defaultValue=""
+          value={inputValue}
           variant="standard"
           placeholder="Search Client"
           onChange={handleSearchChange}
+          className="flex items-center justify-center"
           sx={{
-            pl: 2,
-            // border: "1px solid blue",
+            height: "45px",
+            pl: "5px", // Adjusted padding to accommodate the icon
+            width: "286px",
+            pr: 2,
             backgroundColor: "#F6F6F6",
             borderRadius: "8px",
-            border: "1px solid transparent", // Show border when focused
+            border: "1px solid transparent",
             "&:focus-within": {
-              border: "1px solid blue", // Show border when focused
+              border: "1px solid blue",
             },
             "& .MuiInputBase-input": {
-              textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-              border: "none", // Hide the border of the input element
+              textDecoration: "none",
+              border: "none",
             },
             "& .MuiInput-underline:before": {
-              border: "none !important", // Hide the underline (if using underline variant)
+              border: "none !important",
             },
             "& .MuiInput-underline:after": {
-              borderBottom: "none !important", // Hide the underline (if using underline variant)
+              borderBottom: "none !important",
+            },
+            "& .MuiInputBase-input::placeholder": {
+              color: "#757982",
+              opacity: 1,
+            },
+            "& .MuiInputAdornment-positionStart": {
+              // marginLeft: "8px", // Adjusted margin to position the icon
             },
           }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <SearchIcon className="p-2" />
+                <SearchIcon />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <InputAdornment position="end">
+                {inputValue !== "" ? (
+                  <CrossGreyIcon
+                    className="cursor-pointer fill-[#c2cad2] h-[14px]"
+                    onClick={handleInputClear}
+                  />
+                ) : (
+                  // Render an empty icon to occupy space when inputValue is empty
+                  <div style={{ width: "24px" }} />
+                )}
+                {/* You can add more icons conditionally here */}
               </InputAdornment>
             ),
           }}
@@ -189,6 +251,7 @@ export default function Clients() {
           handleCheckboxChange={handleCheckboxChange}
           setfilters={setfilters}
           filters={filters}
+          isAllSelected={isAllSelected}
         />
       ),
       actionBtn: ClientTabButton,
@@ -334,7 +397,7 @@ export default function Clients() {
           {selectedIds?.length > 0 && (
             <Button
               variant="contained"
-              className="h-[40px] text-[16px] flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
+              className="h-[40px] text-[16px] font-600 flex gap-8 text-[#4F46E5] bg-[#EDEDFC] hover:bg-transparent"
               aria-label="delete"
               size="large"
               onClick={() => setIsOpenDeletedModal(true)}

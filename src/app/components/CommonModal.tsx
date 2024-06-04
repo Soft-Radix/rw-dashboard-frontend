@@ -36,6 +36,7 @@ type ModalType = {
   bgColor?: string;
   headerBgColor?: string;
   titleColor?: string;
+  isValid?: boolean;
 };
 
 export default function CommonModal({
@@ -52,6 +53,7 @@ export default function CommonModal({
   bgColor,
   headerBgColor,
   titleColor,
+  isValid = true,
 }: ModalType) {
   return (
     <StylesDialog
@@ -102,9 +104,9 @@ export default function CommonModal({
         <Button
           variant="contained"
           color="secondary"
-          className="w-[156px] h-[48px] text-[18px]"
+          className={`${disabled ? "btn-disable" : ""} w-[156px] h-[48px] text-[18px]`}
           onClick={onSubmit}
-          disabled={disabled}
+          disabled={!isValid || disabled}
         >
           {btnTitle}
         </Button>
@@ -112,7 +114,7 @@ export default function CommonModal({
           variant="outlined"
           disabled={disabled}
           color="secondary"
-          className="w-[156px] h-[48px] text-[18px] ml-14"
+          className={`${disabled ? "btn-disable-light" : ""} w-[156px] h-[48px] text-[18px] ml-14`}
           onClick={handleToggle}
         >
           {closeTitle}

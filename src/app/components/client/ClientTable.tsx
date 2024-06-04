@@ -1,10 +1,16 @@
 import ListLoading from "@fuse/core/ListLoading";
-import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import {
+  Checkbox,
+  TableCell,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { sortColumn } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import moment from "moment";
-import { ArrowRightCircleIcon } from "public/assets/icons/common";
+import { ArrowRightCircleIcon, NoDataFound } from "public/assets/icons/common";
 import { ChangeEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
@@ -20,6 +26,7 @@ function ClientTable({
   setfilters,
   filters,
   status = true,
+  isAllSelected = false,
 }) {
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -36,6 +43,7 @@ function ClientTable({
 
   const renderCell = (cellId: string): boolean => {
     const { selectedColumn } = clientState ?? {};
+
     // If there's no selectedColumn or it's empty, always return true
     if (!selectedColumn || selectedColumn.length === 0) {
       return true;
@@ -67,16 +75,17 @@ function ClientTable({
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
               : status
-                ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
-                : ["ID", "Name", "Company Name", "Joining Date", ""]
+              ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
+              : ["ID", "Name", "Company Name", "Joining Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
           sortOrder={sortOrder}
           onSort={sortData}
           handleSelectAll={handleSelectAll}
+          isAllSelected={isAllSelected}
         >
-          {clientState?.list.length == 0 ? (
+          {clientState?.list?.length == 0 ? (
             <TableRow
               sx={{
                 "& td": {
@@ -87,10 +96,16 @@ function ClientTable({
                 },
               }}
             >
-              <TableCell colSpan={5} align="center">
-                <span className="font-bold text-20 text-[#e4e4e4]">
-                  No Data Found
-                </span>
+              <TableCell colSpan={7} align="center">
+                <div
+                  className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                  style={{ alignItems: "center" }}
+                >
+                  <NoDataFound />
+                  <Typography className="text-[24px] text-center font-600 leading-normal">
+                    No data found !
+                  </Typography>
+                </div>
               </TableCell>
             </TableRow>
           ) : (
@@ -156,17 +171,17 @@ function ClientTable({
                       className="whitespace-nowrap font-500"
                     >
                       <span
-                        className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                        className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
                         ${
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subscription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subscription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subscription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subscription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subscription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                       >
                         {row.subscription_status || "N/A"}

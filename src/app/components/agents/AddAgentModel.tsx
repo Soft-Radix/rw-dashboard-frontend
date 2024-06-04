@@ -119,6 +119,7 @@ function AddAgentModel({
         setIsOpen(false);
         setUploadedFiles([]);
         setpreviewUrl("");
+        resetForm();
       }
     } catch (error) {
       // Handle error if dispatch or API call fails
@@ -146,7 +147,7 @@ function AddAgentModel({
     } else if (!!agentState?.errorMsg) {
       dispatch(restAll());
     }
-  }, [agentState, isOpen]);
+  }, [agentState]);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -201,16 +202,20 @@ function AddAgentModel({
       }
       if (!isOpen) {
         setpreviewUrl("");
+        setUploadedFiles([]);
       }
     }
-    setUploadedFiles([]);
   }, [agentDetail, isOpen]);
   // console.log("uploadedFiles", uploadedFiles);
   return (
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => false), formik.resetForm();
+        setIsOpen((prev) => false),
+          formik.resetForm(),
+          setpreviewUrl(""),
+          setUploadedFiles([]);
+        setSelectedImage(null);
       }}
       modalTitle={isEditing ? "Edit Agent" : "Add Agent"}
       maxWidth="733"
@@ -218,7 +223,7 @@ function AddAgentModel({
       disabled={agentState.actionStatus}
       //   disabled={loading}
       onSubmit={formik.handleSubmit}
-      closeTitle={"Cancel"}
+      closeTitle={"Close"}
     >
       <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
         <img
@@ -237,7 +242,7 @@ function AddAgentModel({
           htmlFor="file-input" // The label triggers the file input when clicked
           className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer"
         >
-          <span className="absolute bottom-0 right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
+          <span className="absolute bottom-[-2px] right-0 bg-secondary h-[3.4rem] aspect-square flex items-center justify-center rounded-full border-2 border-white cursor-pointer">
             <FuseSvgIcon className="text-white" size={20}>
               heroicons-outline:camera
             </FuseSvgIcon>
@@ -261,11 +266,28 @@ function AddAgentModel({
         </div>
         <div className="flex gap-20 sm:flex-row flex-col">
           <InputField
+            type="number"
             formik={formik}
             name="phone_number"
             label="Phone Number"
             placeholder="Enter Phone Number"
-            sx={{ backgroundColor: "#F6F6F6", borderRadius: "8px" }}
+            sx={{
+              backgroundColor: "#F6F6F6",
+              borderRadius: "8px",
+              "& input[type=number]": {
+                "-moz-appearance": "textfield", // Firefox
+                "&::-webkit-outer-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+                "&::-webkit-inner-spin-button": {
+                  // Chrome, Safari, Edge, Opera
+                  "-webkit-appearance": "none",
+                  margin: 0,
+                },
+              },
+            }}
           />
           <InputField
             formik={formik}
@@ -305,7 +327,7 @@ function AddAgentModel({
                 />
               </label>
               <span>
-                <AttachmentUploadIcon />
+                <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
             {uploadedFiles.map((file, index) => (
@@ -313,7 +335,7 @@ function AddAgentModel({
                 key={index}
                 className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] flex items-center justify-between cursor-pointer"
               >
-                <div className="mr-4 text-[16px] text-[#4F46E5] py-5 w-full flex  items-center">
+                <div className="mr-4 text-[16px] text-[#111827] py-5 w-full flex  items-center">
                   <PreviewIcon />
                   {file.name}
                 </div>

@@ -175,6 +175,8 @@ export const accManagerSlice = createSlice({
         const payload = action.payload as ApiResponse; // Assert type
         state.actionStatus = false;
         if (payload?.data?.status) {
+          // console.log("🚀check", payload?.data?.status);
+
           state.successMsg = payload?.data?.message;
           toast.success(payload?.data?.message);
         } else {
@@ -186,7 +188,7 @@ export const accManagerSlice = createSlice({
         toast.error(error?.message);
         state.actionStatus = false;
       })
-      .addCase(getAccManagerList.pending, (state) => {
+      .addCase(getAccManagerList.pending, (state, action) => {
         state.status = "loading";
       })
       .addCase(getAccManagerList.fulfilled, (state, action) => {
@@ -293,7 +295,10 @@ export const accManagerSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, resetFormManagrData } =
-  accManagerSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  resetFormManagrData,
+} = accManagerSlice.actions;
 
 export default accManagerSlice.reducer;

@@ -52,11 +52,16 @@ export default function ClientDetail() {
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const location: Location = useLocation();
-  const { clientDetail, actionStatus, fetchStatus, assignAccManagerDetail } =
-    useSelector((store: ClientRootState) => store?.client);
+  const {
+    clientDetail,
+    actionStatus,
+    fetchStatus,
+    assignAccManagerDetail,
+  } = useSelector((store: ClientRootState) => store?.client);
   // console.log(assignAccManagerDetail, "detailsffffs");
   const { role } = useSelector((store: any) => store?.user);
   const { searchAgentList } = useSelector(
@@ -93,12 +98,12 @@ export default function ClientDetail() {
         agent_ids: checkedItems,
       })
     );
-    dispatch(
-      GetAssignAgentsInfo({
-        client_id,
-        agentfilterMenu,
-      })
-    );
+    // dispatch(
+    //   GetAssignAgentsInfo({
+    //     client_id,
+    //     agentfilterMenu,
+    //   })
+    // );
     handleClose();
     setIsOpenEditModal(false);
 
@@ -172,12 +177,12 @@ export default function ClientDetail() {
         account_manager_ids: checkedItems,
       })
     );
-    dispatch(
-      GetAssignAgentsInfo({
-        client_id,
-        managerfilterMenu,
-      })
-    );
+    // dispatch(
+    //   GetAssignAgentsInfo({
+    //     client_id,
+    //     managerfilterMenu,
+    //   })
+    // );
     handleClose();
     setIsOpenEditModal(false);
 
@@ -435,7 +440,7 @@ export default function ClientDetail() {
   }
   return (
     <>
-      <TitleBar title="SearchInput" minHeight="min-h-[80px]">
+      <TitleBar title="Client" minHeight="min-h-[80px]">
         {paramValue == "subscription" && (
           <Button
             variant="outlined"
@@ -448,7 +453,7 @@ export default function ClientDetail() {
             }}
           >
             <PlusIcon color={theme.palette.secondary.main} />
-            Add Subscription
+            Add a subscription
           </Button>
         )}
       </TitleBar>

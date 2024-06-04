@@ -3,8 +3,15 @@ import InputField from "../InputField";
 import ManageButton from "./ManageButton";
 import SearchInput from "../SearchInput";
 import { Input, InputAdornment, TextField } from "@mui/material";
+import { CrossGreyIcon } from "public/assets/icons/common";
+import { useState } from "react";
 
 const ClientTabButton = () => {
+  const [inputValue, setInputValue] = useState("");
+
+  const handleClearInput = () => {
+    setInputValue("");
+  };
   return (
     <div className="flex flex-col gap-10 sm:flex-row">
       <TextField
@@ -36,6 +43,16 @@ const ClientTabButton = () => {
           startAdornment: (
             <InputAdornment position="start">
               <SearchIcon className="p-2" />
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              {inputValue && (
+                <CrossGreyIcon
+                  style={{ cursor: "pointer" }}
+                  onClick={handleClearInput}
+                />
+              )}
             </InputAdornment>
           ),
         }}

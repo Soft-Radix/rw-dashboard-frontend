@@ -14,7 +14,7 @@ import { useFormik } from "formik";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { AgentGroupSchema } from "src/formSchema";
+import { AddAgentGroupSchema, AgentGroupSchema } from "src/formSchema";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import { debounce } from "lodash";
@@ -34,6 +34,7 @@ function AddGroupModel({
   isOpen,
   setIsOpen,
   isNewAgent,
+
   fetchAgentGroupList,
 }: IProps) {
   const agentGroupState = useSelector(
@@ -45,7 +46,9 @@ function AddGroupModel({
   // console.log(addagentList, "pp");
   const [checked, setChecked] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
+
   const [searchText, setSearchText] = useState("");
+  const [isValid, setisValid] = useState<boolean>(false);
   // console.log(agentGroupState, "ggfsd");
   const { group_id } = useParams();
   // console.log(id, "asss");
@@ -54,13 +57,12 @@ function AddGroupModel({
   // const {searchAgentList}=useSelector(store:roo)
 
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
-    // console.log(values, "valauuuu");
-
-    const { payload } = await dispatch(addAgentGroup(values));
+    const { payload } = await dispatch(
+      addAgentGroup({ group_name: values?.group_names })
+    );
     // console.log(payload, "payload");
 
     if (payload?.data?.status) {
-      resetForm();
       fetchAgentGroupList();
       resetForm();
     }
@@ -78,8 +80,13 @@ function AddGroupModel({
       ...prevFilters,
       search: "",
     }));
+    if (checkedItems.length! == 0) {
+      setisValid(true);
+    }
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
+    setCheckedItems([]);
+
     // Handle the case when there is an id (e.g., updating an existing group)
   };
 
@@ -96,12 +103,12 @@ function AddGroupModel({
     limit: -1,
     search: "",
   });
-
+  const { start, limit, search } = filterMenu;
   const formik = useFormik({
     initialValues: {
-      group_name: "",
+      group_names: "",
     },
-    validationSchema: AgentGroupSchema,
+    validationSchema: AddAgentGroupSchema,
     onSubmit,
   });
   const debouncedSearch = debounce((searchValue) => {
@@ -117,31 +124,46 @@ function AddGroupModel({
     debouncedSearch(value);
   };
   // console.log(filterMenu, "ggg");
+
   useEffect(() => {
-    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
-  }, [filterMenu]);
+    if (isNewAgent) {
+      dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    }
+  }, [start, limit, search]);
+
   // console.log(checkedItems, "hhh");
   useEffect(() => {
     if (!!agentGroupState?.successMsg) {
       dispatch(restAll());
       // fetchAgentGroupList;
       setIsOpen(false);
+      formik.resetForm();
     } else if (!!agentGroupState?.errorMsg) {
-      dispatch(restAll());
+      setIsOpen(true);
+      // dispatch(restAll());
     }
-    formik.resetForm();
   }, [agentGroupState, filterMenu]);
 
   const handleToggle = (e: React.MouseEvent) => {
     // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
-    setFilterMenu((prevFilters) => ({
-      ...prevFilters,
-      search: "",
-    }));
+    // setFilterMenu((prevFilters) => ({
+    //   ...prevFilters,
+    //   search: "",
+    // }));
     setCheckedItems([]);
     setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
   };
+  useEffect(() => {
+    if (checkedItems.length > 0) {
+      setisValid(true);
+    } else {
+      setisValid(false);
+    }
+  }, [checkedItems]);
+
+  console.log(formik.errors, "formik");
+
   return (
     <CommonModal
       open={isOpen}
@@ -151,10 +173,8 @@ function AddGroupModel({
       btnTitle="Save"
       closeTitle="Cancel"
       onSubmit={isNewAgent ? handleAddmember : formik.handleSubmit}
-      disabled={
-        (isNewAgent && checkedItems.length === 0) ||
-        agentGroupState.actionStatus
-      }
+      disabled={isNewAgent && agentGroupState.actionStatus}
+      isValid={!!isNewAgent ? isValid : true}
     >
       <div className="flex flex-col  mb-20 ">
         {isNewAgent ? (
@@ -200,7 +220,8 @@ function AddGroupModel({
         ) : (
           <InputField
             formik={formik}
-            name="group_name"
+            name="group_names"
+            id="group_names"
             label="Group Name"
             placeholder="Enter Group Name"
           />

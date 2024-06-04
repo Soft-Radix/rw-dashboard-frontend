@@ -42,6 +42,7 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   total_records: number;
+  fetchList?: boolean;
 };
 
 export interface AccManagerRootState {

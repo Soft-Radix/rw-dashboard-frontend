@@ -18,6 +18,7 @@ export interface ClientType {
   updated_at?: string;
   userName?: string;
   agent_ids?: number[];
+  agent_id?: number[];
 }
 
 export interface filterType {
@@ -48,6 +49,8 @@ export type initialStateProps = {
   selectedColumn: string[];
   actionStatus: boolean;
   isloading?: boolean;
+  assignedAgentDetail: ClientType[];
+  agentTotal_records?: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed
@@ -81,7 +84,7 @@ export interface ProjectAdd {
 
 export interface ProjectAddDoc {
   name: string;
-  token:any
+  token: any;
 }
 export interface ProjectUpdate {
   project_id: number | string;

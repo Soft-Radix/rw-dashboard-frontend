@@ -123,6 +123,7 @@ function UserMenu() {
             <MenuItem
               onClick={() => {
                 signOut();
+                localStorage.clear();
               }}
             >
               <ListItemIcon className="min-w-40">

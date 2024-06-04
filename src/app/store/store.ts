@@ -1,4 +1,3 @@
-import i18n from "app/store/i18nSlice";
 import apiService from "app/store/apiService";
 import {
   ReducersMapObject,
@@ -14,13 +13,15 @@ import { AppDispatchType } from "app/store/types";
 import { useDispatch } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { createLogger } from "redux-logger";
-
+import i18n from "app/store/i18nSlice";
 // import all slices
 import { authSlice } from "./Auth";
 import { clientSlice } from "./Client";
 import { agentSlice } from "./Agent";
 import { agentGroupSlice } from "./Agent group";
 import { accManagerSlice } from "./AccountManager";
+import { persistReducer, persistStore } from "redux-persist";
+import storage from "redux-persist/lib/storage";
 
 /**
  * The dynamic middleware instance.
@@ -29,8 +30,9 @@ const dynamicInstance = createDynamicMiddleware();
 
 export const { middleware: dynamicMiddleware } = dynamicInstance;
 
-export const addAppMiddleware =
-  dynamicInstance.addMiddleware.withTypes<Config>();
+export const addAppMiddleware = dynamicInstance.addMiddleware.withTypes<
+  Config
+>();
 
 const middlewares: Middleware[] = [apiService.middleware, dynamicMiddleware];
 
@@ -54,7 +56,15 @@ const staticReducers: ReducersMapObject = {
   i18n,
   [apiService.reducerPath]: apiService.reducer,
   auth: authSlice.reducer,
-  client: clientSlice.reducer,
+  client: persistReducer(
+    {
+      key: "client",
+      storage,
+      whitelist: ["selectedColumn"], // Add the field you want to persist
+    },
+    clientSlice.reducer
+  ),
+  // client: clientSlice.reducer,
   agent: agentSlice.reducer,
   agentGroup: agentGroupSlice.reducer,
   accManagerSlice: accManagerSlice.reducer,
@@ -63,8 +73,9 @@ const staticReducers: ReducersMapObject = {
 /**
  * The root reducer.
  */
-export const rootReducer =
-  combineSlices(staticReducers).withLazyLoadedSlices<LazyLoadedSlices>();
+export const rootReducer = combineSlices(staticReducers).withLazyLoadedSlices<
+  LazyLoadedSlices
+>();
 
 /**
  * The type definition for the root state.
@@ -122,8 +133,9 @@ type Config = {
   dispatch: AppDispatch;
 };
 
-export const withAppMiddleware =
-  dynamicInstance.withMiddleware.withTypes<Config>();
+export const withAppMiddleware = dynamicInstance.withMiddleware.withTypes<
+  Config
+>();
 
 const store = configureAppStore();
 

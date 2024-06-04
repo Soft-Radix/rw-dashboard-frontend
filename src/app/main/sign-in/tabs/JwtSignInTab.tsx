@@ -55,12 +55,13 @@ function jwtSignInTab() {
 
   const responseFacebook = async (response) => {
     console.log(response);
+    const fullName = response?.name.split(" ");
     if (response.id) {
       const payload = {
         id: response.id,
         type: 2,
-        firstname: response.name,
-        lastname: response.name,
+        firstname: fullName[0],
+        lastname: fullName.slice(1).join(" "),
         email: response.email ? response.email : `${response.id}@facebook.com`,
       };
       await jwtService.socialSignIn(payload);
@@ -81,11 +82,12 @@ function jwtSignInTab() {
         .then((response) => response.json())
         .then((user) => {
           console.log(user);
+          const fullName = user?.name.split(" ");
           const payload = {
             id: user.sub,
             type: 1,
-            firstname: user.name,
-            lastname: user.name,
+            firstname: fullName[0],
+            lastname: fullName.slice(1).join(" "),
             email: user.email,
           };
           // onLogin(user);
@@ -160,7 +162,7 @@ function jwtSignInTab() {
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
-            cssClass="facebook-login-btn flex items-center justify-center w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
+            cssClass="facebook-login-btn flex items-center justify-center mx-auto w-full !max-w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew"
             textButton="&nbsp;&nbsp; Log In with Facebook"
           />
         </div>

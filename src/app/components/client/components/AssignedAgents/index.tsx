@@ -1,4 +1,4 @@
-import { TableCell, TableRow, Theme } from "@mui/material";
+import { TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { deleteAgentList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
@@ -13,18 +13,25 @@ import CommonPagination from "src/app/components/pagination";
 import UnassignedAgent from "./UnassignedAgent";
 import { getAgentList } from "app/store/Agent";
 import { filterAgentType } from "app/store/Agent/Interafce";
+import { NoDataFound } from "public/assets/icons/common";
+import { addAgentInagentGroup } from "app/store/Agent group";
+import { filterType } from "app/store/Agent group/Interface";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
   agentfilterMenu,
 }) {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [filters, setfilters] = useState<filterAgentType>({
     start: 0,
-    limit: 10,
+    limit: -1,
     search: "",
   });
 
@@ -55,7 +62,7 @@ export default function AssignedAgents({
           ...prevFilters,
           start: assignedAgentDetail.length - 1 == 0 ? 0 : prevFilters.start,
         }));
-        dispatch(getAgentList(filters));
+        dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {
@@ -83,34 +90,29 @@ export default function AssignedAgents({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
-            {assignedAgentDetail?.length === 0 ? (
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell colSpan={7} align="center">
-                  <span className="font-bold text-20 text-[#e4e4e4]">
-                    No Data Found
-                  </span>
-                </TableCell>
-              </TableRow>
-            ) : (
+          {assignedAgentDetail?.length === 0 ? (
+            <div
+              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+              style={{ alignItems: "center" }}
+            >
+              <NoDataFound />
+              <Typography className="text-[24px] text-center font-600 leading-normal">
+                No data found !
+              </Typography>
+            </div>
+          ) : (
+            <CommonTable
+              headings={["Agents", "Agents Id", "Assigned Date", ""]}
+            >
               <>
-                {assignedAgentDetail.map((row, index) => (
+                {assignedAgentDetail?.map((row, index) => (
                   <TableRow
                     key={index}
                     sx={{
                       "& td": {
                         borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
+                        paddingTop: "26px",
+                        paddingBottom: "32px",
                         color: theme.palette.primary.main,
                       },
                     }}
@@ -154,8 +156,8 @@ export default function AssignedAgents({
                      row.status === "Unassign"
                        ? "text-secondary bg-secondary_bg"
                        : row.status === "Unassigned"
-                         ? "text-[#F44336] bg-[#F443362E]"
-                         : "text-[#4F46E5] bg-[#EDEDFC]"
+                       ? "text-[#F44336] bg-[#F443362E]"
+                       : "text-[#4F46E5] bg-[#EDEDFC]"
                    }`}
                       >
                         {row.status ? row.status : "Unassign"}
@@ -164,8 +166,8 @@ export default function AssignedAgents({
                   </TableRow>
                 ))}
               </>
-            )}
-          </CommonTable>
+            </CommonTable>
+          )}
           <div className="flex justify-end py-14 px-[3rem]">
             {/* {assignedAgentDetail?.length >= 0 && ( */}
             <CommonPagination
@@ -186,7 +188,7 @@ export default function AssignedAgents({
         isOpen={isOpenUnssignedModal}
         setIsOpen={setIsOpenUnassignedModal}
         onDelete={() => unassignAgent(deleteId)}
-        description={"Are you sure you want to unassign this agent ?"}
+        description={"Are you sure you want to unassign this agent?"}
       />
     </>
   );

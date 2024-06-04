@@ -47,48 +47,113 @@ export default function NumberInput({
   value,
 }) {
   return (
-    <div>
-      <label className=" inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
+    // <div>
+    //   <label className=" inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
+    //     {label}
+    //   </label>
+    //   {/* <CustomNumberInput
+    //     aria-label="Demo number input"
+    //     placeholder="0"
+    //     onChange={onChange}
+    //   /> */}
+
+    //   <BaseNumberInput
+    //     slots={{
+    //       root: StyledInputRoot,
+    //       input: StyledInputElement,
+    //       incrementButton: StyledButton,
+    //       decrementButton: StyledButton,
+    //     }}
+    //     slotProps={{
+    //       incrementButton: {
+    //         children: (
+    //           <img
+    //             src={arrowDown}
+    //             alt="arrow"
+    //             className="w-[10px] max-w-none"
+    //           />
+    //         ),
+    //       },
+    //       decrementButton: {
+    //         children: (
+    //           <img src={arrowUp} alt="arrow" className="w-[10px] max-w-none" />
+    //         ),
+    //       },
+    //     }}
+    //     disabled={disable}
+    //     placeholder="0"
+    //     value={value}
+    //     onChange={(e: any) => {
+    //       formik ? formik.setFieldValue(name, e.target.value) : null;
+    //     }}
+    //     // {...props}
+    //     // ref={ref}
+    //   />
+    //   <span className="inline-block text-red pt-[5px]">
+    //     {formik?.errors[name ?? ""] &&
+    //       formik?.touched[name ?? ""] &&
+    //       formik?.errors[name ?? ""]}
+    //   </span>
+    // </div>
+
+    <div className="common-inputField">
+      <label className="inline-block text-[16px] font-medium mb-[0.5rem] leading-[20px]">
         {label}
       </label>
-      {/* <CustomNumberInput
-        aria-label="Demo number input"
-        placeholder="0"
-        onChange={onChange}
-      /> */}
 
-      <BaseNumberInput
-        slots={{
-          root: StyledInputRoot,
-          input: StyledInputElement,
-          incrementButton: StyledButton,
-          decrementButton: StyledButton,
-        }}
-        slotProps={{
-          incrementButton: {
-            children: (
-              <img
-                src={arrowDown}
-                alt="arrow"
-                className="w-[10px] max-w-none"
-              />
-            ),
-          },
-          decrementButton: {
-            children: (
-              <img src={arrowUp} alt="arrow" className="w-[10px] max-w-none" />
-            ),
-          },
-        }}
-        disabled={disable}
+      {/* <StyledInputRoot> */}
+      {/* <input
+          type="number"
+          disabled={disable}
+          placeholder="0"
+          min={0}
+          value={value}
+          onChange={(e) => {
+            formik ? formik.setFieldValue(name, e.target.value) : null;
+          }}
+        /> */}
+
+      <input
+        type="number"
+        id="filled-hidden-label-small"
+        defaultValue=""
         placeholder="0"
+        className="noscroll"
         value={value}
-        onChange={(e: any) => {
+        onChange={(e) => {
           formik ? formik.setFieldValue(name, e.target.value) : null;
         }}
-        // {...props}
-        // ref={ref}
+        style={{
+          width: "300px",
+          paddingBottom: "0px",
+          display: "flex",
+          alignItems: "center",
+          textDecoration: "none",
+          // border: "none",
+          borderBottom: "none",
+          color: "#111827",
+          padding: "0px 14px",
+          border: "0.5px solid #9DA0A6",
+        }}
+        min={0}
       />
+      {/* <StyledButton
+          onClick={() => {
+            formik.setFieldValue(name, value + 1);
+          }}
+        >
+          <img src={arrowUp} alt="arrow" className="w-[10px] max-w-none" />
+        </StyledButton>
+        <StyledButton
+          onClick={() => {
+            if (formik) {
+              formik.setFieldValue(name, value - 1);
+            }
+          }}
+        >
+          <img src={arrowDown} alt="arrow" className="w-[10px] max-w-none" />
+        </StyledButton> */}
+      {/* </StyledInputRoot> */}
       <span className="inline-block text-red pt-[5px]">
         {formik?.errors[name ?? ""] &&
           formik?.touched[name ?? ""] &&
@@ -167,8 +232,7 @@ line-height: 16px;
   border-radius: inherit;
   padding: 8px 12px;
   outline: 0;
-  border-bottom-right-radius: 0;
-  border-top-right-radius: 0;
+  
   border : 0.5px solid #9DA0A6;
 `
 );
@@ -193,7 +257,7 @@ const StyledButton = styled("button")(
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 120ms;
-  border : 0.5px solid #9DA0A6;
+
   border-left: 0;
 
   &:hover {

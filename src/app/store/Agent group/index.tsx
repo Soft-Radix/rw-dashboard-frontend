@@ -47,7 +47,7 @@ export const getAgentGroupList = createAsyncThunk(
     return {
       data: response.data,
     };
-    addAgentGroup;
+   
   }
 );
 
@@ -114,7 +114,7 @@ export const addAgentInagentGroup = createAsyncThunk(
 );
 export const deleteAgentMemberGroup = createAsyncThunk(
   "agent-group-member/delete",
-  async (payload: deleteAgentGroupType) => {
+  async (payload: deleteAgentGroupType, { dispatch }) => {
     const response = await ApiHelperFunction({
       url: "agent-group-member/delete",
       method: "post",
@@ -148,7 +148,7 @@ export const searchAgentGroup = createAsyncThunk(
  * The initial state of the auth slice.
  */
 export const initialState: initialStateProps = {
-  status: "idle",
+  status: "loading",
   fetchStatus: "loading",
   actionStatus: false,
   successMsg: "",
@@ -262,7 +262,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(getAgentGroupList.fulfilled, (state, action) => {
         const response = action.payload?.data;
-        state.status = "idle";
+
         if (!response.status) {
           toast.error(response?.message);
         } else {
@@ -272,6 +272,7 @@ export const agentGroupSlice = createSlice({
             10
           );
         }
+        state.status = "idle";
       })
       .addCase(getAgentGroupList.rejected, (state, action) => {
         state.status = "idle";
@@ -323,7 +324,8 @@ export const agentGroupSlice = createSlice({
           let contactArray = state.agentGroupDetail.group_members.concat(
             response.data
           );
-          console.log(response.data, "contactArray");
+          // console.log("🚀 ~ .addCasegroup_members", state.agentGroupDetail.group_members)
+          // console.log(contactArray, "contactArray");
           state.agentGroupDetail.group_members = contactArray;
 
           // state.agentDetail.attachments = state.agentDetail.attachments.concat(
@@ -339,6 +341,7 @@ export const agentGroupSlice = createSlice({
       })
 
       .addCase(addAgentInagentGroup.pending, (state) => {
+        state.status = "loading";
         state.actionStatus = true;
       })
       .addCase(addAgentInagentGroup.fulfilled, (state, action) => {
@@ -346,9 +349,10 @@ export const agentGroupSlice = createSlice({
         // console.log(response, "findttt");
         const { data } = action.payload?.data;
         // console.log(data, "dgftdfdf");
-        state.searchAgentList = data.list;
+        state.searchAgentList = data?.list;
         // console.log(state.searchAgentList, "serch");
         state.actionStatus = false;
+        state.status = "idle";
         if (!response.status) {
           toast.error(response?.message);
           state.total_records = calculatePageNumber(
@@ -359,6 +363,7 @@ export const agentGroupSlice = createSlice({
       })
       .addCase(addAgentInagentGroup.rejected, (state, action) => {
         state.actionStatus = false;
+        state.status = "idle";
       })
       .addCase(deleteAgentMemberGroup.pending, (state) => {
         state.actionStatusGroupMember = true;
@@ -368,10 +373,9 @@ export const agentGroupSlice = createSlice({
         const { member_id } = action.meta?.arg;
         // console.log(group_id, "idd");
         if (payload?.data?.status) {
-          state.agentGroupDetail.group_members =
-            state.agentGroupDetail.group_members.filter(
-              (item) => item.id !== member_id
-            );
+          state.agentGroupDetail.group_members = state.agentGroupDetail.group_members.filter(
+            (item) => item.id !== member_id
+          );
 
           state.actionStatusGroupMember = false;
           toast.success(payload?.data?.message);
@@ -386,7 +390,11 @@ export const agentGroupSlice = createSlice({
   },
 });
 
-export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
-  agentGroupSlice.actions;
+export const {
+  restAll,
+  changeFetchStatus,
+  updateSelectedColumn,
+  sortColumn,
+} = agentGroupSlice.actions;
 
 export default agentGroupSlice.reducer;

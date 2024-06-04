@@ -4,12 +4,13 @@ import {
   TableCell,
   TableRow,
   Theme,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { defaultAccManagerList, deleteAccManagerList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
@@ -18,6 +19,7 @@ import UnassignedAgent from "../AssignedAgents/UnassignedAgent";
 import CommonPagination from "src/app/components/pagination";
 import { start } from "repl";
 import { getAccManagerList } from "app/store/AccountManager";
+import { NoDataFound } from "public/assets/icons/common";
 
 export default function AssignedAccountManager({
   setManagerFilterMenu,
@@ -33,6 +35,7 @@ export default function AssignedAccountManager({
   // console.log(assignAccManagerDetail, "popopff");
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [defaultAccManagerId, setDefaultAccManagerId] = useState(null);
 
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const unassignAccManager = async (id: any) => {
@@ -57,14 +60,25 @@ export default function AssignedAccountManager({
       console.error("Failed to delete agent group:", error);
     }
   };
-  const defaultAddAccManager = (id) =>
-    // if(default)
+  const handleDefaultAccManagerChange = (id) => {
+    // Update the state with the ID of the selected default account manager
+    setDefaultAccManagerId(id);
+
+    // Dispatch your action here if needed
     dispatch(
       defaultAccManagerList({
         client_id: client_id,
         account_manager_id: id,
       })
     );
+  };
+
+  useEffect(() => {
+    if (assignAccManagerDetail.length > 0) {
+      // Set the first element's account_manager_id as the default checked
+      setDefaultAccManagerId(assignAccManagerDetail[0].account_manager_id);
+    }
+  }, [assignAccManagerDetail]);
 
   // console.log(assignAccManagerDetail.length, "length");
   // console.log(totalPageCount, "totalPageCount");
@@ -86,33 +100,26 @@ export default function AssignedAccountManager({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          <CommonTable
-            headings={[
-              "Account Manager",
-              "Account Manager Id",
-              "Assigned date",
-              "",
-              "",
-            ]}
-          >
-            {assignAccManagerDetail?.length === 0 ? (
-              <TableRow
-                sx={{
-                  "& td": {
-                    borderBottom: "1px solid #EDF2F6",
-                    paddingTop: "12px",
-                    paddingBottom: "12px",
-                    color: theme.palette.primary.main,
-                  },
-                }}
-              >
-                <TableCell colSpan={7} align="center">
-                  <span className="font-bold text-20 text-[#e4e4e4]">
-                    No Data Found
-                  </span>
-                </TableCell>
-              </TableRow>
-            ) : (
+          {assignAccManagerDetail?.length === 0 ? (
+            <div
+              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+              style={{ alignItems: "center" }}
+            >
+              <NoDataFound />
+              <Typography className="text-[24px] text-center font-600 leading-normal">
+                No data found !
+              </Typography>
+            </div>
+          ) : (
+            <CommonTable
+              headings={[
+                "Account Manager",
+                "Account Manager Id",
+                "Assigned date",
+                "",
+                "",
+              ]}
+            >
               <>
                 {assignAccManagerDetail.map((row, index) => (
                   <TableRow
@@ -120,7 +127,7 @@ export default function AssignedAccountManager({
                     sx={{
                       "& td": {
                         borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
+                        paddingTop: "26px",
                         paddingBottom: "12px",
                         color: theme.palette.primary.main,
                       },
@@ -142,14 +149,14 @@ export default function AssignedAccountManager({
                     </TableCell>
                     <TableCell
                       align="center"
-                      className="whitespace-nowrap font-500"
+                      className="whitespace-nowrap font-500 "
                     >
                       {row.id}
                     </TableCell>
 
                     <TableCell
                       align="center"
-                      className="whitespace-nowrap font-500"
+                      className="whitespace-nowrap font-500 custom"
                     >
                       {row.assigned_date_time}
                     </TableCell>
@@ -159,10 +166,20 @@ export default function AssignedAccountManager({
                     >
                       <FormControlLabel
                         onClick={() =>
-                          defaultAddAccManager(row.account_manager_id)
+                          handleDefaultAccManagerChange(row.account_manager_id)
                         }
                         value="Mark as default"
-                        control={<Radio checked={row.is_default === 1} />}
+                        control={
+                          <Radio
+                            checked={
+                              defaultAccManagerId === row.account_manager_id
+                            }
+                            // checked={
+                            //   index === 0 ||
+                            //   defaultAccManagerId === row.account_manager_id
+                            // }
+                          />
+                        }
                         label="Mark as default"
                       />
                     </TableCell>
@@ -176,7 +193,13 @@ export default function AssignedAccountManager({
                     >
                       <span
                         className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${row.status === "Unassign" ? "text-secondary bg-secondary_bg" : row.status === "Unassigned" ? "text-[#F44336] bg-[#F443362E]" : "text-[#4F46E5] bg-[#EDEDFC]"}`}
+                      ${
+                        row.status === "Unassign"
+                          ? "text-secondary bg-secondary_bg"
+                          : row.status === "Unassigned"
+                          ? "text-[#F44336] bg-[#F443362E]"
+                          : "text-[#4F46E5] bg-[#EDEDFC]"
+                      }`}
                       >
                         {row.status ? row.status : "Unassign"}
                       </span>
@@ -184,8 +207,8 @@ export default function AssignedAccountManager({
                   </TableRow>
                 ))}
               </>
-            )}
-          </CommonTable>
+            </CommonTable>
+          )}
           <div className="flex justify-end py-14 px-[3rem]">
             {/* {assignAccManagerDetail?.length > 0 && ( */}
             <CommonPagination
