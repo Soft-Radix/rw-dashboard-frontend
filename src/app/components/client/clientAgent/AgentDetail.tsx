@@ -94,7 +94,7 @@ export default function AgentDetail() {
           <RecentData />
         </div>
       </div>
-      <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      {/* <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} /> */}
     </div>
   );
 }
