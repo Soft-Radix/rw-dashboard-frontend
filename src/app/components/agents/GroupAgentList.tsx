@@ -6,14 +6,16 @@ import {
   changeFetchStatus,
   deleteAgentMemberGroup,
   getAgentGroupInfo,
+  getGroupMemberDetail,
   updateGroupName,
 } from "app/store/Agent group";
 import {
   AgentGroupRootState,
   AgentGroupType,
   UpdateAgentGroupPayload,
+  filterGroupType,
 } from "app/store/Agent group/Interface";
-import { AgentRootState } from "app/store/Agent/Interafce";
+import { AgentRootState, filterAgentType } from "app/store/Agent/Interafce";
 import { filterType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
@@ -40,26 +42,25 @@ export default function GroupAgentsList() {
   const [rows, setRows] = useState<any[]>([]);
   const [currentRows, setCurrentRows] = useState<any>([]);
   const [loading, setLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
     search: "",
   });
-  const [filterPagination, setFilterPagination] = useState<filterType>({
+  const [filterPagination, setFilterPagination] = useState<filterGroupType>({
     start: 0,
     limit: 10,
-    search: "",
   });
 
-  const itemsPerPage = 10;
   // console.log(group_id, "check");
   const dispatch = useAppDispatch();
-  const { agentGroupDetail, actionStatus, actionStatusEdit } = useSelector(
-    (store: AgentGroupRootState) => store?.agentGroup
-  );
-  const { list } = useSelector((store: AgentRootState) => store.agent);
-  console.log("🚀 ~ GroupAgentsList ~ list:", list);
+  const {
+    agentGroupDetail,
+    actionStatus,
+    actionStatusEdit,
+    agentGroupListMember,
+    total_groupDetail,
+  } = useSelector((store: AgentGroupRootState) => store?.agentGroup);
 
   // console.log(agentGroupDetail.group_members, "girl");
   const onSubmit = async (values: AgentGroupType, { resetForm }) => {
@@ -84,15 +85,13 @@ export default function GroupAgentsList() {
     if (!!actionStatus || !id) return;
     // console.log(id, "id");
     try {
-      const { payload } = await dispatch(
-        deleteAgentMemberGroup({ member_id: id })
-      );
-      // console.log(payload, "payload");
-      if (payload?.data?.status) {
+      const payload = await dispatch(deleteAgentMemberGroup({ member_id: id }));
+      console.log(payload, "payl555555ffffffffffoad");
+      if (payload?.status) {
         setIsOpenDeletedModal(false);
         // fetchAgentGroupLsssist();
       }
-      dispatch(addAgentInagentGroup({ ...filterMenu, group_id }));
+      dispatch(getGroupMemberDetail({ ...filterPagination, group_id }));
       setIsDeleteId(null);
     } catch (error) {
       console.error("Failed to delete agent group:", error);
@@ -113,7 +112,8 @@ export default function GroupAgentsList() {
     if (!group_id) return null;
     const fetchData = async () => {
       setLoading(true);
-      await dispatch(getAgentGroupInfo({ group_id }));
+      // await dispatch(getAgentGroupInfo({ group_id }));
+      await dispatch(getGroupMemberDetail({ ...filterPagination, group_id }));
       setLoading(false);
     };
     fetchData();
@@ -121,60 +121,33 @@ export default function GroupAgentsList() {
     return () => {
       dispatch(changeFetchStatus());
     };
-  }, []);
-
-  // useEffect(() => {
-  //   dispatch(getAgentList({ ...filterPagination, group_id }));
-
-  //   // console.log(filters, "filters");
-  // }, [filterPagination.limit, filterPagination.search, filterPagination.start]);
+  }, [filterPagination]);
 
   useEffect(() => {
-    if (agentGroupDetail) {
+    if (agentGroupListMember) {
+      // console.log(agentGroupListMember, "agentGroupListMember");
       formik.setValues({
-        group_name: agentGroupDetail.group_name,
+        group_name: agentGroupListMember?.group_name,
       });
     }
-  }, [agentGroupDetail]);
-  const totalPageCount = Math.ceil(
-    agentGroupDetail?.group_members?.length / itemsPerPage
-  );
+  }, [agentGroupListMember]);
+
   // console.log("checking");
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number
-  ) => {
-    setCurrentPage(page);
-    // Handle any additional logic when the page changes, e.g., fetching data
+
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setFilterPagination((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
   };
 
-  useEffect(() => {
-    const currentRows1 =
-      (agentGroupDetail?.group_members &&
-        agentGroupDetail.group_members.slice(
-          (currentPage - 1) * itemsPerPage,
-          currentPage * itemsPerPage
-        )) ||
-      [];
-    setCurrentRows([...currentRows1]);
-    if (currentRows1.length == 0 && currentPage > 1) {
-      if (currentPage == 1) {
-        setCurrentPage(1);
-      } else {
-        setCurrentPage(currentPage - 1);
-      }
-    }
-  }, [agentGroupDetail, group_id, currentPage]);
-
-  const currentRows1 =
-    (agentGroupDetail?.group_members &&
-      agentGroupDetail.group_members.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-      )) ||
-    [];
-
-  if (agentGroupDetail?.fetchStatus == "loading" || loading == true) {
+  if (agentGroupListMember?.fetchStatus == "loading" || loading == true) {
     return <ListLoading />;
   }
 
@@ -232,7 +205,7 @@ export default function GroupAgentsList() {
               headings={["Agent ID", "Agent First Name", "Last Name", "Action"]}
             >
               {" "}
-              {currentRows1?.length == 0 && !loading ? (
+              {agentGroupListMember.list?.length == 0 && !loading ? (
                 <TableRow
                   sx={{
                     "& td": {
@@ -257,58 +230,62 @@ export default function GroupAgentsList() {
                 </TableRow>
               ) : (
                 <>
-                  {currentRows1?.map((row: any, index) => (
-                    <TableRow
-                      key={index}
-                      sx={{
-                        "& td": {
-                          borderBottom: "1px solid #EDF2F6",
-                          paddingTop: "12px",
-                          paddingBottom: "12px",
-                          color: theme.palette.primary.main,
-                        },
-                      }}
-                    >
-                      <TableCell scope="row" className="px-20">
-                        {row.id}
-                      </TableCell>
-                      <TableCell align="center" className="whitespace-nowrap">
-                        {row.first_name}
-                      </TableCell>
+                  {agentGroupListMember.list?.map((row: any, index) => {
+                    return (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "& td": {
+                            borderBottom: "1px solid #EDF2F6",
+                            paddingTop: "12px",
+                            paddingBottom: "12px",
+                            color: theme.palette.primary.main,
+                          },
+                        }}
+                      >
+                        <TableCell scope="row" className="px-20">
+                          {row.member_details.id}
+                        </TableCell>
+                        <TableCell align="center" className="whitespace-nowrap">
+                          {row.member_details.first_name}
+                        </TableCell>
 
-                      <TableCell align="center" className="whitespace-nowrap">
-                        {row.last_name}
-                      </TableCell>
+                        <TableCell align="center" className="whitespace-nowrap">
+                          {row.member_details.last_name}
+                        </TableCell>
 
-                      <TableCell align="left" className="w-[18%]  px-[7px]">
-                        <div className="flex gap-5 pe-20 items-center justify-center">
-                          <span className="p-2 cursor-pointer">
-                            <DeleteIcon
-                              onClick={() => {
-                                setIsOpenDeletedModal(true);
-                                setIsDeleteId(row.id);
-                              }}
-                            />
-                          </span>
-                          <span className="p-2 cursor-pointer ">
-                            <Link to="/admin/agents/list">
-                              Go to Agent Page
-                            </Link>
-                          </span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell align="left" className="w-[18%]  px-[7px]">
+                          <div className="flex gap-5 pe-20 items-center justify-center">
+                            <span className="p-2 cursor-pointer">
+                              <DeleteIcon
+                                onClick={() => {
+                                  setIsOpenDeletedModal(true);
+                                  setIsDeleteId(row.id);
+                                }}
+                              />
+                            </span>
+                            <span className="p-2 cursor-pointer ">
+                              <Link to="/admin/agents/list">
+                                Go to Agent Page
+                              </Link>
+                            </span>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </>
               )}
             </CommonTable>
           </>
           <div className="flex justify-end py-14 px-[3rem]">
-            {currentRows?.length > 0 && (
+            {agentGroupListMember.list?.length > 0 && (
               <CommonPagination
-                count={totalPageCount}
-                currentPage={currentPage}
-                onPageChange={handlePageChange}
+                count={total_groupDetail}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={filterPagination.start + 1}
               />
             )}
           </div>
@@ -318,6 +295,7 @@ export default function GroupAgentsList() {
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
         isNewAgent={true}
+        filterPagination={filterPagination}
         // fetchAgentGroupList={fetchAgentGroupList}
       />
       <DeleteClient

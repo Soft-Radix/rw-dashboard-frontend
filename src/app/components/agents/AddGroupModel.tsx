@@ -2,6 +2,7 @@ import { Checkbox, InputAdornment } from "@mui/material";
 import {
   addAgentGroup,
   addAgentInagentGroup,
+  getGroupMemberDetail,
   searchAgentGroup,
 } from "app/store/Agent group";
 import {
@@ -28,13 +29,14 @@ interface IProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isNewAgent: boolean;
   fetchAgentGroupList?: () => void;
+  filterPagination?: any;
 }
 
 function AddGroupModel({
   isOpen,
   setIsOpen,
   isNewAgent,
-
+  filterPagination,
   fetchAgentGroupList,
 }: IProps) {
   const agentGroupState = useSelector(
@@ -69,6 +71,8 @@ function AddGroupModel({
   };
 
   const handleAddmember = async () => {
+    // console.log("helloe");
+
     await dispatch(
       searchAgentGroup({
         group_id: group_id,
@@ -80,10 +84,13 @@ function AddGroupModel({
       ...prevFilters,
       search: "",
     }));
+    console.log("helloe");
     if (checkedItems.length! == 0) {
       setisValid(true);
     }
-    // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    console.log("helloe");
+    dispatch(getGroupMemberDetail({ ...filterPagination, group_id }));
+    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     setIsOpen(false);
     setCheckedItems([]);
 
