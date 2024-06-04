@@ -24,6 +24,7 @@ import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
 import CommonChip from "../chip";
 import CustomButton from "../custom_button";
+import { AudioVisualizer, LiveAudioVisualizer } from "react-audio-visualize";
 import { CrossGreyIcon } from "public/assets/icons/common";
 
 interface IProps {
@@ -49,8 +50,20 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [selectedStatus, setSelectedStatus] = useState<string>("Status");
   const [isRecording, setIsRecording] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [timerId, setTimerId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
+  const [mediaRecorder, setMediaRecorder] = useState(null);
+  const [mediaRecorder1, setMediaRecorder1] = useState<MediaRecorder>();
+  const [recordingAudio, setRecordingAudio] = useState(false);
+  const [audioURL, setAudioURL] = useState("");
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const mediaStreamRef = useRef(null);
+  const [savedAudioURL, setSavedAudioURL] = useState("");
+  const [blob, setBlob] = useState<Blob>();
+  const visualizerRef = useRef<HTMLCanvasElement>(null);
 
+  const [screenSharingStream, setScreenSharingStream] = useState(null);
   const formik = useFormik({
     initialValues: {
       title: "",
@@ -108,53 +121,6 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   };
   const videoRef = useRef(null);
 
-  // const handleRecordClick = async () => {
-  //   try {
-  //     const stream = await navigator.mediaDevices.getDisplayMedia({
-  //       video: true,
-  //       // screen: true,
-  //       audio: false,
-  //     });
-
-  //     const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp8")
-  //       ? "video/webm; codecs=vp8"
-  //       : "video/webm";
-
-  //     const mediaRecorder = new MediaRecorder(stream, {
-  //       mimeType: mime,
-  //     });
-
-  //     const chunks = [];
-  //     mediaRecorder.addEventListener("dataavailable", (e) => {
-  //       if (e.data.size > 0) {
-  //         chunks.push(e.data);
-  //       }
-  //     });
-
-  //     mediaRecorder.addEventListener("stop", () => {
-  //       setIsRecording((prevState) => !prevState);
-  //       const blob = new Blob(chunks, {
-  //         type: chunks[0].type,
-  //       });
-  //       const url = URL.createObjectURL(blob);
-
-  //       if (videoRef.current) {
-  //         videoRef.current.src = url;
-  //       }
-
-  //       // const a = document.createElement("a");
-  //       // a.href = url;
-  //       // a.download = "video.webm";
-  //       // a.click();
-  //     });
-
-  //     // Start the recorder manually
-  //     mediaRecorder.start();
-  //   } catch (error) {
-  //     console.error("Error accessing screen:", error);
-  //   }
-  // };
-
   const handleRecordClick = async () => {
     let stream;
 
@@ -167,19 +133,20 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
       const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp8")
         ? "video/webm; codecs=vp8"
         : "video/webm";
-
-      const mediaRecorder = new MediaRecorder(stream, {
+      setScreenSharingStream(stream);
+      const recorder = new MediaRecorder(stream, {
         mimeType: mime,
       });
+      setMediaRecorder(recorder);
 
       const chunks = [];
-      mediaRecorder.addEventListener("dataavailable", (e) => {
+      recorder.addEventListener("dataavailable", (e) => {
         if (e.data.size > 0) {
           chunks.push(e.data);
         }
       });
 
-      mediaRecorder.addEventListener("stop", () => {
+      recorder.addEventListener("stop", () => {
         const blob = new Blob(chunks, {
           type: chunks[0].type,
         });
@@ -190,57 +157,119 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
         }
         setIsRecording(false);
         setShowVideo(true);
+        clearInterval(timerId);
+        setElapsedTime(0);
       });
 
-      mediaRecorder.addEventListener("error", (error) => {
+      recorder.addEventListener("error", (error) => {
         console.error("MediaRecorder Error:", error);
+        clearInterval(timerId);
+        setElapsedTime(0);
       });
 
       // Listen for the stream's inactive event
       stream.getVideoTracks()[0].oninactive = () => {
         setIsRecording(false);
         console.log("User clicked cancel or ended screen share");
+        clearInterval(timerId);
+        setElapsedTime(0);
       };
 
       // Start the recorder manually
-      mediaRecorder.start();
+      recorder.start();
+      const id = setInterval(() => {
+        setElapsedTime((prevTime) => prevTime + 1);
+      }, 1000);
+      setTimerId(id);
     } catch (error) {
       console.error("Error accessing screen:", error);
     }
-
-    // Listen for the user's cancellation of screen sharing
-    if (!stream) {
-      setIsRecording(false);
-      console.log("User canceled screen share");
-    }
   };
-  // useEffect(() => {
-  //   let timerInterval;
+  useEffect(() => {
+    // Cleanup function to clear the interval when the component unmounts
+    return () => clearInterval(timerId);
+  }, [timerId]);
+  const toggleRecording = async () => {
+    if (mediaRecorder && mediaRecorder.state === "recording") {
+      try {
+        await mediaRecorder.stop(); // Stop recording
+        console.log("Recording stopped"); // Log confirmation
+        setIsRecording(false);
+        setShowVideo(true);
+      } catch (error) {
+        console.error("Error stopping recording:", error);
+      }
+    }
 
-  //   if (isRecording) {
-  //     const startTime = Date.now() - elapsedTime;
-  //     timerInterval = setInterval(() => {
-  //       const elapsedTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
-  //       setElapsedTime(elapsedTimeSeconds);
-  //     }, 1000);
-  //   } else {
-  //     clearInterval(timerInterval);
-  //   }
-
-  //   return () => clearInterval(timerInterval);
-  // }, [isRecording, elapsedTime]);
-
-  const toggleRecording = () => {
-    // mediaRecorder.stop();
-    setShowVideo(true);
-    setIsRecording(false);
+    // Add logic to stop screen sharing if applicable
+    if (screenSharingStream) {
+      // Assuming screenSharingStream is the variable holding your screen sharing stream
+      screenSharingStream.getTracks().forEach((track) => track.stop());
+      console.log("Screen sharing stopped");
+      // Update any relevant state variables
+      setScreenSharingStream(null);
+    }
   };
 
   const formatTime = (time) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
-    return `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes
+      .toString()
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
+
+  const handleAudioRecord = () => {
+    if (recordingAudio) {
+      console.log("Stopping the recorder...");
+      mediaRecorderRef.current.stop();
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
+      setRecordingAudio(false);
+    } else {
+      console.log("Starting the recorder...");
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          mediaStreamRef.current = stream; // Store the stream
+          const mediaRecorder = new MediaRecorder(stream);
+          mediaRecorderRef.current = mediaRecorder;
+          audioChunksRef.current = [];
+
+          mediaRecorder.ondataavailable = (event) => {
+            console.log("Data available:", event.data);
+            audioChunksRef.current.push(event.data);
+          };
+
+          mediaRecorder.onstop = () => {
+            console.log("Recorder stopped");
+            const audioBlob = new Blob(audioChunksRef.current, {
+              type: "audio/wav",
+            });
+            const audioUrl = URL.createObjectURL(audioBlob);
+            setAudioURL(audioUrl);
+            setBlob(audioBlob);
+          };
+
+          mediaRecorder.start();
+          console.log("Recorder started");
+          setRecordingAudio(true);
+          setMediaRecorder1(mediaRecorder);
+        })
+        .catch((error) => {
+          console.error("Error accessing microphone", error);
+        });
+    }
+  };
+
+  const handleSave = () => {
+    setSavedAudioURL(audioURL);
+    setAudioURL("");
+  };
+
+  const handleCancel = () => {
+    setAudioURL("");
+  };
+
   return (
     <CommonModal
       open={isOpen}
@@ -525,9 +554,66 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                   className="w-full"
                   label="Record voice memo"
                   icon={<MicIcon />}
+                  onClick={handleAudioRecord}
                   // variant="outlined"
                   style={{ border: "0.5px solid #4F46E5" }}
                 />
+                {/* {audioURL && <audio controls src={audioURL} />} */}
+                {audioURL && (
+                  <div className="audio-container relative">
+                    <audio controls src={audioURL} />
+                    <div className="audio-controls ml-[15px]">
+                      <button
+                        onClick={handleSave}
+                        className="text-[#4F46E5] text-[16px] font-500 underline mr-10"
+                      >
+                        Save
+                      </button>
+                      <button
+                        onClick={handleCancel}
+                        className="text-[#757982] text-[16px] font-500 ml-10"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                      <CrossGreyIcon
+                        className="h-20 w-20 p-4"
+                        fill="#757982"
+                        onClick={() => handleCancel()}
+                      />
+                    </div>
+                  </div>
+                )}
+                {recordingAudio && mediaRecorderRef && (
+                  <div className="my-10 flex gap-[10px]">
+                    <img
+                      src="../assets/images/logo/play2.svg"
+                      alt="play"
+                      onClick={handleAudioRecord}
+                    ></img>
+                    <LiveAudioVisualizer
+                      mediaRecorder={mediaRecorderRef.current}
+                      width={300}
+                      height={35}
+                      barWidth={1}
+                      gap={1}
+                      barColor={"#4F46E5"}
+                      smoothingTimeConstant={0.4}
+                    />
+                  </div>
+                )}
+                {/* {blob && (
+                  <AudioVisualizer
+                    ref={visualizerRef}
+                    blob={blob}
+                    width={300}
+                    height={75}
+                    barWidth={1}
+                    gap={1}
+                    barColor={"#4F46E5"}
+                  />
+                )} */}
               </Grid>
               <Grid item md={6}>
                 <label
@@ -586,26 +672,29 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
               {showVideo ? "Record Your Screen Again" : "Screen Recording"}
             </FormLabel>
-
-            <CommonChip
-              colorSecondary
-              className="w-full"
-              label={
-                showVideo ? "Record you Screen Again" : "Record you Screen"
-              }
-              onClick={handleRecordClick}
-              icon={
-                <ScreenRecordingIcon
-                  className="record-btn"
-                  // onClick={handleRecordClick}
-                />
-              }
-              style={{ border: "0.5px solid #4F46E5" }}
-            />
+            {!isRecording && (
+              <CommonChip
+                colorSecondary
+                className="w-full"
+                label={
+                  showVideo ? "Record you Screen Again" : "Record you Screen"
+                }
+                onClick={handleRecordClick}
+                icon={
+                  <ScreenRecordingIcon
+                    className="record-btn"
+                    // onClick={handleRecordClick}
+                  />
+                }
+                style={{ border: "0.5px solid #4F46E5" }}
+              />
+            )}
             <>
               {/* {showVideo && !isRecording && ( */}
               <div
-                className={`rounded-[7px] border-1 border-solid border-[#9DA0A6] mt-10 relative  block ${showVideo && !isRecording ? "" : "hidden"}`}
+                className={`rounded-[7px] border-1 border-solid border-[#9DA0A6] mt-10 relative  block ${
+                  showVideo && !isRecording ? "" : "hidden"
+                }`}
               >
                 <video
                   className="rounded-[7px] p-5 h-[120px] "
@@ -623,25 +712,28 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
               </div>
               {/* )} */}
               {isRecording && (
-                <div className="bg-[#FEECEB] border-[0.5px] border-[#F44336] my-10 rounded-[7px] flex items-center justify-between px-16 py-10">
-                  <Typography className="text-[#F44336] text-[16px] ">
-                    Stop Recording
-                  </Typography>
-                  <div className="flex items-center gap-10">
-                    <span id="timer" className="text-[#F44336] text-[16px]">
-                      {formatTime(elapsedTime)}
-                    </span>
-                    <img
-                      src="../assets/images/logo/play.svg"
-                      alt="play"
-                      onClick={toggleRecording}
-                    ></img>
-                    <img
-                      src="../assets/images/logo/pause.svg"
-                      alt="pause"
-                    ></img>
+                <>
+                  <div className="bg-[#FEECEB] border-[0.5px] border-[#F44336] my-10 rounded-[7px] flex items-center justify-between px-16 py-10">
+                    <Typography className="text-[#F44336] text-[16px] ">
+                      Stop Recording
+                    </Typography>
+                    <div className="flex items-center gap-10">
+                      <span id="timer" className="text-[#F44336] text-[16px]">
+                        {formatTime(elapsedTime)}
+                      </span>
+                      <img
+                        src="../assets/images/logo/play.svg"
+                        alt="play"
+                        onClick={toggleRecording}
+                      ></img>
+                      {/* <img
+                        src="../assets/images/logo/pause.svg"
+                        alt="pause"
+                        onClick={PlayRecording}
+                      ></img> */}
+                    </div>
                   </div>
-                </div>
+                </>
               )}
             </>
           </Grid>

@@ -20,12 +20,7 @@
 
 html {
   font-size: 62.5%;
-  font-family:
-    "Inter",
-    Roboto,
-    Helvetica Neue,
-    Arial,
-    sans-serif;
+  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
   background-color: #121212;
 }
 
@@ -417,4 +412,18 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
 
 .muiltr-1ogds6z-MuiTableRow-root td.custom {
   padding: 26px 16px 32px !important;
+}
+
+.audio-container {
+  margin-top: 20px;
+  background-color: #f6f6f6;
+  width: max-content;
+  padding: 20px;
+  padding-left: 10px;
+  border: 1px solid #e7e8e9;
+  border-radius: 8px;
+}
+
+.audio-controls {
+  margin-top: 10px;
 }
