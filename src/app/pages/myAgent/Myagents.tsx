@@ -272,19 +272,7 @@ export default function Myagents() {
 
   return (
     <>
-      <TitleBar title="Agents">
-        <Button
-          variant="outlined"
-          color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
-          aria-label="Add Tasks"
-          size="large"
-          onClick={() => setIsOpenAddModal(true)}
-        >
-          <PlusIcon color={theme.palette.secondary.main} />
-          Add Agent
-        </Button>
-      </TitleBar>
+      <TitleBar title="Agents"></TitleBar>
 
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
@@ -402,7 +390,7 @@ export default function Myagents() {
                   <TableCell align="left" className="w-[1%] font-500">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        <Link to={`/admin/agents/agent-detail/${row.id}`}>
+                        <Link to={`/my-agents/detail/${row.id}`}>
                           <ArrowRightCircleIcon />
                         </Link>
                       </span>
