@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-       - name: Creating env file
+      - name: Creating env file
         env:
           ENV_VARIABLE: ${{ secrets.DEV_FRONTEND_ENV }}
         run: |
