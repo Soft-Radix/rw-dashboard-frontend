@@ -16,59 +16,28 @@ import { Link } from "react-router-dom";
 
 const rows = [
   {
-    title: "Brand logo design",
+    title: "Home page design",
     defaultChecked: true,
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
     priority: "Medium",
   },
   {
-    title: "Brand logo design",
+    title: "Mobile screen design",
     defaultChecked: true,
-    assignedImg: [
-      "female-01.jpg",
-      "female-02.jpg",
-      "female-03.jpg",
-      "female-04.jpg",
-      "female-05.jpg",
-    ],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
     priority: "Medium",
   },
   {
-    title: "Brand logo design",
+    title: "Logo design",
     defaultChecked: false,
     assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
+    priority: "Medium",
   },
 ];
 
-function ThemePageTable(props) {
+function SubTaskTable(props) {
   const { tableSelectedItemDesign } = props;
   const theme: Theme = useTheme();
-  console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -110,14 +79,14 @@ function ThemePageTable(props) {
             >
               <TableCell scope="row">
                 <span className="flex items-center gap-10">
-                  <Checkbox
+                  {/* <Checkbox
                     sx={{ padding: "4px" }}
                     color="primary"
                     defaultChecked={row.defaultChecked}
                     inputProps={{
                       "aria-labelledby": `table-checkbox-${index}`,
                     }}
-                  />{" "}
+                  />{" "} */}
                   {row.title}
                 </span>
               </TableCell>
@@ -141,11 +110,6 @@ function ThemePageTable(props) {
                   <span className="p-2 cursor-pointer">
                     <EditIcon />
                   </span>
-                  <Link to={`/tasks/detail/5`}>
-                    <span className="p-2 cursor-pointer">
-                      <ArrowRightCircleIcon />
-                    </span>
-                  </Link>
                 </div>
               </TableCell>
             </TableRow>
@@ -156,4 +120,4 @@ function ThemePageTable(props) {
   );
 }
 
-export default ThemePageTable;
+export default SubTaskTable;
