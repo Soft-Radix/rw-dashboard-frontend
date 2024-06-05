@@ -42,15 +42,15 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     };
   }
 
-  // componentDidMount() {
-  //   console.log(
-  //     "Component Did Mount - Access Granted:",
-  //     this.state.accessGranted
-  //   );
-  //   if (!this.state.accessGranted) {
-  //     this.redirectRoute();
-  //   }
-  // }
+  componentDidMount() {
+    console.log(
+      "Component Did Mount - Access Granted:",
+      this.state.accessGranted
+    );
+    if (!this.state.accessGranted) {
+      this.redirectRoute();
+    }
+  }
 
   componentWillUnmount() {
     if (this.timer) {
@@ -80,7 +80,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       this.timer = setTimeout(() => {
         this.setState({ accessGranted });
         if (!accessGranted) {
-          this.redirectRoute();
+          // this.redirectRoute();
         }
       }, 3000);
     }
