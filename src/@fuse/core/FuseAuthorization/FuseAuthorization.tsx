@@ -80,7 +80,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       this.timer = setTimeout(() => {
         this.setState({ accessGranted });
         if (!accessGranted) {
-          this.redirectRoute();
+          // this.redirectRoute();
         }
       }, 3000);
     }

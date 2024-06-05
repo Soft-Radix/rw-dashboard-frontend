@@ -273,7 +273,9 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   };
 
   const handleSave = () => {
-    handleAudioRecord();
+    if (recordingAudio) {
+      handleAudioRecord();
+    }
     setSavedAudioURL(audioURL);
     setAudioURL("");
     setVisible(false);
@@ -283,6 +285,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     if (recordingAudio) {
       handleAudioRecord();
     }
+    setRecordingTime(0);
 
     setVisible(false);
     setAudioURL("");
@@ -291,6 +294,8 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const handleCross = () => {
     setAudioURL("");
     setSavedAudioURL("");
+    setRecordingTime(0);
+    setVisible(false);
   };
 
   return (
@@ -584,6 +589,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 {savedAudioURL && (
                   <div className="audio-container relative">
                     <audio controls src={savedAudioURL} />
+
                     <div className="audio-controls ml-[15px]"></div>
                     <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
                       <CrossGreyIcon
@@ -608,8 +614,8 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                         ></img>
                       ) : (
                         <img
-                          src="../assets/images/logo/play.svg"
-                          alt="play"
+                          src="../assets/images/logo/pause.svg"
+                          alt="pause"
                           onClick={handleAudioRecord}
                         ></img>
                       )}
