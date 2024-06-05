@@ -2,6 +2,7 @@ import { Checkbox, InputAdornment } from "@mui/material";
 import {
   addAgentGroup,
   addAgentInagentGroup,
+  getGroupMemberDetail,
   searchAgentGroup,
 } from "app/store/Agent group";
 import {
@@ -22,25 +23,27 @@ import { filterType } from "app/store/Client/Interface";
 import img1 from "../../../../public/assets/images/pages/admin/accImg.png";
 import { useParams } from "react-router";
 import { getAgentList } from "app/store/Agent";
+import ListLoading from "@fuse/core/ListLoading";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   isNewAgent: boolean;
   fetchAgentGroupList?: () => void;
+  filterPagination?: any;
 }
 
 function AddGroupModel({
   isOpen,
   setIsOpen,
   isNewAgent,
-
+  filterPagination,
   fetchAgentGroupList,
 }: IProps) {
   const agentGroupState = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
-  const { searchAgentList, addagentList } = useSelector(
+  const { searchAgentList, status, addagentList } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
   // console.log(addagentList, "pp");
@@ -49,6 +52,11 @@ function AddGroupModel({
 
   const [searchText, setSearchText] = useState("");
   const [isValid, setisValid] = useState<boolean>(false);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+  });
   // console.log(agentGroupState, "ggfsd");
   const { group_id } = useParams();
   // console.log(id, "asss");
@@ -83,7 +91,8 @@ function AddGroupModel({
     if (checkedItems.length! == 0) {
       setisValid(true);
     }
-    // dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
+    dispatch(getGroupMemberDetail({ ...filterPagination, group_id }));
     setIsOpen(false);
     setCheckedItems([]);
 
@@ -98,11 +107,6 @@ function AddGroupModel({
     );
   };
 
-  const [filterMenu, setFilterMenu] = useState<filterType>({
-    start: 0,
-    limit: -1,
-    search: "",
-  });
   const { start, limit, search } = filterMenu;
   const formik = useFormik({
     initialValues: {
@@ -126,10 +130,10 @@ function AddGroupModel({
   // console.log(filterMenu, "ggg");
 
   useEffect(() => {
-    if (isNewAgent) {
+    if (isNewAgent && isOpen) {
       dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     }
-  }, [start, limit, search]);
+  }, [start, limit, search, isOpen]);
 
   // console.log(checkedItems, "hhh");
   useEffect(() => {
@@ -139,6 +143,8 @@ function AddGroupModel({
       setIsOpen(false);
       formik.resetForm();
     } else if (!!agentGroupState?.errorMsg) {
+      // console.log(agentGroupState?.errorMsg, "agentGroupState?.errorMsg");
+
       setIsOpen(true);
       // dispatch(restAll());
     }
@@ -150,8 +156,9 @@ function AddGroupModel({
     //   ...prevFilters,
     //   search: "",
     // }));
+    debouncedSearch("");
     setCheckedItems([]);
-    setIsOpen((prev) => !prev);
+    setIsOpen(false);
     formik.resetForm(); // Reset form values when closing the modal
   };
   useEffect(() => {
@@ -162,7 +169,7 @@ function AddGroupModel({
     }
   }, [checkedItems]);
 
-  console.log(formik.errors, "formik");
+  // console.log(formik.errors, "formik");
 
   return (
     <CommonModal
@@ -197,24 +204,30 @@ function AddGroupModel({
               }}
             />
             <div className=" max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-              {searchAgentList.map((item: any) => (
-                <label
-                  className="flex items-center gap-10 px-20 w-1/3 cursor-pointer"
-                  key={item.id}
-                  // onClick={() => handleCheckboxChange(item.id)}
-                >
-                  <Checkbox
-                    checked={checkedItems.includes(item.id)}
-                    onChange={() => handleCheckboxChange(item.id)}
-                  />
-                  <span
-                    className=""
-                    // onClick={() => handleCheckboxChange(item.id)}
-                  >
-                    {item.first_name}
-                  </span>
-                </label>
-              ))}
+              {status == "loading" ? (
+                <ListLoading />
+              ) : (
+                <>
+                  {searchAgentList.map((item: any) => (
+                    <label
+                      className="flex items-center gap-10 px-20 w-1/3 cursor-pointer"
+                      key={item.id}
+                      // onClick={() => handleCheckboxChange(item.id)}
+                    >
+                      <Checkbox
+                        checked={checkedItems.includes(item.id)}
+                        onChange={() => handleCheckboxChange(item.id)}
+                      />
+                      <span
+                        className=""
+                        // onClick={() => handleCheckboxChange(item.id)}
+                      >
+                        {item.first_name}
+                      </span>
+                    </label>
+                  ))}
+                </>
+              )}
             </div>
           </>
         ) : (
