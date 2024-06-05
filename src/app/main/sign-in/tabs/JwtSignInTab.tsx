@@ -2,12 +2,12 @@ import React, { useCallback, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Typography } from "@mui/material";
 import Button from "@mui/material/Button";
-import { logIn } from "app/store/Auth";
+import { logIn, restAll } from "app/store/Auth";
 import { AxiosError } from "axios";
 import { useFormik } from "formik";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useAppDispatch } from "app/store/store";
+import { RootState, useAppDispatch } from "app/store/store";
 import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
@@ -18,6 +18,7 @@ import { GoogleLogin, useGoogleLogin } from "@react-oauth/google";
 import jwt_decode from "jwt-decode";
 import FacebookLogin from "react-facebook-login";
 import { Console } from "console";
+import { useSelector } from "react-redux";
 
 type FormType = {
   email: string;
@@ -27,10 +28,14 @@ type FormType = {
 
 function jwtSignInTab() {
   const { jwtService } = useAuth();
+  const { error } = useSelector((state: RootState) => state.auth);
+  const [check, setCheck] = useState(false);
+  let [emailErrorMsg, setEmailErrorMsg] = useState<string | null>(null);
+  let [passErrorMsg, setPassErrorMsg] = useState<string | null>(null);
   const { loginWithRedirect } = useAuth0();
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const dispatch = useAppDispatch();
   const onSubmit = useCallback(async (formData) => {
     const { email, password } = formData;
     setIsLoading(true);
@@ -51,6 +56,7 @@ function jwtSignInTab() {
   const handleSubmit = (event) => {
     event.preventDefault();
     formik.handleSubmit();
+    setCheck(!check);
   };
 
   const responseFacebook = async (response) => {
@@ -97,6 +103,46 @@ function jwtSignInTab() {
     },
   });
 
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    if (name === "email") {
+      setEmailErrorMsg(null);
+      dispatch(restAll());
+      formik.setFieldError("password", "");
+    }
+    if (name === "password") {
+      setPassErrorMsg(null);
+      dispatch(restAll());
+      formik.setFieldError("password", "");
+    }
+    formik.handleChange(event);
+  };
+
+  useEffect(() => {
+    if (error && error.includes("email")) {
+      setEmailErrorMsg(error);
+    } else {
+      setEmailErrorMsg(null);
+    }
+
+    if (error && error.includes("Password")) {
+      setPassErrorMsg(error);
+    } else {
+      setPassErrorMsg(null);
+    }
+  }, [error, check]);
+
+  // const handleChange = (event) => {
+  //   const { name, value } = event.target;
+  //   if (name === "email") {
+  //     setEmailErrorMsg(null);
+  //   }
+  //   if (name === "password") {
+  //     setPassErrorMsg(null);
+  //   }
+  //   // Handle other form changes if needed
+  // };
+
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
       <form onSubmit={handleSubmit}>
@@ -105,15 +151,24 @@ function jwtSignInTab() {
           name="email"
           label="Email Address"
           placeholder="Enter Email Address"
+          onChange={handleChange}
           // inputRef={input => input && input.focus()}
         />
+        <div>
+          <span className=" text-red pt-[1px]  block ">{emailErrorMsg}</span>
+        </div>
         <InputField
           formik={formik}
           name="password"
           label="Password"
           type="password"
+          onChange={handleChange}
           placeholder="Enter Password"
         />
+        <div>
+          <span className=" text-red pt-[1px]  block ">{passErrorMsg}</span>
+        </div>
+
         <Link
           className="text-[16px] font-medium !no-underline w-fit inline-block mt-10"
           to="/forgot-password"
