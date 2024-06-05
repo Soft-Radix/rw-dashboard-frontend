@@ -10,6 +10,7 @@ import {
   UpdateAgentGroupPayload,
   AgentGroupIDType,
   searchAgentGroupType,
+  filterGroupType,
 } from "./Interface";
 import { calculatePageNumber } from "src/utils";
 
@@ -33,7 +34,21 @@ export const addAgentGroup = createAsyncThunk(
   }
 );
 addAgentGroup;
+export const getGroupMemberDetail = createAsyncThunk(
+  "agent-group-members",
+  async (payload: filterGroupType) => {
+    const response = await ApiHelperFunction({
+      url: "agent-group-members",
+      method: "post",
+      data: payload,
+    });
 
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 export const getAgentGroupList = createAsyncThunk(
   "agent-group/list",
   async (payload: filterType) => {
@@ -47,7 +62,6 @@ export const getAgentGroupList = createAsyncThunk(
     return {
       data: response.data,
     };
-   
   }
 );
 
@@ -162,6 +176,8 @@ export const initialState: initialStateProps = {
   actionStatusDisabled: false,
   actionStatusEdit: false,
   actionStatusGroupMember: false,
+  agentGroupListMember: {},
+  total_groupDetail: 0,
 };
 
 /**
@@ -321,12 +337,12 @@ export const agentGroupSlice = createSlice({
           toast.error(response?.message);
           // console.log(response, "responsed");
         } else {
-          let contactArray = state.agentGroupDetail.group_members.concat(
-            response.data
-          );
-          // console.log("🚀 ~ .addCasegroup_members", state.agentGroupDetail.group_members)
-          // console.log(contactArray, "contactArray");
-          state.agentGroupDetail.group_members = contactArray;
+          // let contactArray = state.agentGroupDetail.group_members.concat(
+          //   response.data
+          // );
+          // // console.log("🚀 ~ .addCasegroup_members", state.agentGroupDetail.group_members)
+          // // console.log(contactArray, "contactArray");
+          // state.agentGroupDetail.group_members = contactArray;
 
           // state.agentDetail.attachments = state.agentDetail.attachments.concat(
           //   response.data
@@ -373,9 +389,10 @@ export const agentGroupSlice = createSlice({
         const { member_id } = action.meta?.arg;
         // console.log(group_id, "idd");
         if (payload?.data?.status) {
-          state.agentGroupDetail.group_members = state.agentGroupDetail.group_members.filter(
-            (item) => item.id !== member_id
-          );
+          // state.agentGroupDetail.group_members =
+          //   state.agentGroupDetail.group_members.filter(
+          //     (item) => item.id !== member_id
+          //   );
 
           state.actionStatusGroupMember = false;
           toast.success(payload?.data?.message);
@@ -386,15 +403,42 @@ export const agentGroupSlice = createSlice({
       .addCase(deleteAgentMemberGroup.rejected, (state, { error }) => {
         toast.error(error?.message);
         state.actionStatusGroupMember = false;
+      })
+      .addCase(getGroupMemberDetail.pending, (state) => {
+        state.status = "loading";
+        state.actionStatus = true;
+      })
+      .addCase(getGroupMemberDetail.fulfilled, (state, action) => {
+        const response = action.payload?.data;
+        // console.log(response, "findttt");
+        const { data } = action.payload?.data;
+        // console.log(data, "dgftdfdf");
+        state.agentGroupListMember = data;
+        // console.log(state.agentGroupListMember, "serch");
+        state.actionStatus = false;
+        state.status = "idle";
+        if (!response.status) {
+          toast.error(response?.message);
+        } else {
+          state.list = response?.data?.list || [];
+          state.total_groupDetail = calculatePageNumber(
+            response?.data?.total_records,
+            10
+          );
+          // console.log(
+          //   "🚀 ~ .addCase ~ state.total_groupDetail :",
+          //   state.total_groupDetail
+          // );
+        }
+      })
+      .addCase(getGroupMemberDetail.rejected, (state, action) => {
+        state.actionStatus = false;
+        state.status = "idle";
       });
   },
 });
 
-export const {
-  restAll,
-  changeFetchStatus,
-  updateSelectedColumn,
-  sortColumn,
-} = agentGroupSlice.actions;
+export const { restAll, changeFetchStatus, updateSelectedColumn, sortColumn } =
+  agentGroupSlice.actions;
 
 export default agentGroupSlice.reducer;

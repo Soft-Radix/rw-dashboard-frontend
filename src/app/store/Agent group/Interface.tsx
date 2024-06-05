@@ -11,6 +11,7 @@ export interface AgentGroupType {
   group_members?: any[];
   actionStatus?: boolean;
   fetchStatus?: string;
+  list?: [];
 }
 
 export interface filterType {
@@ -43,6 +44,8 @@ export type initialStateProps = {
   actionStatusDisabled: boolean;
   actionStatusEdit: boolean;
   actionStatusGroupMember: boolean;
+  agentGroupListMember: AgentGroupType;
+  total_groupDetail: number;
 };
 export interface AgentGroupRootState {
   agentGroup: initialStateProps; // Add other slices if needed
@@ -74,4 +77,11 @@ export interface searchAgentGroupType {
   group_id: number | string;
   agent_ids: number[];
   delete_agent_ids: [];
+}
+export interface filterGroupType {
+  start: number;
+  limit: number;
+  search?: string;
+  client_id?: any;
+  group_id?: string;
 }

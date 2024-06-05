@@ -1,3 +1,4 @@
+//agentgroup
 import ListLoading from "@fuse/core/ListLoading";
 import { Button, TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
@@ -77,7 +78,7 @@ export default function AgentsGroup() {
         }));
         setIsOpenDeletedModal(false);
         setIsDeleteId(null);
-        // fetchAgentGroupLsssist();
+        dispatch(getAgentGroupList(filters));
       }
     } catch (error) {
       // console.error("Failed to delete agent group:", error);
