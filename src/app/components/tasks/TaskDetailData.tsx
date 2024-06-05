@@ -34,7 +34,7 @@ function TaskDetailData() {
   };
 
   return (
-    <div className="shadow-md bg-white rounded-lg overflow-hidden min-h-[82vh] flex flex-col justify-between">
+    <div className="shadow-md bg-white rounded-lg overflow-hidden min-h-[88vh] flex flex-col justify-between">
       <div>
         <div className="flex gap-10 justify-start items-center bg-[#2C334C] px-[10px] py-[10px]">
           <GroupName />
