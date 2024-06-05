@@ -19,7 +19,10 @@ function SearchInput({
   inputValue,
 }: IProps) {
   return (
-    <div className="w-full mb-3 sm:mb-0 sm:w-max" style={{ width: "286px" }}>
+    <div
+      className="w-full sm:w-[286px] mb-3 sm:mb-0  "
+      // style={{ width: "286px" }}
+    >
       <TextField
         hiddenLabel
         id="filled-hidden-label-small"
@@ -72,7 +75,7 @@ function SearchInput({
                 />
               ) : (
                 // Render an empty icon to occupy space when inputValue is empty
-                <div style={{ width: "24px" }} />
+                <div className="sm:w-[24px] w-0" />
               )}
               {/* You can add more icons conditionally here */}
             </InputAdornment>
