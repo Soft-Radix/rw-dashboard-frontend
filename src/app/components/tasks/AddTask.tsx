@@ -26,7 +26,6 @@ import CommonChip from "../chip";
 import CustomButton from "../custom_button";
 import { AudioVisualizer, LiveAudioVisualizer } from "react-audio-visualize";
 import { CrossGreyIcon } from "public/assets/icons/common";
-import WaveSurfer from "wavesurfer.js";
 
 interface IProps {
   isOpen: boolean;
@@ -298,33 +297,6 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     setRecordingTime(0);
     setVisible(false);
   };
-
-  const waveformRef = useRef(null);
-  const waveSurferRef = useRef(null);
-
-  useEffect(() => {
-    console.log(waveSurferRef.current); // Should log WaveSurfer instance or null
-    if (!waveSurferRef.current) {
-      waveSurferRef.current = WaveSurfer.create({
-        container: waveformRef.current,
-        waveColor: "#4F46E5",
-        progressColor: "#FF5733",
-        height: 75,
-      });
-      console.log("WaveSurfer instance created");
-    } else {
-      console.log("WaveSurfer instance already exists");
-    }
-
-    waveSurferRef.current.load(audioURL);
-    console.log("Audio URL loaded:", audioURL);
-
-    return () => {
-      waveSurferRef.current.destroy();
-      waveSurferRef.current = null;
-      console.log("WaveSurfer instance destroyed");
-    };
-  }, [audioURL]);
 
   return (
     <CommonModal
@@ -617,10 +589,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 {savedAudioURL && (
                   <div className="audio-container relative">
                     <audio controls src={savedAudioURL} />
-                    <div
-                      ref={waveformRef}
-                      style={{ width: "100%", height: "75px" }}
-                    ></div>
+
                     <div className="audio-controls ml-[15px]"></div>
                     <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
                       <CrossGreyIcon
