@@ -56,12 +56,15 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [mediaRecorder1, setMediaRecorder1] = useState<MediaRecorder>();
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [audioURL, setAudioURL] = useState("");
+  const [visible, setVisible] = useState(false);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const mediaStreamRef = useRef(null);
   const [savedAudioURL, setSavedAudioURL] = useState("");
   const [blob, setBlob] = useState<Blob>();
   const visualizerRef = useRef<HTMLCanvasElement>(null);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const timerRef = useRef(null);
 
   const [screenSharingStream, setScreenSharingStream] = useState(null);
   const formik = useFormik({
@@ -211,7 +214,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     }
   };
 
-  const formatTime = (time) => {
+  const formatTime = (time: any) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
     return `${minutes
@@ -221,11 +224,14 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
 
   const handleAudioRecord = () => {
     if (recordingAudio) {
+      setVisible(true);
       console.log("Stopping the recorder...");
       mediaRecorderRef.current.stop();
       mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
       setRecordingAudio(false);
+      clearInterval(timerRef.current); // Stop the timer
     } else {
+      setVisible(true);
       console.log("Starting the recorder...");
       navigator.mediaDevices
         .getUserMedia({ audio: true })
@@ -247,13 +253,18 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
             });
             const audioUrl = URL.createObjectURL(audioBlob);
             setAudioURL(audioUrl);
+
             setBlob(audioBlob);
+            // setRecordingTime(0);
           };
 
           mediaRecorder.start();
           console.log("Recorder started");
           setRecordingAudio(true);
           setMediaRecorder1(mediaRecorder);
+          timerRef.current = setInterval(() => {
+            setRecordingTime((prevTime) => prevTime + 1);
+          }, 1000);
         })
         .catch((error) => {
           console.error("Error accessing microphone", error);
@@ -262,12 +273,24 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   };
 
   const handleSave = () => {
+    handleAudioRecord();
     setSavedAudioURL(audioURL);
     setAudioURL("");
+    setVisible(false);
   };
 
   const handleCancel = () => {
+    if (recordingAudio) {
+      handleAudioRecord();
+    }
+
+    setVisible(false);
     setAudioURL("");
+    setSavedAudioURL("");
+  };
+  const handleCross = () => {
+    setAudioURL("");
+    setSavedAudioURL("");
   };
 
   return (
@@ -558,11 +581,56 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                   // variant="outlined"
                   style={{ border: "0.5px solid #4F46E5" }}
                 />
-                {/* {audioURL && <audio controls src={audioURL} />} */}
-                {audioURL && (
+                {savedAudioURL && (
                   <div className="audio-container relative">
-                    <audio controls src={audioURL} />
-                    <div className="audio-controls ml-[15px]">
+                    <audio controls src={savedAudioURL} />
+                    <div className="audio-controls ml-[15px]"></div>
+                    <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                      <CrossGreyIcon
+                        className="h-20 w-20 p-4"
+                        fill="#757982"
+                        onClick={() => handleCross()}
+                      />
+                    </div>
+                  </div>
+                )}
+                {visible && (
+                  <div className="my-10 flex flex-col gap-[10px] audio-container ">
+                    <div
+                      className="my-10 flex  gap-[10px] "
+                      style={{ alignItems: "center" }}
+                    >
+                      {recordingAudio ? (
+                        <img
+                          src="../assets/images/logo/play2.svg"
+                          alt="play"
+                          onClick={handleAudioRecord}
+                        ></img>
+                      ) : (
+                        <img
+                          src="../assets/images/logo/play.svg"
+                          alt="play"
+                          onClick={handleAudioRecord}
+                        ></img>
+                      )}
+                      <p className="text-[#9DA0A6]">
+                        {" "}
+                        {formatTime(recordingTime)}
+                      </p>
+
+                      <LiveAudioVisualizer
+                        mediaRecorder={
+                          recordingAudio ? mediaRecorderRef?.current : ""
+                        }
+                        width={300}
+                        height={35}
+                        barWidth={1}
+                        gap={1}
+                        barColor={"#4F46E5"}
+                        smoothingTimeConstant={0.4}
+                      />
+                    </div>
+                    <div>
                       <button
                         onClick={handleSave}
                         className="text-[#4F46E5] text-[16px] font-500 underline mr-10"
@@ -576,31 +644,6 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                         Cancel
                       </button>
                     </div>
-                    <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
-                      <CrossGreyIcon
-                        className="h-20 w-20 p-4"
-                        fill="#757982"
-                        onClick={() => handleCancel()}
-                      />
-                    </div>
-                  </div>
-                )}
-                {recordingAudio && mediaRecorderRef && (
-                  <div className="my-10 flex gap-[10px]">
-                    <img
-                      src="../assets/images/logo/play2.svg"
-                      alt="play"
-                      onClick={handleAudioRecord}
-                    ></img>
-                    <LiveAudioVisualizer
-                      mediaRecorder={mediaRecorderRef.current}
-                      width={300}
-                      height={35}
-                      barWidth={1}
-                      gap={1}
-                      barColor={"#4F46E5"}
-                      smoothingTimeConstant={0.4}
-                    />
                   </div>
                 )}
                 {/* {blob && (

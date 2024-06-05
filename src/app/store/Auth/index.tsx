@@ -17,6 +17,15 @@ import { SubProjectIcon } from "public/assets/icons/navabarIcon";
 
 // Define a type for the payload
 
+export const initialState: initialStateProps = {
+  status: "idle",
+  email: "",
+  userData: [],
+  UserResponse: [],
+  error: "",
+  // navigation: [],
+};
+
 /**
  * API calling
  */
@@ -132,13 +141,6 @@ export const setPassword = createAsyncThunk(
 /**
  * The initial state of the auth slice.
  */
-export const initialState: initialStateProps = {
-  status: "idle",
-  email: "",
-  userData: [],
-  UserResponse: [],
-  // navigation: [],
-};
 
 /**
  * The auth slice.
@@ -146,7 +148,13 @@ export const initialState: initialStateProps = {
 export const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    restAll: (state) => {
+      state.error = "";
+      
+      // state.selectedColumn = [];
+    },
+  },
   extraReducers(builder) {
     builder
 
@@ -169,7 +177,8 @@ export const authSlice = createSlice({
         if (payload?.status) {
           toast.success(payload?.message);
         } else {
-          toast.error(payload?.message);
+          // toast.error(payload?.message);
+          state.error = payload?.message;
         }
       })
 
@@ -202,6 +211,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const {} = authSlice.actions;
+export const {restAll} = authSlice.actions;
 
 export default authSlice.reducer;

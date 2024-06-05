@@ -41,6 +41,7 @@ export type initialStateProps = {
   email?: string;
   userData?: any[];
   UserResponse?: any[];
+  error?: string;
 };
 
 export interface AuthState {
