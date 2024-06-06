@@ -82,6 +82,21 @@ export interface ProjectAdd {
   name: string;
 }
 
+export interface Taskadd {
+  project_id: number;
+  project_column_id: number;
+  title: string;
+  description: string;
+  priority: string;
+  labels: string;
+  status: string;
+  agent_ids: string | number;
+  voice_record_file: any;
+  files: any;
+  screen_record_file: any;
+  due_date_time: string | number;
+  reminders: string | number;
+}
 export interface ProjectAddDoc {
   name: string;
   token: any;

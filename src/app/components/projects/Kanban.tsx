@@ -170,7 +170,9 @@ const Kanban = (props: IProps): JSX.Element => {
         <FilterPage filterDesign={true} />
       </div>
       <div
-        className={`flex ${columnList?.length > 0 ? "gap-20" : ""} overflow-x-auto px-28 pb-28 items-start`}
+        className={`flex ${
+          columnList?.length > 0 ? "gap-20" : ""
+        } overflow-x-auto px-28 pb-28 items-start`}
       >
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId="droppable" direction="horizontal">
@@ -197,7 +199,9 @@ const Kanban = (props: IProps): JSX.Element => {
                           key={item.id}
                           isEmpty
                           id={item.id}
+                          project_id={item.project_id}
                           callListApi={listData}
+                          tasks={item.tasks}
                           // handleAddTask={handleAddTask}
                         />
                       </div>
