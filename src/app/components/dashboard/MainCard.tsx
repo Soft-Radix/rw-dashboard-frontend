@@ -11,7 +11,11 @@ import InputField from "../InputField";
 import ItemCard from "./ItemCard";
 import ActionModal from "../ActionModal";
 import { useDispatch } from "react-redux";
-import { deleteColumn, projectColumnUpdate } from "app/store/Projects";
+import {
+  TaskListColumn,
+  deleteColumn,
+  projectColumnUpdate,
+} from "app/store/Projects";
 import toast from "react-hot-toast";
 import * as Yup from "yup";
 import AddTaskModal from "../tasks/AddTask";
@@ -21,16 +25,31 @@ type MainCardType = {
   title: string;
   isEmpty?: boolean;
   callListApi?: any;
+  dataList?: any;
+  dataListLength?: any;
+  tasks?: any[];
+  project_id?: number | string;
 };
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 export default function MainCard({
   title,
   isEmpty,
   id,
+  dataList,
   callListApi,
+  dataListLength,
+  tasks,
+  project_id,
 }: MainCardType) {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalTitle, setOriginalTitle] = useState(title);
+
   const toggleEditModal = () => {
     if (openEditModal) {
       formik.setFieldValue("name", originalTitle);
@@ -44,6 +63,7 @@ export default function MainCard({
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
   const [disable, setDisabled] = useState(false);
+  const [List, setList] = useState(null);
 
   /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -111,6 +131,24 @@ export default function MainCard({
     formik.setFieldValue("name", title);
   }, [title]);
 
+  useEffect(() => {
+    setList(tasks);
+  }, [tasks]);
+
+  const onDragEnd = (result: DropResult) => {
+    if (!result.destination) {
+      return;
+    }
+    const items = Array.from(tasks);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+
+    // Update your state or perform any action you need here
+    console.log("Updated items: ", items);
+
+    setList(items);
+  };
+
   return (
     <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px]">
       <div>
@@ -167,7 +205,7 @@ export default function MainCard({
           Please review your to-do list below.
         </Typography>
         <div className="py-20 flex flex-col gap-14">
-          {isEmpty ? (
+          {tasks.length == 0 ? (
             <>
               <div className="bg-[#F7F9FB] p-14 rounded-md border flex items-center flex-col">
                 <Typography
@@ -196,54 +234,64 @@ export default function MainCard({
               </Button>
             </>
           ) : (
-            <>
-              {" "}
-              <ItemCard
-                title="iOS App Home Page"
-                priority="Medium"
-                taskName="There 20 mobile app design requirements"
-                date="Feb 12, 2024"
-                isChecked={false}
-                images={[
-                  "https://picsum.photos/seed/picsum/200/200",
-                  "https://picsum.photos/200/200?grayscale",
-                  "https://picsum.photos/seed/picsum/200/200",
-                ]}
-              />
-              <ItemCard
-                title="iOS App Home Page"
-                priority="High"
-                taskName="There 20 mobile app design requirements"
-                date="Feb 12, 2024"
-                isChecked={false}
-                images={[
-                  "https://picsum.photos/seed/picsum/200/200",
-                  "https://picsum.photos/200/200?grayscale",
-                  "https://picsum.photos/seed/picsum/200/200",
-                ]}
-              />
-              <ItemCard
-                title="iOS App Home Page"
-                priority="Low"
-                taskName="There 20 mobile app design requirements"
-                date="Feb 12, 2024"
-                isChecked={false}
-                images={[
-                  "https://picsum.photos/seed/picsum/200/200",
-                  "https://picsum.photos/200/200?grayscale",
-                  "https://picsum.photos/seed/picsum/200/200",
-                ]}
-              />
-            </>
+            <DragDropContext onDragEnd={onDragEnd}>
+              <Droppable droppableId="droppable" direction="vertical">
+                {(provided) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(200px, 1fr))",
+                      gap: "10px",
+                    }}
+                  >
+                    {List?.map((item, index) => (
+                      <Draggable
+                        key={item.id}
+                        draggableId={String(item.id)} // Ensure draggableId is a string
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                            style={{
+                              ...provided.draggableProps.style,
+                              userSelect: "none", // Prevent text selection
+                            }}
+                          >
+                            <ItemCard
+                              id={item.id}
+                              title={item.title}
+                              priority={item.priority}
+                              taskName={item.description}
+                              date={item.createdAt}
+                              isChecked={item.isChecked}
+                              images={item.images}
+                              callListApi={callListApi}
+                            />
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
+            </DragDropContext>
           )}
         </div>
-        {!isEmpty && (
+        {tasks.length > 0 && (
           <Button
             variant="contained"
             color="secondary"
             className="w-full h-[48px] text-[18px] flex gap-8"
             aria-label="Log In"
             size="large"
+            onClick={() => setIsOpenAddModal(true)}
           >
             <PlusIcon color="white" />
             Add New
@@ -275,7 +323,12 @@ export default function MainCard({
         onDelete={handleDelete}
         disabled={disable}
       />
-      <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+      <AddTaskModal
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        ColumnId={id}
+        project_id={project_id}
+      />
     </div>
   );
 }

@@ -5,8 +5,10 @@ import {
   Grid,
   Hidden,
   MenuItem,
+  TextField,
   Typography,
   styled,
+  Popover,
 } from "@mui/material";
 import { useFormik } from "formik";
 import {
@@ -26,29 +28,40 @@ import CommonChip from "../chip";
 import CustomButton from "../custom_button";
 import { AudioVisualizer, LiveAudioVisualizer } from "react-audio-visualize";
 import { CrossGreyIcon } from "public/assets/icons/common";
+import { TaskAdd, projectColumnList } from "app/store/Projects";
+import { useAppDispatch } from "app/store/store";
+import * as Yup from "yup";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { getAgentList } from "app/store/Agent";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  ColumnId?: any;
+  project_id?: any;
 }
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
   minWidth: "250px",
 }));
 
-function AddTaskModal({ isOpen, setIsOpen }: IProps) {
+function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
   const [dateTimeMenu, setDateTimeMenu] = useState<HTMLElement | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("Due Date & Time");
 
   const [priorityMenu, setPriorityMenu] = useState<HTMLElement | null>(null);
   const [showReminder, setShowReminder] = useState<HTMLElement | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<string>("Priority");
+  const [selectedAgent, setSelectedAgent] = useState<string>("Assigned To");
+  const [AgentMenu, setAgentMenu] = useState<HTMLElement | null>(null);
   const [statusMenu, setStatusMenu] = useState<HTMLElement | null>(null);
   const [labelsMenu, setLabelsMenu] = useState<HTMLElement | null>(null);
   const [selectedlabel, setSelectedlabel] = useState<string>("Labels");
   const [showLabelForm, setShowLabelForm] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("Status");
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isRecording, setIsRecording] = useState(false);
+  const [agentMenuData, setAgentMenuData] = useState([]);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [timerId, setTimerId] = useState(null);
   const [showVideo, setShowVideo] = useState(false);
@@ -64,14 +77,24 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const [blob, setBlob] = useState<Blob>();
   const visualizerRef = useRef<HTMLCanvasElement>(null);
   const [recordingTime, setRecordingTime] = useState(0);
+  const [agentid, setAgentID] = useState(null);
   const timerRef = useRef(null);
+  const dispatch = useAppDispatch();
 
   const [screenSharingStream, setScreenSharingStream] = useState(null);
+  const validationSchema = Yup.object({
+    title: Yup.string()
+      .required("Title is required")
+      .matches(/^(?!\s*$).+/, "Title cannot be empty or contain only spaces"),
+    description: Yup.string(),
+  });
+  const userId = JSON.parse(localStorage.getItem("userDetail"));
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
     },
+    validationSchema,
     onSubmit: (values) => {},
   });
 
@@ -105,6 +128,19 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
   const handleAddLabel = () => {
     setShowLabelForm(true);
   };
+
+  useEffect(() => {
+    const filters = {
+      start: 0,
+      limit: -1,
+      search: "",
+      client_id: userId.id,
+    };
+    dispatch(getAgentList(filters)).then((res) => {
+      setAgentMenuData(res?.payload?.data?.data?.list);
+    });
+  }, []);
+
   useEffect(() => {
     if (labelsMenu) {
       setShowLabelForm(false);
@@ -122,6 +158,13 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     setSelectedPriority(data);
     setPriorityMenu(null); // Close the dropdown priority menu after selection
   };
+
+  const handleAgentMenuClick = (data) => {
+    setSelectedAgent(data.first_name);
+    setAgentID(data.id);
+    setAgentMenu(null); // Close the dropdown priority menu after selection
+  };
+
   const videoRef = useRef(null);
 
   const handleRecordClick = async () => {
@@ -192,6 +235,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(timerId);
   }, [timerId]);
+
   const toggleRecording = async () => {
     if (mediaRecorder && mediaRecorder.state === "recording") {
       try {
@@ -298,6 +342,57 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
     setVisible(false);
   };
 
+  const onSubmit = async () => {
+    formik.handleSubmit();
+    const screenRecordFile = videoRef?.current?.src || "";
+    const formData = new FormData();
+
+    formData.append("project_id", project_id);
+    formData.append("project_column_id", ColumnId);
+    formData.append("title", formik.values.title);
+    formData.append("description", formik.values.description);
+    formData.append("priority", selectedPriority);
+    formData.append("labels", selectedlabel);
+    formData.append("status", selectedStatus);
+    formData.append("agent_ids", agentid);
+    formData.append("voice_record_file", savedAudioURL);
+    formData.append("screen_record_file", screenRecordFile);
+    formData.append("due_date_time", selectedDate);
+    formData.append("reminders", "");
+    // Append each file with the same key
+    uploadedFiles.forEach((file) => {
+      formData.append("files", file); // Note the use of "files[]" to indicate an array of files
+    });
+    try {
+      const res = await dispatch(TaskAdd(formData));
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleUploadFile = (event) => {
+    const files = event.target.files;
+    const filesArray = Array.from(files);
+    setUploadedFiles((prevFiles) => [...prevFiles, filesArray[0]]);
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedDate1, setSelectedDate1] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleDateChange = (date: any) => {
+    setSelectedDate1(date);
+  };
+
+  const open = Boolean(anchorEl);
   return (
     <CommonModal
       open={isOpen}
@@ -306,6 +401,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
       maxWidth="910"
       btnTitle="Save"
       closeTitle="Close"
+      onSubmit={onSubmit}
     >
       <div className="flex flex-col gap-20">
         <InputField
@@ -323,7 +419,33 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
           rows={4}
         />
         <div className="flex gap-10">
-          <CommonChip label="Assigned To" icon={<AssignIcon />} />
+          <DropdownMenu
+            anchorEl={AgentMenu}
+            handleClose={() => setAgentMenu(null)}
+            button={
+              <CommonChip
+                onClick={(event) => setAgentMenu(event.currentTarget)}
+                label={selectedAgent}
+                icon={<AssignIcon />}
+              />
+            }
+            popoverProps={{
+              open: !!AgentMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
+          >
+            <div style={{ maxHeight: "150px" }}>
+              {agentMenuData?.map((item) => (
+                <StyledMenuItem onClick={() => handleAgentMenuClick(item)}>
+                  {item.first_name}
+                </StyledMenuItem>
+              ))}
+            </div>
+          </DropdownMenu>
+
+          {/* <CommonChip label="Assigned To" icon={<AssignIcon />} /> */}
           <DropdownMenu
             handleClose={() => setDateTimeMenu(null)}
             anchorEl={dateTimeMenu}
@@ -364,9 +486,29 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 }
                 className="min-w-[224px] mt-10"
                 // onClick={handleCalender}
+                onClick={handleClick}
               >
                 Custom Date
               </CustomButton>
+              <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: "bottom",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                <DateTimePicker
+                  value={selectedDate1}
+                  onChange={handleDateChange}
+                  // renderInput={(props) => <TextField {...props} />}
+                />
+              </Popover>
             </div>
           </DropdownMenu>
           <DropdownMenu
@@ -531,13 +673,6 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                 </Button>
               </div>
             </div>
-            {/* {priorityMenuData.map((item) => (
-              <StyledMenuItem
-                onClick={() => handlePriorityMenuClick(item.label)}
-              >
-                {item.label}
-              </StyledMenuItem> */}
-            {/* ))} */}
           </DropdownMenu>
           {/* <CommonChip label="Reminder" icon={<ReminderIcon />} /> */}
           <DropdownMenu
@@ -678,8 +813,9 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                       style={{ display: "none" }}
                       multiple={true}
                       id="attachment"
-                      accept="audio/*"
-                      // onChange={handleUploadFile}
+                      // accept="audio/*"
+                      accept=".pdf,.png,.jpg,.jpeg"
+                      onChange={handleUploadFile}
                     />
                   </label>
                   <span>
@@ -707,7 +843,7 @@ function AddTaskModal({ isOpen, setIsOpen }: IProps) {
                   multiple={true}
                   id="attachment"
                   accept=".pdf,.png,.jpg,.jpeg"
-                  // onChange={handleUploadFile}
+                  onChange={handleUploadFile}
                 />
               </label>
               <span>

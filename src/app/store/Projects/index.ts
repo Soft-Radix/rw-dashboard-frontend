@@ -8,6 +8,7 @@ import {
   ProductUpdate,
   ProjectUpdate,
   ProjectAddDoc,
+  Taskadd,
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 
@@ -125,6 +126,24 @@ export const projectColumnList = createAsyncThunk(
   }
 );
 
+export const TaskAdd = createAsyncThunk(
+  "project/task/add",
+  async (payload: Taskadd | FormData) => {
+    const response = await ApiHelperFunction({
+      url: `/project/task/add`,
+      method: "post",
+      data: payload,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const deleteColumn: any = createAsyncThunk(
   "column/delete",
   async (payload: any) => {
@@ -139,6 +158,38 @@ export const deleteColumn: any = createAsyncThunk(
     };
   }
 );
+
+
+export const deleteTask: any = createAsyncThunk(
+  "project/task-delete/",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/task-delete/${payload}`,
+      method: "delete",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const TaskListColumn: any = createAsyncThunk(
+  "TaskListColumn",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/task/list`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const projectColumnUpdate: any = createAsyncThunk(
   "column/update",
   async (payload: any) => {
