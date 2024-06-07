@@ -77,7 +77,7 @@ const Kanban = (props: IProps): JSX.Element => {
       toast.success(res?.payload?.data?.message);
       formik.setFieldValue("name", "");
       formik.resetForm();
-      listData();
+      listData(2);
       if (setIsOpen) setIsOpen((prev) => !prev);
       if (setIsEditing) setIsEditing(false);
       if (setId) setId(null);
@@ -87,12 +87,14 @@ const Kanban = (props: IProps): JSX.Element => {
     setAddCard(!addCard);
   };
 
-  const listData = async () => {
+  const listData = async (task_limt) => {
     const payload: any = {
       start: 0,
       limit: 10,
       search: "",
       project_id: id as string,
+      task_start: 0,
+      task_limit: task_limt,
     };
     try {
       const res = await dispatch(projectColumnList(payload));
@@ -145,7 +147,7 @@ const Kanban = (props: IProps): JSX.Element => {
     if (savedOrder) {
       setColumnList(JSON.parse(savedOrder));
     } else {
-      listData();
+      listData(2);
     }
   }, [id]);
   // const handleAddTask = () => {

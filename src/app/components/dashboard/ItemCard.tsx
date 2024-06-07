@@ -17,6 +17,7 @@ import toast from "react-hot-toast";
 import { deleteTask } from "app/store/Projects";
 import AddTaskModal from "../tasks/AddTask";
 import { Clock, ClockTask } from "public/assets/icons/common";
+import { debounce } from "lodash";
 // import { CalendarIcon } from "public/assets/icons/dashboardIcons";
 
 type CardType = {
@@ -103,7 +104,7 @@ export default function ItemCard({
         .then((res) => {
           if (res?.data?.status == 1) {
             setOpenDeleteModal(false);
-            callListApi();
+            callListApi(2);
             toast.success(res?.data?.message, {
               duration: 4000,
             });
@@ -112,6 +113,25 @@ export default function ItemCard({
         });
     }
   };
+
+  const handleScroll = debounce(() => {
+    // Check if the user has scrolled to the bottom of the page
+    if (
+      window.innerHeight + document.documentElement.scrollTop ===
+      document.documentElement.offsetHeight
+    ) {
+      // If scrolled to the bottom, trigger the API call
+      callListApi(10);
+    }
+  }, 1000); // Adjust the debounce delay as needed (e.g., 300ms)
+
+  // Attach scroll event listener when component mounts
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <div className="bg-[#F7F9FB] p-14 rounded-md border">
