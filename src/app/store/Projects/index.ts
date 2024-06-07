@@ -144,6 +144,24 @@ export const TaskAdd = createAsyncThunk(
   }
 );
 
+export const EditTaskAdd = createAsyncThunk(
+  "project/task/edit",
+  async (payload: Taskadd | FormData) => {
+    const response = await ApiHelperFunction({
+      url: `project/task/edit`,
+      method: "post",
+      data: payload,
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const deleteColumn: any = createAsyncThunk(
   "column/delete",
   async (payload: any) => {
@@ -159,6 +177,35 @@ export const deleteColumn: any = createAsyncThunk(
   }
 );
 
+export const TaskDetails: any = createAsyncThunk(
+  "project/task-detail/",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/task-detail/${payload}`,
+      method: "get",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const TaskDeleteAttachment: any = createAsyncThunk(
+  "/project/task/delete-files",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/task/delete-files`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
 
 export const deleteTask: any = createAsyncThunk(
   "project/task-delete/",

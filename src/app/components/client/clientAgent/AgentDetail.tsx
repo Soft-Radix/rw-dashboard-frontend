@@ -19,7 +19,6 @@ import moment from "moment";
 const AgentDetail = () => {
   const dispatch = useAppDispatch();
   const { agentDetail } = useSelector((store: AgentRootState) => store?.agent);
-  console.log("========hkh==", agentDetail);
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const handleClick = (event) => {

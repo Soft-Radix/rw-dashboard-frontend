@@ -90,7 +90,7 @@ export interface Taskadd {
   priority: string;
   labels: string;
   status: string;
-  agent_ids: string | number;
+  agent_ids: any[];
   voice_record_file: any;
   files: any;
   screen_record_file: any;

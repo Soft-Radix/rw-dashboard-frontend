@@ -270,7 +270,7 @@ export default function MainCard({
                               taskName={item.description}
                               date={item.createdAt}
                               isChecked={item.isChecked}
-                              images={item.images}
+                              images={item?.images}
                               callListApi={callListApi}
                             />
                           </div>
@@ -328,6 +328,7 @@ export default function MainCard({
         setIsOpen={setIsOpenAddModal}
         ColumnId={id}
         project_id={project_id}
+        callListApi={callListApi}
       />
     </div>
   );
