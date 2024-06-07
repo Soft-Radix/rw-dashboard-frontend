@@ -9,6 +9,7 @@ import {
   Typography,
   styled,
   Popover,
+  Checkbox,
 } from "@mui/material";
 import { useFormik } from "formik";
 import {
@@ -27,28 +28,52 @@ import InputField from "../InputField";
 import CommonChip from "../chip";
 import CustomButton from "../custom_button";
 import { AudioVisualizer, LiveAudioVisualizer } from "react-audio-visualize";
-import { CrossGreyIcon } from "public/assets/icons/common";
-import { TaskAdd, projectColumnList } from "app/store/Projects";
+import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
+import {
+  EditTaskAdd,
+  TaskAdd,
+  TaskDeleteAttachment,
+  TaskDetails,
+  projectColumnList,
+} from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { getAgentList } from "app/store/Agent";
+import { deleteAttachment, getAgentList } from "app/store/Agent";
+import moment from "moment";
+import DeleteClient from "../client/DeleteClient";
+import {
+  AttachmentDeleteIcon,
+  AttachmentIcon,
+} from "public/assets/icons/supportIcons";
+import { debounce } from "lodash";
+import { filterType } from "app/store/Client/Interface";
 
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   ColumnId?: any;
   project_id?: any;
+  callListApi?: any;
+  Edit?: any;
 }
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
   minWidth: "250px",
 }));
 
-function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
+function AddTaskModal({
+  isOpen,
+  setIsOpen,
+  ColumnId,
+  project_id,
+  callListApi,
+  Edit,
+}: IProps) {
+  const [expandedImage, setExpandedImage] = useState(null);
   const [dateTimeMenu, setDateTimeMenu] = useState<HTMLElement | null>(null);
   const [selectedDate, setSelectedDate] = useState<string>("Due Date & Time");
-
+  const [selectedDate1, setSelectedDate1] = useState(new Date());
   const [priorityMenu, setPriorityMenu] = useState<HTMLElement | null>(null);
   const [showReminder, setShowReminder] = useState<HTMLElement | null>(null);
   const [selectedPriority, setSelectedPriority] = useState<string>("Priority");
@@ -57,6 +82,7 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
   const [statusMenu, setStatusMenu] = useState<HTMLElement | null>(null);
   const [labelsMenu, setLabelsMenu] = useState<HTMLElement | null>(null);
   const [selectedlabel, setSelectedlabel] = useState<string>("Labels");
+  const [uploadedFilesNew, setUploadedFilesNew] = useState([]);
   const [showLabelForm, setShowLabelForm] = useState<boolean>(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("Status");
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -70,43 +96,62 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
   const [recordingAudio, setRecordingAudio] = useState(false);
   const [audioURL, setAudioURL] = useState("");
   const [visible, setVisible] = useState(false);
+  const [type, setType] = useState(null);
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
   const mediaStreamRef = useRef(null);
   const [savedAudioURL, setSavedAudioURL] = useState("");
   const [blob, setBlob] = useState<Blob>();
   const visualizerRef = useRef<HTMLCanvasElement>(null);
+  const [customDate, setCustomDate] = useState(null);
+  const [calculatedDate, setCalculatedDate] = useState(null);
   const [recordingTime, setRecordingTime] = useState(0);
   const [agentid, setAgentID] = useState(null);
-  const timerRef = useRef(null);
-  const dispatch = useAppDispatch();
+  const [dateError, setDateError] = useState("");
 
+  const [checkedItems, setCheckedItems] = useState([]);
+  const [selectedAgents, setSelectedAgents] = useState<any[]>([]);
+  const [audioRecorder, setAudioRecorder] = useState<File | null>(null);
+  const [screenRecorder, setScreenRecorder] = useState("");
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const timerRef = useRef(null);
+  const [deleteId, setIsDeleteId] = useState<number>(null);
+  const dispatch = useAppDispatch();
+  const userId = JSON.parse(localStorage.getItem("userDetail"));
   const [screenSharingStream, setScreenSharingStream] = useState(null);
+  const [filterMenu, setFilterMenu] = useState<filterType>({
+    start: 0,
+    limit: -1,
+    search: "",
+    client_id: userId.id,
+  });
   const validationSchema = Yup.object({
     title: Yup.string()
       .required("Title is required")
       .matches(/^(?!\s*$).+/, "Title cannot be empty or contain only spaces"),
     description: Yup.string(),
   });
-  const userId = JSON.parse(localStorage.getItem("userDetail"));
+
   const formik = useFormik({
     initialValues: {
       title: "",
       description: "",
+      time: "",
+      date: "",
     },
     validationSchema,
     onSubmit: (values) => {},
   });
 
   const dateTimeMenuData = [
-    { label: "In 1 business day" },
-    { label: "In 2 business days" },
-    { label: "In 3 business days" },
-    { label: "In 1 week" },
-    { label: "In 2 week" },
-    { label: "In 1 month" },
-    { label: "In 3 months" },
-    { label: "In 6 months" },
+    { label: "In 1 business day", days: 1 },
+    { label: "In 2 business days", days: 2 },
+    { label: "In 3 business days", days: 3 },
+    { label: "In 1 week", days: 7 },
+    { label: "In 2 week", days: 14 },
+    { label: "In 1 month", days: 30 },
+    { label: "In 3 months", days: 90 },
+    { label: "In 6 months", days: 180 },
   ];
   const priorityMenuData = [
     { label: "Medium" },
@@ -130,16 +175,10 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
   };
 
   useEffect(() => {
-    const filters = {
-      start: 0,
-      limit: -1,
-      search: "",
-      client_id: userId.id,
-    };
-    dispatch(getAgentList(filters)).then((res) => {
+    dispatch(getAgentList(filterMenu)).then((res) => {
       setAgentMenuData(res?.payload?.data?.data?.list);
     });
-  }, []);
+  }, [filterMenu]);
 
   useEffect(() => {
     if (labelsMenu) {
@@ -159,12 +198,19 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
     setPriorityMenu(null); // Close the dropdown priority menu after selection
   };
 
-  const handleAgentMenuClick = (data) => {
-    setSelectedAgent(data.first_name);
-    setAgentID(data.id);
-    setAgentMenu(null); // Close the dropdown priority menu after selection
+  // const handleAgentMenuClick = (data) => {
+  //   setSelectedAgent(data.first_name);
+  //   setAgentID(data.id);
+  //   setAgentMenu(null); // Close the dropdown priority menu after selection
+  // };
+  const handleAgentMenuClick = (item) => {
+    const agentId = item.id;
+    if (selectedAgents?.includes(agentId)) {
+      setSelectedAgents(selectedAgents?.filter((id) => id !== agentId));
+    } else {
+      setSelectedAgents([...selectedAgents, agentId]);
+    }
   };
-
   const videoRef = useRef(null);
 
   const handleRecordClick = async () => {
@@ -197,6 +243,12 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
           type: chunks[0].type,
         });
         const url = URL.createObjectURL(blob);
+
+        const file = new File([blob], "recorded_video.webm", {
+          type: chunks[0].type,
+        });
+        //@ts-ignore
+        setScreenRecorder(file);
 
         if (videoRef.current) {
           videoRef.current.src = url;
@@ -295,6 +347,11 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
             const audioBlob = new Blob(audioChunksRef.current, {
               type: "audio/wav",
             });
+            const audioFile = new File([audioBlob], "recorded_audio.wav", {
+              type: "audio/wav",
+            });
+            // console.log("=====audioFile===", audioFile);
+            setAudioRecorder(audioFile);
             const audioUrl = URL.createObjectURL(audioBlob);
             setAudioURL(audioUrl);
 
@@ -335,6 +392,26 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
     setAudioURL("");
     setSavedAudioURL("");
   };
+
+  const handleReset = () => {
+    setIsOpen(false);
+    formik.resetForm();
+    setSavedAudioURL("");
+    setIsRecording(false);
+    setShowVideo(false);
+    videoRef.current = null;
+    setSelectedAgent("Assigned To");
+    setSelectedStatus("Status");
+    setSelectedPriority("Priority");
+    setSelectedlabel("Labels");
+    setCalculatedDate("");
+    setAgentID(null);
+    setUploadedFiles([]);
+    setCustomDate(null);
+
+    setSelectedAgents([]);
+  };
+
   const handleCross = () => {
     setAudioURL("");
     setSavedAudioURL("");
@@ -346,7 +423,6 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
     formik.handleSubmit();
     const screenRecordFile = videoRef?.current?.src || "";
     const formData = new FormData();
-
     formData.append("project_id", project_id);
     formData.append("project_column_id", ColumnId);
     formData.append("title", formik.values.title);
@@ -354,18 +430,32 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
     formData.append("priority", selectedPriority);
     formData.append("labels", selectedlabel);
     formData.append("status", selectedStatus);
-    formData.append("agent_ids", agentid);
-    formData.append("voice_record_file", savedAudioURL);
-    formData.append("screen_record_file", screenRecordFile);
-    formData.append("due_date_time", selectedDate);
-    formData.append("reminders", "");
+    formData.append("agent_ids", selectedAgents as any);
+    formData.append("voice_record_file", audioRecorder);
+    formData.append("screen_record_file", screenRecorder);
+    formData.append("due_date_time", calculatedDate ? calculatedDate : "");
+    formData.append("business_due_date", selectedDate);
+    formData.append(
+      "reminders",
+      formik?.values?.date != "" && formik?.values?.time != ""
+        ? moment(formik?.values?.date + " " + formik?.values?.time).format(
+            "YYYY-MM-DD HH:mm"
+          )
+        : ""
+      // moment(formik?.values?.date + " " + formik?.values?.time).format(
+      //   "YYYY-MM-DD HH:mm"
+      // )
+    );
     // Append each file with the same key
     uploadedFiles.forEach((file) => {
       formData.append("files", file); // Note the use of "files[]" to indicate an array of files
     });
     try {
       const res = await dispatch(TaskAdd(formData));
+      callListApi();
       setIsOpen(false);
+      formik.resetForm();
+      handleReset();
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -374,11 +464,18 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
   const handleUploadFile = (event) => {
     const files = event.target.files;
     const filesArray = Array.from(files);
-    setUploadedFiles((prevFiles) => [...prevFiles, filesArray[0]]);
+    setUploadedFiles((prevFiles) => [...prevFiles, ...filesArray]);
+  };
+
+  const handleAudioUploadFile = (event) => {
+    const file = event.target.files[0];
+    setAudioRecorder(file);
+    const audioUrl = URL.createObjectURL(file);
+    setAudioURL(audioUrl);
+    setSavedAudioURL(audioUrl); // If you want to save it separately
   };
 
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedDate1, setSelectedDate1] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -388,20 +485,210 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
     setAnchorEl(null);
   };
 
-  const handleDateChange = (date: any) => {
-    setSelectedDate1(date);
+  const calculateFutureDate = (days, label) => {
+    let date = new Date();
+    let addedDays = 0;
+
+    while (addedDays < days) {
+      date.setDate(date.getDate() + 1);
+      if (label.includes("business")) {
+        const dayOfWeek = date.getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          addedDays++;
+        }
+      } else {
+        addedDays++;
+      }
+    }
+    return moment(date).format("YYYY-MM-DD HH:mm");
   };
 
+  const handleDateChange = (newDate) => {
+    setCustomDate(newDate);
+    setSelectedDate(newDate.toLocaleString());
+  };
   const open = Boolean(anchorEl);
+  const today = new Date();
+
+  const validateBillingStartDate = (dateString) => {
+    const selectedDate = new Date(dateString);
+    selectedDate.setHours(0, 0, 0, 0);
+
+    const year = selectedDate.getFullYear().toString();
+    const isFourDigitYear = /^\d{4}$/.test(year);
+
+    if (!isFourDigitYear) {
+      return { isValid: false, error: "Year must be in 4 digits" };
+    }
+
+    if (selectedDate <= today) {
+      return {
+        isValid: false,
+        error: "Billing Start Date must be greater than tomorrow",
+      };
+    }
+
+    return { isValid: true, error: "" };
+  };
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
+  const EditDetails = () => {
+    dispatch(TaskDetails(ColumnId)).then((res) => {
+      const data = res?.payload?.data?.data;
+      const remindersDateTime = data?.reminders.split("T");
+      const date = remindersDateTime[0]; // Extract the date component
+      const time = remindersDateTime[1].split(".")[0];
+      if (data?.screen_record_file != "") {
+        setShowVideo(true);
+      } else {
+        setShowVideo(false);
+      }
+      if (data?.voice_record_file == "" || data?.voice_record_file == "null") {
+        setSavedAudioURL("");
+      } else {
+        setSavedAudioURL(urlForImage + data.voice_record_file);
+      }
+
+      formik.setFieldValue("title", data.title);
+      formik.setFieldValue("description", data.description);
+      formik.setFieldValue("date", date);
+      formik.setFieldValue("time", time);
+      setSavedAudioURL(
+        data?.voice_record_file && urlForImage + data.voice_record_file
+      );
+      videoRef.current.src =
+        data?.screen_record_file && urlForImage + data?.screen_record_file;
+      setSelectedDate(data?.business_due_date);
+      setSelectedlabel(data?.labels);
+      setSelectedPriority(data?.priority);
+      setSelectedStatus(data?.status);
+      setUploadedFilesNew(data.task_files);
+      const userNames = data?.assigned_task_users?.map(
+        (user) => user.first_name
+      );
+      const userId = data?.assigned_task_users?.map((user) => user.user_id);
+      setSelectedAgent(userNames.join(", "));
+      setSelectedAgents(userId);
+    });
+  };
+  useEffect(() => {
+    if (Edit) {
+      EditDetails();
+    }
+  }, []);
+  const handleDeleteAttachment = async (id: number) => {
+    const { payload } = await dispatch(
+      TaskDeleteAttachment({ type: type, file_id: id })
+    );
+    // console.log(payload, "kklkkkl");
+    if (payload?.data?.status) {
+      EditDetails();
+    }
+    setIsOpenDeletedModal(false);
+    if (type == 1) {
+      handleCross();
+    }
+  };
+
+  const handleImageClick = (imageUrl) => {
+    if (expandedImage === imageUrl) {
+      setExpandedImage(null); // If already expanded, close it
+    } else {
+      setExpandedImage(imageUrl); // If not expanded, expand it
+    }
+  };
+
+  const onSubmitEdit = async () => {
+    formik.handleSubmit();
+    const screenRecordFile = videoRef?.current?.src || "";
+    const formData = new FormData();
+    formData.append("task_id", ColumnId);
+    formData.append("title", formik.values.title);
+    formData.append("description", formik.values.description);
+    formData.append("priority", selectedPriority);
+    formData.append("labels", selectedlabel);
+    formData.append("status", selectedStatus);
+    formData.append("agent_ids", selectedAgents as any);
+    formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
+    formData.append("screen_record_file", screenRecorder);
+    formData.append("due_date_time", calculatedDate ? calculatedDate : "");
+    formData.append("business_due_date", selectedDate);
+    formData.append("delete_agent_ids", "");
+    formData.append("delete_file_ids", "");
+    formData.append(
+      "reminders",
+      !formik?.values?.date && !formik?.values?.time
+        ? moment(formik?.values?.date + " " + formik?.values?.time).format(
+            "YYYY-MM-DD HH:mm"
+          )
+        : ""
+    );
+    // Append each file with the same key
+    uploadedFiles.forEach((file) => {
+      formData.append("files", file); // Note the use of "files[]" to indicate an array of files
+    });
+    try {
+      const res = await dispatch(EditTaskAdd(formData));
+      callListApi();
+      setIsOpen(false);
+      formik.resetForm();
+      handleReset();
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  const handleAgentSelect = (agentId) => {
+    if (selectedAgents.includes(agentId)) {
+      setSelectedAgents(selectedAgents.filter((id) => id != agentId));
+      if (selectedAgents.length == 1) {
+        setSelectedAgent("Assign To");
+      }
+    } else {
+      // If not selected, add to selection
+      setSelectedAgents([...selectedAgents, agentId]);
+    }
+  };
+  const debouncedSearch = debounce((searchValue) => {
+    // Update the search filter here
+    setFilterMenu((prevFilters) => ({
+      ...prevFilters,
+      search: searchValue,
+    }));
+  }, 300);
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    debouncedSearch(value);
+  };
+
+  const handleCheckboxChange = (id) => {
+    setCheckedItems((prevCheckedItems) => {
+      if (prevCheckedItems.includes(id)) {
+        return prevCheckedItems.filter((item) => item !== id);
+      } else {
+        return [...prevCheckedItems, id];
+      }
+    });
+  };
+
+  const handleSelectAllAgents = () => {
+    if (selectedAgents.length == agentMenuData.length) {
+      // If all agents are already selected, deselect all
+      setSelectedAgents([]);
+    } else {
+      // Otherwise, select all agents
+      setSelectedAgents(agentMenuData.map((item) => item.id));
+    }
+  };
+
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={() => setIsOpen(false)}
+      handleToggle={() => handleReset()}
       modalTitle="Add Task"
       maxWidth="910"
-      btnTitle="Save"
+      btnTitle={Edit ? "Save Edit" : "Save"}
       closeTitle="Close"
-      onSubmit={onSubmit}
+      onSubmit={Edit ? onSubmitEdit : onSubmit}
     >
       <div className="flex flex-col gap-20">
         <InputField
@@ -425,7 +712,18 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
             button={
               <CommonChip
                 onClick={(event) => setAgentMenu(event.currentTarget)}
-                label={selectedAgent}
+                style={{ maxWidth: "200px" }}
+                label={
+                  selectedAgents?.length > 0
+                    ? selectedAgents
+                        ?.map(
+                          (agentId) =>
+                            agentMenuData.find((item) => item.id === agentId)
+                              ?.first_name
+                        )
+                        .join(", ")
+                    : selectedAgent
+                }
                 icon={<AssignIcon />}
               />
             }
@@ -436,16 +734,112 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
               },
             }}
           >
-            <div style={{ maxHeight: "150px" }}>
-              {agentMenuData?.map((item) => (
-                <StyledMenuItem onClick={() => handleAgentMenuClick(item)}>
-                  {item.first_name}
-                </StyledMenuItem>
-              ))}
+            <div className="w-[375px] p-20">
+              <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
+
+              <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+                <InputField
+                  name={"agent"}
+                  placeholder={"Enter Agent Name"}
+                  className="common-inputField "
+                  inputProps={{
+                    className: "ps-[2rem] w-full sm:w-full",
+                  }}
+                  onChange={handleSearchChange}
+                />
+                <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
+                  <div
+                    className="flex items-center gap-10 px-20 w-full"
+                    onClick={handleSelectAllAgents}
+                  >
+                    <Checkbox
+                      checked={selectedAgents.length === agentMenuData.length}
+                      onChange={handleSelectAllAgents}
+                    />
+                    <span>Select All</span>
+                  </div>
+                  {agentMenuData.map((item: any) => (
+                    <div
+                      className="flex items-center gap-10 px-20 w-full"
+                      key={item.id}
+                    >
+                      <label className="flex items-center gap-10 w-full cursor-pointer">
+                        <Checkbox
+                          checked={selectedAgents.includes(item.id)}
+                          onChange={() => handleAgentSelect(item.id)}
+                        />
+                        <span>{item.first_name}</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </DropdownMenu>
 
-          {/* <CommonChip label="Assigned To" icon={<AssignIcon />} /> */}
+          {/* 
+          <DropdownMenu
+            anchorEl={AgentMenu}
+            handleClose={() => setAgentMenu(null)}
+            button={
+              <CommonChip
+                onClick={(event) => setAgentMenu(event.currentTarget)}
+                label={
+                  selectedAgents?.length > 0
+                    ? selectedAgents
+                        ?.map(
+                          (agentId) =>
+                            agentMenuData.find((item) => item.id == agentId)
+                              ?.first_name
+                        )
+                        .join(", ")
+                    : selectedAgent
+                }
+                icon={<AssignIcon />}
+              />
+            }
+            popoverProps={{
+              open: !!AgentMenu,
+              classes: {
+                paper: "pt-10 pb-20",
+              },
+            }}
+          >
+            <div className="w-[375px] p-20">
+              <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
+
+              <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+                <InputField
+                  name={"agent"}
+                  placeholder={"Enter Agent Name"}
+                  className="common-inputField "
+                  inputProps={{
+                    className: "ps-[2rem] w-full sm:w-full",
+                  }}
+                  onChange={handleSearchChange}
+                />
+                <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
+                  {agentMenuData.map((item: any) => (
+                    <div
+                      className="flex items-center gap-10 px-20 w-full"
+                      key={item.id}
+                    >
+                      <label className="flex items-center gap-10 w-full cursor-pointer">
+                        <Checkbox
+                          // checked={checkedItems.includes(item.id)}
+                          // onChange={() => handleCheckboxChange(item.id)}
+                          checked={selectedAgents.includes(item.id)}
+                          onChange={() => handleAgentSelect(item.id)}
+                        />
+                        <span>{item.first_name}</span>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </DropdownMenu> */}
+
           <DropdownMenu
             handleClose={() => setDateTimeMenu(null)}
             anchorEl={dateTimeMenu}
@@ -469,8 +863,12 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
           >
             {dateTimeMenuData.map((item) => (
               <StyledMenuItem
+                key={item.label}
                 onClick={() => {
-                  setSelectedDate(item.label), setDateTimeMenu(null);
+                  const futureDate = calculateFutureDate(item.days, item.label);
+                  setCalculatedDate(futureDate.toLocaleString()); // Store the calculated date
+                  setSelectedDate(item.label); // Display the label
+                  setDateTimeMenu(null);
                 }}
               >
                 {item.label}
@@ -485,7 +883,6 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                   <FuseSvgIcon>material-outline:add_circle_outline</FuseSvgIcon>
                 }
                 className="min-w-[224px] mt-10"
-                // onClick={handleCalender}
                 onClick={handleClick}
               >
                 Custom Date
@@ -504,9 +901,8 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                 }}
               >
                 <DateTimePicker
-                  value={selectedDate1}
+                  value={customDate}
                   onChange={handleDateChange}
-                  // renderInput={(props) => <TextField {...props} />}
                 />
               </Popover>
             </div>
@@ -536,7 +932,6 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
               </StyledMenuItem>
             ))}
           </DropdownMenu>
-
           <DropdownMenu
             anchorEl={labelsMenu}
             handleClose={() => setLabelsMenu(null)}
@@ -643,12 +1038,15 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                 id="date"
                 label="Date"
                 placeholder="Enter Date"
+                type="date"
               />
+
               <InputField
                 formik={formik}
                 name="time"
                 id="time"
                 label="Time"
+                type="time"
                 placeholder="Enter Time"
               />
               <div className="mt-20">
@@ -657,6 +1055,7 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                   color="secondary"
                   className="w-[156px] h-[48px] text-[18px]"
                   // onClick={onSubmit}
+                  onClick={() => setShowReminder(null)}
                 >
                   Save
                 </Button>
@@ -667,6 +1066,9 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                   className="w-[156px] h-[48px] text-[18px] ml-14"
                   onClick={() => {
                     setShowLabelForm(false);
+                    setShowReminder(null);
+                    formik.setFieldValue("time", "");
+                    formik.setFieldValue("date", "");
                   }}
                 >
                   Cancel
@@ -726,13 +1128,28 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                     <audio controls src={savedAudioURL} />
 
                     <div className="audio-controls ml-[15px]"></div>
-                    <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
-                      <CrossGreyIcon
-                        className="h-20 w-20 p-4"
-                        fill="#757982"
-                        onClick={() => handleCross()}
-                      />
-                    </div>
+                    {Edit ? (
+                      <div
+                        className="absolute top-7 right-7"
+                        // onClick={() => handleDeleteAttachment(item.id)}
+                      >
+                        <AttachmentDeleteIcon
+                          onClick={() => {
+                            setIsOpenDeletedModal(true);
+                            setType(1);
+                            setIsDeleteId(ColumnId);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                        <CrossGreyIcon
+                          className="h-20 w-20 p-4"
+                          fill="#757982"
+                          onClick={() => handleCross()}
+                        />
+                      </div>
+                    )}
                   </div>
                 )}
                 {visible && (
@@ -813,9 +1230,9 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                       style={{ display: "none" }}
                       multiple={true}
                       id="attachment"
-                      // accept="audio/*"
-                      accept=".pdf,.png,.jpg,.jpeg"
-                      onChange={handleUploadFile}
+                      accept="audio/*"
+                      // accept=".pdf,.png,.jpg,.jpeg"
+                      onChange={handleAudioUploadFile}
                     />
                   </label>
                   <span>
@@ -830,7 +1247,7 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
               File
             </FormLabel>
             <label
-              htmlFor="attachment"
+              htmlFor="fileattachment"
               className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
             justify-between cursor-pointer"
               // onClick={() => handleUploadFile()}
@@ -841,7 +1258,7 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                   type="file"
                   style={{ display: "none" }}
                   multiple={true}
-                  id="attachment"
+                  id="fileattachment"
                   accept=".pdf,.png,.jpg,.jpeg"
                   onChange={handleUploadFile}
                 />
@@ -850,6 +1267,136 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                 <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
+            <div className="flex flex-wrap gap-2">
+              {uploadedFiles?.map((file, index) => (
+                <div
+                  key={index}
+                  className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
+                >
+                  <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
+                    <span className="mr-4">
+                      <PreviewIcon />
+                    </span>
+                    <span className="text-[16px] text-[#4F46E5] py-5 mr-3">
+                      {file.name}
+                    </span>
+                    <span
+                    // onClick={() =>
+                    //    handleRemoveFile(file)}
+                    >
+                      <CrossGreyIcon />
+                    </span>
+                  </div>
+                </div>
+              ))}
+
+              {/* {uploadedFilesNew?.map((file, index) => (
+                <div
+                  key={index}
+                  className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
+                >
+                  <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
+                    <img
+                      src={urlForImage + file.file}
+                      alt="img"
+                      width="20px"
+                    ></img>
+                    <span
+                    // onClick={() =>
+                    //    handleRemoveFile(file)}
+                    >
+                      <CrossGreyIcon />
+                    </span>
+                  </div>
+                </div>
+              ))} */}
+
+              {uploadedFilesNew?.map((item: any) => (
+                <div className="relative cursor-pointer ">
+                  {item.file.includes(".png") ||
+                  item.file.includes(".jpg") ||
+                  item.file.includes(".jpeg") ? (
+                    <>
+                      <img
+                        src={urlForImage + item.file}
+                        alt="Black Attachment"
+                        className="w-[200px] rounded-md sm:h-[130px]"
+                      />
+                      <div
+                        className="absolute top-7 left-7"
+                        onClick={() =>
+                          handleImageClick(urlForImage + item.file)
+                        }
+                      >
+                        <AttachmentIcon />
+                      </div>
+                      <div
+                        className="absolute top-7 right-7"
+                        // onClick={() => handleDeleteAttachment(item.id)}
+                      >
+                        <AttachmentDeleteIcon
+                          onClick={() => {
+                            setIsOpenDeletedModal(true);
+                            setType(3);
+                            setIsDeleteId(item.id);
+                          }}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="w-[200px] rounded-md sm:h-[130px] flex items-center justify-center border-1 border-[#4F46E5]">
+                      <a
+                        href={urlForImage + item.file}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src="../assets/images/logo/pdfIcon.png"
+                          alt="Black Attachment"
+                          className="h-[50px] w-[50px]"
+                        />
+                      </a>
+
+                      {/* <a href="/">check</a> */}
+                      <div
+                        className="absolute top-7 left-7"
+                        onClick={() =>
+                          handleImageClick(urlForImage + item.file)
+                        }
+                      >
+                        <AttachmentIcon />
+                      </div>
+                      <div
+                        className="absolute top-7 right-7"
+                        // onClick={() => handleDeleteAttachment(item.id)}
+                      >
+                        <AttachmentDeleteIcon
+                          onClick={() => {
+                            setIsOpenDeletedModal(true);
+                            setIsDeleteId(item.id);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {expandedImage && (
+                <div
+                  className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
+                  onClick={() => setExpandedImage(null)}
+                >
+                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <img
+                      src={expandedImage}
+                      alt="Expanded Image"
+                      className="max-w-full max-h-full"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </Grid>
         </Grid>
         <Grid container spacing={2}>
@@ -887,13 +1434,28 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
                   ref={videoRef}
                   controls
                 />
-                <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
-                  <CrossGreyIcon
-                    className="h-20 w-20 p-4"
-                    fill="#757982"
-                    onClick={() => setShowVideo(false)}
-                  />
-                </div>
+                {Edit ? (
+                  <div
+                    className="absolute top-7 right-7"
+                    // onClick={() => handleDeleteAttachment(item.id)}
+                  >
+                    <AttachmentDeleteIcon
+                      onClick={() => {
+                        setIsOpenDeletedModal(true);
+                        setType(2);
+                        setIsDeleteId(ColumnId);
+                      }}
+                    />
+                  </div>
+                ) : (
+                  <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                    <CrossGreyIcon
+                      className="h-20 w-20 p-4"
+                      fill="#757982"
+                      onClick={() => setShowVideo(false)}
+                    />
+                  </div>
+                )}
               </div>
               {/* )} */}
               {isRecording && (
@@ -924,6 +1486,15 @@ function AddTaskModal({ isOpen, setIsOpen, ColumnId, project_id }: IProps) {
           </Grid>
         </Grid>
       </div>
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        onDelete={() => handleDeleteAttachment(deleteId)}
+        heading={`Delete ${type == 3 ? "Attachment" : "File"}`}
+        description={`Are you sure you want to delete this ${
+          type == 3 ? "Attachment" : "File"
+        }? `}
+      />
     </CommonModal>
   );
 }

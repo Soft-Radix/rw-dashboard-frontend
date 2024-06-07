@@ -137,7 +137,12 @@ export default function AgentDetails() {
       <div className="px-40 xs:px-10">
         <Grid container spacing={3} className="sm:px-10 xs:px-10 ">
           <Grid item xs={12} sm={12} md={9} className="">
-            <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 ">
+            {/* <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto
+             md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 "> */}
+            <div
+              className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto
+             sm:h-auto  rounded-12 xs:px-20 "
+            >
               <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
                 <div className="flex gap-40">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
@@ -162,10 +167,10 @@ export default function AgentDetails() {
                           selectedItem === "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                             : selectedItem === "Cancelled"
-                              ? "text-[#F44336] bg-[#F443362E]"
-                              : selectedItem == "Pending"
-                                ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                : "text-[#F0B402]  bg-[#FFEEBB]"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : selectedItem == "Pending"
+                            ? "text-[#FF5F15] bg-[#ffe2d5]"
+                            : "text-[#F0B402]  bg-[#FFEEBB]"
                         }`}
                         endIcon={
                           <DownGreenIcon
@@ -173,10 +178,10 @@ export default function AgentDetails() {
                               selectedItem === "Active"
                                 ? "#4CAF50"
                                 : selectedItem === "Cancelled"
-                                  ? "#F44336"
-                                  : selectedItem == "Pending"
-                                    ? "#FF5F15"
-                                    : "#F0B402"
+                                ? "#F44336"
+                                : selectedItem == "Pending"
+                                ? "#FF5F15"
+                                : "#F0B402"
                             }
                           />
                         }

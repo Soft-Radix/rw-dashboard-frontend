@@ -15,6 +15,8 @@ import ActionModal from "../ActionModal";
 import { useAppDispatch } from "app/store/store";
 import toast from "react-hot-toast";
 import { deleteTask } from "app/store/Projects";
+import AddTaskModal from "../tasks/AddTask";
+import { Clock, ClockTask } from "public/assets/icons/common";
 // import { CalendarIcon } from "public/assets/icons/dashboardIcons";
 
 type CardType = {
@@ -80,9 +82,11 @@ export default function ItemCard({
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [originalTitle, setOriginalTitle] = useState(title);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
   const toggleEditModal = () => {
+    setIsOpenAddModal(true);
     if (openEditModal) {
       // formik.setFieldValue("name", originalTitle);
     } else {
@@ -115,7 +119,7 @@ export default function ItemCard({
         <Typography color="primary.main" className="font-medium">
           <TruncateText text={title} maxWidth={150} />
         </Typography>
-        <div className="flex">
+        <div className="flex gap-4">
           <span
             className={`${
               priority === "Medium"
@@ -175,23 +179,23 @@ export default function ItemCard({
       </div>
       <div className="mt-10 flex justify-between gap-20 items-start">
         <Typography color="primary.light" className="text-[12px] ">
-          {taskName}
+          <TruncateText text={taskName} maxWidth={150} />
         </Typography>
         <Checkbox />
       </div>
       <div className="mt-10 flex justify-between">
         <div className="flex items-center">
-          {/* <CalendarIcon color={theme.palette.secondary.main} /> */}
+          <ClockTask color={theme.palette.secondary.main} />
           <Typography color="primary.light" className="text-[12px] ml-10 ">
             {moment(date).format("ll")}
           </Typography>
         </div>
         <div className="flex flex-row-reverse">
-          {images?.map((item) => (
+          {["female-01.jpg", "female-02.jpg", "female-03.jpg"]?.map((item) => (
             <img
               className="h-[34px] w-[34px] rounded-full border-2 border-white ml-[-10px] z-0"
               key={item}
-              src={item}
+              src={`/assets/images/avatars/${item}`}
               alt={item}
               loading="lazy"
             />
@@ -200,14 +204,23 @@ export default function ItemCard({
       </div>
 
       <ActionModal
-        modalTitle="Delete Column"
-        modalSubTitle="Are you sure you want to delete this column?"
+        modalTitle="Delete Task"
+        modalSubTitle="Are you sure you want to delete this task?"
         open={openDeleteModal}
         handleToggle={toggleDeleteModal}
         type="delete"
         onDelete={handleDelete}
         disabled={disable}
       />
+      {isOpenAddModal && (
+        <AddTaskModal
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          ColumnId={id}
+          callListApi={callListApi}
+          Edit
+        />
+      )}
     </div>
   );
 }
