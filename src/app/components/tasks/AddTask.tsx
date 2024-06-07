@@ -178,7 +178,7 @@ function AddTaskModal({
     dispatch(getAgentList(filterMenu)).then((res) => {
       setAgentMenuData(res?.payload?.data?.data?.list);
     });
-  }, [filterMenu]);
+  }, [filterMenu.search]);
 
   useEffect(() => {
     if (labelsMenu) {

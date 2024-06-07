@@ -323,13 +323,15 @@ export default function MainCard({
         onDelete={handleDelete}
         disabled={disable}
       />
-      <AddTaskModal
-        isOpen={isOpenAddModal}
-        setIsOpen={setIsOpenAddModal}
-        ColumnId={id}
-        project_id={project_id}
-        callListApi={callListApi}
-      />
+      {isOpenAddModal && (
+        <AddTaskModal
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          ColumnId={id}
+          project_id={project_id}
+          callListApi={callListApi}
+        />
+      )}
     </div>
   );
 }
