@@ -128,14 +128,14 @@ export default function ItemCard({
                 priority === "Medium"
                   ? "bg-priorityMedium/[.18]"
                   : priority === "High"
-                  ? "bg-red/[.18]"
-                  : "bg-green/[.18]"
+                    ? "bg-red/[.18]"
+                    : "bg-green/[.18]"
               } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
                 priority === "Medium"
                   ? "text-priorityMedium"
                   : priority === "High"
-                  ? "text-red"
-                  : "text-green"
+                    ? "text-red"
+                    : "text-green"
               }`}
             >
               {priority}

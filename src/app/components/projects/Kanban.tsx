@@ -95,6 +95,7 @@ const Kanban = (props: IProps): JSX.Element => {
       project_id: id as string,
       task_start: 0,
       task_limit: task_limt,
+      project_column_id: 0,
     };
     try {
       const res = await dispatch(projectColumnList(payload));
