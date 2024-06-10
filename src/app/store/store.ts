@@ -22,6 +22,7 @@ import { agentGroupSlice } from "./Agent group";
 import { accManagerSlice } from "./AccountManager";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+import { projectSlice } from "./Projects";
 
 /**
  * The dynamic middleware instance.
@@ -30,9 +31,8 @@ const dynamicInstance = createDynamicMiddleware();
 
 export const { middleware: dynamicMiddleware } = dynamicInstance;
 
-export const addAppMiddleware = dynamicInstance.addMiddleware.withTypes<
-  Config
->();
+export const addAppMiddleware =
+  dynamicInstance.addMiddleware.withTypes<Config>();
 
 const middlewares: Middleware[] = [apiService.middleware, dynamicMiddleware];
 
@@ -68,14 +68,14 @@ const staticReducers: ReducersMapObject = {
   agent: agentSlice.reducer,
   agentGroup: agentGroupSlice.reducer,
   accManagerSlice: accManagerSlice.reducer,
+  project: projectSlice.reducer,
 };
 
 /**
  * The root reducer.
  */
-export const rootReducer = combineSlices(staticReducers).withLazyLoadedSlices<
-  LazyLoadedSlices
->();
+export const rootReducer =
+  combineSlices(staticReducers).withLazyLoadedSlices<LazyLoadedSlices>();
 
 /**
  * The type definition for the root state.
@@ -133,9 +133,8 @@ type Config = {
   dispatch: AppDispatch;
 };
 
-export const withAppMiddleware = dynamicInstance.withMiddleware.withTypes<
-  Config
->();
+export const withAppMiddleware =
+  dynamicInstance.withMiddleware.withTypes<Config>();
 
 const store = configureAppStore();
 

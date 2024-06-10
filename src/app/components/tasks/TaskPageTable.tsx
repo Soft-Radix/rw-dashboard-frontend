@@ -68,7 +68,8 @@ const rows = [
 function ThemePageTable(props) {
   const { tableSelectedItemDesign } = props;
   const theme: Theme = useTheme();
-  console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
+  // console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
+  
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -141,7 +142,7 @@ function ThemePageTable(props) {
                   <span className="p-2 cursor-pointer">
                     <EditIcon />
                   </span>
-                  <Link to={`/tasks/detail/5`}>
+                  <Link to={`/tasks/detail/9`}>
                     <span className="p-2 cursor-pointer">
                       <ArrowRightCircleIcon />
                     </span>

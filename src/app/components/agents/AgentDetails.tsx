@@ -56,13 +56,13 @@ export default function AgentDetails() {
   );
   // console.log(agentDetail.attachments, "agent");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [expandedImage, setExpandedImage] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
-
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [expandedImage, setExpandedImage] = useState(null);
   const handleImageClick = (imageUrl) => {
     if (expandedImage === imageUrl) {
       setExpandedImage(null); // If already expanded, close it
@@ -167,10 +167,10 @@ export default function AgentDetails() {
                           selectedItem === "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                             : selectedItem === "Cancelled"
-                            ? "text-[#F44336] bg-[#F443362E]"
-                            : selectedItem == "Pending"
-                            ? "text-[#FF5F15] bg-[#ffe2d5]"
-                            : "text-[#F0B402]  bg-[#FFEEBB]"
+                              ? "text-[#F44336] bg-[#F443362E]"
+                              : selectedItem == "Pending"
+                                ? "text-[#FF5F15] bg-[#ffe2d5]"
+                                : "text-[#F0B402]  bg-[#FFEEBB]"
                         }`}
                         endIcon={
                           <DownGreenIcon
@@ -178,10 +178,10 @@ export default function AgentDetails() {
                               selectedItem === "Active"
                                 ? "#4CAF50"
                                 : selectedItem === "Cancelled"
-                                ? "#F44336"
-                                : selectedItem == "Pending"
-                                ? "#FF5F15"
-                                : "#F0B402"
+                                  ? "#F44336"
+                                  : selectedItem == "Pending"
+                                    ? "#FF5F15"
+                                    : "#F0B402"
                             }
                           />
                         }
@@ -238,7 +238,7 @@ export default function AgentDetails() {
                     </div>
 
                     <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
-                      <div className="flex pr-10 gap-32 lg1:flex-row flex-col">
+                      <div className="flex pr-10 gap-32 lgsrc={task1}1:flex-row flex-col">
                         <div className="flex flex-col gap-5">
                           <span className="text-[#111827] text-[18px] font-500">
                             Email Address
