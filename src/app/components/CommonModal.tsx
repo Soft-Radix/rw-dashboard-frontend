@@ -86,7 +86,10 @@ export default function CommonModal({
             <CrossIcon
               className="cursor-pointer"
               color="#fff"
-              onClick={handleToggle}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggle(e);
+              }}
             />
           </IconButton>
         </div>
@@ -104,8 +107,13 @@ export default function CommonModal({
         <Button
           variant="contained"
           color="secondary"
-          className={`${disabled ? "btn-disable" : ""} w-[156px] h-[48px] text-[18px]`}
-          onClick={onSubmit}
+          className={`${
+            disabled ? "btn-disable" : ""
+          } w-[156px] h-[48px] text-[18px]`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSubmit();
+          }}
           disabled={!isValid || disabled}
         >
           {btnTitle}
@@ -114,8 +122,13 @@ export default function CommonModal({
           variant="outlined"
           disabled={disabled}
           color="secondary"
-          className={`${disabled ? "btn-disable-light" : ""} w-[156px] h-[48px] text-[18px] ml-14`}
-          onClick={handleToggle}
+          className={`${
+            disabled ? "btn-disable-light" : ""
+          } w-[156px] h-[48px] text-[18px] ml-14`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle(e);
+          }}
         >
           {closeTitle}
         </Button>

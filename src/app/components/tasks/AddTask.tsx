@@ -691,7 +691,6 @@ function AddTaskModal({
     }
   };
 
-  console.log("=-0987===", calenderOpen);
   return (
     <CommonModal
       open={isOpen}

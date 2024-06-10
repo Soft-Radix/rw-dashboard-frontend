@@ -68,7 +68,10 @@ export default function ActionModal({
           variant="contained"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px]"
-          onClick={onDelete}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
           disabled={disabled}
         >
           Yes
@@ -77,7 +80,10 @@ export default function ActionModal({
           variant="outlined"
           color="secondary"
           className="w-[156px] h-[48px] text-[18px] ml-10"
-          onClick={handleToggle}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle();
+          }}
           disabled={disabled}
         >
           Cancel
