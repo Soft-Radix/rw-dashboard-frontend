@@ -37,6 +37,7 @@ type ModalType = {
   headerBgColor?: string;
   titleColor?: string;
   isValid?: boolean;
+  isHeaderDisplay?: boolean;
 };
 
 export default function CommonModal({
@@ -54,11 +55,16 @@ export default function CommonModal({
   headerBgColor,
   titleColor,
   isValid = true,
+  isHeaderDisplay,
 }: ModalType) {
   return (
     <StylesDialog
       aria-labelledby="customized-dialog-title"
       open={open}
+      onClose={(e: any) => {
+        e.stopPropagation();
+        handleToggle(e);
+      }}
       sx={{
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
@@ -73,7 +79,7 @@ export default function CommonModal({
         <div
           className={`p-16 flex justify-between w-full items-center ${
             headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"
-          } `}
+          } ${isHeaderDisplay ? "hidden" : ""}`}
         >
           <Typography
             className={`text-[16px] font-semibold" ${
@@ -96,7 +102,10 @@ export default function CommonModal({
       ) : (
         <IconButton
           className="flex items-center justify-end pt-20 pr-20 rounded-none "
-          onClick={handleToggle}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle(e);
+          }}
         >
           <CrossIcon className="cursor-pointer" color="#9DA0A6" />
         </IconButton>

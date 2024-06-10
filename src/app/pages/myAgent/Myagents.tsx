@@ -33,7 +33,7 @@ import SearchInput from "src/app/components/SearchInput";
 import { debounce } from "lodash";
 import { filterType } from "app/store/Client/Interface";
 import { GetAssignAgentsInfo } from "app/store/Client";
-import { ClientRootState } from "app/store/Projects/Interface";
+import { ClientRootState } from "app/store/Client/Interface";
 
 export default function Myagents() {
   const agentState = useSelector((store: ClientRootState) => store.client);
@@ -218,8 +218,8 @@ export default function Myagents() {
                     row.status === "Completed"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status === "In Progress"
-                      ? "text-[#F44336] bg-[#F443362E]"
-                      : "text-[#4CAF50] bg-[#4CAF502E]"
+                        ? "text-[#F44336] bg-[#F443362E]"
+                        : "text-[#4CAF50] bg-[#4CAF502E]"
                   }`}
                     >
                       {row.status || "Active"}

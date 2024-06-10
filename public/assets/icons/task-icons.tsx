@@ -121,3 +121,38 @@ export const ImportantTaskIcon: React.FC<SVGProps<SVGSVGElement>> = () => (
     />
   </svg>
 );
+
+export const TaskDelete: React.FC<SVGProps<SVGSVGElement>> = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="11.5"
+      fill="white"
+      fill-opacity="0.36"
+      stroke="#F44336"
+    />
+    <path
+      d="M15 8.4H18V9.6H16.8V17.4C16.8 17.5591 16.7368 17.7117 16.6243 17.8243C16.5117 17.9368 16.3591 18 16.2 18H7.8C7.64087 18 7.48826 17.9368 7.37574 17.8243C7.26321 17.7117 7.2 17.5591 7.2 17.4V9.6H6V8.4H9V6.6C9 6.44087 9.06321 6.28826 9.17574 6.17574C9.28826 6.06321 9.44087 6 9.6 6H14.4C14.5591 6 14.7117 6.06321 14.8243 6.17574C14.9368 6.28826 15 6.44087 15 6.6V8.4ZM15.6 9.6H8.4V16.8H15.6V9.6ZM10.2 11.4H11.4V15H10.2V11.4ZM12.6 11.4H13.8V15H12.6V11.4ZM10.2 7.2V8.4H13.8V7.2H10.2Z"
+      fill="#F44336"
+    />
+  </svg>
+);
+
+export const RightBorder: React.FC<SVGProps<SVGSVGElement>> = () => (
+  <svg
+    width="1"
+    height="70"
+    viewBox="0 0 1 70"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <line x1="0.5" y1="-2.18557e-08" x2="0.500003" y2="70" stroke="#EDF2F6" />
+  </svg>
+);

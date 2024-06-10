@@ -66,6 +66,7 @@ export interface clientIDType {
   agent_id?: Number | string;
   account_manager_id?: number[];
   account_manager_ids?: number[];
+  task_id?: number;
 }
 
 // Type for the payload that updateProfile expects
