@@ -236,6 +236,37 @@ export const projectColumnMove: any = createAsyncThunk(
     };
   }
 );
+
+export const projectTaskMove: any = createAsyncThunk(
+  "project/task/sort",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/task/sort`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const projectTaskMoveCol: any = createAsyncThunk(
+  "project/task/move-in-column",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/task/move-in-column`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */

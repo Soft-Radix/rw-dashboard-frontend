@@ -21,6 +21,8 @@ import {
   projectColumnList,
   projectColumnMove,
 } from "app/store/Projects";
+import CombinedDragDrop from "./Combined";
+import DragLayout from "../dashboard/DragLayout";
 
 interface IProps {
   isOpen?: boolean;
@@ -31,6 +33,7 @@ interface IProps {
   setId?: Dispatch<SetStateAction<number | null>>;
   isEditing?: boolean;
   id?: number | null;
+  isCombineEnabled?: false;
 }
 
 const Kanban = (props: IProps): JSX.Element => {
@@ -42,6 +45,7 @@ const Kanban = (props: IProps): JSX.Element => {
     setIsEditing,
     fetchUpdateData,
     setId,
+    isCombineEnabled,
   } = props;
   const [columnList, setColumnList] = useState<any[]>([]);
   const dispatch = useAppDispatch();
@@ -87,7 +91,7 @@ const Kanban = (props: IProps): JSX.Element => {
     setAddCard(!addCard);
   };
 
-  const listData = async (task_limt) => {
+  const listData = async (task_limt, columnid = 0) => {
     const payload: any = {
       start: 0,
       limit: 10,
@@ -95,16 +99,40 @@ const Kanban = (props: IProps): JSX.Element => {
       project_id: id as string,
       task_start: 0,
       task_limit: task_limt,
-      project_column_id: 0,
+      project_column_id: columnid,
     };
     try {
       const res = await dispatch(projectColumnList(payload));
-      setColumnList(res?.payload?.data?.data?.list);
+      // setColumnList(res?.payload?.data?.data?.list);
+      const updatedList = res?.payload?.data?.data?.list;
+
+      if (columnid != 0) {
+        // If columnId is provided, find the column with that id
+        const columnObject = updatedList.find((item) => item.id == columnid);
+        const columnIndex = columnList.findIndex(
+          (column) => column.id == columnid
+        );
+        if (columnIndex !== -1) {
+          // If column is found, update its tasks
+          const updatedColumn = {
+            ...columnList[columnIndex],
+            tasks: columnObject?.tasks,
+          };
+          // Update the columnList state with the updated column
+          setColumnList((prevColumnList) => {
+            const updatedColumns = [...prevColumnList];
+            updatedColumns[columnIndex].tasks = updatedColumn?.tasks;
+            return updatedColumns;
+          });
+        }
+      } else {
+        // If columnId is 0, update the entire columnList
+        setColumnList(updatedList);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-
   const moveColumns = async (payload: {
     project_id: string;
     column_ids: any[];
@@ -136,8 +164,8 @@ const Kanban = (props: IProps): JSX.Element => {
     };
 
     try {
-      setColumnList(reorderedColumns); // Update the state with the new column order
-      await moveColumns(payload); // Call the moveColumns function with the correct payload
+      setColumnList(reorderedColumns);
+      await moveColumns(payload);
     } catch (error) {
       console.error("Error moving column:", error);
     }
@@ -172,17 +200,24 @@ const Kanban = (props: IProps): JSX.Element => {
       <div className="px-20 mb-20">
         <FilterPage filterDesign={true} />
       </div>
+
       <div
         className={`flex ${
           columnList?.length > 0 ? "gap-20" : ""
         } overflow-x-auto px-28 pb-28 items-start`}
       >
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable droppableId="droppable" direction="horizontal">
+        <DragLayout columnList={columnList} callListApi={listData} id={id} />
+        {/* <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable
+            droppableId="droppable"
+            direction="horizontal"
+            isCombineEnabled={isCombineEnabled}
+          >
             {(provided) => (
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
+                {...provided.droppableProps}
                 className={`flex  ${columnList?.length > 0 ? "gap-20" : ""}`}
               >
                 {columnList?.map((item, index) => (
@@ -215,7 +250,7 @@ const Kanban = (props: IProps): JSX.Element => {
               </div>
             )}
           </Droppable>
-        </DragDropContext>
+        </DragDropContext> */}
 
         <div className="min-w-[322px] bg-white p-14 py-[20px] rounded-lg shadow-md">
           {!addCard && (
