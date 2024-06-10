@@ -29,6 +29,7 @@ type MainCardType = {
   dataListLength?: any;
   tasks?: any[];
   project_id?: number | string;
+  key?: any;
 };
 import {
   DragDropContext,
@@ -47,6 +48,7 @@ export default function MainCard({
   dataListLength,
   tasks,
   project_id,
+  key,
 }: MainCardType) {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalTitle, setOriginalTitle] = useState(title);
@@ -64,6 +66,7 @@ export default function MainCard({
   const [isFetching, setIsFetching] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
+  const [scrolledDivId, setScrolledDivId] = useState(null);
   const [disable, setDisabled] = useState(false);
   const [List, setList] = useState(null);
 
@@ -145,12 +148,8 @@ export default function MainCard({
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
 
-    // Update your state or perform any action you need here
-    console.log("Updated items: ", items);
-
     setList(items);
   };
-
   const scrollRef = useRef(null);
   const handleScroll = useCallback(
     debounce(() => {
@@ -159,23 +158,24 @@ export default function MainCard({
         if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
           // Increased threshold
           setIsFetching(true);
-          callListApi(4).finally(() => {
+          callListApi(4, 124).finally(() => {
             setIsFetching(false);
           });
         }
       }
-    }, 300),
+    }, 300), // Adjust debounce delay as needed
     [isFetching]
   );
 
+  // Effect to attach scroll event listener when component mounts
   useEffect(() => {
-    const ref = scrollRef.current;
-    if (ref) {
-      ref.addEventListener("scroll", handleScroll);
+    const scrolledElement = scrollRef.current;
+    if (scrolledElement) {
+      scrolledElement.addEventListener("scroll", handleScroll);
     }
     return () => {
-      if (ref) {
-        ref.removeEventListener("scroll", handleScroll);
+      if (scrolledElement) {
+        scrolledElement.removeEventListener("scroll", handleScroll);
       }
     };
   }, [handleScroll]);
@@ -239,7 +239,7 @@ export default function MainCard({
           className="py-20 flex flex-col gap-14 max-h-[300px] overflow-auto"
           ref={scrollRef}
         >
-          {tasks.length == 0 ? (
+          {tasks?.length == 0 ? (
             <>
               <div className="bg-[#F7F9FB] p-14 rounded-md border flex items-center flex-col">
                 <Typography
