@@ -37,6 +37,7 @@ type ModalType = {
   headerBgColor?: string;
   titleColor?: string;
   isValid?: boolean;
+  isHeaderDisplay?: boolean;
 };
 
 export default function CommonModal({
@@ -54,6 +55,7 @@ export default function CommonModal({
   headerBgColor,
   titleColor,
   isValid = true,
+  isHeaderDisplay,
 }: ModalType) {
   return (
     <StylesDialog
@@ -73,7 +75,7 @@ export default function CommonModal({
         <div
           className={`p-16 flex justify-between w-full items-center ${
             headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"
-          } `}
+          } ${isHeaderDisplay ? "hidden" : ""}`}
         >
           <Typography
             className={`text-[16px] font-semibold" ${
