@@ -535,9 +535,9 @@ function AddTaskModal({
   const EditDetails = () => {
     dispatch(TaskDetails(ColumnId)).then((res) => {
       const data = res?.payload?.data?.data;
-      const remindersDateTime = data?.reminders.split("T");
-      const date = remindersDateTime[0]; // Extract the date component
-      const time = remindersDateTime[1].split(".")[0];
+      // const remindersDateTime = data?.reminders.split("T");
+      // const date = remindersDateTime[0]; // Extract the date component
+      // const time = remindersDateTime[1].split(".")[0];
       if (data?.screen_record_file != "") {
         setShowVideo(true);
       } else {
@@ -551,8 +551,8 @@ function AddTaskModal({
 
       formik.setFieldValue("title", data.title);
       formik.setFieldValue("description", data.description);
-      formik.setFieldValue("date", date);
-      formik.setFieldValue("time", time);
+      formik.setFieldValue("date", "");
+      formik.setFieldValue("time", "");
       setSavedAudioURL(
         data?.voice_record_file && urlForImage + data.voice_record_file
       );

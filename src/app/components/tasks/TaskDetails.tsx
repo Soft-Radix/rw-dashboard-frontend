@@ -45,6 +45,7 @@ import {
 } from "public/assets/icons/supportIcons";
 import DeleteClient from "../client/DeleteClient";
 import ActionModal from "../ActionModal";
+import toast from "react-hot-toast";
 
 const TaskDetails = () => {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -71,6 +72,7 @@ const TaskDetails = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+  const [disable, setDisabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -89,21 +91,7 @@ const TaskDetails = () => {
     }
     setOpenEditModal(!openEditModal);
   };
-  // useEffect(() => {
-  //   const getMedia = async () => {
-  //     try {
-  //       const stream = await navigator.mediaDevices.getUserMedia({
-  //         audio: true,
-  //       });
-  //       const recorder = new MediaRecorder(stream);
-  //       setMediaRecorder(recorder);
-  //     } catch (err) {
-  //       console.error("Error accessing media devices.", err);
-  //     }
-  //   };
 
-  //   getMedia();
-  // }, []);
   useEffect(() => {
     if (!taskId) return null;
     dispatch(getTaskDetails(taskId));
@@ -116,6 +104,7 @@ const TaskDetails = () => {
     // }
     // setIsOpenDeletedModal(false);
   };
+
   const handleImageClick = (imageUrl) => {
     if (expandedImage === imageUrl) {
       setExpandedImage(null); // If already expanded, close it
@@ -124,21 +113,25 @@ const TaskDetails = () => {
     }
   };
   const handleDelete = () => {
-    // if (taskId) {
-    //   setDisabled(true);
-    //   dispatch(deleteTask(taskId))
-    //     .unwrap()
-    //     .then((res) => {
-    //       if (res?.data?.status == 1) {
-    //         setOpenDeleteModal(false);
-    //         callListApi(2);
-    //         toast.success(res?.data?.message, {
-    //           duration: 4000,
-    //         });
-    //         setDisabled(false);
-    //       }
-    //     });
-    // }
+    if (taskId) {
+      setDisabled(true);
+      dispatch(deleteTask(taskId))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            setOpenDeleteModal(false);
+            callListApi(2);
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+            setDisabled(false);
+          }
+        });
+    }
+  };
+  const callListApi = (param: number) => {
+    console.log("callListApi called with param:", param);
+    // Add actual logic here
   };
   return (
     <div>
@@ -460,7 +453,7 @@ const TaskDetails = () => {
             isOpen={isOpenAddModal}
             setIsOpen={setIsOpenAddModal}
             ColumnId={taskId}
-            // callListApi={callListApi}
+            callListApi={callListApi}
             Edit
           />
         )}
