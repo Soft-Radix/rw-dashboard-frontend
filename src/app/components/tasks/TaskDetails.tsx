@@ -284,10 +284,10 @@ const TaskDetails = () => {
                     </div>
                     <div className="flex -space-x-2 mt-10">
                       {taskDetailInfo?.assigned_task_users?.map((item) => {
-                        console.log(item, "itemmmm");
+                        // console.log(item, "itemmmm");
                         return (
                           <img
-                            className="w-24 h-24 rounded-full border-2 border-white"
+                            className="w-28 h-28 rounded-full border-2 border-white"
                             src={
                               item.user_image
                                 ? urlForImage + item.user_image
@@ -376,30 +376,29 @@ const TaskDetails = () => {
 
                 <div>
                   <Typography className="mb-10">Voice Memo</Typography>
-                  <div className="my-10 flex flex-col gap-[10px] audio-container ">
-                    <div
+                  {/* <div className="my-10 flex flex-col gap-[10px] audio-container "> */}
+                  {/* <div
                       className="my-10 flex  gap-[10px] "
                       style={{ alignItems: "center" }}
-                    >
-                      {/* {recordingAudio ? ( */}
-                      {/* <img
+                    > */}
+                  {/* {recordingAudio ? ( */}
+                  {/* <img
                         src="../assets/images/logo/play2.svg"
                         alt="play"
                         // onClick={handleAudioRecord} */}
-                      {/* ></img> */}
-                      {/* ) : ( */}
-                      <img
+                  {/* ></img> */}
+                  {/* ) : ( */}
+                  {/* <img
                         src="../assets/images/logo/pause.svg"
                         alt="pause"
                         // onClick={handleAudioRecord}
                       ></img>
                       {/* )} */}
-                      <p className="text-[#9DA0A6]">
-                        {" "}
-                        {formatTime(recordingTime)}
-                      </p>
-                    </div>
-                  </div>
+                  {/* <p className="text-[#9DA0A6]"> */}{" "}
+                  {/* {formatTime(recordingTime)} */}
+                  {/* </p> */}
+                  {/* </div> */}
+                  {/* </div> */}
                 </div>
                 <audio controls>
                   <source
@@ -460,7 +459,7 @@ const TaskDetails = () => {
           <AddTaskModal
             isOpen={isOpenAddModal}
             setIsOpen={setIsOpenAddModal}
-            // taskId={id}
+            ColumnId={taskId}
             // callListApi={callListApi}
             Edit
           />
