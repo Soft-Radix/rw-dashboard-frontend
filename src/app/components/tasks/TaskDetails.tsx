@@ -45,6 +45,7 @@ import {
 } from "public/assets/icons/supportIcons";
 import DeleteClient from "../client/DeleteClient";
 import ActionModal from "../ActionModal";
+import toast from "react-hot-toast";
 
 const TaskDetails = () => {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -71,6 +72,7 @@ const TaskDetails = () => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+  const [disable, setDisabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: any) => {
@@ -89,21 +91,7 @@ const TaskDetails = () => {
     }
     setOpenEditModal(!openEditModal);
   };
-  // useEffect(() => {
-  //   const getMedia = async () => {
-  //     try {
-  //       const stream = await navigator.mediaDevices.getUserMedia({
-  //         audio: true,
-  //       });
-  //       const recorder = new MediaRecorder(stream);
-  //       setMediaRecorder(recorder);
-  //     } catch (err) {
-  //       console.error("Error accessing media devices.", err);
-  //     }
-  //   };
 
-  //   getMedia();
-  // }, []);
   useEffect(() => {
     if (!taskId) return null;
     dispatch(getTaskDetails(taskId));
@@ -116,6 +104,7 @@ const TaskDetails = () => {
     // }
     // setIsOpenDeletedModal(false);
   };
+
   const handleImageClick = (imageUrl) => {
     if (expandedImage === imageUrl) {
       setExpandedImage(null); // If already expanded, close it
@@ -124,21 +113,25 @@ const TaskDetails = () => {
     }
   };
   const handleDelete = () => {
-    // if (taskId) {
-    //   setDisabled(true);
-    //   dispatch(deleteTask(taskId))
-    //     .unwrap()
-    //     .then((res) => {
-    //       if (res?.data?.status == 1) {
-    //         setOpenDeleteModal(false);
-    //         callListApi(2);
-    //         toast.success(res?.data?.message, {
-    //           duration: 4000,
-    //         });
-    //         setDisabled(false);
-    //       }
-    //     });
-    // }
+    if (taskId) {
+      setDisabled(true);
+      dispatch(deleteTask(taskId))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            setOpenDeleteModal(false);
+            callListApi(2);
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+            setDisabled(false);
+          }
+        });
+    }
+  };
+  const callListApi = (param: number) => {
+    console.log("callListApi called with param:", param);
+    // Add actual logic here
   };
   return (
     <div>
@@ -284,10 +277,10 @@ const TaskDetails = () => {
                     </div>
                     <div className="flex -space-x-2 mt-10">
                       {taskDetailInfo?.assigned_task_users?.map((item) => {
-                        console.log(item, "itemmmm");
+                        // console.log(item, "itemmmm");
                         return (
                           <img
-                            className="w-24 h-24 rounded-full border-2 border-white"
+                            className="w-28 h-28 rounded-full border-2 border-white"
                             src={
                               item.user_image
                                 ? urlForImage + item.user_image
@@ -376,30 +369,29 @@ const TaskDetails = () => {
 
                 <div>
                   <Typography className="mb-10">Voice Memo</Typography>
-                  <div className="my-10 flex flex-col gap-[10px] audio-container ">
-                    <div
+                  {/* <div className="my-10 flex flex-col gap-[10px] audio-container "> */}
+                  {/* <div
                       className="my-10 flex  gap-[10px] "
                       style={{ alignItems: "center" }}
-                    >
-                      {/* {recordingAudio ? ( */}
-                      {/* <img
+                    > */}
+                  {/* {recordingAudio ? ( */}
+                  {/* <img
                         src="../assets/images/logo/play2.svg"
                         alt="play"
                         // onClick={handleAudioRecord} */}
-                      {/* ></img> */}
-                      {/* ) : ( */}
-                      <img
+                  {/* ></img> */}
+                  {/* ) : ( */}
+                  {/* <img
                         src="../assets/images/logo/pause.svg"
                         alt="pause"
                         // onClick={handleAudioRecord}
                       ></img>
                       {/* )} */}
-                      <p className="text-[#9DA0A6]">
-                        {" "}
-                        {formatTime(recordingTime)}
-                      </p>
-                    </div>
-                  </div>
+                  {/* <p className="text-[#9DA0A6]"> */}{" "}
+                  {/* {formatTime(recordingTime)} */}
+                  {/* </p> */}
+                  {/* </div> */}
+                  {/* </div> */}
                 </div>
                 <audio controls>
                   <source
@@ -460,8 +452,8 @@ const TaskDetails = () => {
           <AddTaskModal
             isOpen={isOpenAddModal}
             setIsOpen={setIsOpenAddModal}
-            // taskId={id}
-            // callListApi={callListApi}
+            ColumnId={taskId}
+            callListApi={callListApi}
             Edit
           />
         )}
