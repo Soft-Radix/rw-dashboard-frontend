@@ -22,6 +22,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import store from "./store/store";
 import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
+import { ChatProvider } from "./chatContext/ChatProvider";
 
 // import axios from 'axios';
 /**
@@ -74,16 +75,18 @@ function App() {
           >
             <FuseTheme theme={mainTheme} direction={langDirection}>
               <AuthRouteProvider>
-                <FuseLayout layouts={themeLayouts} />
-                <Toaster
-                  position="top-center"
-                  reverseOrder={false}
-                  toastOptions={{
-                    style: {
-                      zIndex: 9999, // Set z-index to your desired value
-                    },
-                  }}
-                />
+                <ChatProvider>
+                  <FuseLayout layouts={themeLayouts} />
+                  <Toaster
+                    position="top-center"
+                    reverseOrder={false}
+                    toastOptions={{
+                      style: {
+                        zIndex: 9999, // Set z-index to your desired value
+                      },
+                    }}
+                  />
+                </ChatProvider>
               </AuthRouteProvider>
             </FuseTheme>
           </CacheProvider>
