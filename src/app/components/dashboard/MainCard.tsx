@@ -5,7 +5,7 @@ import {
   PlusIcon,
   ThreeDotsIcon,
 } from "public/assets/icons/dashboardIcons";
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useRef, useState } from "react";
 import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import ItemCard from "./ItemCard";
@@ -36,6 +36,7 @@ import {
   Draggable,
   DropResult,
 } from "react-beautiful-dnd";
+import { debounce } from "lodash";
 
 export default function MainCard({
   title,
@@ -60,6 +61,7 @@ export default function MainCard({
   };
   const dispatch = useDispatch();
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
   const [disable, setDisabled] = useState(false);
@@ -149,6 +151,35 @@ export default function MainCard({
     setList(items);
   };
 
+  const scrollRef = useRef(null);
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (scrollRef.current) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
+          // Increased threshold
+          setIsFetching(true);
+          callListApi(4).finally(() => {
+            setIsFetching(false);
+          });
+        }
+      }
+    }, 300),
+    [isFetching]
+  );
+
+  useEffect(() => {
+    const ref = scrollRef.current;
+    if (ref) {
+      ref.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (ref) {
+        ref.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [handleScroll]);
+
   return (
     <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px]">
       <div>
@@ -204,7 +235,10 @@ export default function MainCard({
         <Typography color="primary.light">
           Please review your to-do list below.
         </Typography>
-        <div className="py-20 flex flex-col gap-14">
+        <div
+          className="py-20 flex flex-col gap-14 max-h-[300px] overflow-auto"
+          ref={scrollRef}
+        >
           {tasks.length == 0 ? (
             <>
               <div className="bg-[#F7F9FB] p-14 rounded-md border flex items-center flex-col">
