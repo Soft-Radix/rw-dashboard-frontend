@@ -393,6 +393,10 @@ function AddTaskModal({
     setAudioURL("");
     setSavedAudioURL("");
   };
+  const handleRemoveFile = (file: File) => {
+    const filteredFiles = uploadedFiles.filter((f) => f !== file);
+    setUploadedFiles(filteredFiles);
+  };
 
   const handleReset = () => {
     setIsOpen(false);
@@ -1245,7 +1249,7 @@ function AddTaskModal({
                 <label
                   htmlFor="attachment"
                   className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
-            justify-between cursor-pointer"
+               justify-between cursor-pointer"
                   // onClick={() => handleUploadFile()}
                 >
                   <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
@@ -1267,14 +1271,15 @@ function AddTaskModal({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} className="relative">
             <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 border-solid border-[#4F46E5]">
               File
             </FormLabel>
             <label
               htmlFor="fileattachment"
-              className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
-            justify-between cursor-pointer"
+              className="bg-[#EDEDFC] px-20  border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] 
+              flex items-center 
+             justify-between cursor-pointer mb-10"
               // onClick={() => handleUploadFile()}
             >
               <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
@@ -1292,23 +1297,20 @@ function AddTaskModal({
                 <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 items-center justify-center absolute">
               {uploadedFiles?.map((file, index) => (
                 <div
                   key={index}
                   className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
                 >
-                  <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer">
+                  <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer w-full">
                     <span className="mr-4">
                       <PreviewIcon />
                     </span>
                     <span className="text-[16px] text-[#4F46E5] py-5 mr-3">
                       {file.name}
                     </span>
-                    <span
-                    // onClick={() =>
-                    //    handleRemoveFile(file)}
-                    >
+                    <span onClick={() => handleRemoveFile(file)}>
                       <CrossGreyIcon />
                     </span>
                   </div>

@@ -173,8 +173,8 @@ const DragLayout = ({ columnList, callListApi, id }) => {
             {starter.columnOrder.map((columnId, index) => {
               const column = starter.columns[columnId];
 
-              const tasks = column.taskIds.map(
-                (taskId) => starter.tasks[taskId]
+              const tasks = column?.taskIds.map(
+                (taskId) => starter?.tasks[taskId]
               );
               const firstTaskId = Object.keys(starter.tasks)[0];
               const project_id = starter?.tasks[firstTaskId]?.project_id;
@@ -182,7 +182,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
               return (
                 <MainCard
                   index={index}
-                  key={column.id}
+                  key={column?.id}
                   column={column}
                   tasks={tasks}
                   id={column?.id}

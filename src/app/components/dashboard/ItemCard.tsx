@@ -7,7 +7,6 @@ import {
   Tooltip,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-
 import moment from "moment";
 import { ThreeDotsIcon } from "public/assets/icons/dashboardIcons";
 import { MouseEvent, useEffect, useRef, useState } from "react";
@@ -21,7 +20,6 @@ import { debounce } from "lodash";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Draggable } from "react-beautiful-dnd";
 // import { CalendarIcon } from "public/assets/icons/dashboardIcons";
-
 type CardType = {
   title: string;
   priority: string;
@@ -34,7 +32,6 @@ type CardType = {
   index?: any;
   project_id?: any;
 };
-
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef(null);
@@ -44,7 +41,6 @@ export const TruncateText = ({ text, maxWidth }) => {
       setIsTruncated(textWidth > maxWidth);
     }
   }, [text, maxWidth]);
-
   return (
     <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
       <Typography
@@ -63,7 +59,6 @@ export const TruncateText = ({ text, maxWidth }) => {
     </Tooltip>
   );
 };
-
 export default function ItemCard({
   title,
   priority,
@@ -81,7 +76,6 @@ export default function ItemCard({
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const projectid = useParams<{ id: string }>();
-
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -89,7 +83,6 @@ export default function ItemCard({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -123,7 +116,6 @@ export default function ItemCard({
         });
     }
   };
-
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -239,14 +231,14 @@ export default function ItemCard({
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                            ? "bg-red/[.18]"
-                            : "bg-green/[.18]"
+                              ? "bg-red/[.18]"
+                              : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                            ? "text-red"
-                            : "text-green"
+                              ? "text-red"
+                              : "text-green"
                         }`}
                       >
                         {priority}
