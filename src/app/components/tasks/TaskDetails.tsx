@@ -214,7 +214,7 @@ const TaskDetails = () => {
                     <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20">
                       {/* {agentDetail?.status || "N/A"} */}
                       <ImportantTaskIcon />
-                      Important Task
+                      {taskDetailInfo?.labels}
                     </Button>
                     {/* <div className="flex justify-between gap-10 items-center"> */}
 

@@ -1271,7 +1271,7 @@ function AddTaskModal({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item md={6} className="">
+          <Grid item md={6} className="relative">
             <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 border-solid border-[#4F46E5]">
               File
             </FormLabel>
@@ -1297,7 +1297,7 @@ function AddTaskModal({
                 <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
-            <div className="flex flex-wrap gap-2 items-center justify-center">
+            <div className="flex flex-wrap gap-2 items-center justify-center absolute">
               {uploadedFiles?.map((file, index) => (
                 <div
                   key={index}
