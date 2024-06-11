@@ -92,7 +92,7 @@ const ManagerProfile = () => {
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                   <img
                     src={
-                      accManagerDetail.user_image
+                      accManagerDetail?.user_image
                         ? urlForImage + accManagerDetail.user_image
                         : "../assets/images/logo/images.jpeg"
                     }

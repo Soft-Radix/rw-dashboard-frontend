@@ -21,6 +21,7 @@ import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
 import PasswordManagerConfig from "../pages/password-manager/passwordManagerConfig";
 import SharedFilesConfig from "../pages/shared-files/sharedFilesConfig";
+import ChatBoardConfig from "../pages/chatBoard/chatBoardConfig";
 import BillingConfig, {
   AdminBillingConfig,
 } from "../pages/billing/billingConfig";
@@ -76,6 +77,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   VerificationConfig,
   SucessConfig,
   CancelConfig,
+  ChatBoardConfig
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [
@@ -98,6 +100,7 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   ClientOnBoardConfig,
   PasswordManagerConfig,
   SharedFilesConfig,
+  ChatBoardConfig,
   clientSettingConfig,
   BillingConfig,
   SupportConfig,

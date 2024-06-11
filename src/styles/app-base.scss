@@ -427,3 +427,18 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
 .audio-controls {
   margin-top: 10px;
 }
+
+.chatboard > .cc-tabs > .cc-tab-list {
+  height: 60px !important;
+  width: 270px !important;
+  background-color: #ffffff !important;
+  bottom: 0px !important;
+
+  .cc-tab-item__wrapper {
+    justify-content: space-around !important;
+  }
+}
+
+.cc-conversations > .cc-list > .cc-list__content {
+  padding-bottom: 80px !important;
+}
