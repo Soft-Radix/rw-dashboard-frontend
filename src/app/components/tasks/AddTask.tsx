@@ -1272,7 +1272,7 @@ function AddTaskModal({
             justify-between cursor-pointer"
               // onClick={() => handleUploadFile()}
             >
-              <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
+              <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer mb-20">
                 Upload File
                 <input
                   type="file"

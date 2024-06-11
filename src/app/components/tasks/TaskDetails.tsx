@@ -15,7 +15,7 @@ import AddTaskModal from "src/app/components/tasks/AddTask";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import RecentData from "../../components/client/clientAgent/RecentData";
 import { Clock, DownGreenIcon, Token } from "public/assets/icons/common";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getAgentInfo } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
@@ -75,6 +75,7 @@ const TaskDetails = () => {
   const [disable, setDisabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -96,6 +97,7 @@ const TaskDetails = () => {
     if (!taskId) return null;
     dispatch(getTaskDetails(taskId));
   }, [dispatch]);
+  
   const handleDeleteAttachment = async (id: number) => {
     // const { payload } = await dispatch(deleteAttachment({ attachment_id: id }));
     // // console.log(payload, "kklkkkl");
@@ -115,22 +117,13 @@ const TaskDetails = () => {
   const handleDelete = () => {
     if (taskId) {
       setDisabled(true);
-      dispatch(deleteTask(taskId))
-        .unwrap()
-        .then((res) => {
-          if (res?.data?.status == 1) {
-            setOpenDeleteModal(false);
-            callListApi(2);
-            toast.success(res?.data?.message, {
-              duration: 4000,
-            });
-            setDisabled(false);
-          }
-        });
+      dispatch(deleteTask(taskId));
+      navigate("/projects");
     }
   };
   const callListApi = (param: number) => {
     console.log("callListApi called with param:", param);
+    dispatch(getTaskDetails(taskId));
     // Add actual logic here
   };
   return (
@@ -275,18 +268,19 @@ const TaskDetails = () => {
                     <div className="w-1/4 text-[#757982] font-500">
                       Assignees
                     </div>
-                    <div className="flex -space-x-2 mt-10">
+                    <div className="flex -space-x-2 mt-10 ">
                       {taskDetailInfo?.assigned_task_users?.map((item) => {
                         // console.log(item, "itemmmm");
                         return (
                           <img
-                            className="w-28 h-28 rounded-full border-2 border-white"
+                            className="w-28 h-28 rounded-full border-2 border-white mr-[-5px]"
                             src={
                               item.user_image
                                 ? urlForImage + item.user_image
                                 : "../assets/images/logo/images.jpeg"
                             }
                             alt="User 1"
+                            style={{ marginRight: "-5px" }}
                           />
                         );
                       })}
@@ -295,7 +289,7 @@ const TaskDetails = () => {
                 </div>
 
                 <div className="flex gap-20 my-20 w-full">
-                  <div className="relative w-1/2">
+                  <div className="relative w-1/2 ">
                     <Typography className="mb-10">Files</Typography>
                     {taskDetailInfo?.task_files?.map((item) => {
                       // console.log(item, "itemmmm");
@@ -305,7 +299,7 @@ const TaskDetails = () => {
                             <img
                               src={urlForImage + item.file}
                               alt=""
-                              className="block w-full h-[200px]"
+                              className="w-full h-[200px]"
                             />
                             <div
                               className="absolute top-7 left-7"
