@@ -39,6 +39,8 @@ import AddSubTaskModal from "./AddSubTaskModal";
 import { deleteTask, TaskDetails as getTaskDetails } from "app/store/Projects";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { LiveAudioVisualizer } from "react-audio-visualize";
+
+import { useVoiceVisualizer, VoiceVisualizer } from "react-voice-visualizer";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
@@ -54,6 +56,7 @@ const TaskDetails = () => {
   const { taskDetailInfo } = useSelector(
     (store: ProjectRootState) => store.project
   );
+
   // console.log(" TaskDetail", taskDetailInfo);
   const formatTime = (time: any) => {
     const minutes = Math.floor(time / 60);
@@ -97,7 +100,6 @@ const TaskDetails = () => {
     if (!taskId) return null;
     dispatch(getTaskDetails(taskId));
   }, [dispatch]);
-  
   const handleDeleteAttachment = async (id: number) => {
     // const { payload } = await dispatch(deleteAttachment({ attachment_id: id }));
     // // console.log(payload, "kklkkkl");
@@ -118,7 +120,21 @@ const TaskDetails = () => {
     if (taskId) {
       setDisabled(true);
       dispatch(deleteTask(taskId));
-      navigate("/projects");
+      navigate(
+        `/projects/${taskDetailInfo.project_id}/${taskDetailInfo.project_name}`
+      );
+      // .unwrap()
+      // .then((res) => {
+      //   if (res?.data?.status == 1) {
+      //     setOpenDeleteModal(false);
+      //     callListApi(2);
+      //     toast.success(res?.data?.message, {
+      //       duration: 4000,
+      //     });
+      //     setDisabled(false);
+
+      //   }
+      // });
     }
   };
   const callListApi = (param: number) => {
@@ -126,6 +142,54 @@ const TaskDetails = () => {
     dispatch(getTaskDetails(taskId));
     // Add actual logic here
   };
+
+  const recorderControls = useVoiceVisualizer();
+  const { recordedBlob, error } = recorderControls; // setPreloadedAudioBlob
+
+  // Get the recorded audio blob
+  useEffect(() => {
+    if (!recordedBlob) return;
+
+    console.log(recordedBlob);
+  }, [recordedBlob, error]);
+
+  // Get the error when it occurs
+  useEffect(() => {
+    if (!error) return;
+
+    console.error(error);
+  }, [error]);
+
+  console.log(
+    urlForImage + taskDetailInfo?.voice_record_file,
+    "urlForImage + taskDetailInfo?.voice_record_file454545"
+  );
+
+  const fetchAudioBlob = async () => {
+    try {
+      const response = await fetch(
+        "https://rcw-dev.s3.amazonaws.com/Tasks/76/1718098937245-rcw.mp3"
+      );
+      const audioData = await response.blob();
+      return audioData;
+    } catch (error) {
+      console.error("Error fetching audio blob:", error);
+      return null;
+    }
+  };
+  useEffect(() => {
+    fetchAudioBlob().then((audioBlob) => {
+      if (audioBlob) {
+        // Use the audioBlob as needed, for example, create a URL for it
+        const audioUrl = URL.createObjectURL(audioBlob);
+        console.log("Blob URL:", audioUrl);
+        // setPreloadedAudioBlob(audioUrl);
+
+        // You can now use audioUrl as the source for an audio element or for any other purpose
+      }
+    });
+  }, []);
+
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -268,19 +332,18 @@ const TaskDetails = () => {
                     <div className="w-1/4 text-[#757982] font-500">
                       Assignees
                     </div>
-                    <div className="flex -space-x-2 mt-10 ">
+                    <div className="flex -space-x-2 mt-10">
                       {taskDetailInfo?.assigned_task_users?.map((item) => {
                         // console.log(item, "itemmmm");
                         return (
                           <img
-                            className="w-28 h-28 rounded-full border-2 border-white mr-[-5px]"
+                            className="w-28 h-28 rounded-full border-2 border-white"
                             src={
                               item.user_image
                                 ? urlForImage + item.user_image
                                 : "../assets/images/logo/images.jpeg"
                             }
                             alt="User 1"
-                            style={{ marginRight: "-5px" }}
                           />
                         );
                       })}
@@ -289,7 +352,7 @@ const TaskDetails = () => {
                 </div>
 
                 <div className="flex gap-20 my-20 w-full">
-                  <div className="relative w-1/2 ">
+                  <div className="relative w-1/2">
                     <Typography className="mb-10">Files</Typography>
                     {taskDetailInfo?.task_files?.map((item) => {
                       // console.log(item, "itemmmm");
@@ -299,7 +362,7 @@ const TaskDetails = () => {
                             <img
                               src={urlForImage + item.file}
                               alt=""
-                              className="w-full h-[200px]"
+                              className="block w-full h-[200px]"
                             />
                             <div
                               className="absolute top-7 left-7"
@@ -342,20 +405,6 @@ const TaskDetails = () => {
                             }}
                           />
                         </div>
-                        {expandedImage && (
-                          <div
-                            className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
-                            onClick={() => setExpandedImage(null)}
-                          >
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              <img
-                                src={expandedImage}
-                                alt="Expanded Image"
-                                className="max-w-full max-h-full"
-                              />
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -387,6 +436,30 @@ const TaskDetails = () => {
                   {/* </div> */}
                   {/* </div> */}
                 </div>
+                {/* <VoiceVisualizer
+                  controls={recorderControls}
+                  width={200}
+                  height={200}
+                  speed={3}
+                  backgroundColor={"4f46E5"}
+                  mainBarColor={"red"}
+                  secondaryBarColor={"#5e5e5e"}
+                  barWidth={2}
+                  gap={1}
+                  rounded={5}
+                  isControlPanelShown={true}
+                  isDownloadAudioButtonShown={false}
+                  fullscreen={false}
+                  onlyRecording={false}
+                  animateCurrentPick={true}
+                  isDefaultUIShown={true}
+                  defaultAudioWaveIconColor={"#FFFFFF"}
+                  defaultMicrophoneIconColor={"#FFFFFF"}
+                  isProgressIndicatorShown={true}
+                  isProgressIndicatorTimeShown={true}
+                  isProgressIndicatorOnHoverShown={true}
+                  isProgressIndicatorTimeOnHoverShown={true}
+                /> */}
                 <audio controls>
                   <source
                     src={urlForImage + taskDetailInfo?.voice_record_file}
