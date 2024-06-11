@@ -360,7 +360,7 @@ export const addAssignAgents = createAsyncThunk(
     };
   }
 );
-export const GetAssignAgentsInfo = createAsyncThunk(
+export const GetAssignAgentsInfo:any = createAsyncThunk(
   "client/assign-agents-list",
   async (payload: ClientInfo) => {
     const response = await ApiHelperFunction({
@@ -389,7 +389,7 @@ export const deleteAgentList = createAsyncThunk(
     };
   }
 );
-export const getAssignAccMangerInfo = createAsyncThunk(
+export const getAssignAccMangerInfo:any = createAsyncThunk(
   "client/assign-account-manager-list",
   async (payload: ClientInfo) => {
     const response = await ApiHelperFunction({
