@@ -69,15 +69,15 @@ const navigationConfig: FuseNavItemType[] = [
     children: getProjectNavItems(),
   },
 
-  {
-    id: "task",
-    title: "Task",
-    translate: "TASK",
-    type: "item",
-    icon: "heroicons-outline:clipboard-check",
-    customIcon: <TaskIcon />,
-    url: "tasks",
-  },
+  // {
+  //   id: "task",
+  //   title: "Task",
+  //   translate: "TASK",
+  //   type: "item",
+  //   icon: "heroicons-outline:clipboard-check",
+  //   customIcon: <TaskIcon />,
+  //   url: "tasks",
+  // },
 
   {
     id: "chatBoard",

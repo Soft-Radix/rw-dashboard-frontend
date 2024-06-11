@@ -37,6 +37,7 @@ type ModalType = {
   headerBgColor?: string;
   titleColor?: string;
   isValid?: boolean;
+  isHeaderDisplay?: boolean;
 };
 
 export default function CommonModal({
@@ -54,11 +55,16 @@ export default function CommonModal({
   headerBgColor,
   titleColor,
   isValid = true,
+  isHeaderDisplay,
 }: ModalType) {
   return (
     <StylesDialog
       aria-labelledby="customized-dialog-title"
       open={open}
+      onClose={(e: any) => {
+        e.stopPropagation();
+        handleToggle(e);
+      }}
       sx={{
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
@@ -73,7 +79,7 @@ export default function CommonModal({
         <div
           className={`p-16 flex justify-between w-full items-center ${
             headerBgColor ? `bg-[${headerBgColor}` : "bg-[#2C334C]"
-          } `}
+          } ${isHeaderDisplay ? "hidden" : ""}`}
         >
           <Typography
             className={`text-[16px] font-semibold" ${
@@ -86,14 +92,20 @@ export default function CommonModal({
             <CrossIcon
               className="cursor-pointer"
               color="#fff"
-              onClick={handleToggle}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleToggle(e);
+              }}
             />
           </IconButton>
         </div>
       ) : (
         <IconButton
           className="flex items-center justify-end pt-20 pr-20 rounded-none "
-          onClick={handleToggle}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle(e);
+          }}
         >
           <CrossIcon className="cursor-pointer" color="#9DA0A6" />
         </IconButton>
@@ -104,8 +116,13 @@ export default function CommonModal({
         <Button
           variant="contained"
           color="secondary"
-          className={`${disabled ? "btn-disable" : ""} w-[156px] h-[48px] text-[18px]`}
-          onClick={onSubmit}
+          className={`${
+            disabled ? "btn-disable" : ""
+          } w-[156px] h-[48px] text-[18px]`}
+          onClick={(e) => {
+            e.stopPropagation();
+            onSubmit();
+          }}
           disabled={!isValid || disabled}
         >
           {btnTitle}
@@ -114,8 +131,13 @@ export default function CommonModal({
           variant="outlined"
           disabled={disabled}
           color="secondary"
-          className={`${disabled ? "btn-disable-light" : ""} w-[156px] h-[48px] text-[18px] ml-14`}
-          onClick={handleToggle}
+          className={`${
+            disabled ? "btn-disable-light" : ""
+          } w-[156px] h-[48px] text-[18px] ml-14`}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleToggle(e);
+          }}
         >
           {closeTitle}
         </Button>

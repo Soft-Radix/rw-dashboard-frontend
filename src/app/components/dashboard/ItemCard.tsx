@@ -18,6 +18,8 @@ import { deleteTask } from "app/store/Projects";
 import AddTaskModal from "../tasks/AddTask";
 import { Clock, ClockTask } from "public/assets/icons/common";
 import { debounce } from "lodash";
+import { Link, useNavigate } from "react-router-dom";
+import { Draggable } from "react-beautiful-dnd";
 // import { CalendarIcon } from "public/assets/icons/dashboardIcons";
 
 type CardType = {
@@ -29,12 +31,12 @@ type CardType = {
   images: string[];
   id?: number;
   callListApi?: any;
+  index?: any;
 };
 
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
   const textRef = useRef(null);
-
   useEffect(() => {
     if (textRef.current) {
       const textWidth = textRef.current.scrollWidth;
@@ -70,11 +72,15 @@ export default function ItemCard({
   id,
   callListApi,
   images,
+  index,
 }: CardType) {
   const theme: Theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
+
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -114,133 +120,148 @@ export default function ItemCard({
     }
   };
 
-  const handleScroll = debounce(() => {
-    // Check if the user has scrolled to the bottom of the page
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      // If scrolled to the bottom, trigger the API call
-      callListApi(10);
-    }
-  }, 1000); // Adjust the debounce delay as needed (e.g., 300ms)
-
-  // Attach scroll event listener when component mounts
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
   return (
-    <div className="bg-[#F7F9FB] p-14 rounded-md border">
-      <div className="flex justify-between gap-10 items-center">
-        <Typography color="primary.main" className="font-medium">
-          <TruncateText text={title} maxWidth={150} />
-        </Typography>
-        <div className="flex gap-4">
-          <span
-            className={`${
-              priority === "Medium"
-                ? "bg-priorityMedium/[.18]"
-                : priority === "High"
-                ? "bg-red/[.18]"
-                : "bg-green/[.18]"
-            } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
-              priority === "Medium"
-                ? "text-priorityMedium"
-                : priority === "High"
-                ? "text-red"
-                : "text-green"
-            }`}
+    <div
+      // to={}
+      style={{ textDecoration: "none" }}
+      onClick={(e) => {
+        e.stopPropagation();
+        navigate(`/tasks/detail/${id}`);
+      }}
+    >
+      <Draggable
+        draggableId={id.toString()}
+        index={index}
+        //@ts-ignore
+        type="task"
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}
+            //@ts-ignore
+            {...provided.draggableProps}
+            //@ts-ignore
+            isDragging={snapshot.isDragging}
           >
-            {priority}
-          </span>
+            <div className="bg-[#F7F9FB] p-14 rounded-md border my-4">
+              <div className="flex justify-between gap-10 items-center">
+                <Typography color="primary.main" className="font-medium">
+                  <TruncateText text={title} maxWidth={150} />
+                </Typography>
+                <div className="flex gap-4">
+                  <span
+                    className={`${
+                      priority === "Medium"
+                        ? "bg-priorityMedium/[.18]"
+                        : priority === "High"
+                        ? "bg-red/[.18]"
+                        : "bg-green/[.18]"
+                    } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
+                      priority === "Medium"
+                        ? "text-priorityMedium"
+                        : priority === "High"
+                        ? "text-red"
+                        : "text-green"
+                    }`}
+                  >
+                    {priority}
+                  </span>
 
-          <span
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <ThreeDotsIcon className="cursor-pointer" />
-          </span>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                toggleEditModal();
-              }}
-            >
-              Edit Task
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose();
-                toggleDeleteModal();
-              }}
-            >
-              Delete Task
-            </MenuItem>
-          </Menu>
-        </div>
-      </div>
-      <div className="mt-10 flex justify-between gap-20 items-start">
-        <Typography color="primary.light" className="text-[12px] ">
-          <TruncateText text={taskName} maxWidth={150} />
-        </Typography>
-        <Checkbox />
-      </div>
-      <div className="mt-10 flex justify-between">
-        <div className="flex items-center">
-          <ClockTask color={theme.palette.secondary.main} />
-          <Typography color="primary.light" className="text-[12px] ml-10 ">
-            {moment(date).format("ll")}
-          </Typography>
-        </div>
-        <div className="flex flex-row-reverse">
-          {["female-01.jpg", "female-02.jpg", "female-03.jpg"]?.map((item) => (
-            <img
-              className="h-[34px] w-[34px] rounded-full border-2 border-white ml-[-10px] z-0"
-              key={item}
-              src={`/assets/images/avatars/${item}`}
-              alt={item}
-              loading="lazy"
-            />
-          ))}
-        </div>
-      </div>
+                  <span
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  >
+                    <ThreeDotsIcon className="cursor-pointer" />
+                  </span>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose();
+                        toggleEditModal();
+                        e.stopPropagation();
+                      }}
+                    >
+                      Edit Task
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose();
+                        toggleDeleteModal();
+                        e.stopPropagation();
+                      }}
+                    >
+                      Delete Task
+                    </MenuItem>
+                  </Menu>
+                </div>
+              </div>
+              <div className="mt-10 flex justify-between gap-20 items-start">
+                <Typography color="primary.light" className="text-[12px] ">
+                  <TruncateText text={taskName} maxWidth={150} />
+                </Typography>
+                <Checkbox />
+              </div>
+              <div className="mt-10 flex justify-between">
+                <div className="flex items-center">
+                  <ClockTask color={theme.palette.secondary.main} />
+                  <Typography
+                    color="primary.light"
+                    className="text-[12px] ml-10 "
+                  >
+                    {moment(date).format("ll")}
+                  </Typography>
+                </div>
+                <div className="flex flex-row-reverse">
+                  {["female-01.jpg", "female-02.jpg", "female-03.jpg"]?.map(
+                    (item) => (
+                      <img
+                        className="h-[34px] w-[34px] rounded-full border-2 border-white ml-[-10px] z-0"
+                        key={item}
+                        src={`/assets/images/avatars/${item}`}
+                        alt={item}
+                        loading="lazy"
+                      />
+                    )
+                  )}
+                </div>
+              </div>
 
-      <ActionModal
-        modalTitle="Delete Task"
-        modalSubTitle="Are you sure you want to delete this task?"
-        open={openDeleteModal}
-        handleToggle={toggleDeleteModal}
-        type="delete"
-        onDelete={handleDelete}
-        disabled={disable}
-      />
-      {isOpenAddModal && (
-        <AddTaskModal
-          isOpen={isOpenAddModal}
-          setIsOpen={setIsOpenAddModal}
-          ColumnId={id}
-          callListApi={callListApi}
-          Edit
-        />
-      )}
+              <ActionModal
+                modalTitle="Delete Task"
+                modalSubTitle="Are you sure you want to delete this task?"
+                open={openDeleteModal}
+                handleToggle={toggleDeleteModal}
+                type="delete"
+                onDelete={handleDelete}
+                disabled={disable}
+              />
+              {isOpenAddModal && (
+                <AddTaskModal
+                  isOpen={isOpenAddModal}
+                  setIsOpen={setIsOpenAddModal}
+                  ColumnId={id}
+                  callListApi={callListApi}
+                  Edit
+                />
+              )}
+            </div>
+          </div>
+        )}
+      </Draggable>
     </div>
   );
 }

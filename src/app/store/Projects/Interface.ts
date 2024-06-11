@@ -20,6 +20,30 @@ export interface ClientType {
   agent_ids?: number[];
   agent_id?: number[];
 }
+export interface taskDetailType {
+  id?: number;
+  user_id?: number;
+  project_id?: number;
+  project_column_id?: number;
+  title?: string;
+  description?: string;
+  voice_record_file?: string;
+  screen_record_file?: string;
+  priority?: string;
+  labels?: string;
+  status?: string;
+  sort_order?: null;
+  due_date_time?: null;
+  business_due_date?: null;
+  reminders?: null;
+  deleted_at?: null;
+  createdAt?: string;
+  updatedAt?: string;
+  project_name?: string;
+  column_name?: string;
+  task_files?: any;
+  assigned_task_users?: any;
+}
 
 export interface filterType {
   start: number;
@@ -51,13 +75,18 @@ export type initialStateProps = {
   isloading?: boolean;
   assignedAgentDetail: ClientType[];
   agentTotal_records?: number;
+  taskDetailInfo?: taskDetailType;
 };
-export interface ClientRootState {
-  client: initialStateProps; // Add other slices if needed
+// export interface ClientRootState {
+//   client: initialStateProps; // Add other slices if needed
+// }
+export interface ProjectRootState {
+  project: initialStateProps; // Add other slices if needed
 }
 
 export interface clientIDType {
-  client_id: string;
+  client_id?: string;
+  task_id?: number;
 }
 
 // Type for the payload that updateProfile expects

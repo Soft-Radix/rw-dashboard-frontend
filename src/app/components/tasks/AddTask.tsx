@@ -108,7 +108,7 @@ function AddTaskModal({
   const [recordingTime, setRecordingTime] = useState(0);
   const [agentid, setAgentID] = useState(null);
   const [dateError, setDateError] = useState("");
-
+  const [calenderOpen, setCalenderOpen] = useState(false);
   const [checkedItems, setCheckedItems] = useState([]);
   const [selectedAgents, setSelectedAgents] = useState<any[]>([]);
   const [audioRecorder, setAudioRecorder] = useState<File | null>(null);
@@ -479,10 +479,12 @@ function AddTaskModal({
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
+    setCalenderOpen(true);
   };
 
   const handleClose = () => {
     setAnchorEl(null);
+    setCalenderOpen(false);
   };
 
   const calculateFutureDate = (days, label) => {
@@ -533,11 +535,15 @@ function AddTaskModal({
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
 
   const EditDetails = () => {
-    dispatch(TaskDetails(ColumnId)).then((res) => {
+    dispatch(TaskDetails(ColumnId)).then((res: any) => {
       const data = res?.payload?.data?.data;
-      const remindersDateTime = data?.reminders.split("T");
-      const date = remindersDateTime[0]; // Extract the date component
-      const time = remindersDateTime[1].split(".")[0];
+      let date: any;
+      let time: any;
+      if (data?.reminders) {
+        var remindersDateTime = data?.reminders.split("T");
+        date = remindersDateTime[0]; // Extract the date component
+        time = remindersDateTime[1].split(".")[0];
+      }
       if (data?.screen_record_file != "") {
         setShowVideo(true);
       } else {
@@ -548,26 +554,30 @@ function AddTaskModal({
       } else {
         setSavedAudioURL(urlForImage + data.voice_record_file);
       }
-
       formik.setFieldValue("title", data.title);
       formik.setFieldValue("description", data.description);
-      formik.setFieldValue("date", date);
-      formik.setFieldValue("time", time);
+      formik.setFieldValue("date", date || "");
+      formik.setFieldValue("time", time || "");
       setSavedAudioURL(
         data?.voice_record_file && urlForImage + data.voice_record_file
       );
       videoRef.current.src =
         data?.screen_record_file && urlForImage + data?.screen_record_file;
-      setSelectedDate(data?.business_due_date);
-      setSelectedlabel(data?.labels);
-      setSelectedPriority(data?.priority);
-      setSelectedStatus(data?.status);
+      setSelectedDate(
+        !data?.business_due_date ? "Due Date & Time" : data?.business_due_date
+      );
+      setSelectedlabel(!data?.labels ? "Labels" : data?.labels);
+      setSelectedPriority(!data?.priority ? "Priority" : data?.priority);
+      setSelectedStatus(!data?.status ? "Status" : data?.status);
       setUploadedFilesNew(data.task_files);
       const userNames = data?.assigned_task_users?.map(
         (user) => user.first_name
       );
       const userId = data?.assigned_task_users?.map((user) => user.user_id);
       setSelectedAgent(userNames.join(", "));
+      if (data?.assigned_task_users.length == 0) {
+        setSelectedAgent("Assign To");
+      }
       setSelectedAgents(userId);
     });
   };
@@ -575,7 +585,8 @@ function AddTaskModal({
     if (Edit) {
       EditDetails();
     }
-  }, []);
+  }, [isOpen]);
+
   const handleDeleteAttachment = async (id: number) => {
     const { payload } = await dispatch(
       TaskDeleteAttachment({ type: type, file_id: id })
@@ -684,7 +695,7 @@ function AddTaskModal({
     <CommonModal
       open={isOpen}
       handleToggle={() => handleReset()}
-      modalTitle="Add Task"
+      modalTitle={Edit ? "Edit Task" : "Add Task"}
       maxWidth="910"
       btnTitle={Edit ? "Save Edit" : "Save"}
       closeTitle="Close"
@@ -841,7 +852,10 @@ function AddTaskModal({
           </DropdownMenu> */}
 
           <DropdownMenu
-            handleClose={() => setDateTimeMenu(null)}
+            handleClose={() => {
+              setDateTimeMenu(null);
+              setCalenderOpen(false);
+            }}
             anchorEl={dateTimeMenu}
             button={
               <CommonChip
@@ -888,7 +902,7 @@ function AddTaskModal({
                 Custom Date
               </CustomButton>
               <Popover
-                open={open}
+                open={calenderOpen}
                 anchorEl={anchorEl}
                 onClose={handleClose}
                 anchorOrigin={{
@@ -901,6 +915,12 @@ function AddTaskModal({
                 }}
               >
                 <DateTimePicker
+                  open={calenderOpen}
+                  // onOpen={() => setOpen(true)} // Ensure open state is true when the calendar opens
+                  onClose={() => {
+                    setCalenderOpen(false);
+                    setDateTimeMenu(null);
+                  }}
                   value={customDate}
                   onChange={handleDateChange}
                 />
