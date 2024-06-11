@@ -1,26 +1,22 @@
 import { initCometChat, loginCometChat } from "app/configs/cometChatConfig";
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { selectUser } from "../auth/user/store/userSlice";
-import { useSelector } from "react-redux";
 import {
   CometChatIncomingCall,
   CometChatOngoingCall,
+  CometChatUIKit,
 } from "@cometchat/chat-uikit-react";
-import { CometChatCreateGroup } from "@cometchat/chat-uikit-react";
 
 const ChatContext = createContext({ userChat: null });
 
 export const ChatProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-  const userDetails = useSelector(selectUser);
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
 
   useEffect(() => {
-    console.log("userDetails...", userDetails);
     initCometChat()
       .then(async () => {
-        await loginCometChat("amit")
+        await loginCometChat(userDetails?.id)
           .then((loggedInUser) => {
-            console.log("Login Successful:", loggedInUser);
             setUser(loggedInUser);
           })
           .catch((err) => {
