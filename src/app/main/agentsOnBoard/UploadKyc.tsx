@@ -74,7 +74,7 @@ export default function UploadKyc() {
     try {
       const res = await dispatch(Uploadkyc({ payload, token }));
       if (res?.payload?.data?.status == 0) {
-        navigate("/photo-id/token");
+        navigate(`/photo-id/${token}`);
         toast.success(res?.payload?.data?.message);
       }
     } catch (error) {

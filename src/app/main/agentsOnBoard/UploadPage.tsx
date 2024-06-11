@@ -54,6 +54,10 @@ export default function UploadPage() {
       navigate("/sign-in");
     }
   }
+  const handleButtonClick = async () => {
+    // Navigate to '/photo-id' route
+    navigate(`/agent/dashboard`);
+  };
 
   return (
     <>
@@ -90,6 +94,7 @@ export default function UploadPage() {
               color="secondary"
               size="large"
               className="text-[18px] font-500 sm:min-w-[417px] w-[300px]"
+              onClick={handleButtonClick}
             >
               Ok
             </Button>
