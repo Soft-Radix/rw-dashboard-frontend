@@ -77,6 +77,7 @@ export type initialStateProps = {
   agentTotal_records?: number;
   taskDetailInfo?: taskDetailType;
   projectInfo?: any;
+  actionDisable?: boolean;
 };
 // export interface ClientRootState {
 //   client: initialStateProps; // Add other slices if needed
@@ -188,5 +189,12 @@ export interface AddSubscriptionList {
     unit_discount_type: number;
     unit_discount: number;
     net_price: number;
-  }[];
+  };
+}
+export interface ApiResponse {
+  status: number;
+  message: string;
+  code: number;
+  data: any | null; // or more specific type if known
+  meta: any | null;
 }
