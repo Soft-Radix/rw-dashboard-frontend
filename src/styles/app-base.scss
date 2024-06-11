@@ -440,3 +440,17 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
 .muiltr-7g9680-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected) {
   border: 1px solid #4f46e5;
 }
+.chatboard > .cc-tabs > .cc-tab-list {
+  height: 60px !important;
+  width: 270px !important;
+  background-color: #ffffff !important;
+  bottom: 0px !important;
+
+  .cc-tab-item__wrapper {
+    justify-content: space-around !important;
+  }
+}
+
+.cc-conversations > .cc-list > .cc-list__content {
+  padding-bottom: 80px !important;
+}

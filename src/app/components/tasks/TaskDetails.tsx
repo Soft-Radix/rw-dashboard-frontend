@@ -15,7 +15,7 @@ import AddTaskModal from "src/app/components/tasks/AddTask";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import RecentData from "../../components/client/clientAgent/RecentData";
 import { Clock, DownGreenIcon, Token } from "public/assets/icons/common";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getAgentInfo } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
@@ -39,6 +39,8 @@ import AddSubTaskModal from "./AddSubTaskModal";
 import { deleteTask, TaskDetails as getTaskDetails } from "app/store/Projects";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { LiveAudioVisualizer } from "react-audio-visualize";
+
+import { useVoiceVisualizer, VoiceVisualizer } from "react-voice-visualizer";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
@@ -54,6 +56,7 @@ const TaskDetails = () => {
   const { taskDetailInfo } = useSelector(
     (store: ProjectRootState) => store.project
   );
+
   // console.log(" TaskDetail", taskDetailInfo);
   const formatTime = (time: any) => {
     const minutes = Math.floor(time / 60);
@@ -75,6 +78,7 @@ const TaskDetails = () => {
   const [disable, setDisabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const navigate = useNavigate();
   const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
@@ -115,24 +119,77 @@ const TaskDetails = () => {
   const handleDelete = () => {
     if (taskId) {
       setDisabled(true);
-      dispatch(deleteTask(taskId))
-        .unwrap()
-        .then((res) => {
-          if (res?.data?.status == 1) {
-            setOpenDeleteModal(false);
-            callListApi(2);
-            toast.success(res?.data?.message, {
-              duration: 4000,
-            });
-            setDisabled(false);
-          }
-        });
+      dispatch(deleteTask(taskId));
+      navigate(
+        `/projects/${taskDetailInfo.project_id}/${taskDetailInfo.project_name}`
+      );
+      // .unwrap()
+      // .then((res) => {
+      //   if (res?.data?.status == 1) {
+      //     setOpenDeleteModal(false);
+      //     callListApi(2);
+      //     toast.success(res?.data?.message, {
+      //       duration: 4000,
+      //     });
+      //     setDisabled(false);
+
+      //   }
+      // });
     }
   };
   const callListApi = (param: number) => {
     console.log("callListApi called with param:", param);
+    dispatch(getTaskDetails(taskId));
     // Add actual logic here
   };
+
+  const recorderControls = useVoiceVisualizer();
+  const { recordedBlob, error } = recorderControls; // setPreloadedAudioBlob
+
+  // Get the recorded audio blob
+  useEffect(() => {
+    if (!recordedBlob) return;
+
+    console.log(recordedBlob);
+  }, [recordedBlob, error]);
+
+  // Get the error when it occurs
+  useEffect(() => {
+    if (!error) return;
+
+    console.error(error);
+  }, [error]);
+
+  console.log(
+    urlForImage + taskDetailInfo?.voice_record_file,
+    "urlForImage + taskDetailInfo?.voice_record_file454545"
+  );
+
+  const fetchAudioBlob = async () => {
+    try {
+      const response = await fetch(
+        "https://rcw-dev.s3.amazonaws.com/Tasks/76/1718098937245-rcw.mp3"
+      );
+      const audioData = await response.blob();
+      return audioData;
+    } catch (error) {
+      console.error("Error fetching audio blob:", error);
+      return null;
+    }
+  };
+  useEffect(() => {
+    fetchAudioBlob().then((audioBlob) => {
+      if (audioBlob) {
+        // Use the audioBlob as needed, for example, create a URL for it
+        const audioUrl = URL.createObjectURL(audioBlob);
+        console.log("Blob URL:", audioUrl);
+        // setPreloadedAudioBlob(audioUrl);
+
+        // You can now use audioUrl as the source for an audio element or for any other purpose
+      }
+    });
+  }, []);
+
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -348,20 +405,6 @@ const TaskDetails = () => {
                             }}
                           />
                         </div>
-                        {expandedImage && (
-                          <div
-                            className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
-                            onClick={() => setExpandedImage(null)}
-                          >
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              <img
-                                src={expandedImage}
-                                alt="Expanded Image"
-                                className="max-w-full max-h-full"
-                              />
-                            </div>
-                          </div>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -393,6 +436,30 @@ const TaskDetails = () => {
                   {/* </div> */}
                   {/* </div> */}
                 </div>
+                {/* <VoiceVisualizer
+                  controls={recorderControls}
+                  width={200}
+                  height={200}
+                  speed={3}
+                  backgroundColor={"4f46E5"}
+                  mainBarColor={"red"}
+                  secondaryBarColor={"#5e5e5e"}
+                  barWidth={2}
+                  gap={1}
+                  rounded={5}
+                  isControlPanelShown={true}
+                  isDownloadAudioButtonShown={false}
+                  fullscreen={false}
+                  onlyRecording={false}
+                  animateCurrentPick={true}
+                  isDefaultUIShown={true}
+                  defaultAudioWaveIconColor={"#FFFFFF"}
+                  defaultMicrophoneIconColor={"#FFFFFF"}
+                  isProgressIndicatorShown={true}
+                  isProgressIndicatorTimeShown={true}
+                  isProgressIndicatorOnHoverShown={true}
+                  isProgressIndicatorTimeOnHoverShown={true}
+                /> */}
                 <audio controls>
                   <source
                     src={urlForImage + taskDetailInfo?.voice_record_file}

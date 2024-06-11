@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import { selectUser } from "src/app/auth/user/store/userSlice";
 import { getLocalStorage } from "src/utils";
+import { CometChatUIKit } from "@cometchat/chat-uikit-react";
 
 /**
  * The user menu.
@@ -123,6 +124,7 @@ function UserMenu() {
             <MenuItem
               onClick={() => {
                 signOut();
+                CometChatUIKit.logout();
                 localStorage.clear();
               }}
             >

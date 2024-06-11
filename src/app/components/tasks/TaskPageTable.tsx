@@ -69,7 +69,7 @@ function ThemePageTable(props) {
   const { tableSelectedItemDesign } = props;
   const theme: Theme = useTheme();
   // console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
-  
+
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (

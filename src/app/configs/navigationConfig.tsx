@@ -294,6 +294,14 @@ export const adminNavigationConfig: FuseNavItemType[] = [
     customIcon: <AccountManagerIcon />,
     url: "admin/acc-manager",
   },
+  {
+    id: "chatBoard",
+    title: "Chat Board",
+    type: "item",
+    icon: "heroicons-outline:chat-alt-2",
+    customIcon: <ChatBoardIcon />,
+    url: "chat-board",
+  },
 
   // {
   //   id: "billings",

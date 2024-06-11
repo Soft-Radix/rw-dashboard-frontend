@@ -10,12 +10,12 @@ const transformData = (data) => {
     });
 
     columns[column.id] = {
-      id: column.id.toString(),
+      id: column?.id.toString(),
       title: column.name,
       taskIds,
     };
 
-    columnOrder.push(column.id.toString());
+    columnOrder.push(column?.id.toString());
   });
 
   return {
