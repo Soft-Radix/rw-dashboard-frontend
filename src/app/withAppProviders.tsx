@@ -6,7 +6,11 @@
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StyledEngineProvider } from "@mui/material/styles";
-import { adminRoutes, clientRoutes } from "app/configs/routesConfig";
+import {
+  adminRoutes,
+  agentRoutes,
+  clientRoutes,
+} from "app/configs/routesConfig";
 import { useEffect, useMemo } from "react";
 import { Provider } from "react-redux";
 import ErrorBoundary from "@fuse/utils/ErrorBoundary";
@@ -35,8 +39,10 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
       () =>
         userDetail?.role === "admin"
           ? { routes: adminRoutes }
+          : userDetail?.role === "agent"
+          ? { routes: agentRoutes }
           : { routes: clientRoutes },
-      [adminRoutes, clientRoutes]
+      [adminRoutes, clientRoutes, agentRoutes]
     );
     // const val = useMemo(() => {
     //   if (userDetail.is_signed == 1) {

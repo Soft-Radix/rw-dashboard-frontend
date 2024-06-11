@@ -90,12 +90,15 @@ export default function ItemCard({
     setAnchorEl(null);
   };
 
+  const Date = date.split(",");
+  console.log("=====date==", Date[0]);
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [originalTitle, setOriginalTitle] = useState(title);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
+
   const toggleEditModal = () => {
     setIsOpenAddModal(true);
     if (openEditModal) {
@@ -103,7 +106,7 @@ export default function ItemCard({
     } else {
       // setOriginalTitle(formik.values.name);
     }
-    setOpenEditModal(!openEditModal);
+    // setOpenEditModal(!openEditModal);
   };
   const dispatch = useAppDispatch();
   const handleDelete = () => {
@@ -152,7 +155,6 @@ export default function ItemCard({
               onClick={(e) => {
                 handleClose();
                 toggleEditModal();
-                e.stopPropagation();
               }}
             >
               Edit Task
@@ -270,7 +272,7 @@ export default function ItemCard({
                         color="primary.light"
                         className="text-[12px] ml-10 "
                       >
-                        {moment(date).format("ll")}
+                        {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")}
                       </Typography>
                     </div>
                     <div className="flex flex-row-reverse">

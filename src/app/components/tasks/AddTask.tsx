@@ -1305,10 +1305,7 @@ function AddTaskModal({
                     <span className="text-[16px] text-[#4F46E5] py-5 mr-3">
                       {file.name}
                     </span>
-                    <span
-                    // onClick={() =>
-                    //    handleRemoveFile(file)}
-                    >
+                    <span>
                       <CrossGreyIcon />
                     </span>
                   </div>

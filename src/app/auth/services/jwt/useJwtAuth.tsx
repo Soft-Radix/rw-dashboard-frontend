@@ -254,6 +254,23 @@ const useJwtAuth = <User, SignUpPayload>(
       if (response?.payload.data?.user?.role == "admin") {
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
+      } else if (response?.payload.data?.user?.role == "agent") {
+        if (response?.payload.data?.user?.is_complete_profile == 1) {
+          // window.location.href = response?.payload.data?.user?.docusign_link;
+          const docusignLink = response?.payload.data?.user?.docusign_link;
+          if (docusignLink) {
+            window.location.href = docusignLink;
+          } else {
+            console.log("Docusign link is not valid.");
+          }
+        } else if (response?.payload.data?.user?.is_complete_profile == 2) {
+          window.location.href = `/kyc-doc/${accessToken}`;
+        } else if (response?.payload.data?.user?.is_complete_profile == 3) {
+          window.location.href = `/photo-id/${accessToken}`;
+        } else {
+          handleSignInSuccess(userData, accessToken);
+          window.location.reload();
+        }
       } else {
         if (signin == 1) {
           if (response?.payload.data?.user.projects.length == 0) {

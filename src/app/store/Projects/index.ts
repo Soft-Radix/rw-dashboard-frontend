@@ -99,7 +99,7 @@ export const projectColumnAdd = createAsyncThunk(
 );
 export const projectColumnList = createAsyncThunk(
   "project/columns/list",
-  async (payload: ProjectAdd) => {
+  async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `/project/columns/list`,
       method: "post",
@@ -284,6 +284,7 @@ export const initialState: initialStateProps = {
   agentTotal_records: 0,
   taskDetailInfo: {},
   projectInfo: {},
+  fetchStatusNew: "loading",
 };
 /**
  * The auth slice.
@@ -312,17 +313,19 @@ export const projectSlice = createSlice({
       .addCase(TaskDetails.rejected, (state) => {
         state.fetchStatus = "idle";
       })
-      .addCase(projectColumnList.pending, (state) => {
-        state.fetchStatus = "loading";
+      .addCase(projectColumnList.pending, (state, action) => {
+        const { project_column_id } = action.meta.arg;
+        state.fetchStatusNew = !project_column_id ? "loading" : "idle";
+        // state.fetchStatusNew = "loading";
       })
       .addCase(projectColumnList.fulfilled, (state, action) => {
         console.log(state, "statet");
         const { data } = action.payload?.data;
-        state.fetchStatus = "idle";
+        state.fetchStatusNew = "idle";
         state.projectInfo = data;
       })
       .addCase(projectColumnList.rejected, (state) => {
-        state.fetchStatus = "idle";
+        state.fetchStatusNew = "idle";
       });
   },
 });

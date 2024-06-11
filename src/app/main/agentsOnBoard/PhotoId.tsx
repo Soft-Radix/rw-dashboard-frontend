@@ -1,15 +1,18 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { UploadImage } from "app/store/Agent";
 import { setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
+import { Camera } from "public/assets/icons/common";
 import {
   CircleLeft1Icon,
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import { useState } from "react";
+import { useCallback, useRef, useState } from "react";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useNavigate, useParams } from "react-router-dom";
@@ -23,36 +26,38 @@ type FormType = {
 export default function CreatePassword() {
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [frontID, setFrontID] = useState(null);
+  const [frontfile, setFrontFile] = useState(null);
+  const [webcamCapture, setWebcamCapture] = useState(null);
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
+  const webcamRef = useRef(null);
   const store = useSelector((store: AuthRootState) => store.auth);
 
   //* initialise useformik hook
-  const formik = useFormik({
-    initialValues: {
-      cnfPassword: "",
-      password: "",
-    },
-    validationSchema: resetPassSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
-  });
+  const handleWebcamFrontCapture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setWebcamCapture(imageSrc);
+    setFrontID(imageSrc);
+  }, [webcamRef]);
 
-  async function onSubmit(formData: FormType) {
-    let data = {
-      password: formData.password,
-      token,
-    };
-    setIsLoading(true);
-    let { payload } = await dispatch(setPassword(data));
-    setIsLoading(false);
-    if (payload?.data?.status) {
-      navigate("/sign-in");
+  const handleButtonClick = async () => {
+    // Navigate to '/photo-id' route
+    const payload = new FormData();
+    payload.append("file", frontfile);
+
+    try {
+      const res = await dispatch(UploadImage({ payload, token }));
+      if (res?.payload?.data?.status == 0) {
+        toast.success(res?.payload?.data?.message);
+        navigate("/upload-doc");
+      }
+    } catch (error) {
+      toast.error(error?.message);
+      console.error("Error fetching data:", error);
     }
-  }
+  };
 
   return (
     <div className="flex  items-center flex-col  gap-32 px-28 py-32">
@@ -70,19 +75,29 @@ export default function CreatePassword() {
               To proceed, please take a photo while holding your ID.
             </p>
           </Typography>
-          <div></div>
+          <div className="flex justify-center">
+            <button
+              onClick={handleWebcamFrontCapture}
+              className="  text-white px-4 py-2 "
+            >
+              <Camera />
+            </button>
+            {frontID && (
+              <img src={frontID} alt="Front ID" className="w-full max-w-xs " />
+            )}
+          </div>
         </div>
       </div>
-      <Link to="/upload-doc">
-        <Button
-          variant="contained"
-          color="secondary"
-          size="large"
-          className="text-[18px] font-500  min-w-[196px]"
-        >
-          Next
-        </Button>
-      </Link>
+      <Button
+        variant="contained"
+        color="secondary"
+        size="large"
+        // disabled={!frontID}
+        onClick={handleButtonClick}
+        className="text-[18px] font-500  min-w-[196px]"
+      >
+        Next
+      </Button>
     </div>
   );
 }

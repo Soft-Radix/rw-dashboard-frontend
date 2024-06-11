@@ -85,7 +85,7 @@ export default function AgentSignDocument() {
             </div>
           </div>
         </div>
-        <Link to="/kyc-doc">
+        <Link to="/kyc-doc/:token">
           <Button
             variant="contained"
             color="secondary"
