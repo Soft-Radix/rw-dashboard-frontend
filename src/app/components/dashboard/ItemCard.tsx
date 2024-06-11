@@ -83,12 +83,16 @@ export default function ItemCard({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const Date = date.split(",");
+  console.log("=====date==", Date[0]);
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [originalTitle, setOriginalTitle] = useState(title);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
+
   const toggleEditModal = () => {
     setIsOpenAddModal(true);
     if (openEditModal) {
@@ -96,7 +100,7 @@ export default function ItemCard({
     } else {
       // setOriginalTitle(formik.values.name);
     }
-    setOpenEditModal(!openEditModal);
+    // setOpenEditModal(!openEditModal);
   };
   const dispatch = useAppDispatch();
   const handleDelete = () => {
@@ -144,7 +148,6 @@ export default function ItemCard({
               onClick={(e) => {
                 handleClose();
                 toggleEditModal();
-                e.stopPropagation();
               }}
             >
               Edit Task
@@ -231,14 +234,14 @@ export default function ItemCard({
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                              ? "bg-red/[.18]"
-                              : "bg-green/[.18]"
+                            ? "bg-red/[.18]"
+                            : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                              ? "text-red"
-                              : "text-green"
+                            ? "text-red"
+                            : "text-green"
                         }`}
                       >
                         {priority}
@@ -262,7 +265,7 @@ export default function ItemCard({
                         color="primary.light"
                         className="text-[12px] ml-10 "
                       >
-                        {moment(date).format("ll")}
+                        {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")}
                       </Typography>
                     </div>
                     <div className="flex flex-row-reverse">

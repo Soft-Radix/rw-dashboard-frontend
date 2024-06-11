@@ -115,6 +115,47 @@ export const deleteAttachment = createAsyncThunk(
   }
 );
 
+export const Uploadkyc = createAsyncThunk(
+  "agent/upload-kyc",
+  async ({ payload, token }: any) => {
+    console.log("===payload.back_id==", token);
+    const response = await ApiHelperFunction({
+      url: "agent/upload-kyc",
+      method: "post",
+      data: payload,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const UploadImage = createAsyncThunk(
+  "agent/capture-image",
+  async ({ payload, token }: any) => {
+    const response = await ApiHelperFunction({
+      url: "agent/capture-image",
+      method: "post",
+      data: payload,
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 /**
  * The initial state of the auth slice.
  */

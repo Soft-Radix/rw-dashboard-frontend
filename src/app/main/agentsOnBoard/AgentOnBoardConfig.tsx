@@ -41,11 +41,11 @@ const AgentOnBoardConfig: FuseRouteConfigType = {
       element: <AgentSignDocument />,
     },
     {
-      path: "kyc-doc",
+      path: "kyc-doc/:token",
       element: <UploadKyc />,
     },
     {
-      path: "photo-id",
+      path: "photo-id/:token",
       element: <PhotoId />,
     },
     {

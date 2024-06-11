@@ -16,6 +16,7 @@ import AddProjectConfig from "../main/add-project/AddProjectConfig";
 import {
   AdminDashboardConfig,
   ClientDashboardConfig,
+  AgentDashboardConfig,
 } from "../pages/dashboard/DashboardConfig";
 import TasksConfig from "../pages/tasks/TasksConfig";
 import UsersConfig from "../pages/users/usersConfig";
@@ -109,6 +110,34 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   CancelConfig,
   AgentOnBoardConfig,
 ];
+const agentRouteConfigs: FuseRouteConfigsType = [
+  AgentDashboardConfig,
+  ProjectsConfig,
+  TasksConfig,
+
+  MyAgentsConfig,
+  SignOutConfig,
+  SignInConfig,
+  SignUpConfig,
+  ForgotPasswordConfig,
+  ResetPasswordConfig,
+  SetPasswordConfig,
+  OtpVerificationConfig,
+  ClientConfig,
+  AdminAgentsConfig,
+  UsersConfig,
+  SettingConfig,
+  ClientOnBoardConfig,
+  PasswordManagerConfig,
+  SharedFilesConfig,
+  clientSettingConfig,
+  BillingConfig,
+  SupportConfig,
+  VerificationConfig,
+  SucessConfig,
+  CancelConfig,
+  AgentOnBoardConfig,
+];
 
 /**
  * The routes of the Admin application.
@@ -137,6 +166,19 @@ export const clientRoutes: FuseRoutesType = [
   {
     path: "/",
     element: <Navigate to="/dashboard" />,
+    auth: settingsConfig.defaultAuth,
+  },
+  ...commonRoutes,
+];
+
+export const agentRoutes: FuseRoutesType = [
+  ...FuseUtils.generateRoutesFromConfigs(
+    agentRouteConfigs,
+    settingsConfig.defaultAuth
+  ),
+  {
+    path: "/",
+    element: <Navigate to="/agent/dashboard" />,
     auth: settingsConfig.defaultAuth,
   },
   ...commonRoutes,

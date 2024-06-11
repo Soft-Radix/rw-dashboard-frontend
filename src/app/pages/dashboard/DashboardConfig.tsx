@@ -40,4 +40,13 @@ export const ClientDashboardConfig = {
   ],
 };
 
+export const AgentDashboardConfig = {
+  ...commonSetting,
+  routes: [
+    {
+      path: "agent/dashboard",
+      element: <Dashboard />,
+    },
+  ],
+};
 // export default DashboardConfig;

@@ -157,6 +157,76 @@ const navigationConfig: FuseNavItemType[] = [
   },
 ];
 
+export const agentNavigationConfig: FuseNavItemType[] = [
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    translate: "DASHBOARD",
+    type: "item",
+    icon: "heroicons-outline:template",
+    customIcon: <DashBoardIcon />,
+    url: "agent/dashboard",
+  },
+  {
+    id: "projects",
+    title: "Projects",
+    translate: "Projects",
+    type: "collapse",
+    icon: "heroicons-outline:list",
+    customIcon: <ProjectIcon />,
+    children: getProjectNavItems(),
+  },
+
+  // {
+  //   id: "task",
+  //   title: "Task",
+  //   translate: "TASK",
+  //   type: "item",
+  //   icon: "heroicons-outline:clipboard-check",
+  //   customIcon: <TaskIcon />,
+  //   url: "tasks",
+  // },
+
+  {
+    id: "chatBoard",
+    title: "Chat Board",
+    translate: "CHAT_BOARD",
+    type: "item",
+    icon: "heroicons-outline:chat-alt-2",
+    customIcon: <ChatBoardIcon />,
+    url: "chat-board",
+  },
+  {
+    id: "sharedFiles",
+    title: "Shared Files",
+    translate: "SHARED_FILES",
+    type: "item",
+    icon: "heroicons-outline:external-link",
+    customIcon: <SharedFileIcon />,
+    url: "shared-files",
+  },
+  {
+    id: "passwordManager",
+    title: "Password Manager",
+    translate: "PASSWORD_MANAGER",
+    type: "item",
+    icon: "heroicons-outline:lock-closed",
+    customIcon: <PasswordManagerIcon />,
+    url: "password-manager",
+  },
+
+  {
+    id: "support",
+    title: "Support",
+    translate: "SUPPORT",
+    type: "item",
+    icon: "heroicons-outline:question-mark-circle",
+    customIcon: <SupportIcon />,
+
+    url: "support",
+  },
+];
+
 export const adminNavigationConfig: FuseNavItemType[] = [
   {
     id: "dashboard",

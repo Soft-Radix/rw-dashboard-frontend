@@ -20,6 +20,8 @@ import {
 } from "public/assets/icons/welcome";
 import { Camera } from "public/assets/icons/common";
 import { useNavigation } from "react-router";
+import { Uploadkyc } from "app/store/Agent";
+import toast from "react-hot-toast";
 
 type FormType = {
   cnfPassword: string;
@@ -34,13 +36,17 @@ export default function UploadKyc() {
   const navigate = useNavigate();
   const [frontID, setFrontID] = useState(null);
   const [backID, setBackID] = useState(null);
+  const [frontfile, setFrontFile] = useState(null);
+  const [backfile, setBackFile] = useState(null);
   const [webcamCapture, setWebcamCapture] = useState(null);
   const webcamRef = React.useRef(null);
+
   const handleFrontIDChange = (event) => {
+    setFrontFile(event.target.files[0]);
     setFrontID(URL.createObjectURL(event.target.files[0]));
   };
-
   const handleBackIDChange = (event) => {
+    setBackFile(event.target.files[0]);
     setBackID(URL.createObjectURL(event.target.files[0]));
   };
 
@@ -59,33 +65,22 @@ export default function UploadKyc() {
   const store = useSelector((store: AuthRootState) => store.auth);
 
   //* initialise useformik hook
-  const formik = useFormik({
-    initialValues: {
-      cnfPassword: "",
-      password: "",
-    },
-    validationSchema: resetPassSchema,
-    onSubmit: (values) => {
-      onSubmit(values);
-    },
-  });
 
-  async function onSubmit(formData: FormType) {
-    let data = {
-      password: formData.password,
-      token,
-    };
-    setIsLoading(true);
-    let { payload } = await dispatch(setPassword(data));
-    setIsLoading(false);
-    if (payload?.data?.status) {
-      navigate("/sign-in");
-    }
-  }
-
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     // Navigate to '/photo-id' route
-    navigate("/photo-id");
+    const payload = new FormData();
+    payload.append("front_id", frontfile);
+    payload.append("back_id", backfile);
+    try {
+      const res = await dispatch(Uploadkyc({ payload, token }));
+      if (res?.payload?.data?.status == 0) {
+        navigate("/photo-id/token");
+        toast.success(res?.payload?.data?.message);
+      }
+    } catch (error) {
+      toast.error(error?.message);
+      console.error("Error fetching data:", error);
+    }
   };
 
   return (

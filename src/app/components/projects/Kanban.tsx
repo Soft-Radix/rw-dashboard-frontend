@@ -93,7 +93,7 @@ const Kanban = (props: IProps): JSX.Element => {
     }
     setAddCard(!addCard);
   };
-  const { fetchStatus } = useSelector(
+  const { fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
   );
   const listData = async (task_limt, columnid = 0) => {
@@ -103,7 +103,7 @@ const Kanban = (props: IProps): JSX.Element => {
       search: "",
       project_id: id as string,
       task_start: 0,
-      task_limit: task_limt,
+      task_limit: task_limt || 2,
       project_column_id: columnid,
     };
     try {
@@ -123,10 +123,13 @@ const Kanban = (props: IProps): JSX.Element => {
             ...columnList[columnIndex],
             tasks: columnObject?.tasks,
           };
+
           // Update the columnList state with the updated column
           setColumnList((prevColumnList) => {
             const updatedColumns = [...prevColumnList];
-            updatedColumns[columnIndex].tasks = updatedColumn?.tasks;
+            const newColumn: any = { ...updatedColumns[columnIndex] };
+            newColumn.tasks = [...updatedColumn?.tasks];
+            updatedColumns[columnIndex] = newColumn;
             return updatedColumns;
           });
         }
@@ -185,7 +188,7 @@ const Kanban = (props: IProps): JSX.Element => {
     }
   }, [id]);
 
-  if (fetchStatus === "loading") {
+  if (fetchStatusNew == "loading") {
     return <ListLoading />;
   }
   // const handleAddTask = () => {

@@ -13,6 +13,7 @@ import {
 } from "@reduxjs/toolkit";
 import navigationConfig, {
   adminNavigationConfig,
+  agentNavigationConfig,
 } from "app/configs/navigationConfig";
 import { selectCurrentLanguageId } from "app/store/i18nSlice";
 import { AppThunk, RootStateType } from "app/store/types";
@@ -44,84 +45,88 @@ const emptyInitialState = navigationAdapter.getInitialState([]);
 /**
  * Appends a navigation item to the navigation store state.
  */
-export const appendNavigationItem =
-  (item: FuseNavItemType, parentId?: string | null): AppThunk =>
-  async (dispatch, getState) => {
-    const AppState = getState() as AppRootStateType;
-    const navigation = FuseNavigationHelper.unflattenNavigation(
-      selectNavigationAll(AppState)
-    );
+export const appendNavigationItem = (
+  item: FuseNavItemType,
+  parentId?: string | null
+): AppThunk => async (dispatch, getState) => {
+  const AppState = getState() as AppRootStateType;
+  const navigation = FuseNavigationHelper.unflattenNavigation(
+    selectNavigationAll(AppState)
+  );
 
-    dispatch(
-      setNavigation(
-        FuseNavigationHelper.appendNavItem(
-          navigation,
-          FuseNavItemModel(item),
-          parentId
-        )
+  dispatch(
+    setNavigation(
+      FuseNavigationHelper.appendNavItem(
+        navigation,
+        FuseNavItemModel(item),
+        parentId
       )
-    );
+    )
+  );
 
-    return Promise.resolve();
-  };
+  return Promise.resolve();
+};
 
 /**
  * Prepends a navigation item to the navigation store state.
  */
-export const prependNavigationItem =
-  (item: FuseNavItemType, parentId?: string | null): AppThunk =>
-  async (dispatch, getState) => {
-    const AppState = getState() as AppRootStateType;
-    const navigation = FuseNavigationHelper.unflattenNavigation(
-      selectNavigationAll(AppState)
-    );
+export const prependNavigationItem = (
+  item: FuseNavItemType,
+  parentId?: string | null
+): AppThunk => async (dispatch, getState) => {
+  const AppState = getState() as AppRootStateType;
+  const navigation = FuseNavigationHelper.unflattenNavigation(
+    selectNavigationAll(AppState)
+  );
 
-    dispatch(
-      setNavigation(
-        FuseNavigationHelper.prependNavItem(
-          navigation,
-          FuseNavItemModel(item),
-          parentId
-        )
+  dispatch(
+    setNavigation(
+      FuseNavigationHelper.prependNavItem(
+        navigation,
+        FuseNavItemModel(item),
+        parentId
       )
-    );
+    )
+  );
 
-    return Promise.resolve();
-  };
+  return Promise.resolve();
+};
 
 /**
  * Adds a navigation item to the navigation store state at the specified index.
  */
-export const updateNavigationItem =
-  (id: string, item: PartialDeep<FuseNavItemType>): AppThunk =>
-  async (dispatch, getState) => {
-    const AppState = getState() as AppRootStateType;
-    const navigation = FuseNavigationHelper.unflattenNavigation(
-      selectNavigationAll(AppState)
-    );
+export const updateNavigationItem = (
+  id: string,
+  item: PartialDeep<FuseNavItemType>
+): AppThunk => async (dispatch, getState) => {
+  const AppState = getState() as AppRootStateType;
+  const navigation = FuseNavigationHelper.unflattenNavigation(
+    selectNavigationAll(AppState)
+  );
 
-    dispatch(
-      setNavigation(FuseNavigationHelper.updateNavItem(navigation, id, item))
-    );
+  dispatch(
+    setNavigation(FuseNavigationHelper.updateNavItem(navigation, id, item))
+  );
 
-    return Promise.resolve();
-  };
+  return Promise.resolve();
+};
 
 /**
  * Removes a navigation item from the navigation store state.
  */
-export const removeNavigationItem =
-  (id: string): AppThunk =>
-  async (dispatch, getState) => {
-    const AppState = getState() as AppRootStateType;
-    const navigation = FuseNavigationHelper.unflattenNavigation(
-      selectNavigationAll(AppState)
-    );
+export const removeNavigationItem = (id: string): AppThunk => async (
+  dispatch,
+  getState
+) => {
+  const AppState = getState() as AppRootStateType;
+  const navigation = FuseNavigationHelper.unflattenNavigation(
+    selectNavigationAll(AppState)
+  );
 
-    dispatch(setNavigation(FuseNavigationHelper.removeNavItem(navigation, id)));
+  dispatch(setNavigation(FuseNavigationHelper.removeNavItem(navigation, id)));
 
-    return Promise.resolve();
-  };
+  return Promise.resolve();
+};
 
 export const {
   selectAll: selectNavigationAll,
@@ -134,7 +139,11 @@ const userDetail = getLocalStorage("userDetail");
 const initialState = navigationAdapter.upsertMany(
   emptyInitialState,
   FuseNavigationHelper.flattenNavigation(
-    userDetail?.role === "admin" ? adminNavigationConfig : navigationConfig
+    userDetail?.role === "admin"
+      ? adminNavigationConfig
+      : userDetail?.role === "agent"
+      ? agentNavigationConfig
+      : navigationConfig
   )
 );
 /**
@@ -151,8 +160,10 @@ export const navigationSlice = createSlice({
           payload?.role === "admin"
             ? adminNavigationConfig
             : payload?.isAdd
-              ? payload?.customNavigation
-              : navigationConfig
+            ? payload?.customNavigation
+            : payload?.role === "agent"
+            ? agentNavigationConfig
+            : navigationConfig
         )
       );
     },
@@ -166,14 +177,18 @@ export const navigationSlice = createSlice({
   },
 });
 
-export const { setNavigation, resetNavigation, setInitialState } =
-  navigationSlice.actions;
+export const {
+  setNavigation,
+  resetNavigation,
+  setInitialState,
+} = navigationSlice.actions;
 
 export const selectNavigation = createSelector(
   [selectNavigationAll, selectUserRole, selectCurrentLanguageId],
   (navigationSimple, userRole) => {
-    const navigation =
-      FuseNavigationHelper.unflattenNavigation(navigationSimple);
+    const navigation = FuseNavigationHelper.unflattenNavigation(
+      navigationSimple
+    );
 
     function setAdditionalData(data: FuseNavItemType[]): FuseNavItemType[] {
       return data?.map((item) => ({

@@ -101,7 +101,7 @@ export const projectColumnAdd = createAsyncThunk(
 );
 export const projectColumnList = createAsyncThunk(
   "project/columns/list",
-  async (payload: ProjectAdd) => {
+  async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `/project/columns/list`,
       method: "post",
@@ -286,7 +286,7 @@ export const initialState: initialStateProps = {
   agentTotal_records: 0,
   taskDetailInfo: {},
   projectInfo: {},
-  actionDisable: false,
+  fetchStatusNew: "loading",
 };
 /**
  * The auth slice.
@@ -315,40 +315,19 @@ export const projectSlice = createSlice({
       .addCase(TaskDetails.rejected, (state) => {
         state.fetchStatus = "idle";
       })
-      .addCase(projectColumnList.pending, (state) => {
-        state.fetchStatus = "loading";
+      .addCase(projectColumnList.pending, (state, action) => {
+        const { project_column_id } = action.meta.arg;
+        state.fetchStatusNew = !project_column_id ? "loading" : "idle";
+        // state.fetchStatusNew = "loading";
       })
       .addCase(projectColumnList.fulfilled, (state, action) => {
         console.log(state, "statet");
         const { data } = action.payload?.data;
-        state.fetchStatus = "idle";
+        state.fetchStatusNew = "idle";
         state.projectInfo = data;
       })
       .addCase(projectColumnList.rejected, (state) => {
-        state.fetchStatus = "idle";
-      })
-      .addCase(TaskDeleteAttachment.pending, (state) => {
-        state.actionDisable = true;
-      })
-      .addCase(TaskDeleteAttachment.fulfilled, (state, action) => {
-        const payload = action.payload as ApiResponse; // Assert type
-        // const { member_id } = action.meta?.arg;
-        // console.log(group_id, "idd");
-        if (payload?.data?.status) {
-          // state.agentGroupDetail.group_members =
-          //   state.agentGroupDetail.group_members.filter(
-          //     (item) => item.id !== member_id
-          //   );
-
-          state.actionDisable = false;
-          toast.success(payload?.data?.message);
-        } else {
-          toast.error(payload?.data?.message);
-        }
-      })
-      .addCase(TaskDeleteAttachment.rejected, (state, { error }) => {
-        toast.error(error?.message);
-        state.actionDisable = false;
+        state.fetchStatusNew = "idle";
       });
   },
 });

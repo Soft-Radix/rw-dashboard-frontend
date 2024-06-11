@@ -428,6 +428,18 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
   margin-top: 10px;
 }
 
+.muiltr-c1i6fn-MuiButtonBase-root-MuiMenuItem-root-MuiMultiSectionDigitalClockSection-item.Mui-selected {
+  background-color: #4f46e5;
+  color: rgb(255, 255, 255);
+}
+.muiltr-hs29jq-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  color: rgb(255, 255, 255);
+  background-color: #4f46e5;
+  font-weight: 500;
+}
+.muiltr-7g9680-MuiButtonBase-root-MuiPickersDay-root:not(.Mui-selected) {
+  border: 1px solid #4f46e5;
+}
 .chatboard > .cc-tabs > .cc-tab-list {
   height: 60px !important;
   width: 270px !important;

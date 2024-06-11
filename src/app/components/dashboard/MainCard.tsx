@@ -305,62 +305,13 @@ export default function MainCard({
                             </Button>
                           </>
                         ) : (
-                          // <DragDropContext onDragEnd={onDragEnd}>
-                          //   <Droppable droppableId={`tasks-${key}`}>
-                          //     {(provided) => (
-                          //       <div
-                          //         {...provided.droppableProps}
-                          //         ref={provided.innerRef}
-                          //         style={{
-                          //           display: "grid",
-                          //           gridTemplateColumns:
-                          //             "repeat(auto-fill, minmax(200px, 1fr))",
-                          //           gap: "10px",
-                          //         }}
-                          //       >
-                          //         {List?.map((item, index) => (
-                          //           <Draggable
-                          //             key={item.id}
-                          //             draggableId={String(item.id)}
-                          //             index={index}
-                          //           >
-                          //             {(provided) => (
-                          //               <div
-                          //                 ref={provided.innerRef}
-                          //                 {...provided.draggableProps}
-                          //                 {...provided.dragHandleProps}
-                          //                 style={{
-                          //                   ...provided.draggableProps.style,
-                          //                   userSelect: "none", // Prevent text selection
-                          //                 }}
-                          //               >
-                          //                 <ItemCard
-                          //                   id={item.id}
-                          //                   title={item.title}
-                          //                   priority={item.priority}
-                          //                   taskName={item.description}
-                          //                   date={item.createdAt}
-                          //                   isChecked={item.isChecked}
-                          //                   images={item?.images}
-                          //                   callListApi={callListApi}
-                          //                 />
-                          //               </div>
-                          //             )}
-                          //           </Draggable>
-                          //         ))}
-                          //         {provided.placeholder}
-                          //       </div>
-                          //     )}
-                          //   </Droppable>
-                          // </DragDropContext>
-
                           tasks.map((item, index) => (
                             <ItemCard
                               id={item.id}
                               title={item.title}
                               priority={item.priority}
                               taskName={item.description}
-                              date={item.createdAt}
+                              date={item.business_due_date}
                               isChecked={item.isChecked}
                               images={item?.images}
                               callListApi={callListApi}
