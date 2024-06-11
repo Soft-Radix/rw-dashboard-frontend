@@ -8,6 +8,7 @@ import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import { AgentRootState } from "app/store/Agent/Interafce";
 import { ClientRootState } from "app/store/Client/Interface";
+import { ProjectRootState } from "app/store/Projects/Interface";
 
 interface IProps {
   isOpen: boolean;
@@ -38,7 +39,9 @@ function DeleteClient({
   const { actionStatusClient } = useSelector(
     (store: ClientRootState) => store.client
   );
-
+  const { actionDisable } = useSelector(
+    (store: ProjectRootState) => store.project
+  );
   return (
     <>
       <CommonModal
@@ -52,7 +55,8 @@ function DeleteClient({
           actionStatusDisabled ||
           actionStatusAttachment ||
           actionStatusClient ||
-          actionStatusGroupMember
+          actionStatusGroupMember ||
+          actionDisable
         }
         onSubmit={onDelete}
         btnTitle="Yes"

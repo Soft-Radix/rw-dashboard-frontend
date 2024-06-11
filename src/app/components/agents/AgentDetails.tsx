@@ -59,7 +59,7 @@ export default function AgentDetails() {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  
+
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -356,7 +356,7 @@ export default function AgentDetails() {
                               handleImageClick(urlForImage + item.file)
                             }
                           >
-                            {/* <AttachmentIcon /> */}
+                            <AttachmentIcon />
                           </div>
                           <div
                             className="absolute top-7 right-7"

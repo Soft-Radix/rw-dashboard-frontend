@@ -9,9 +9,11 @@ import {
   ProjectUpdate,
   ProjectAddDoc,
   Taskadd,
+  ApiResponse,
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 import { clientIDType } from "../Client/Interface";
+import toast from "react-hot-toast";
 /**
  * API calling
  */
@@ -284,6 +286,7 @@ export const initialState: initialStateProps = {
   agentTotal_records: 0,
   taskDetailInfo: {},
   projectInfo: {},
+  actionDisable: false,
 };
 /**
  * The auth slice.
@@ -323,6 +326,29 @@ export const projectSlice = createSlice({
       })
       .addCase(projectColumnList.rejected, (state) => {
         state.fetchStatus = "idle";
+      })
+      .addCase(TaskDeleteAttachment.pending, (state) => {
+        state.actionDisable = true;
+      })
+      .addCase(TaskDeleteAttachment.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+        // const { member_id } = action.meta?.arg;
+        // console.log(group_id, "idd");
+        if (payload?.data?.status) {
+          // state.agentGroupDetail.group_members =
+          //   state.agentGroupDetail.group_members.filter(
+          //     (item) => item.id !== member_id
+          //   );
+
+          state.actionDisable = false;
+          toast.success(payload?.data?.message);
+        } else {
+          toast.error(payload?.data?.message);
+        }
+      })
+      .addCase(TaskDeleteAttachment.rejected, (state, { error }) => {
+        toast.error(error?.message);
+        state.actionDisable = false;
       });
   },
 });

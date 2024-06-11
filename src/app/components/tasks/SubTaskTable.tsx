@@ -77,9 +77,9 @@ function SubTaskTable(props) {
                 },
               }}
             >
-              <TableCell scope="row">
-                <span className="flex items-center gap-10">
-                  {/* <Checkbox
+              {/* <TableCell scope="row">
+                <span className="flex items-center gap-10"> */}
+              {/* <Checkbox
                     sx={{ padding: "4px" }}
                     color="primary"
                     defaultChecked={row.defaultChecked}
@@ -87,7 +87,7 @@ function SubTaskTable(props) {
                       "aria-labelledby": `table-checkbox-${index}`,
                     }}
                   />{" "} */}
-                  {row.title}
+              {/* {row.title}
                 </span>
               </TableCell>
               <TableCell align="center">
@@ -111,7 +111,7 @@ function SubTaskTable(props) {
                     <EditIcon />
                   </span>
                 </div>
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           ))}
         </CommonTable>
