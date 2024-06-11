@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "@emotion/styled";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import initialData from "./data";
 import ReactDOM from "react-dom";
 
-import Column from "./Column";
-import { initial } from "lodash";
 import transformData from "./dataTransform";
 import MainCard from "./MainCard";
 import { useAppDispatch } from "app/store/store";
@@ -179,7 +176,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
               const tasks = column?.taskIds.map(
                 (taskId) => starter?.tasks[taskId]
               );
-              const firstTaskId = Object.keys(starter?.tasks)[0];
+              const firstTaskId = Object.keys(starter.tasks)[0];
               const project_id = starter?.tasks[firstTaskId]?.project_id;
 
               return (
@@ -189,7 +186,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
                   column={column}
                   tasks={tasks}
                   id={column?.id}
-                  project_id={project_id}
+                  project_id={id}
                   callListApi={callListApi}
                 />
               );

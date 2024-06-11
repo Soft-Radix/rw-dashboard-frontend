@@ -366,6 +366,7 @@ export default function MainCard({
                               callListApi={callListApi}
                               index={index}
                               key={item.id}
+                              project_id={project_id}
                             />
                             // <Task key={task.id} task={task} index={index} />
                           ))
