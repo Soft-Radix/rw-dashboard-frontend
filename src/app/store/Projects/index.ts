@@ -283,6 +283,7 @@ export const initialState: initialStateProps = {
   assignedAgentDetail: [],
   agentTotal_records: 0,
   taskDetailInfo: {},
+  projectInfo: {},
 };
 /**
  * The auth slice.
@@ -309,6 +310,18 @@ export const projectSlice = createSlice({
         state.taskDetailInfo = data;
       })
       .addCase(TaskDetails.rejected, (state) => {
+        state.fetchStatus = "idle";
+      })
+      .addCase(projectColumnList.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
+      .addCase(projectColumnList.fulfilled, (state, action) => {
+        console.log(state, "statet");
+        const { data } = action.payload?.data;
+        state.fetchStatus = "idle";
+        state.projectInfo = data;
+      })
+      .addCase(projectColumnList.rejected, (state) => {
         state.fetchStatus = "idle";
       });
   },

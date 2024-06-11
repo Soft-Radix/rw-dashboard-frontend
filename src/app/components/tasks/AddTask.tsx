@@ -138,6 +138,7 @@ function AddTaskModal({
       description: "",
       time: "",
       date: "",
+      newLabel: "",
     },
     validationSchema,
     onSubmit: (values) => {},
@@ -428,7 +429,7 @@ function AddTaskModal({
     formData.append("title", formik.values.title);
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
-    formData.append("labels", selectedlabel);
+    formData.append("labels", formik?.values?.newLabel || selectedlabel);
     formData.append("status", selectedStatus);
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder);
@@ -617,7 +618,7 @@ function AddTaskModal({
     formData.append("title", formik.values.title);
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
-    formData.append("labels", selectedlabel);
+    formData.append("labels", formik?.values?.newLabel || selectedlabel);
     formData.append("status", selectedStatus);
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
@@ -628,7 +629,7 @@ function AddTaskModal({
     formData.append("delete_file_ids", "");
     formData.append(
       "reminders",
-      !formik?.values?.date && !formik?.values?.time
+      formik?.values?.date && formik?.values?.time
         ? moment(formik?.values?.date + " " + formik?.values?.time).format(
             "YYYY-MM-DD HH:mm"
           )
@@ -1013,7 +1014,10 @@ function AddTaskModal({
                     variant="contained"
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px]"
-                    // onClick={onSubmit}
+                    onClick={() => {
+                      setSelectedlabel(formik?.values?.newLabel);
+                      setShowLabelForm(false);
+                    }}
                   >
                     Save
                   </Button>
@@ -1023,6 +1027,7 @@ function AddTaskModal({
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px] ml-14"
                     onClick={() => {
+                      formik.setFieldValue("newLabel", "");
                       setShowLabelForm(false);
                     }}
                   >
@@ -1340,7 +1345,7 @@ function AddTaskModal({
                       <img
                         src={urlForImage + item.file}
                         alt="Black Attachment"
-                        className="w-[200px] rounded-md sm:h-[130px]"
+                        className="w-[100px] rounded-md "
                       />
                       <div
                         className="absolute top-7 left-7"

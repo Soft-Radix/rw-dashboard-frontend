@@ -3,7 +3,7 @@ const transformData = (data) => {
   const columns = {};
   const columnOrder = [];
 
-  data.forEach((column) => {
+  data?.forEach((column) => {
     const taskIds = column.tasks.map((task) => {
       tasks[task?.id.toString()] = { ...task };
       return task.id.toString();

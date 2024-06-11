@@ -76,6 +76,7 @@ export type initialStateProps = {
   assignedAgentDetail: ClientType[];
   agentTotal_records?: number;
   taskDetailInfo?: taskDetailType;
+  projectInfo?: any;
 };
 // export interface ClientRootState {
 //   client: initialStateProps; // Add other slices if needed

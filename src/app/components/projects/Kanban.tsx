@@ -23,6 +23,9 @@ import {
 } from "app/store/Projects";
 import CombinedDragDrop from "./Combined";
 import DragLayout from "../dashboard/DragLayout";
+import { ProjectRootState } from "app/store/Projects/Interface";
+import { useSelector } from "react-redux";
+import ListLoading from "@fuse/core/ListLoading";
 
 interface IProps {
   isOpen?: boolean;
@@ -90,7 +93,9 @@ const Kanban = (props: IProps): JSX.Element => {
     }
     setAddCard(!addCard);
   };
-
+  const { fetchStatus } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const listData = async (task_limt, columnid = 0) => {
     const payload: any = {
       start: 0,
@@ -179,6 +184,10 @@ const Kanban = (props: IProps): JSX.Element => {
       listData(2);
     }
   }, [id]);
+
+  if (fetchStatus === "loading") {
+    return <ListLoading />;
+  }
   // const handleAddTask = () => {
   //   return (
   //     <Button
@@ -207,50 +216,6 @@ const Kanban = (props: IProps): JSX.Element => {
         } overflow-x-auto px-28 pb-28 items-start`}
       >
         <DragLayout columnList={columnList} callListApi={listData} id={id} />
-        {/* <DragDropContext onDragEnd={onDragEnd}>
-          <Droppable
-            droppableId="droppable"
-            direction="horizontal"
-            isCombineEnabled={isCombineEnabled}
-          >
-            {(provided) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`flex  ${columnList?.length > 0 ? "gap-20" : ""}`}
-              >
-                {columnList?.map((item, index) => (
-                  <Draggable
-                    key={item.id}
-                    draggableId={item.id.toString()}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        ref={provided.innerRef}
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                      >
-                        <MainCard
-                          title={item.name}
-                          key={item.id}
-                          isEmpty
-                          id={item.id}
-                          project_id={item.project_id}
-                          callListApi={listData}
-                          tasks={item.tasks}
-                          // handleAddTask={handleAddTask}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
-        </DragDropContext> */}
 
         <div className="min-w-[322px] bg-white p-14 py-[20px] rounded-lg shadow-md">
           {!addCard && (
