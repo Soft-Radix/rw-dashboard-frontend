@@ -3,19 +3,19 @@ const transformData = (data) => {
   const columns = {};
   const columnOrder = [];
 
-  data.forEach((column) => {
+  data?.forEach((column) => {
     const taskIds = column.tasks.map((task) => {
       tasks[task?.id.toString()] = { ...task };
       return task.id.toString();
     });
 
     columns[column.id] = {
-      id: column.id.toString(),
+      id: column?.id.toString(),
       title: column.name,
       taskIds,
     };
 
-    columnOrder.push(column.id.toString());
+    columnOrder.push(column?.id.toString());
   });
 
   return {
