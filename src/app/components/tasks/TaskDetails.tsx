@@ -36,7 +36,11 @@ import task2 from "../../../../public/assets/images/pages/tasks/task-file2.png";
 import screen from "../../../../public/assets/images/pages/tasks/task-screen.png";
 import ImagesOverlap from "../ImagesOverlap";
 import AddSubTaskModal from "./AddSubTaskModal";
-import { deleteTask, TaskDetails as getTaskDetails } from "app/store/Projects";
+import {
+  deleteTask,
+  TaskDetails as getTaskDetails,
+  TaskDeleteAttachment,
+} from "app/store/Projects";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { LiveAudioVisualizer } from "react-audio-visualize";
 
@@ -68,7 +72,7 @@ const TaskDetails = () => {
   const theme: Theme = useTheme();
   const [isOpenAddSubTaskModal, setIsOpenAddSubTaskModal] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [deleteId, setIsDeleteId] = useState<number>(null);
+  const [deleteId, setIsDeleteId] = useState<any>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
@@ -77,6 +81,7 @@ const TaskDetails = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [disable, setDisabled] = useState(false);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [type, setType] = useState(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const handleClick = (event: any) => {
@@ -102,11 +107,14 @@ const TaskDetails = () => {
   }, [dispatch]);
   const handleDeleteAttachment = async (id: number) => {
     // const { payload } = await dispatch(deleteAttachment({ attachment_id: id }));
+    const { payload } = await dispatch(
+      TaskDeleteAttachment({ type: type, file_id: id })
+    );
     // // console.log(payload, "kklkkkl");
-    // if (payload?.data?.status) {
-    //   dispatch(getAgentInfo({ agent_id }));
-    // }
-    // setIsOpenDeletedModal(false);
+    if (payload?.data?.status) {
+      dispatch(getTaskDetails(taskId));
+    }
+    setIsOpenDeletedModal(false);
   };
 
   const handleImageClick = (imageUrl) => {
@@ -193,7 +201,6 @@ const TaskDetails = () => {
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
-
       <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap pb-20">
         <div className="basis-full lg:basis-auto lg:grow">
           <div className="shadow-md bg-white rounded-lg">
@@ -201,13 +208,13 @@ const TaskDetails = () => {
               <div className="w-full">
                 <div className="flex items-center justify-between gap-40 mb-10">
                   <span className="text-[20px] text-[#111827] font-600 inline-block">
-                    Brand logo design
+                    {taskDetailInfo?.title}
                   </span>
                   <div className="flex items-center gap-20">
                     <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20">
                       {/* {agentDetail?.status || "N/A"} */}
                       <ImportantTaskIcon />
-                      Important Task
+                      {taskDetailInfo?.labels}
                     </Button>
                     {/* <div className="flex justify-between gap-10 items-center"> */}
 
@@ -354,15 +361,15 @@ const TaskDetails = () => {
                 <div className="flex gap-20 my-20 w-full">
                   <div className="relative w-1/2">
                     <Typography className="mb-10">Files</Typography>
-                    {taskDetailInfo?.task_files?.map((item) => {
-                      // console.log(item, "itemmmm");
-                      return (
-                        <div className="flex gap-4">
-                          <div className="relative w-full">
+                    <div className="flex gap-10  flex-wrap">
+                      {taskDetailInfo?.task_files?.map((item) => {
+                        // console.log(item, "itemmmm");
+                        return (
+                          <div className="relative w-max  ">
                             <img
                               src={urlForImage + item.file}
-                              alt=""
-                              className="block w-full h-[200px]"
+                              alt="Black Attachment"
+                              className="w-[200px] rounded-md sm:h-[130px]"
                             />
                             <div
                               className="absolute top-7 left-7"
@@ -372,40 +379,59 @@ const TaskDetails = () => {
                             >
                               <AttachmentIcon />
                             </div>
-                            <div className="absolute top-0 right-0 mt-4 mr-4 cursor-pointer">
+                            <div className="absolute top-7 right-7">
                               <AttachmentDeleteIcon
                                 onClick={() => {
                                   setIsOpenDeletedModal(true);
+                                  setType(3);
                                   setIsDeleteId(item.id);
                                 }}
                               />
                             </div>
                           </div>
+                        );
+                      })}
+                      {expandedImage && (
+                        <div
+                          className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
+                          onClick={() => setExpandedImage(null)}
+                        >
+                          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <img
+                              src={expandedImage}
+                              alt="Expanded Image"
+                              className="max-w-full max-h-full"
+                            />
+                          </div>
                         </div>
-                      );
-                    })}
+                      )}
+                    </div>
                   </div>
                   <div className="w-1/2">
                     <div className="relative">
                       <Typography className="mb-10">
                         Screen Recording
                       </Typography>
-                      <div className="relative">
-                        <video
-                          src={urlForImage + taskDetailInfo?.screen_record_file}
-                          // alt="screen recorder"
-                          className="block w-full h-[200px]"
-                        />
-
-                        <div className="absolute top-0 right-0 mt-4 mr-4">
-                          <AttachmentDeleteIcon
-                            onClick={() => {
-                              setIsOpenDeletedModal(true);
-                              // setIsDeleteId(item.id);
-                            }}
+                      {taskDetailInfo?.screen_record_file && (
+                        <>
+                          <video
+                            src={
+                              urlForImage + taskDetailInfo?.screen_record_file
+                            }
+                            // alt="screen recorder"
+                            className="block w-full h-[200px]"
                           />
-                        </div>
-                      </div>
+                          <div className="absolute top-0 right-0 mt-4 mr-4">
+                            <AttachmentDeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setType(2);
+                                setIsDeleteId(taskId);
+                              }}
+                            />
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -460,12 +486,14 @@ const TaskDetails = () => {
                   isProgressIndicatorOnHoverShown={true}
                   isProgressIndicatorTimeOnHoverShown={true}
                 /> */}
-                <audio controls>
-                  <source
-                    src={urlForImage + taskDetailInfo?.voice_record_file}
-                    type="audio/mp3"
-                  />
-                </audio>
+                {taskDetailInfo?.voice_record_file && (
+                  <audio controls className="mb-10">
+                    <source
+                      src={urlForImage + taskDetailInfo?.voice_record_file}
+                      type="audio/mp3"
+                    />
+                  </audio>
+                )}
 
                 {/* <LiveAudioVisualizer
                   mediaRecorder={}
@@ -492,7 +520,7 @@ const TaskDetails = () => {
             <SubTaskTable />
           </div>
         </div>
-        <div className="basis-[470px]">
+        <div className="basis-[320px]">
           <TaskDetailData />
         </div>
         <AddSubTaskModal
@@ -513,7 +541,7 @@ const TaskDetails = () => {
           handleToggle={toggleDeleteModal}
           type="delete"
           onDelete={handleDelete}
-          // disabled={disable}
+          disabled={disable}
         />
         {isOpenAddModal && (
           <AddTaskModal
