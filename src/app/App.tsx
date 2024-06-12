@@ -23,6 +23,10 @@ import { persistStore } from "redux-persist";
 import store from "./store/store";
 import { setInitialState } from "./theme-layouts/shared-components/navigation/store/navigationSlice";
 import { ChatProvider } from "./chatContext/ChatProvider";
+import {
+  CometChatOngoingCall,
+} from "@cometchat/chat-uikit-react";
+import IncomingCallHandler from "./components/chatBoard/IncomingCallHandler";
 
 // import axios from 'axios';
 /**
@@ -76,6 +80,13 @@ function App() {
             <FuseTheme theme={mainTheme} direction={langDirection}>
               <AuthRouteProvider>
                 <ChatProvider>
+                  <div className="">
+                  <IncomingCallHandler />
+                  </div>
+                  <div>
+                    <CometChatOngoingCall />
+                  </div>
+
                   <FuseLayout layouts={themeLayouts} />
                   <Toaster
                     position="top-center"

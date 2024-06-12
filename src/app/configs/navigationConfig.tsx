@@ -40,7 +40,9 @@ export const getProjectNavItems = () => {
     type: "item",
     icon: "material-twotone:compress",
     customIcon: <SubProjectIcon />,
-    url: `projects/${project.id}/${project.name}`,
+    url: `projects/${
+      userDetail?.role == "client" ? project.id : project.project_id
+    }/${project.name}/?type=kanban`,
     end: true,
     isProject: true,
   }));

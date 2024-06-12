@@ -1,55 +1,63 @@
+import React, { useCallback, useRef, useState } from "react";
+import Webcam from "react-webcam";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { UploadImage } from "app/store/Agent";
-import { setPassword } from "app/store/Auth";
-import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
-import { useFormik } from "formik";
-import { Camera } from "public/assets/icons/common";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   CircleLeft1Icon,
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import { useCallback, useRef, useState } from "react";
-import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { useNavigate, useParams } from "react-router-dom";
-import { resetPassSchema } from "src/formSchema";
-
-type FormType = {
-  cnfPassword: string;
-  password: string;
-};
+import { Camera } from "public/assets/icons/common";
 
 export default function CreatePassword() {
-  // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [frontID, setFrontID] = useState(null);
-  const [frontfile, setFrontFile] = useState(null);
-  const [webcamCapture, setWebcamCapture] = useState(null);
+  const [frontID, setFrontID] = useState<string | null>(null);
+  const [frontfile, setFrontFile] = useState<File | null>(null);
+  const [webcamCapture, setWebcamCapture] = useState<string | null>(null);
+  const [showWebcam, setShowWebcam] = useState<boolean>(false);
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const webcamRef = useRef(null);
-  const store = useSelector((store: AuthRootState) => store.auth);
+  const webcamRef = useRef<Webcam | null>(null);
+  const store = useSelector((store: any) => store.auth);
 
-  //* initialise useformik hook
   const handleWebcamFrontCapture = useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
-    setWebcamCapture(imageSrc);
-    setFrontID(imageSrc);
+    if (webcamRef.current) {
+      // setFrontFile(webcamRef.current);
+      const imageSrc = webcamRef.current.getScreenshot();
+      setWebcamCapture(imageSrc);
+      setFrontID(imageSrc);
+      if (imageSrc) {
+        // Convert base64 to Blob
+        const byteString = atob(imageSrc.split(",")[1]);
+        const mimeString = imageSrc.split(",")[0].split(":")[1].split(";")[0];
+        const ab = new ArrayBuffer(byteString.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: mimeString });
+        const file = new File([blob], "capture.jpg", { type: mimeString });
+        setFrontFile(file);
+      }
+      setShowWebcam(false); // Hide webcam after capturing the photo
+    }
   }, [webcamRef]);
 
   const handleButtonClick = async () => {
-    // Navigate to '/photo-id' route
     const payload = new FormData();
-    payload.append("file", frontfile);
+    if (frontID) {
+      payload.append("file", frontfile);
+    }
 
     try {
       const res = await dispatch(UploadImage({ payload, token }));
-      if (res?.payload?.data?.status == 0) {
+      if (res?.payload?.data?.status === 0) {
         toast.success(res?.payload?.data?.message);
         navigate("/upload-doc");
       }
@@ -60,14 +68,14 @@ export default function CreatePassword() {
   };
 
   return (
-    <div className="flex  items-center flex-col  gap-32 px-28 py-32">
+    <div className="flex items-center flex-col gap-32 px-28 py-32">
       <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
-      <CircleLeft1Icon className=" hidden sm:block absolute bottom-0 left-0 z-[-1]" />
+      <CircleLeft1Icon className="hidden sm:block absolute bottom-0 left-0 z-[-1]" />
       <CircleLeft2Icon className="hidden sm:block absolute bottom-[28px] left-0 z-[-1]" />
 
       <img src="assets/icons/remote-icon.svg" alt="" />
 
-      <div className="bg-[#fff] sm:min-w-[60%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md ">
+      <div className="bg-[#fff] sm:min-w-[60%] h-auto sm:py-[8rem] py-60 px-20 sm:px-20 flex justify-center rounded-lg shadow-md">
         <div className="flex flex-col justify-center gap-40">
           <Typography className="text-[48px] text-center font-700 leading-normal">
             Capture a Photo
@@ -76,14 +84,36 @@ export default function CreatePassword() {
             </p>
           </Typography>
           <div className="flex justify-center">
-            <button
-              onClick={handleWebcamFrontCapture}
-              className="  text-white px-4 py-2 "
-            >
-              <Camera />
-            </button>
+            {!showWebcam && !frontID ? (
+              <button
+                onClick={() => setShowWebcam(true)}
+                className="text-white px-4 py-2"
+              >
+                <Camera />
+              </button>
+            ) : null}
+            {showWebcam ? (
+              <div
+                className="flex flex-col gap-[20px] "
+                style={{ alignItems: "center" }}
+              >
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  className="w-full "
+                />
+                <div className="border-spacing-5 border-3 border-[#4f46e5] rounded-full">
+                  <button
+                    onClick={handleWebcamFrontCapture}
+                    className="bg-[#4f46e5] border-2 h-[54px] w-[54px] rounded-full p-2 m-2 "
+                    style={{}}
+                  ></button>
+                </div>
+              </div>
+            ) : null}
             {frontID && (
-              <img src={frontID} alt="Front ID" className="w-full max-w-xs " />
+              <img src={frontID} alt="Front ID" className="w-full " />
             )}
           </div>
         </div>
@@ -92,9 +122,9 @@ export default function CreatePassword() {
         variant="contained"
         color="secondary"
         size="large"
-        // disabled={!frontID}
         onClick={handleButtonClick}
-        className="text-[18px] font-500  min-w-[196px]"
+        disabled={!frontID}
+        className="text-[18px] font-500 min-w-[196px]"
       >
         Next
       </Button>
