@@ -206,7 +206,7 @@ export default function ProjectTabPanel() {
         <Kanban />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={1}>
-        <ProjectTaskTabel customSelectedTab={selectedTab} />
+        {/* <ProjectTaskTabel customSelectedTab={selectedTab} /> */}
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={2}>
         <ProjectTaskList customSelectedTab={selectedTab} />
