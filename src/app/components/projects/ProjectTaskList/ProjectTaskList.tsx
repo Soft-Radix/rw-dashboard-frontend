@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FilterPage from "../FilterPage";
 import ProjectMenuItems from "../ProjectMenuItems";
 import {
@@ -36,6 +36,11 @@ import TaskListDueData from "./TaskListDueData";
 import Assignee from "./Assignee";
 import Priority from "./Priority";
 import Label from "./Label";
+import Todo from "./Todo";
+import { useParams } from "react-router";
+import { useAppDispatch } from "app/store/store";
+import { projectColumnList } from "app/store/Projects";
+import DragLayout from "./DragLayout";
 const rows = [
   {
     title: "Brand logo design",
@@ -75,15 +80,70 @@ interface TaskList {
 const ProjectTaskList = (props: TaskList) => {
   const theme: Theme = useTheme();
   const { customSelectedTab } = props;
-
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
-    useState("Priority");
+  const [columnList, setColumnList] = useState<any[]>([]);
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState(
+    "Priority"
+  );
   const [showData, setShowData] = useState(true);
-
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const handleShowTable = () => {
     setShowData(!showData);
   };
-  console.log(tableSelectedItemDesign, "find");
+  const listData = async (task_limt, columnid = 0) => {
+    const payload: any = {
+      start: 0,
+      limit: 10,
+      search: "",
+      project_id: id as string,
+      task_start: 0,
+      task_limit: task_limt || 2,
+      project_column_id: columnid,
+    };
+    try {
+      const res = await dispatch(projectColumnList(payload));
+      // setColumnList(res?.payload?.data?.data?.list);
+      const updatedList = res?.payload?.data?.data?.list;
+
+      if (columnid != 0) {
+        // If columnId is provided, find the column with that id
+        const columnObject = updatedList.find((item) => item.id == columnid);
+        const columnIndex = columnList.findIndex(
+          (column) => column.id == columnid
+        );
+        if (columnIndex !== -1) {
+          // If column is found, update its tasks
+          const updatedColumn = {
+            ...columnList[columnIndex],
+            tasks: columnObject?.tasks,
+          };
+
+          // Update the columnList state with the updated column
+          setColumnList((prevColumnList) => {
+            const updatedColumns = [...prevColumnList];
+            const newColumn: any = { ...updatedColumns[columnIndex] };
+            newColumn.tasks = [...updatedColumn?.tasks];
+            updatedColumns[columnIndex] = newColumn;
+            return updatedColumns;
+          });
+        }
+      } else {
+        // If columnId is 0, update the entire columnList
+        setColumnList(updatedList);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    const savedOrder = localStorage.getItem(`columnOrder-${id}`);
+    if (savedOrder) {
+      setColumnList(JSON.parse(savedOrder));
+    } else {
+      listData(2);
+    }
+  }, [id]);
   return (
     <>
       {customSelectedTab && (
@@ -113,128 +173,11 @@ const ProjectTaskList = (props: TaskList) => {
               />
             </div>
           </div>
-
-          <div className="block gap-20  pt-10  w-full  my-10 bg-white rounded-lg h-fit border-1 border-solid border-[#D1D7DB] mb-24  ">
-            <div className="flex  flex-col  ">
-              <div className="flex items-center justify-start gap-20 px-20 pb-10">
-                {!showData ? (
-                  <DownArrowright onClick={handleShowTable} />
-                ) : (
-                  <SortIcon
-                    onClick={handleShowTable}
-                    className="border-1 w-32 h-32 p-2 rounded-sm"
-                  />
-                )}
-                <Typography className="text-lg font-medium text-black">
-                  Todo
-                </Typography>
-              </div>
-
-              {showData && (
-                <>
-                  {tableSelectedItemDesign == "Due Date" ? (
-                    <TaskListDueData />
-                  ) : tableSelectedItemDesign == "Asignee" ? (
-                    <Assignee />
-                  ) : tableSelectedItemDesign == "Priority" ? (
-                    <Priority />
-                  ) : tableSelectedItemDesign == "Label" ? (
-                    <Label />
-                  ) : (
-                    <div>
-                      <CommonTable
-                        headings={[
-                          "Title",
-                          "Assigned",
-                          "Due Date",
-                          "Priority",
-                          "Action",
-                        ]}
-                        useBorderDesign={true}
-                      >
-                        <>
-                          {rows.map((row: any, index: number) => (
-                            <TableRow
-                              key={index}
-                              sx={{
-                                "&:last-child td, &:last-child th": {
-                                  border: 0,
-                                },
-                                "& td": {
-                                  borderBottom: "1px solid #EDF2F6",
-                                  paddingTop: "12px",
-                                  paddingBottom: "12px",
-                                  color: theme.palette.primary.main,
-                                },
-                              }}
-                            >
-                              <TableCell scope="row">
-                                <span className="flex items-center gap-10">
-                                  <Checkbox
-                                    sx={{ padding: "4px" }}
-                                    color="primary"
-                                    defaultChecked={row.defaultChecked}
-                                    inputProps={{
-                                      "aria-labelledby": `table-checkbox-${index}`,
-                                    }}
-                                  />{" "}
-                                  {row.title}
-                                </span>
-                              </TableCell>
-                              <TableCell align="center">
-                                <ImagesOverlap images={row.assignedImg} />
-                              </TableCell>
-                              <TableCell align="center">Feb 12,2024</TableCell>
-                              <TableCell align="center">
-                                <span
-                                  className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-               ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
-                                >
-                                  {row.priority}
-                                </span>
-                              </TableCell>
-                              <TableCell align="left" className="w-[1%] ">
-                                <div className="flex gap-20 px-10">
-                                  <span className="p-2 cursor-pointer">
-                                    <DeleteIcon />
-                                  </span>
-                                  <span className="p-2 cursor-pointer">
-                                    <EditIcon />
-                                  </span>
-                                  <span className="p-2 cursor-pointer">
-                                    <ArrowRightCircleIcon />
-                                  </span>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </>
-                      </CommonTable>
-
-                      <div className=" border-1 border-solid border-[#D1D7DB]">
-                        <Button
-                          variant="text"
-                          color="secondary"
-                          className="h-[40px] sm:text-[16px] flex gap-2 sm:mb-[1rem] leading-none pt-10  pl-10"
-                          aria-label="Manage Sections"
-                          size="large"
-                          startIcon={
-                            <PlusIcon color={theme.palette.secondary.main} />
-                          }
-                        >
-                          Add Task
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-
-          <InProgress />
+          <DragLayout columnList={columnList} callListApi={listData} id={id} />
+          {/* <Todo /> */}
+          {/* <InProgress />
           <Review />
-          <Completed />
+          <Completed /> */}
         </div>
       )}
     </>
@@ -242,3 +185,6 @@ const ProjectTaskList = (props: TaskList) => {
 };
 
 export default ProjectTaskList;
+function useQuery(): { query: any } {
+  throw new Error("Function not implemented.");
+}

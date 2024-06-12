@@ -39,7 +39,7 @@ import {
 import { useAppDispatch } from "app/store/store";
 import * as Yup from "yup";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { deleteAttachment, getAgentList } from "app/store/Agent";
+import { deleteAttachment, getAgentList, getStatusList } from "app/store/Agent";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
 import {
@@ -119,6 +119,8 @@ function AddTaskModal({
   const dispatch = useAppDispatch();
   const userId = JSON.parse(localStorage.getItem("userDetail"));
   const [screenSharingStream, setScreenSharingStream] = useState(null);
+  const [statusMenuData, setStatusMenuData] = useState([]);
+  const [selectedStatusId, setSelectedStatusId] = useState(null);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -159,12 +161,12 @@ function AddTaskModal({
     { label: "High" },
     { label: "Low" },
   ];
-  const statusMenuData = [
-    { label: "To Do" },
-    { label: "In Progress" },
-    { label: "In Review" },
-    { label: "Completed" },
-  ];
+  // const statusMenuData = [
+  //   { label: "To Do" },
+  //   { label: "In Progress" },
+  //   { label: "In Review" },
+  //   { label: "Completed" },
+  // ];
   const labelsMenuData = [
     { label: "Important Task" },
     { label: "High Priority" },
@@ -180,6 +182,11 @@ function AddTaskModal({
       setAgentMenuData(res?.payload?.data?.data?.list);
     });
   }, [filterMenu.search]);
+  useEffect(() => {
+    dispatch(getStatusList({ id: project_id })).then((res) => {
+      setStatusMenuData(res?.payload?.data?.data?.list);
+    });
+  }, [project_id]);
 
   useEffect(() => {
     if (labelsMenu) {
@@ -191,7 +198,8 @@ function AddTaskModal({
   };
 
   const handleStatusMenuItemClick = (status) => {
-    setSelectedStatus(status);
+    setSelectedStatus(status.name);
+    setSelectedStatusId(status.id);
     setStatusMenu(null); // Close the dropdown menu after selection
   };
   const handlePriorityMenuClick = (data) => {
@@ -407,6 +415,7 @@ function AddTaskModal({
     videoRef.current = null;
     setSelectedAgent("Assigned To");
     setSelectedStatus("Status");
+    setSelectedStatusId(null);
     setSelectedPriority("Priority");
     setSelectedlabel("Labels");
     setCalculatedDate("");
@@ -434,7 +443,7 @@ function AddTaskModal({
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
-    formData.append("status", selectedStatus);
+    formData.append("status", selectedStatusId);
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder);
     formData.append("screen_record_file", screenRecorder);
@@ -517,26 +526,6 @@ function AddTaskModal({
   const open = Boolean(anchorEl);
   const today = new Date();
 
-  const validateBillingStartDate = (dateString) => {
-    const selectedDate = new Date(dateString);
-    selectedDate.setHours(0, 0, 0, 0);
-
-    const year = selectedDate.getFullYear().toString();
-    const isFourDigitYear = /^\d{4}$/.test(year);
-
-    if (!isFourDigitYear) {
-      return { isValid: false, error: "Year must be in 4 digits" };
-    }
-
-    if (selectedDate <= today) {
-      return {
-        isValid: false,
-        error: "Billing Start Date must be greater than tomorrow",
-      };
-    }
-
-    return { isValid: true, error: "" };
-  };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
 
   const EditDetails = () => {
@@ -572,8 +561,8 @@ function AddTaskModal({
         !data?.business_due_date ? "Due Date & Time" : data?.business_due_date
       );
       setSelectedlabel(!data?.labels ? "Labels" : data?.labels);
-      setSelectedPriority(!data?.priority ? "Priority" : data?.priority);
-      setSelectedStatus(!data?.status ? "Status" : data?.status);
+      setSelectedPriority(!data?.priority ? "" : data?.priority);
+      setSelectedStatusId(!data?.status ? "Status" : data?.status);
       setUploadedFilesNew(data.task_files);
       const userNames = data?.assigned_task_users?.map(
         (user) => user.first_name
@@ -623,7 +612,7 @@ function AddTaskModal({
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
-    formData.append("status", selectedStatus);
+    formData.append("status", selectedStatusId || null);
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
     formData.append("screen_record_file", screenRecorder);
@@ -1112,7 +1101,13 @@ function AddTaskModal({
             button={
               <CommonChip
                 onClick={handleStatusMenuClick}
-                label={selectedStatus}
+                // label={selectedStatus}
+                label={
+                  selectedStatusId
+                    ? statusMenuData.find((item) => item.id == selectedStatusId)
+                        ?.name
+                    : selectedStatus
+                }
                 icon={<StatusIcon />}
               />
             }
@@ -1126,10 +1121,10 @@ function AddTaskModal({
             {statusMenuData.map((item) => {
               return (
                 <StyledMenuItem
-                  key={item.label}
-                  onClick={() => handleStatusMenuItemClick(item.label)}
+                  key={item.id}
+                  onClick={() => handleStatusMenuItemClick(item)}
                 >
-                  {item.label}
+                  {item.name}
                 </StyledMenuItem>
               );
               // console.log(item, "itezcfm");

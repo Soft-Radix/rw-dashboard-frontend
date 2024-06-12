@@ -3,18 +3,18 @@ import styled from "@emotion/styled";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import ReactDOM from "react-dom";
 
-import transformData from "./dataTransform";
-import MainCard from "./MainCard";
+// import MainCard from "./MainCard";
 import { useAppDispatch } from "app/store/store";
 import {
   projectColumnMove,
   projectTaskMove,
   projectTaskMoveCol,
 } from "app/store/Projects";
+import transformData from "../../dashboard/dataTransform";
+import Todo from "./Todo";
+import InProgress from "./InProgress";
 
-const Container = styled("div")`
-  display: flex;
-`;
+const Container = styled("div")``;
 
 const DragLayout = ({ columnList, callListApi, id }) => {
   const dispatch = useAppDispatch();
@@ -22,6 +22,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
   const a = transformData(columnList);
   useEffect(() => {
     setStarter(transformData(columnList));
+    console.log(transformData(columnList));
   }, [columnList]);
 
   const moveColumns = async (payload: {
@@ -85,7 +86,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
       };
 
       try {
-        await moveColumns(payload);
+        await moveColumns(payload); // Call the moveColumns function with the correct payload
       } catch (error) {
         console.error("Error moving column:", error);
       }
@@ -161,7 +162,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
   };
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="all-column" type="column" direction="horizontal">
+      <Droppable droppableId="all-column" type="column" direction="vertical">
         {(provided, snapshot) => (
           <Container
             //@ts-ignore
@@ -179,9 +180,10 @@ const DragLayout = ({ columnList, callListApi, id }) => {
               const project_id = starter?.tasks[firstTaskId]?.project_id;
 
               return (
-                <MainCard
+                <Todo
                   index={index}
                   key={column?.id}
+                  title={column.title}
                   column={column}
                   tasks={tasks}
                   id={column?.id}

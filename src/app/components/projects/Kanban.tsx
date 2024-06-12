@@ -55,7 +55,10 @@ const Kanban = (props: IProps): JSX.Element => {
   const { id } = useParams<{ id: string }>();
   const theme: Theme = useTheme();
   const [addCard, setAddCard] = useState(false);
+  const [error, setError] = useState("");
+  const [previous, setPrevious] = useState("");
   const [columnIds, setColumnIds] = useState<any>();
+  const [disabled, setDisable] = useState(false);
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -70,28 +73,37 @@ const Kanban = (props: IProps): JSX.Element => {
     },
     validationSchema,
     onSubmit: (values) => {
+      setPrevious(values?.name);
       fetchData(values);
     },
   });
 
   const fetchData = async (payload: any) => {
+    setDisable(true);
     const data: any = {
       project_id: id as string,
       name: payload.name,
     };
     try {
       const res = await dispatch(projectColumnAdd(data));
-      toast.success(res?.payload?.data?.message);
-      formik.setFieldValue("name", "");
-      formik.resetForm();
-      listData(2);
-      if (setIsOpen) setIsOpen((prev) => !prev);
-      if (setIsEditing) setIsEditing(false);
-      if (setId) setId(null);
+      if (res?.payload?.data?.status == 1) {
+        toast.success(res?.payload?.data?.message);
+        formik.setFieldValue("name", "");
+        formik.resetForm();
+        listData(2);
+        if (setIsOpen) setIsOpen((prev) => !prev);
+        if (setIsEditing) setIsEditing(false);
+        if (setId) setId(null);
+        setDisable(false);
+        setAddCard(!addCard);
+      } else {
+        setDisable(false);
+        setError(res?.payload?.data?.message);
+      }
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
-    setAddCard(!addCard);
   };
   const { fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
@@ -206,7 +218,10 @@ const Kanban = (props: IProps): JSX.Element => {
   //     </Button>
   //   );
   // };
-
+  // const value = formik?.values?.name;
+  // useEffect(() => {
+  //   setError("");
+  // }, [value]);
   return (
     <div>
       <div className="px-20 mb-20">
@@ -242,14 +257,19 @@ const Kanban = (props: IProps): JSX.Element => {
                 name="name"
                 label="Column Name"
                 placeholder="Enter Column Name"
+                onChange={(e) => {
+                  formik.setFieldValue("name", e.target.value);
+                  setError("");
+                }}
               />
+              <span className=" text-red   block ">{error}</span>
               <div className="mt-20">
                 <Button
                   variant="contained"
                   color="secondary"
                   className="w-[95px] text-[12px]"
                   onClick={handleSave}
-                  disabled={formik.isSubmitting}
+                  disabled={disabled}
                 >
                   Save
                 </Button>
@@ -262,7 +282,7 @@ const Kanban = (props: IProps): JSX.Element => {
                     formik.setFieldValue("name", "");
                     formik.resetForm();
                   }}
-                  disabled={formik.isSubmitting}
+                  disabled={disabled}
                 >
                   Cancel
                 </Button>

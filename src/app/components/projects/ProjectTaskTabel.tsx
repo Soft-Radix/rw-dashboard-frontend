@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/projectsIcon";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { FilterIcon } from "public/assets/icons/user-icon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "src/app/components/InputField";
 import ProjectMenuItems from "src/app/components/projects/ProjectMenuItems";
 import AddTaskModal from "src/app/components/tasks/AddTask";
@@ -16,6 +16,7 @@ import RecentData from "src/app/components/tasks/RecentData";
 // import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import FilterPage from "./FilterPage";
 import ThemePageTable from "../tasks/TaskPageTable";
+import { useNavigate } from "react-router";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -56,11 +57,62 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(0);
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
-    useState<object>();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState<
+    object
+  >();
+
+  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  //   setSelectedTab(newValue);
+
+  // };
+  const navigate = useNavigate();
+  const getTabIndexFromSubtype = (subtype) => {
+    switch (subtype) {
+      case "to-do":
+        return 0;
+      case "in-progress":
+        return 1;
+      case "in-review":
+        return 2;
+      case "completed":
+        return 3;
+      default:
+        return 0;
+    }
+  };
+  const params = new URLSearchParams(location.search);
+  const subtype = params.get("subtype") || "to-do";
+  const [selectedTab, setSelectedTab] = useState(
+    getTabIndexFromSubtype(subtype)
+  );
+  // Helper function to get the subtype from the tab index
+  const getSubtypeFromTabIndex = (index) => {
+    switch (index) {
+      case 0:
+        return "to-do";
+      case 1:
+        return "in-progress";
+      case 2:
+        return "in-review";
+      case 3:
+        return "completed";
+      default:
+        return "to-do";
+    }
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const subtype = params.get("subtype") || "to-do";
+    setSelectedTab(getTabIndexFromSubtype(subtype));
+  }, [location.search]);
+
+  const handleChange = (event, newValue) => {
+    const newSubtype = getSubtypeFromTabIndex(newValue);
+    const params = new URLSearchParams(location.search);
+    params.set("subtype", newSubtype);
+    navigate(`${location.pathname}?${params.toString()}`);
     setSelectedTab(newValue);
   };
 
