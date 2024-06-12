@@ -19,8 +19,8 @@ import {
   UsersConfiguration,
 } from "@cometchat/uikit-shared";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
-import usersTabIcon from "public/assets/icons/users.svg";
-import groupsTabIcon from "public/assets/icons/group.svg";
+import usersTabIcon from "public/assets/icons/user.svg";
+import groupsTabIcon from "public/assets/icons/groupIcon.svg";
 import chatsTabIcon from "public/assets/icons/chat.svg";
 import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
@@ -50,10 +50,10 @@ function ChatBoard() {
 
   const [isMobileView, setIsMobileView] = useState(false);
   const tabItemStyle = new TabItemStyle({
-    iconTint: "#39f",
-    width: "50px",
-    height: "50px",
-    activeBackground: "#39f",
+    iconTint: "#4F46E5",
+    width: "60px",
+    height: "60px",
+    activeBackground: "#4F46E5",
     activeIconTint: "white",
     activeTitleTextColor: "white",
   });
