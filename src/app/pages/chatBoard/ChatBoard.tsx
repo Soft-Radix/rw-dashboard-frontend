@@ -197,7 +197,7 @@ function ChatBoard() {
     childView: (
       <div className="flex">
         {addGroup && (
-          <div className="absolute h-full w-full bg-black bg-opacity-75 z-999">
+          <div className="absolute h-full w-full bg-black bg-opacity-75 z-99">
             <CreateGroupWrapper
               isMobileView={isMobileView}
               onClose={() => setAddGroup(false)}
@@ -206,7 +206,7 @@ function ChatBoard() {
         )}
         <div className="w-[279px] relative">
           <button
-            className="btn absolute top-[22px] right-[16px] z-99"
+            className="btn absolute top-[22px] right-[16px] z-9"
             onClick={() => setAddGroup(true)}
           >
             <ProjectPlusIcon className="text-lg" />
