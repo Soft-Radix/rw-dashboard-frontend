@@ -8,7 +8,7 @@ import {
 } from "public/assets/icons/projectsIcon";
 import { SearchIcon } from "public/assets/icons/topBarIcons";
 import { FilterIcon } from "public/assets/icons/user-icon";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import InputField from "src/app/components/InputField";
 import ProjectMenuItems from "src/app/components/projects/ProjectMenuItems";
 import AddTaskModal from "src/app/components/tasks/AddTask";
@@ -16,11 +16,19 @@ import RecentData from "src/app/components/tasks/RecentData";
 // import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import FilterPage from "./FilterPage";
 import ThemePageTable from "../tasks/TaskPageTable";
+import { PlusIcon } from "public/assets/icons/dashboardIcons";
+import { useAppDispatch } from "app/store/store";
+import { projectColumnList, projectTaskTableList } from "app/store/Projects";
+import { useParams } from "react-router";
+import { useSelector } from "react-redux";
+import { ProjectRootState } from "app/store/Projects/Interface";
+import { debounce } from "lodash";
 
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
+  scrollRef?: any;
 }
 interface ProjectTaskTableProps {
   customSelectedTab: number;
@@ -28,17 +36,18 @@ interface ProjectTaskTableProps {
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, scrollRef, ...other } = props;
 
   return (
     <div
+      className="h-[300px] overflow-y-scroll "
       role="tabpanel"
-      hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      ref={scrollRef}
       {...other}
     >
-      {value === index && children}
+      {children}
     </div>
   );
 }
@@ -53,17 +62,107 @@ function a11yProps(index: number) {
 }
 
 export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
+  const { id } = useParams<{ id: string }>();
+  const scrollRef = useRef(null);
+  console.log(scrollRef, "scrollRef");
+  console.log(id, "iddfjksdfd");
   const theme: Theme = useTheme();
-
+  const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [columnList, setColumnList] = useState<any[]>([]);
   const [tableSelectedItemDesign, setTableSelectedItemDesign] =
     useState<object>();
-
+  const { projectInfo } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
+  // console.log(projectInfo.list, "projectInfo");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+  const listData = async (task_limt, columnid = 0) => {
+    // console.log(task_limt, "task_limt");
+    const payload: any = {
+      start: 0,
+      limit: 10,
+      search: "",
+      project_id: id as string,
+      task_start: 0,
+      task_limit: task_limt || 2,
+      project_column_id: columnid,
+    };
+    try {
+      const res = await dispatch(projectTaskTableList(payload));
+      console.log(res, "res");
+      // setColumnList(res?.payload?.data?.data?.list);
+      const updatedList = res?.payload?.data?.data?.list;
 
+      if (columnid != 0) {
+        // If columnId is provided, find the column with that id
+        const columnObject = updatedList.find((item) => item.id == columnid);
+        const columnIndex = columnList.findIndex(
+          (column) => column.id == columnid
+        );
+        if (columnIndex !== -1) {
+          // If column is found, update its tasks
+          const updatedColumn = {
+            ...columnList[columnIndex],
+            tasks: columnObject?.tasks,
+          };
+
+          // Update the columnList state with the updated column
+          setColumnList((prevColumnList) => {
+            const updatedColumns = [...prevColumnList];
+            const newColumn: any = { ...updatedColumns[columnIndex] };
+            newColumn.tasks = [...updatedColumn?.tasks];
+            updatedColumns[columnIndex] = newColumn;
+            return updatedColumns;
+          });
+        }
+      } else {
+        // If columnId is 0, update the entire columnList
+        setColumnList(updatedList);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    listData(2);
+  }, []);
+
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (scrollRef.current) {
+        console.log(scrollRef.current, "scrollRef.current");
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
+          // Increased threshold
+          setIsFetching(true);
+          listData(4, 136).finally(() => {
+            setIsFetching(false);
+          });
+        }
+      }
+    }, 300), // Adjust debounce delay as needed
+    [isFetching]
+  );
+  console.log(columnList, "listData");
+
+  // Effect to attach scroll event listener when component mounts
+  useEffect(() => {
+    const scrolledElement = scrollRef.current;
+    if (scrolledElement) {
+      scrolledElement.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (scrolledElement) {
+        scrolledElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [handleScroll]);
   return (
     <>
       {props.customSelectedTab && (
@@ -88,15 +187,15 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                     },
                   }}
                 >
-                  <Tab label="To Do" {...a11yProps(0)} />
-                  <Tab label="In Progress" {...a11yProps(1)} />
-                  <Tab label="In Review" {...a11yProps(2)} />
-                  <Tab label="Completed" {...a11yProps(3)} />
+                  {projectInfo.list.map((item, index) => {
+                    console.log(index, "fdfdf");
+                    return <Tab label={item.name} {...a11yProps(index)} />;
+                  })}
                 </Tabs>
-                <div className="px-4  mb-20">
+                <div className="px-4">
                   <FilterPage />
                 </div>
-                <div className="px-20 pb-28 flex gap-32 ">
+                <div className="px-20  pb-10 flex gap-32 ">
                   <ProjectMenuItems
                     label={"Group By"}
                     icon={<GroupIcon />}
@@ -117,21 +216,27 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                 cursor-pointer text-[12px]"
                   />
                 </div>
+                <Button
+                  variant="text"
+                  color="secondary"
+                  className="h-[40px] text-[16px] flex gap-8 font-[600] px-20"
+                  aria-label="Add Tasks"
+                  size="large"
+                  onClick={() => setIsOpenAddModal(true)}
+                >
+                  <PlusIcon color={theme.palette.secondary.main} />
+                  Add Task
+                </Button>
 
-                <CustomTabPanel value={selectedTab} index={0}>
+                <CustomTabPanel
+                  value={selectedTab}
+                  index={0}
+                  scrollRef={scrollRef}
+                >
                   <ThemePageTable
                     tableSelectedItemDesign={tableSelectedItemDesign}
                     customSelectedTab={props.customSelectedTab}
                   />
-                </CustomTabPanel>
-                <CustomTabPanel value={selectedTab} index={1}>
-                  <ThemePageTable customSelectedTab={props.customSelectedTab} />
-                </CustomTabPanel>
-                <CustomTabPanel value={selectedTab} index={2}>
-                  <ThemePageTable customSelectedTab={props.customSelectedTab} />
-                </CustomTabPanel>
-                <CustomTabPanel value={selectedTab} index={3}>
-                  <ThemePageTable customSelectedTab={props.customSelectedTab} />
                 </CustomTabPanel>
               </div>
             </div>

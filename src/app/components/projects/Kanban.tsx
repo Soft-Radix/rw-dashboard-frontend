@@ -186,6 +186,7 @@ const Kanban = (props: IProps): JSX.Element => {
     } else {
       listData(2);
     }
+    
   }, [id]);
 
   if (fetchStatusNew == "loading") {

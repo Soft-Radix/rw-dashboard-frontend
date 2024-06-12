@@ -73,7 +73,7 @@ const FilterPage = (props: FilterDesign) => {
             className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[46%] translate-y-[-50%] text-para_light"
           />
         </div> */}
-        <div className="p-[2rem]">
+        <div>
           <SearchInput
             name="search"
             placeholder="Search Board"

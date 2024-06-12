@@ -1,53 +1,49 @@
 import FuseSvgIcon from "@fuse/core/FuseSvgIcon";
 import {
   Button,
+  Checkbox,
   FormLabel,
   Grid,
-  Hidden,
   MenuItem,
-  TextField,
-  Typography,
-  styled,
   Popover,
-  Checkbox,
+  Typography,
+  styled
 } from "@mui/material";
+import { DateTimePicker } from "@mui/x-date-pickers";
+import { getAgentList } from "app/store/Agent";
+import { filterType } from "app/store/Client/Interface";
+import {
+  EditTaskAdd,
+  TaskAdd,
+  TaskDeleteAttachment,
+  TaskDetails
+} from "app/store/Projects";
+import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
+import { debounce } from "lodash";
+import moment from "moment";
+import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
+import {
+  AttachmentDeleteIcon,
+  AttachmentIcon,
+} from "public/assets/icons/supportIcons";
 import {
   AssignIcon,
   MicIcon,
   PriorityIcon,
   ReminderIcon,
   ScreenRecordingIcon,
-  StatusIcon,
-  UploadIcon,
+  StatusIcon
 } from "public/assets/icons/task-icons";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { LiveAudioVisualizer } from "react-audio-visualize";
+import * as Yup from "yup";
 import CommonModal from "../CommonModal";
 import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
 import CommonChip from "../chip";
-import CustomButton from "../custom_button";
-import { AudioVisualizer, LiveAudioVisualizer } from "react-audio-visualize";
-import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
-import {
-  EditTaskAdd,
-  TaskAdd,
-  TaskDeleteAttachment,
-  TaskDetails,
-  projectColumnList,
-} from "app/store/Projects";
-import { useAppDispatch } from "app/store/store";
-import * as Yup from "yup";
-import { DateTimePicker } from "@mui/x-date-pickers";
-import { deleteAttachment, getAgentList } from "app/store/Agent";
-import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
-import {
-  AttachmentDeleteIcon,
-  AttachmentIcon,
-} from "public/assets/icons/supportIcons";
-import { debounce } from "lodash";
-import { filterType } from "app/store/Client/Interface";
+import CustomButton from "../custom_button";
 
 interface IProps {
   isOpen: boolean;
