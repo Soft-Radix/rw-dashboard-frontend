@@ -5,7 +5,7 @@ import {
   CometChatOngoingCall,
 } from "@cometchat/chat-uikit-react";
 
-const ChatContext = createContext({ });
+const ChatContext = createContext({});
 
 export const ChatProvider = ({ children }) => {
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
@@ -22,8 +22,10 @@ export const ChatProvider = ({ children }) => {
 
   return (
     <ChatContext.Provider value={{}}>
-      <CometChatIncomingCall />
-      <CometChatOngoingCall />
+      <div className="z-999">
+        <CometChatIncomingCall />
+        <CometChatOngoingCall />
+      </div>
       {children}
     </ChatContext.Provider>
   );

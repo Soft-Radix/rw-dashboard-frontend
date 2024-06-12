@@ -27,7 +27,6 @@ export function CreateGroupWrapper({
 
     const closeClickedEventName = "cc-creategroup-close-clicked";
     const handleCreateGroup = (e: any) => {
-      console.log("Group details:", e);
       CometChat.createGroup({
         name: e.name,
         type: e.type,
