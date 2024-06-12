@@ -7,7 +7,7 @@ import {
   MenuItem,
   Popover,
   Typography,
-  styled
+  styled,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import { getAgentList } from "app/store/Agent";
@@ -16,7 +16,7 @@ import {
   EditTaskAdd,
   TaskAdd,
   TaskDeleteAttachment,
-  TaskDetails
+  TaskDetails,
 } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
@@ -33,7 +33,7 @@ import {
   PriorityIcon,
   ReminderIcon,
   ScreenRecordingIcon,
-  StatusIcon
+  StatusIcon,
 } from "public/assets/icons/task-icons";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { LiveAudioVisualizer } from "react-audio-visualize";
@@ -430,7 +430,7 @@ function AddTaskModal({
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
-    formData.append("status", selectedStatus);
+    formData.append("status", ColumnId);
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder);
     formData.append("screen_record_file", screenRecorder);

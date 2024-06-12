@@ -13,62 +13,43 @@ import { useState } from "react";
 // import { DownArrowBlack, SortIcon } from "public/assets/icons/projectsIcon";
 import DueDate from "../projects/DueDate";
 import { Link } from "react-router-dom";
-
-const rows = [
-  {
-    title: "Brand logo design",
-    defaultChecked: true,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: true,
-    assignedImg: [
-      "female-01.jpg",
-      "female-02.jpg",
-      "female-03.jpg",
-      "female-04.jpg",
-      "female-05.jpg",
-    ],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Medium",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "Low",
-  },
-  {
-    title: "Brand logo design",
-    defaultChecked: false,
-    assignedImg: ["female-01.jpg", "female-02.jpg", "female-03.jpg"],
-    priority: "High",
-  },
-];
+import DeleteClient from "../client/DeleteClient";
+import { deleteTask } from "app/store/Projects";
+import { useAppDispatch } from "app/store/store";
+import AddTaskModal from "./AddTask";
 
 function ThemePageTable(props) {
-  const { tableSelectedItemDesign } = props;
+  const {
+    tableSelectedItemDesign,
+    columnList,
+    ListData,
+    setColumnList,
+    project_id,
+    ColumnId,
+  } = props;
+  const dispatch = useAppDispatch();
+  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+
+  const [deleteId, setIsDeleteId] = useState<any>(null);
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const theme: Theme = useTheme();
   // console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
+  // console.log(columnList, "columnListvsdfsdf");
+  const handleDeleteAttachment = (id) => {
+    dispatch(deleteTask(id)).then((res) => {
+      // console.log("hellowse", res?.payload);
+
+      if (res?.payload?.data.status === 1) {
+        setColumnList((prevColumnList) =>
+          prevColumnList.filter((item) => item.id !== id)
+        );
+      }
+    });
+    // ListData();
+    setIsOpenDeletedModal(false);
+  };
+  // setIsOpenDeletedModal(false);
 
   return (
     <>
@@ -81,13 +62,13 @@ function ThemePageTable(props) {
           </CommonTable>
           <div className="flex flex-col gap-5">
             <DueDate
-              rows={rows}
+              // rows={rows}
               title={"Overdue (2)"}
               className="text-lg font-medium text-[#F44336]"
             />
             <DueDate
               title={"No Due Date (5)"}
-              rows={rows}
+              // rows={rows}
               className="text-lg font-medium text-[#757982]"
             />
           </div>
@@ -96,7 +77,7 @@ function ThemePageTable(props) {
         <CommonTable
           headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
         >
-          {rows.map((row, index) => (
+          {columnList?.map((row, index) => (
             <TableRow
               key={index}
               sx={{
@@ -123,7 +104,24 @@ function ThemePageTable(props) {
                 </span>
               </TableCell>
               <TableCell align="center">
-                <ImagesOverlap images={row.assignedImg} />
+                <div className="flex -space-x-2 mt-10">
+                  {row?.assigned_task_users?.assigned_task_users?.map(
+                    (item) => {
+                      // console.log(item, "itemmmm");
+                      return (
+                        <img
+                          className="w-28 h-28 rounded-full border-2 border-white"
+                          src={
+                            item.user_image
+                              ? urlForImage + item.user_image
+                              : "../assets/images/logo/images.jpeg"
+                          }
+                          alt="User 1"
+                        />
+                      );
+                    }
+                  )}
+                </div>
               </TableCell>
               <TableCell align="center">Feb 12,2024</TableCell>
               <TableCell align="center">
@@ -137,10 +135,19 @@ function ThemePageTable(props) {
               <TableCell align="left" className="w-[1%]">
                 <div className="flex gap-20 items-center">
                   <span className="p-2 cursor-pointer">
-                    <DeleteIcon />
+                    <DeleteIcon
+                      onClick={() => {
+                        setIsOpenDeletedModal(true);
+                        setIsDeleteId(row.id);
+                      }}
+                    />
                   </span>
                   <span className="p-2 cursor-pointer">
-                    <EditIcon />
+                    <EditIcon
+                      onClick={() => {
+                        setIsOpenAddModal(true);
+                      }}
+                    />
                   </span>
                   <Link to={`/tasks/detail/9`}>
                     <span className="p-2 cursor-pointer">
@@ -153,6 +160,21 @@ function ThemePageTable(props) {
           ))}
         </CommonTable>
       )}
+      <DeleteClient
+        isOpen={isOpenDeletedModal}
+        setIsOpen={setIsOpenDeletedModal}
+        onDelete={() => handleDeleteAttachment(deleteId)}
+        heading={"Delete Task"}
+        description={"Are you sure you want to delete this Task? "}
+      />
+      <AddTaskModal
+        isOpen={isOpenAddModal}
+        setIsOpen={setIsOpenAddModal}
+        project_id={project_id}
+        ColumnId={ColumnId}
+        callListApi={ListData}
+        Edit
+      />
     </>
   );
 }

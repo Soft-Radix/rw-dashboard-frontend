@@ -63,14 +63,17 @@ function a11yProps(index: number) {
 
 export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const { id } = useParams<{ id: string }>();
+  // console.log(id, "ghdfghdjgdf");
   const scrollRef = useRef(null);
-  console.log(scrollRef, "scrollRef");
-  console.log(id, "iddfjksdfd");
+  // console.log(scrollRef, "scrollRef");
+  // console.log(id, "iddfjksdfd");
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [columnId, setcolumnId] = useState();
+  // console.log(columnId, "columnId");
   const [columnList, setColumnList] = useState<any[]>([]);
   const [tableSelectedItemDesign, setTableSelectedItemDesign] =
     useState<object>();
@@ -85,44 +88,36 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     // console.log(task_limt, "task_limt");
     const payload: any = {
       start: 0,
-      limit: 10,
+      limit: 20,
       search: "",
       project_id: id as string,
       task_start: 0,
-      task_limit: task_limt || 2,
+      task_limit: task_limt || 20,
       project_column_id: columnid,
     };
     try {
+      // if (!columnId) return "";
       const res = await dispatch(projectTaskTableList(payload));
-      console.log(res, "res");
-      // setColumnList(res?.payload?.data?.data?.list);
       const updatedList = res?.payload?.data?.data?.list;
 
-      if (columnid != 0) {
-        // If columnId is provided, find the column with that id
-        const columnObject = updatedList.find((item) => item.id == columnid);
-        const columnIndex = columnList.findIndex(
-          (column) => column.id == columnid
-        );
-        if (columnIndex !== -1) {
-          // If column is found, update its tasks
-          const updatedColumn = {
-            ...columnList[columnIndex],
-            tasks: columnObject?.tasks,
-          };
+      const columnObject = updatedList.find((item) => item.id == columnid);
 
-          // Update the columnList state with the updated column
-          setColumnList((prevColumnList) => {
-            const updatedColumns = [...prevColumnList];
-            const newColumn: any = { ...updatedColumns[columnIndex] };
-            newColumn.tasks = [...updatedColumn?.tasks];
-            updatedColumns[columnIndex] = newColumn;
-            return updatedColumns;
+      if (!!columnObject) {
+        // Update the columnList state with the updated column
+        setColumnList((prevColumnList) => {
+          // Create a map to track unique tasks by their id
+          const taskMap = new Map(
+            prevColumnList?.map((task) => [task.id, task])
+          );
+
+          // Add new tasks to the map
+          columnObject?.tasks.forEach((task) => {
+            taskMap.set(task.id, task);
           });
-        }
-      } else {
-        // If columnId is 0, update the entire columnList
-        setColumnList(updatedList);
+
+          // Convert the map back to an array
+          return Array.from(taskMap.values());
+        });
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -130,8 +125,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   };
 
   useEffect(() => {
-    listData(2);
-  }, []);
+    if (projectInfo?.list?.length > 0) {
+      listData(20, projectInfo?.list[0]?.id);
+      setcolumnId(projectInfo?.list[0]?.id);
+    }
+  }, [projectInfo?.list]);
 
   const handleScroll = useCallback(
     debounce(() => {
@@ -141,7 +139,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
         if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
           // Increased threshold
           setIsFetching(true);
-          listData(4, 136).finally(() => {
+          listData(20, columnId).finally(() => {
             setIsFetching(false);
           });
         }
@@ -149,7 +147,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     }, 300), // Adjust debounce delay as needed
     [isFetching]
   );
-  console.log(columnList, "listData");
+  // console.log(columnList, "listData");
 
   // Effect to attach scroll event listener when component mounts
   useEffect(() => {
@@ -163,13 +161,15 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
       }
     };
   }, [handleScroll]);
+
   return (
     <>
       {props.customSelectedTab && (
         <div>
-          <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap">
-            <div className="basis-full lg:basis-auto lg:grow">
+          <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap ">
+            <div className="basis-full lg:basis-auto lg:grow w-1/2">
               <div className="shadow-md bg-white rounded-lg">
+                {/* <div style={{ overflowX: "auto", whiteSpace: "nowrap" }}> */}
                 <Tabs
                   value={selectedTab}
                   onChange={handleChange}
@@ -186,12 +186,25 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                       backgroundColor: theme.palette.secondary.main,
                     },
                   }}
+                  variant="scrollable" // Enables scrolling
+                  scrollButtons="auto" // Shows scroll buttons when needed
+                  allowScrollButtonsMobile // Allows scroll buttons on mobile
                 >
-                  {projectInfo.list.map((item, index) => {
-                    console.log(index, "fdfdf");
-                    return <Tab label={item.name} {...a11yProps(index)} />;
+                  {projectInfo?.list?.map((item, index) => {
+                    return (
+                      <Tab
+                        label={item.name}
+                        {...a11yProps(item.id)}
+                        onClick={() => {
+                          setColumnList([]);
+                          listData(20, item.id);
+                          setcolumnId(item.id);
+                        }}
+                      />
+                    );
                   })}
                 </Tabs>
+                {/* </div> */}
                 <div className="px-4">
                   <FilterPage />
                 </div>
@@ -222,7 +235,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                   className="h-[40px] text-[16px] flex gap-8 font-[600] px-20"
                   aria-label="Add Tasks"
                   size="large"
-                  onClick={() => setIsOpenAddModal(true)}
+                  onClick={() => {
+                    setIsOpenAddModal(true);
+                  }}
                 >
                   <PlusIcon color={theme.palette.secondary.main} />
                   Add Task
@@ -236,6 +251,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                   <ThemePageTable
                     tableSelectedItemDesign={tableSelectedItemDesign}
                     customSelectedTab={props.customSelectedTab}
+                    columnList={columnList}
+                    setColumnList={setColumnList}
+                    ListData={() => listData(20, columnId)}
+                    project_id={id}
+                    ColumnId={columnId}
                   />
                 </CustomTabPanel>
               </div>
@@ -244,7 +264,13 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
               <RecentData />
             </div>
           </div>
-          <AddTaskModal isOpen={isOpenAddModal} setIsOpen={setIsOpenAddModal} />
+          <AddTaskModal
+            isOpen={isOpenAddModal}
+            setIsOpen={setIsOpenAddModal}
+            project_id={id}
+            ColumnId={columnId}
+            callListApi={() => listData(20, columnId)}
+          />
         </div>
       )}
     </>
