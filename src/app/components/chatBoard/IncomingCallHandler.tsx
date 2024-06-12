@@ -22,6 +22,16 @@ const IncomingCallHandler = () => {
           console.log("Incoming call cancelled:", call);
           setCall(null);
         },
+        onCallEndedMessageReceived: (call) => {
+          // Handle incoming call cancelled
+          console.log("Incoming call end message recieved:", call);
+          setCall(null);
+        },
+        onOutgoingCallAccepted: (call) => {
+          // Handle incoming call cancelled
+          console.log("Incoming call accepted:", call);
+          setCall(null);
+        },
       })
     );
 
