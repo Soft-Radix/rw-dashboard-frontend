@@ -1,19 +1,20 @@
 import TitleBar from "src/app/components/TitleBar";
 import { useEffect, useState } from "react";
-import { GetAssignAgentsInfo, getAssignAccMangerInfo } from "app/store/Client";
 import { useDispatch } from "react-redux";
 import {
   CometChatUsersWithMessages,
-  CometChatGroupsWithMessages,
-  CometChatConversationsWithMessages,
   CometChatTabs,
   TabsStyle,
+  CometChatGroups,
+  CometChatMessages,
+  CometChatConversations,
 } from "@cometchat/chat-uikit-react";
 import { TabAlignment, CometChatTabItem } from "@cometchat/uikit-resources";
 import {
-  ContactsConfiguration,
-  CreateGroupConfiguration,
-  GroupsConfiguration,
+  AddMembersConfiguration,
+  DetailsConfiguration,
+  MessageComposerConfiguration,
+  MessagesConfiguration,
   TabItemStyle,
   UsersConfiguration,
 } from "@cometchat/uikit-shared";
@@ -22,41 +23,26 @@ import usersTabIcon from "public/assets/icons/users.svg";
 import groupsTabIcon from "public/assets/icons/group.svg";
 import chatsTabIcon from "public/assets/icons/chat.svg";
 import { ROLES } from "src/app/constants/constants";
+import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
+import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
+import { getUserIdInfo } from "app/store/Common";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
-  const [accountManagers, setAccountManagerList] = useState([]);
+  const [addGroup, setAddGroup] = useState(false);
+  const [groupDetails, setGroupDetails] = useState<any>({});
+  const [conversationDetails, setConversationDetails] = useState<any>({});
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (client_id?.id) {
-      dispatch(
-        GetAssignAgentsInfo({ start: 0, limit: -1, client_id: client_id?.id })
-      )
+    if (client_id?.id && client_id?.role_id !== ROLES.ADMIN) {
+      dispatch(getUserIdInfo())
         .unwrap()
         .then((res) => {
-          if (res?.data && res?.data?.data && res?.data?.data?.list) {
-            setUsersList([
-              ...res?.data?.data?.list.map((user) => user.agent_id),
-            ]);
-          }
-        });
-
-      dispatch(
-        getAssignAccMangerInfo({
-          start: 0,
-          limit: -1,
-          client_id: client_id?.id,
-        })
-      )
-        .unwrap()
-        .then((res) => {
-          if (res?.data && res?.data?.data && res?.data?.data?.list) {
-            setAccountManagerList([
-              ...res?.data?.data?.list.map((user) => user.account_manager_id),
-            ]);
+          if (res?.data && res?.data?.data) {
+            setUsersList([...res?.data?.data]);
           }
         });
     }
@@ -85,25 +71,91 @@ function ChatBoard() {
     style: tabItemStyle,
     isActive: true,
     childView: (
-      <CometChatConversationsWithMessages
-        startConversationConfiguration={
-          new ContactsConfiguration({
-            usersConfiguration: new UsersConfiguration(
-              client_id.role_id !== ROLES.ADMIN
-                ? {
-                    usersRequestBuilder: new CometChat.UsersRequestBuilder()
-                      .setLimit(100)
-                      .setUIDs([1, ...users, ...accountManagers]),
-                  }
-                : {}
-            ),
-            groupsConfiguration: new GroupsConfiguration({
-              onItemClick: handleOnItemClick,
-            }),
-          })
-        }
-        isMobileView={isMobileView}
-      />
+      <div className="flex">
+        <div className="w-[279px] h-[calc(100vh-150px)]">
+          <CometChatConversations
+            onItemClick={(group) => setConversationDetails(group)}
+          />
+        </div>
+
+        {conversationDetails && conversationDetails.conversationId && (
+          <div className="w-[calc(100%-279px)] h-[calc(100vh-150px)]">
+            {conversationDetails.conversationType === "user" ? (
+              <CometChatMessages
+                user={conversationDetails.conversationWith}
+                messageComposerConfiguration={
+                  new MessageComposerConfiguration({
+                    disableMentions: true,
+                  })
+                }
+              />
+            ) : (
+              <CometChatMessages
+                group={conversationDetails.conversationWith}
+                detailsConfiguration={
+                  new DetailsConfiguration({
+                    addMembersConfiguration: new AddMembersConfiguration(
+                      client_id.role_id !== ROLES.ADMIN
+                        ? {
+                            usersRequestBuilder:
+                              new CometChat.UsersRequestBuilder()
+                                .setLimit(100)
+                                .setUIDs([
+                                  ...users
+                                ]),
+                          }
+                        : {}
+                    ),
+                  })
+                }
+              />
+            )}
+          </div>
+        )}
+      </div>
+      // <CometChatConversationsWithMessages
+      //   startConversationConfiguration={
+      //     new ContactsConfiguration({
+      //       usersConfiguration: new UsersConfiguration(
+      //         client_id.role_id !== ROLES.ADMIN
+      //           ? {
+      //               usersRequestBuilder: new CometChat.UsersRequestBuilder()
+      //                 .setLimit(100)
+      //                 .setUIDs([...users]),
+      //               onItemClick: (group) => handleOnItemClick(group),
+      //             }
+      //           : {}
+      //       ),
+      //       groupsConfiguration: new GroupsConfiguration({
+      //         groupsRequestBuilder: new CometChat.GroupsRequestBuilder()
+      //           .joinedOnly(true)
+      //           .setLimit(100),
+      //         onItemClick: (group) => handleOnItemClick(group),
+      //       }),
+      //     })
+      //   }
+      //   messagesConfiguration={
+      //     new MessagesConfiguration({
+      //       detailsConfiguration: new DetailsConfiguration({
+      //         addMembersConfiguration: new AddMembersConfiguration({
+      //           usersConfiguration: new UsersConfiguration(
+      //             client_id.role_id !== ROLES.ADMIN
+      //               ? {
+      //                   usersRequestBuilder: new CometChat.UsersRequestBuilder()
+      //                     .setLimit(100)
+      //                     .setUIDs([...users]),
+      //                 }
+      //               : {}
+      //           ),
+      //         }),
+      //       }),
+      //       messageComposerConfiguration: new MessageComposerConfiguration({
+      //         disableMentions: true,
+      //       }),
+      //     })
+      //   }
+      //   isMobileView={isMobileView}
+      // />
     ),
   });
 
@@ -121,19 +173,21 @@ function ChatBoard() {
               ? {
                   usersRequestBuilder: new CometChat.UsersRequestBuilder()
                     .setLimit(100)
-                    .setUIDs([1, ...users, ...accountManagers]),
+                    .setUIDs([...users]),
                 }
               : {}
           )
         }
+        messagesConfiguration={
+          new MessagesConfiguration({
+            messageComposerConfiguration: new MessageComposerConfiguration({
+              disableMentions: true,
+            }),
+          })
+        }
       />
     ),
   });
-
-  function handleOnItemClick(group: CometChat.Group): void {
-    console.log(group, "your custom on item click action");
-    const guid = group.getGuid();
-  }
 
   const groupsTab = new CometChatTabItem({
     id: "groups",
@@ -141,14 +195,55 @@ function ChatBoard() {
     iconURL: groupsTabIcon,
     style: tabItemStyle,
     childView: (
-      <CometChatGroupsWithMessages
-        groupsConfiguration={
-          new GroupsConfiguration({
-            onItemClick: handleOnItemClick,
-          })
-        }
-        isMobileView={isMobileView}
-      />
+      <div className="flex">
+        {addGroup && (
+          <div className="absolute h-full w-full bg-black bg-opacity-75 z-999">
+            <CreateGroupWrapper
+              isMobileView={isMobileView}
+              onClose={() => setAddGroup(false)}
+            />
+          </div>
+        )}
+        <div className="w-[279px] relative">
+          <button
+            className="btn absolute top-[22px] right-[16px] z-99"
+            onClick={() => setAddGroup(true)}
+          >
+            <ProjectPlusIcon className="text-lg" />
+          </button>
+
+          <CometChatGroups
+            groupsRequestBuilder={new CometChat.GroupsRequestBuilder()
+              .joinedOnly(true)
+              .setLimit(100)}
+            onItemClick={(group) => setGroupDetails(group)}
+          />
+        </div>
+
+        {groupDetails && groupDetails.guid && (
+          <div className="w-[calc(100%-279px)] h-[calc(100vh-150px)]">
+            <CometChatMessages
+              group={groupDetails}
+              detailsConfiguration={
+                new DetailsConfiguration({
+                  addMembersConfiguration: new AddMembersConfiguration(
+                    client_id.role_id !== ROLES.ADMIN
+                      ? {
+                          usersRequestBuilder:
+                            new CometChat.UsersRequestBuilder()
+                              .setLimit(100)
+                              .setUIDs([
+                                ...users
+                              ]),
+                        }
+                      : {}
+                  ),
+                })
+              }
+            />
+          </div>
+        )}
+      </div>
     ),
   });
 
@@ -173,6 +268,7 @@ function ChatBoard() {
     <div>
       <TitleBar title="Chat Board" />
       <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap h-[calc(100vh-150px)] chatboard">
+        {/* <CometChatAddMembers /> */}
         <CometChatTabs
           tabAlignment={TabAlignment.bottom}
           tabs={tabs}

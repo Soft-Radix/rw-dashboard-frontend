@@ -19,13 +19,32 @@ export const initCometChat = () => {
   );
 };
 
-export const loginCometChat = (uid) => {
-  return CometChatUIKit.login(uid).then(
-    (user) => {
-      console.log("Login Successful:", { user });
-    },
-    (error) => {
-      console.log("Login failed with exception:", { error });
-    }
-  );
+export const loginCometChat = async (uid) => {
+  return CometChatUIKit.login(uid)
+    .then(
+      (user) => {
+        console.log("Chat Login Successful:", { user });
+      },
+      (error) => {
+        console.log("Chat Login failed with exception:", { error });
+      }
+    )
+    .catch((err) => {
+      console.log("login chat eerrrr=-----", err);
+    });
+};
+
+export const logoutCometChat = async () => {
+  return CometChatUIKit.logout()
+    .then(
+      () => {
+        console.log("Chat Logout completed successfully");
+      },
+      (error) => {
+        console.error("Chat Logout failed with exception:", error);
+      }
+    )
+    .catch((err) => {
+      console.log("Logout chat eerrrr=-----", err);
+    });
 };
