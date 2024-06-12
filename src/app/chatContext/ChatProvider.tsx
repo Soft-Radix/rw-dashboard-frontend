@@ -1,27 +1,15 @@
 import { initCometChat, loginCometChat } from "app/configs/cometChatConfig";
-import React, { createContext, useContext, useState, useEffect } from "react";
-import {
-  CometChatIncomingCall,
-  CometChatOngoingCall,
-  CometChatUIKit,
-} from "@cometchat/chat-uikit-react";
+import React, { createContext, useContext, useEffect } from "react";
 
-const ChatContext = createContext({ userChat: null });
+const ChatContext = createContext({});
 
 export const ChatProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
 
   useEffect(() => {
     initCometChat()
       .then(async () => {
-        await loginCometChat(userDetails?.id)
-          .then((loggedInUser) => {
-            setUser(loggedInUser);
-          })
-          .catch((err) => {
-            console.log("login cometeerrrr=-----", err);
-          });
+        await loginCometChat(userDetails?.id);
       })
       .catch((err) => {
         console.log("cometeerrrr=-----", err);
@@ -29,9 +17,7 @@ export const ChatProvider = ({ children }) => {
   }, [userDetails]);
 
   return (
-    <ChatContext.Provider value={{ userChat: user }}>
-      <CometChatIncomingCall />
-      <CometChatOngoingCall />
+    <ChatContext.Provider value={{}}>
       {children}
     </ChatContext.Provider>
   );
