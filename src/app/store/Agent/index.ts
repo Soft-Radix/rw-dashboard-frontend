@@ -51,6 +51,23 @@ export const getAgentList = createAsyncThunk(
   }
 );
 
+export const getStatusList = createAsyncThunk(
+  "/project/columns/task-status",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/columns/task-status/${payload.id}`,
+      method: "get",
+      data: payload,
+    });
+    // console.log(response.data, "response.data");
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const getAgentInfo = createAsyncThunk(
   "agent/information",
   async (payload: agentIDType) => {
