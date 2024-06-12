@@ -311,13 +311,14 @@ export default function MainCard({
                               title={item.title}
                               priority={item.priority}
                               taskName={item.description}
-                              date={item.business_due_date}
+                              date={item.due_date_time}
                               isChecked={item.isChecked}
                               images={item?.images}
                               callListApi={callListApi}
                               index={index}
                               key={item.id}
                               project_id={project_id}
+                              agent={item.assigned_task_users}
                             />
                             // <Task key={task.id} task={task} index={index} />
                           ))
