@@ -84,7 +84,9 @@ function App() {
                   <IncomingCallHandler />
                   </div>
                   <div>
-                    <CometChatOngoingCall />
+                    <CometChatOngoingCall onError={(err)=>{
+                      console.log(err);
+                    }}/>
                   </div>
 
                   <FuseLayout layouts={themeLayouts} />
