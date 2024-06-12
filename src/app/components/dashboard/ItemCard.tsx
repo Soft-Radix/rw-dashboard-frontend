@@ -31,6 +31,7 @@ type CardType = {
   callListApi?: any;
   index?: any;
   project_id?: any;
+  agent?: [];
 };
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -70,6 +71,7 @@ export default function ItemCard({
   images,
   index,
   project_id,
+  agent,
 }: CardType) {
   const theme: Theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -84,8 +86,8 @@ export default function ItemCard({
     setAnchorEl(null);
   };
 
-  const Date = date.split(",");
-  console.log("=====date==", Date[0]);
+  // const Date = date.split(",");
+  // console.log("=====date==", Date[0]);
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -265,21 +267,27 @@ export default function ItemCard({
                         color="primary.light"
                         className="text-[12px] ml-10 "
                       >
-                        {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")}
+                        {/* {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")} */}
+                        {date ? moment(date).format("ll") : ""}
                       </Typography>
                     </div>
                     <div className="flex flex-row-reverse">
-                      {["female-01.jpg", "female-02.jpg", "female-03.jpg"]?.map(
-                        (item) => (
-                          <img
-                            className="h-[34px] w-[34px] rounded-full border-2 border-white ml-[-10px] z-0"
-                            key={item}
-                            src={`/assets/images/avatars/${item}`}
-                            alt={item}
-                            loading="lazy"
-                          />
-                        )
-                      )}
+                      {agent?.map((item) => (
+                        <img
+                          className={`h-[34px] w-[34px] rounded-full border-2 border-white
+                  ml-[-10px]
+                          z-0`}
+                          key={item}
+                          src={
+                            //@ts-ignore
+                            !item?.user_image
+                              ? "../assets/images/logo/images.jpeg"
+                              : `/assets/images/avatars/${item}`
+                          }
+                          alt={item}
+                          loading="lazy"
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
