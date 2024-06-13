@@ -111,11 +111,11 @@ const Kanban = (props: IProps): JSX.Element => {
   const listData = async (task_limt, columnid = 0) => {
     const payload: any = {
       start: 0,
-      limit: 10,
+      limit: -1,
       search: "",
       project_id: id as string,
       task_start: 0,
-      task_limit: task_limt || 2,
+      task_limit: task_limt || 20,
       project_column_id: columnid,
     };
     try {
