@@ -19,6 +19,7 @@ const Container = styled("div")`
 const DragLayout = ({ columnList, callListApi, id }) => {
   const dispatch = useAppDispatch();
   const [starter, setStarter] = useState(transformData(columnList));
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const a = transformData(columnList);
   useEffect(() => {
     setStarter(transformData(columnList));

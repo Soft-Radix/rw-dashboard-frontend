@@ -24,7 +24,7 @@ const TasksConfig = {
       element: <Tasks />,
     },
     {
-      path: "tasks/detail/:taskId",
+      path: "/:projectId/tasks/detail/:taskId",
       element: <TaskDetails />,
     },
   ],

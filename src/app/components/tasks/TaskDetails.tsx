@@ -7,7 +7,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { useTheme } from "@mui/styles";
+import { styled, useTheme } from "@mui/styles";
 import { PlusIcon, ThreeDotsIcon } from "public/assets/icons/dashboardIcons";
 import { useEffect, useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
@@ -16,7 +16,7 @@ import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import RecentData from "../../components/client/clientAgent/RecentData";
 import { Clock, DownGreenIcon, Token } from "public/assets/icons/common";
 import { useNavigate, useParams } from "react-router";
-import { getAgentInfo } from "app/store/Agent";
+import { getAgentInfo, getStatusList } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
 import { useSelector } from "react-redux";
 import { ClientRootState } from "app/store/Client/Interface";
@@ -28,6 +28,7 @@ import TaskDetailData from "./TaskDetailData";
 import {
   ImportantTaskIcon,
   RightBorder,
+  StatusIcon,
   TaskDelete,
 } from "public/assets/icons/task-icons";
 import SubTaskTable from "./SubTaskTable";
@@ -40,6 +41,7 @@ import {
   deleteTask,
   TaskDetails as getTaskDetails,
   TaskDeleteAttachment,
+  TaskStatusUpdate,
 } from "app/store/Projects";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { LiveAudioVisualizer } from "react-audio-visualize";
@@ -52,16 +54,23 @@ import {
 import DeleteClient from "../client/DeleteClient";
 import ActionModal from "../ActionModal";
 import toast from "react-hot-toast";
+import DropdownMenu from "../Dropdown";
+import CommonChip from "../chip";
 
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  padding: "8px 20px",
+  minWidth: "250px",
+}));
 const TaskDetails = () => {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const { taskId } = useParams();
+  const { projectId } = useParams();
   const dispatch = useAppDispatch();
   const { taskDetailInfo } = useSelector(
     (store: ProjectRootState) => store.project
   );
 
-  // console.log(" TaskDetail", taskDetailInfo);
+  console.log(" TaskDetail", taskDetailInfo);
   const formatTime = (time: any) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -74,12 +83,19 @@ const TaskDetails = () => {
   const [recordingTime, setRecordingTime] = useState(0);
   const [deleteId, setIsDeleteId] = useState<any>(null);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [statusMenu, setStatusMenu] = useState<HTMLElement | null>(null);
   const [expandedImage, setExpandedImage] = useState(null);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [openEditModal, setOpenEditModal] = useState(false);
+  const [statusMenuData, setStatusMenuData] = useState([]);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState<string>(null);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [disable, setDisabled] = useState(false);
+
+  const [selectedStatusId, setSelectedStatusId] = useState(
+    taskDetailInfo?.status
+  );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [type, setType] = useState(null);
   const open = Boolean(anchorEl);
@@ -99,6 +115,15 @@ const TaskDetails = () => {
       // setOriginalTitle(formik.values.name);
     }
     setOpenEditModal(!openEditModal);
+  };
+  useEffect(() => {
+    dispatch(getStatusList({ id: projectId })).then((res) => {
+      setStatusMenuData(res?.payload?.data?.data?.list);
+    });
+  }, [dispatch, taskDetailInfo]);
+
+  const handleStatusMenuClick = (event) => {
+    setStatusMenu(event.currentTarget);
   };
 
   useEffect(() => {
@@ -150,7 +175,6 @@ const TaskDetails = () => {
     dispatch(getTaskDetails(taskId));
     // Add actual logic here
   };
-
   const recorderControls = useVoiceVisualizer();
   const { recordedBlob, error } = recorderControls; // setPreloadedAudioBlob
 
@@ -197,7 +221,18 @@ const TaskDetails = () => {
       }
     });
   }, []);
+  const handleStatusMenuItemClick = (status) => {
+    setSelectedStatus(status.name);
+    setSelectedStatusId(status.id);
+    const payload = {
+      status: status.id,
+      task_id: taskId,
+    };
+    dispatch(TaskStatusUpdate(payload));
 
+    setStatusMenu(null); // Close the dropdown menu after selection
+  };
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -218,51 +253,53 @@ const TaskDetails = () => {
                     </Button>
                     {/* <div className="flex justify-between gap-10 items-center"> */}
 
-                    <div className="flex gap-4">
-                      <span
-                        id="basic-button"
-                        aria-controls={open ? "basic-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                        onClick={handleClick}
-                      >
-                        <ThreeDotsIcon className="cursor-pointer" />
-                      </span>
-                      <Menu
-                        id="basic-menu"
-                        anchorEl={anchorEl}
-                        open={open}
-                        onClose={handleClose}
-                        MenuListProps={{
-                          "aria-labelledby": "basic-button",
-                        }}
-                        transformOrigin={{
-                          horizontal: "right",
-                          vertical: "top",
-                        }}
-                        anchorOrigin={{
-                          horizontal: "right",
-                          vertical: "bottom",
-                        }}
-                      >
-                        <MenuItem
-                          onClick={() => {
-                            handleClose();
-                            toggleEditModal();
+                    {userDetails?.role != "agent" && (
+                      <div className="flex gap-4">
+                        <span
+                          id="basic-button"
+                          aria-controls={open ? "basic-menu" : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={open ? "true" : undefined}
+                          onClick={handleClick}
+                        >
+                          <ThreeDotsIcon className="cursor-pointer" />
+                        </span>
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                          }}
+                          transformOrigin={{
+                            horizontal: "right",
+                            vertical: "top",
+                          }}
+                          anchorOrigin={{
+                            horizontal: "right",
+                            vertical: "bottom",
                           }}
                         >
-                          Edit Task
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => {
-                            handleClose();
-                            toggleDeleteModal();
-                          }}
-                        >
-                          Delete Task
-                        </MenuItem>
-                      </Menu>
-                    </div>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              toggleEditModal();
+                            }}
+                          >
+                            Edit Task
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose();
+                              toggleDeleteModal();
+                            }}
+                          >
+                            Delete Task
+                          </MenuItem>
+                        </Menu>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -309,11 +346,52 @@ const TaskDetails = () => {
                   </div>
                   <div>
                     <div className="w-1/4 text-[#757982] font-500">Status</div>
-                    <div className="flex items-center w-1/4 ">
-                      <span className=" mt-10 text-[14px] font-500 whitespace-nowrap">
-                        {taskDetailInfo?.status || "N/A"}
-                      </span>
-                    </div>
+                    {userDetails?.role != "agent" && (
+                      <div className="flex items-center w-1/4 ">
+                        <span className=" mt-10 text-[14px] font-500 whitespace-nowrap">
+                          {taskDetailInfo?.status || "N/A"}
+                        </span>
+                      </div>
+                    )}
+                    {userDetails?.role == "agent" && (
+                      <DropdownMenu
+                        anchorEl={statusMenu}
+                        handleClose={() => setStatusMenu(null)}
+                        button={
+                          <CommonChip
+                            onClick={handleStatusMenuClick}
+                            // label={selectedStatus}
+                            style={{ maxWidth: "200px" }}
+                            label={
+                              selectedStatusId
+                                ? statusMenuData.find(
+                                    (item) => item.id == selectedStatusId
+                                  )?.name
+                                : statusMenuData[0]?.name
+                            }
+                            icon={<StatusIcon />}
+                          />
+                        }
+                        popoverProps={{
+                          open: !!statusMenu,
+                          classes: {
+                            paper: "pt-10 pb-20",
+                          },
+                        }}
+                      >
+                        {statusMenuData?.map((item) => {
+                          return (
+                            <StyledMenuItem
+                              key={item.id}
+                              onClick={() => handleStatusMenuItemClick(item)}
+                            >
+                              {item.name}
+                            </StyledMenuItem>
+                          );
+                          // console.log(item, "itezcfm");
+                        })}
+                      </DropdownMenu>
+                    )}
                   </div>
                   <div>
                     <RightBorder />
@@ -506,13 +584,15 @@ const TaskDetails = () => {
                 /> */}
                 <div className="flex justify-between items-center">
                   <div className="text-[20px] font-600">Subtasks</div>
-                  <Button
-                    className="text-[16px] font-500 text-[#4F46E5] gap-10 "
-                    onClick={() => setIsOpenAddSubTaskModal(true)}
-                  >
-                    <PlusIcon color={theme.palette.secondary.main} />
-                    Add Subtask
-                  </Button>
+                  {userDetails?.role != "agent" && (
+                    <Button
+                      className="text-[16px] font-500 text-[#4F46E5] gap-10 "
+                      onClick={() => setIsOpenAddSubTaskModal(true)}
+                    >
+                      <PlusIcon color={theme.palette.secondary.main} />
+                      Add Subtask
+                    </Button>
+                  )}
                 </div>
                 {/* <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 my-10"></div> */}
               </div>
