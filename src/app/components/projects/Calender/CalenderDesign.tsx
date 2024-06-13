@@ -207,6 +207,7 @@ const CalenderDesign = ({ events }) => {
   useEffect(() => {
     setCalendarState({
       ...calendarState,
+      
       title: "",
       status: "",
     });
