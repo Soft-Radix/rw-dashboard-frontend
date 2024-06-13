@@ -130,6 +130,8 @@ export default function Item({
         });
     }
   };
+
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -158,7 +160,7 @@ export default function Item({
           onClick={(e) => {
             event.preventDefault();
             e.stopPropagation();
-            navigate(`/tasks/detail/${id}`);
+            navigate(`/${project_id}/tasks/detail/${id}`);
           }}
         >
           <Draggable
@@ -211,7 +213,9 @@ export default function Item({
                         />
                       ))}
                     </div>
-                    <div className="table-cell">Feb 12, 2024</div>
+                    <div className="table-cell">
+                      {!date ? "N/A" : moment(date).format("ll")}
+                    </div>
                     <div className="table-cell">
                       <span
                         style={{ width: "fit-content" }}
@@ -234,32 +238,37 @@ export default function Item({
                     </div>
                     <div className="table-cell action-cell">
                       <div className="flex gap-20 px-10">
-                        <span
-                          className="p-2 cursor-pointer"
-                          onClick={(e) => {
-                            handleClose();
-                            toggleDeleteModal();
-                            e.stopPropagation();
-                          }}
-                        >
-                          <DeleteIcon />
-                        </span>
-                        <span
-                          className="p-2 cursor-pointer"
-                          onClick={(e) => {
-                            handleClose();
-                            toggleEditModal();
-                            e.stopPropagation();
-                          }}
-                        >
-                          <EditIcon />
-                        </span>
+                        {userDetails?.role != "agent" && (
+                          <span
+                            className="p-2 cursor-pointer"
+                            onClick={(e) => {
+                              handleClose();
+                              toggleDeleteModal();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <DeleteIcon />
+                          </span>
+                        )}
+                        {userDetails?.role != "agent" && (
+                          <span
+                            className="p-2 cursor-pointer"
+                            onClick={(e) => {
+                              handleClose();
+                              toggleEditModal();
+                              e.stopPropagation();
+                            }}
+                          >
+                            <EditIcon />
+                          </span>
+                        )}
+
                         <span
                           className="p-2 cursor-pointer"
                           onClick={(e) => {
                             event.preventDefault();
                             e.stopPropagation();
-                            navigate(`/tasks/detail/${id}`);
+                            navigate(`/${project_id}/tasks/detail/${id}`);
                           }}
                         >
                           <ArrowRightCircleIcon />

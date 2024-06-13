@@ -135,6 +135,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     // console.log(newItems, "nw");
     setItems({ ...items, children: newItems });
   };
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return useMemo(
     () => (
       <Root
@@ -212,7 +213,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
                     </ProjectNavIconArrow>
                   </IconButton>
                 </div>
-                {!items?.hideOption && (
+                {!items?.hideOption && userDetails?.role != "agent" && (
                   <div className="flex items-center gap-10 custom">
                     <ProjectNavIcon
                       className="threeDots-icon"
