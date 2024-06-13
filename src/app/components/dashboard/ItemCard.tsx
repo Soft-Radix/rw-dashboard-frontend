@@ -73,6 +73,9 @@ export default function ItemCard({
   project_id,
   agent,
 }: CardType) {
+  const maxVisibleImages = 3;
+  const visibleAgents = agent.slice(0, maxVisibleImages);
+  const extraAgentsCount = agent.length - maxVisibleImages;
   const theme: Theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -169,7 +172,7 @@ export default function ItemCard({
                 onClick={(e) => {
                   handleClose();
                   e.stopPropagation();
-                  navigate(`/tasks/detail/${id}`);
+                  navigate(`/${project_id}/tasks/detail/${id}`);
                 }}
               >
                 View
@@ -202,7 +205,7 @@ export default function ItemCard({
           onClick={(e) => {
             event.preventDefault();
             e.stopPropagation();
-            navigate(`/tasks/detail/${id}`);
+            navigate(`/${project_id}/tasks/detail/${id}`);
           }}
         >
           <Draggable
@@ -278,8 +281,8 @@ export default function ItemCard({
                         {date ? moment(date).format("ll") : ""}
                       </Typography>
                     </div>
-                    <div className="flex flex-row-reverse">
-                      {agent?.map((item) => (
+                    <div className="flex ">
+                      {/* {agent?.map((item) => (
                         <img
                           className={`h-[34px] w-[34px] rounded-full border-2 border-white
                   ml-[-10px]
@@ -294,7 +297,28 @@ export default function ItemCard({
                           alt={item}
                           loading="lazy"
                         />
+                      ))} */}
+                      {visibleAgents?.map((item, idx) => (
+                        <img
+                          className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                            agent.length > 1 ? "ml-[-10px]" : ""
+                          } z-0`}
+                          key={idx}
+                          src={
+                            //@ts-ignore
+                            !item?.user_image
+                              ? "../assets/images/logo/images.jpeg"
+                              : `/assets/images/avatars/${item}`
+                          }
+                          alt={item}
+                          loading="lazy"
+                        />
                       ))}
+                      {extraAgentsCount > 0 && (
+                        <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-gray-300 flex items-center justify-center text-xs text-white">
+                          +{extraAgentsCount}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

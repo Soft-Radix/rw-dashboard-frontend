@@ -160,7 +160,7 @@ export default function Item({
           onClick={(e) => {
             event.preventDefault();
             e.stopPropagation();
-            navigate(`/tasks/detail/${id}`);
+            navigate(`/${project_id}/tasks/detail/${id}`);
           }}
         >
           <Draggable
@@ -213,7 +213,9 @@ export default function Item({
                         />
                       ))}
                     </div>
-                    <div className="table-cell">Feb 12, 2024</div>
+                    <div className="table-cell">
+                      {!date ? "N/A" : moment(date).format("ll")}
+                    </div>
                     <div className="table-cell">
                       <span
                         style={{ width: "fit-content" }}
@@ -266,7 +268,7 @@ export default function Item({
                           onClick={(e) => {
                             event.preventDefault();
                             e.stopPropagation();
-                            navigate(`/tasks/detail/${id}`);
+                            navigate(`/${project_id}/tasks/detail/${id}`);
                           }}
                         >
                           <ArrowRightCircleIcon />
