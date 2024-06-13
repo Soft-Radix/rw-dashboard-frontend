@@ -133,7 +133,7 @@ function ChatBoard() {
     childView: (
       <CometChatUsersWithMessages
         isMobileView={isMobileView}
-        
+
         usersConfiguration={
           new UsersConfiguration(
             client_id.role_id !== ROLES.ADMIN
@@ -209,7 +209,7 @@ function ChatBoard() {
           </div>
         ) : (
           <div className="w-full flex flex-col items-center justify-center gap-3">
-            <img src={"public/assets/images/pages/chat-board/no-msg.png"} />
+            <img src={import.meta.env.VITE_API_BASE_IMAGE_URL+"chat/no-msg.png"} />
             <h2 className="font-bold" style={{ color: "#111827" }}>
               No Message !
             </h2>
