@@ -19,6 +19,8 @@ import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
 import WhiteBoard from "./ViewPopUp/WhiteBoard";
 import { useNavigate } from "react-router";
+import { useSelector } from "react-redux";
+import { ProjectRootState } from "app/store/Projects/Interface";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -65,7 +67,9 @@ export default function ProjectTabPanel() {
   // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   //   setSelectedTab(newValue);
   // };
-
+  const { projectInfo } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const navigate = useNavigate();
 
   const getTabIndexFromType = (type) => {
@@ -91,7 +95,8 @@ export default function ProjectTabPanel() {
       case 0:
         return "kanban";
       case 1:
-        return "task-table&subtype=to-do";
+        return `task-table&subtype=${projectInfo?.list[0]?.name}`;
+      // return `task-table&subtype=to-do`;
       case 2:
         return "task-list";
       case 3:
@@ -206,7 +211,7 @@ export default function ProjectTabPanel() {
         <Kanban />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={1}>
-        {/* <ProjectTaskTabel customSelectedTab={selectedTab} /> */}
+        <ProjectTaskTabel customSelectedTab={selectedTab} />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={2}>
         <ProjectTaskList customSelectedTab={selectedTab} />
