@@ -214,6 +214,21 @@ export const deleteTask: any = createAsyncThunk(
     };
   }
 );
+
+export const TaskStatusUpdate: any = createAsyncThunk(
+  "project/task/status-update",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/task/status-update`,
+      method: "post",
+      data: payload,
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const TaskListColumn: any = createAsyncThunk(
   "TaskListColumn",
   async (payload: any) => {

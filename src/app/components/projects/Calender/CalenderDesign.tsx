@@ -1,52 +1,18 @@
-import {} from "console";
 import moment from "moment";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import CustomToolbar from "./CustomToolBar";
 import EventCustomize from "./EventCustomize";
-import { Button, Dialog, TextField, Typography } from "@mui/material";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { Button, Dialog, Menu, MenuItem, Typography } from "@mui/material";
 import InputField from "../../InputField";
+import { ThreeDotsIcon } from "public/assets/icons/dashboardIcons"; // Ensure this is the correct import path
 
-interface slotData {
-  start: Date;
-  end: Date;
-  slots: Date[];
-  action: "select" | "click" | "doubleClick" | "contextMenu";
-  bounds: {
-    x: number;
-    y: number;
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-  box: {
-    x: number;
-    y: number;
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-  };
-}
-interface CalendarState {
-  events: any[]; // Adjust the type according to your event structure
-  title: string;
-  desc: string;
-  start: Date | null;
-  end: Date | null;
-  openSlot: boolean;
-  openEvent: boolean;
-  clickedEvent: any | null; // Adjust the type according to your event structure
-}
 const localizer = momentLocalizer(moment);
 
 const CalenderDesign = ({ events }) => {
-  const [calendarState, setCalendarState] = useState<CalendarState>({
-    events: [],
+  const [calendarState, setCalendarState] = useState({
+    events: events,
     title: "",
     desc: "",
     start: null,
@@ -55,55 +21,62 @@ const CalenderDesign = ({ events }) => {
     openEvent: false,
     clickedEvent: null,
   });
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
   const handleClose = () => {
     setCalendarState({
       ...calendarState,
       openSlot: false,
       openEvent: false,
     });
+    setAnchorEl(null);
   };
 
   const handleViewChange = (view: string) => {
     console.log(`Switching to ${view} view`);
-    // Implement your logic to handle view change (e.g., update state)
   };
+
   const formats = {
     weekdayFormat: (date: Date, culture: string, localizer: any) =>
       localizer.format(date, "dddd", culture),
   };
+
   const [today] = React.useState(new Date());
+
   const customDayPropGetter = (date) => {
     const isToday = moment(date).isSame(today, "day");
     return {
       className: isToday ? "today-cell" : "",
     };
   };
+
   const eventComponent = ({ event }) => {
     return (
       <EventCustomize
         event={event}
         onClickButton={(clickedEvent) => {
-          // Handle button click logic here
           console.log(`Button clicked for event: ${clickedEvent.title}`);
         }}
       />
     );
   };
 
-  const handleSlotSelected = (slotInfo: slotData) => {
-    // alert("Date is selected");
-    setCalendarState({
-      ...calendarState,
-      title: "",
-      desc: "",
-      start: slotInfo.start,
-      end: slotInfo.end,
-      openSlot: true,
-    });
-    console.log(calendarState, "kkk");
-  };
+  const handleSelectSlot = useCallback(
+    ({ start, end }) => {
+      setCalendarState({
+        ...calendarState,
+        start,
+        end,
+        openSlot: true,
+        openEvent: false,
+      });
+    },
+    [calendarState]
+  );
 
-  const handleEventSelected = (event: any) => {
+  const handleSelectEvent = (event, e) => {
     setCalendarState({
       ...calendarState,
       openEvent: true,
@@ -113,17 +86,17 @@ const CalenderDesign = ({ events }) => {
       title: event.title,
       desc: event.desc,
     });
+    setAnchorEl(e.currentTarget);
   };
 
   const setNewAppointment = () => {
-    const { title, start, end, desc } = calendarState;
+    const { title, start, end, desc, events } = calendarState;
     const newEvent = { title, start, end, desc };
     setCalendarState({
       ...calendarState,
-      events: [...calendarState.events, newEvent],
+      events: [...events, newEvent],
       openSlot: false,
     });
-    console.log(calendarState, "check");
   };
 
   const updateEvent = () => {
@@ -136,44 +109,37 @@ const CalenderDesign = ({ events }) => {
       events: updatedEvents,
       openEvent: false,
     });
+    handleClose();
   };
 
   const deleteEvent = () => {
-    const { start, events } = calendarState;
-    const updatedEvents = events.filter((event) => event.start !== start);
+    const { events, clickedEvent } = calendarState;
+    const updatedEvents = events.filter((event) => event !== clickedEvent);
     setCalendarState({
       ...calendarState,
       events: updatedEvents,
       openEvent: false,
     });
+    handleClose();
   };
 
-  const appointmentActions = [
-    <Button key="cancel" onClick={handleClose} color="secondary">
-      Cancel
-    </Button>,
-    <Button key="submit" onClick={setNewAppointment} color="primary">
-      Submit
-    </Button>,
-  ];
+  const toggleEditModal = () => {
+    setCalendarState({
+      ...calendarState,
+      openSlot: false,
+      openEvent: true,
+    });
+  };
 
-  const eventActions = [
-    <Button key="cancel" onClick={handleClose} color="secondary">
-      Cancel
-    </Button>,
-    <Button key="delete" onClick={deleteEvent} color="secondary">
-      Delete
-    </Button>,
-    <Button key="confirmEdit" onClick={updateEvent} color="primary">
-      Confirm Edit
-    </Button>,
-  ];
+  const toggleDeleteModal = () => {
+    deleteEvent();
+  };
 
   return (
     <div className="h-[90vh]">
       <Calendar
         localizer={localizer}
-        events={events}
+        events={calendarState.events}
         startAccessor="start"
         endAccessor="end"
         defaultView="month"
@@ -185,9 +151,9 @@ const CalenderDesign = ({ events }) => {
         }}
         formats={formats}
         dayPropGetter={customDayPropGetter}
-        onSelectEvent={handleEventSelected}
-        onSelectSlot={handleSlotSelected} // Handle slot selection
-        selectable={true} // Enable selection of slots
+        onSelectEvent={(event, e) => handleSelectEvent(event, e)}
+        onSelectSlot={handleSelectSlot}
+        selectable={true}
       />
 
       <Dialog
@@ -242,6 +208,127 @@ const CalenderDesign = ({ events }) => {
           </Button>
         </div>
       </Dialog>
+
+      {/* <Dialog
+        open={calendarState.openEvent}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+        PaperProps={{
+          style: {
+            minWidth: "20vw",
+            padding: "2rem",
+          },
+        }}
+      >
+        <div className="flex items-center justify-between mb-20">
+          <Typography className="text-[16px] font-500">Edit Task</Typography>
+          {calendarState.start && (
+            <Typography
+              variant="subtitle1"
+              className="text-[14px] text-[#757982]"
+            >
+              {moment(calendarState.start).format("MMMM Do YYYY")}
+            </Typography>
+          )}
+        </div>
+        <div className="mb-20">
+          <InputField
+            name="title"
+            label="Title"
+            placeholder="Enter Task Name"
+            value={calendarState.title}
+            onChange={(e) =>
+              setCalendarState({ ...calendarState, title: e.target.value })
+            }
+          />
+          <InputField
+            name="desc"
+            label="Description"
+            placeholder="Enter Task Description"
+            value={calendarState.desc}
+            onChange={(e) =>
+              setCalendarState({ ...calendarState, desc: e.target.value })
+            }
+          />
+        </div>
+        <div className="flex">
+          <Button
+            variant="contained"
+            color="secondary"
+            className="w-[95px] h-[30px] text-[16px] rounded-[28px]"
+            onClick={updateEvent}
+          >
+            Save
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            className="w-[95px] h-[30px] text-[16px] ml-14 rounded-[28px]"
+            onClick={deleteEvent}
+          >
+            Delete
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            className="w-[95px] h-[30px] text-[16px] ml-14 rounded-[28px]"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+        </div>
+      </Dialog> */}
+
+      <div style={{ position: "absolute", right: 20, top: 19 }}>
+        <span
+          id="basic-button"
+          aria-controls={open ? "basic-menu" : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? "true" : undefined}
+          onClick={(e) => setAnchorEl(e.currentTarget)}
+        >
+          <ThreeDotsIcon className="cursor-pointer" />
+        </span>
+        <Menu
+          id="basic-menu"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            "aria-labelledby": "basic-button",
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          <MenuItem
+            onClick={(e) => {
+              handleClose();
+              toggleEditModal();
+            }}
+          >
+            Edit Task
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              handleClose();
+              toggleDeleteModal();
+              e.stopPropagation();
+            }}
+          >
+            Delete Task
+          </MenuItem>
+          <MenuItem
+            onClick={(e) => {
+              handleClose();
+              e.stopPropagation();
+              // Replace navigate call with your navigation logic
+              // navigate(`/${project_id}/tasks/detail/${id}`);
+            }}
+          >
+            View
+          </MenuItem>
+        </Menu>
+      </div>
     </div>
   );
 };

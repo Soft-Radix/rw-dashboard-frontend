@@ -105,9 +105,11 @@ const Kanban = (props: IProps): JSX.Element => {
       console.error("Error fetching data:", error);
     }
   };
+
   const { fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
   );
+
   const listData = async (task_limt, columnid = 0) => {
     const payload: any = {
       start: 0,
@@ -153,6 +155,7 @@ const Kanban = (props: IProps): JSX.Element => {
       console.error("Error fetching data:", error);
     }
   };
+
   const moveColumns = async (payload: {
     project_id: string;
     column_ids: any[];
@@ -203,25 +206,7 @@ const Kanban = (props: IProps): JSX.Element => {
   if (fetchStatusNew == "loading") {
     return <ListLoading />;
   }
-  // const handleAddTask = () => {
-  //   return (
-  //     <Button
-  //       variant="outlined"
-  //       color="secondary"
-  //       className="h-[40px] text-[16px] flex gap-8"
-  //       aria-label="Add Tasks"
-  //       size="large"
-  //       // onClick={() => setIsOpenAddModal(true)}
-  //       startIcon={<PlusIcon color={theme.palette.secondary.main} />}
-  //     >
-  //       Add Task
-  //     </Button>
-  //   );
-  // };
-  // const value = formik?.values?.name;
-  // useEffect(() => {
-  //   setError("");
-  // }, [value]);
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div>
       <div className="px-20 mb-20">
@@ -235,61 +220,63 @@ const Kanban = (props: IProps): JSX.Element => {
       >
         <DragLayout columnList={columnList} callListApi={listData} id={id} />
 
-        <div className="min-w-[322px] bg-white p-14 py-[20px] rounded-lg shadow-md">
-          {!addCard && (
-            <div
-              className="flex gap-10 items-center cursor-pointer w-fit"
-              onClick={() => setAddCard(!addCard)}
-            >
-              <PlusIcon color={theme.palette.secondary.main} />
-              <Typography
-                className="text-[16px] font-semibold"
-                color="secondary.main"
+        {userDetails?.role != "agent" && (
+          <div className="min-w-[322px] bg-white p-14 py-[20px] rounded-lg shadow-md">
+            {!addCard && (
+              <div
+                className="flex gap-10 items-center cursor-pointer w-fit"
+                onClick={() => setAddCard(!addCard)}
               >
-                Create New Column
-              </Typography>
-            </div>
-          )}
-          {addCard && (
-            <div>
-              <InputField
-                formik={formik}
-                name="name"
-                label="Column Name"
-                placeholder="Enter Column Name"
-                onChange={(e) => {
-                  formik.setFieldValue("name", e.target.value);
-                  setError("");
-                }}
-              />
-              <span className=" text-red   block ">{error}</span>
-              <div className="mt-20">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="w-[95px] text-[12px]"
-                  onClick={handleSave}
-                  disabled={disabled}
+                <PlusIcon color={theme.palette.secondary.main} />
+                <Typography
+                  className="text-[16px] font-semibold"
+                  color="secondary.main"
                 >
-                  Save
-                </Button>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  className="w-[95px] text-[12px] ml-5"
-                  onClick={() => {
-                    setAddCard(!addCard);
-                    formik.setFieldValue("name", "");
-                    formik.resetForm();
-                  }}
-                  disabled={disabled}
-                >
-                  Cancel
-                </Button>
+                  Create New Column
+                </Typography>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+            {addCard && (
+              <div>
+                <InputField
+                  formik={formik}
+                  name="name"
+                  label="Column Name"
+                  placeholder="Enter Column Name"
+                  onChange={(e) => {
+                    formik.setFieldValue("name", e.target.value);
+                    setError("");
+                  }}
+                />
+                <span className=" text-red   block ">{error}</span>
+                <div className="mt-20">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    className="w-[95px] text-[12px]"
+                    onClick={handleSave}
+                    disabled={disabled}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    className="w-[95px] text-[12px] ml-5"
+                    onClick={() => {
+                      setAddCard(!addCard);
+                      formik.setFieldValue("name", "");
+                      formik.resetForm();
+                    }}
+                    disabled={disabled}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -116,7 +116,7 @@ function AddTaskModal({
   const userId = JSON.parse(localStorage.getItem("userDetail"));
   const [screenSharingStream, setScreenSharingStream] = useState(null);
   const [statusMenuData, setStatusMenuData] = useState([]);
-  const [selectedStatusId, setSelectedStatusId] = useState(null);
+  const [selectedStatusId, setSelectedStatusId] = useState("0");
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -416,7 +416,7 @@ function AddTaskModal({
     videoRef.current = null;
     setSelectedAgent("Assigned To");
     setSelectedStatus("Status");
-    setSelectedStatusId(null);
+    setSelectedStatusId("0");
     setSelectedPriority("Priority");
     setSelectedlabel("Labels");
     setCalculatedDate("");
@@ -614,7 +614,7 @@ function AddTaskModal({
     formData.append("description", formik.values.description);
     formData.append("priority", selectedPriority);
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
-    formData.append("status", selectedStatusId || null);
+    formData.append("status", selectedStatusId || "0");
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
     formData.append("screen_record_file", screenRecorder);
@@ -1105,7 +1105,7 @@ function AddTaskModal({
                 onClick={handleStatusMenuClick}
                 // label={selectedStatus}
                 label={
-                  selectedStatusId
+                  selectedStatusId && selectedStatusId != "0"
                     ? statusMenuData.find((item) => item.id == selectedStatusId)
                         ?.name
                     : selectedStatus
@@ -1120,7 +1120,7 @@ function AddTaskModal({
               },
             }}
           >
-            {statusMenuData.map((item) => {
+            {statusMenuData?.map((item) => {
               return (
                 <StyledMenuItem
                   key={item.id}

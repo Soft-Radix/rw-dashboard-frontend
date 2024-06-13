@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { CometChatIncomingCall } from "@cometchat/chat-uikit-react";
+import {
+  CometChatIncomingCall,
+} from "@cometchat/chat-uikit-react";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 
 const IncomingCallHandler = () => {
   const [call, setCall] = useState(null);
 
   useEffect(() => {
-    const listenerID = new Date().toISOString();
+    const listenerID = new Date().toUTCString();
 
     CometChat.addCallListener(
       listenerID,
@@ -17,19 +19,8 @@ const IncomingCallHandler = () => {
           // Display the incoming call component
           setCall(call);
         },
-        onIncomingCallCancelled: (call) => {
-          // Handle incoming call cancelled
-          console.log("Incoming call cancelled:", call);
-          setCall(null);
-        },
-        onCallEndedMessageReceived: (call) => {
-          // Handle incoming call cancelled
-          console.log("Incoming call end message recieved:", call);
-          setCall(null);
-        },
-        onOutgoingCallAccepted: (call) => {
-          // Handle incoming call cancelled
-          console.log("Incoming call accepted:", call);
+        onIncomingCallRejected: (call) => {
+          console.log("Incoming call rejected:", call);
           setCall(null);
         },
       })
@@ -39,8 +30,9 @@ const IncomingCallHandler = () => {
       CometChat.removeCallListener(listenerID);
     };
   }, []);
+
   if (call) {
-    return <CometChatIncomingCall call={call} />;
+    return <CometChatIncomingCall call={call} disableSoundForCalls={true}/>;
   }
   return null;
 };

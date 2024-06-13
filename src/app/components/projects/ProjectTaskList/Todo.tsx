@@ -182,7 +182,7 @@ export default function Todo({
         if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
           // Increased threshold
           setIsFetching(true);
-          callListApi(4, column.id).finally(() => {
+          callListApi(40, column.id).finally(() => {
             setIsFetching(false);
           });
         }
@@ -204,7 +204,7 @@ export default function Todo({
     };
   }, [handleScroll, showData]);
   const headings = ["Title", "Assigned", "Due Date", "Priority", "Action"];
-
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <>
       <Draggable
@@ -279,27 +279,29 @@ export default function Todo({
                                 ))}
                               </div>
                             </div>
-                            <div className=" border-1 border-solid border-[#D1D7DB]">
-                              <Button
-                                variant="text"
-                                color="secondary"
-                                className="h-[40px] sm:text-[16px] flex gap-2 sm:mb-[1rem] leading-none pt-10  pl-18"
-                                aria-label="Manage Sections"
-                                size="large"
-                                startIcon={
-                                  <PlusIcon
-                                    color={theme.palette.secondary.main}
-                                  />
-                                }
-                                onClick={(e) => {
-                                  handleClose();
-                                  toggleEditModal();
-                                  e.stopPropagation();
-                                }}
-                              >
-                                Add Task
-                              </Button>
-                            </div>
+                            {userDetails?.role != "agent" && (
+                              <div className=" border-1 border-solid border-[#D1D7DB]">
+                                <Button
+                                  variant="text"
+                                  color="secondary"
+                                  className="h-[40px] sm:text-[16px] flex gap-2 sm:mb-[1rem] leading-none pt-10  pl-[18px]"
+                                  aria-label="Manage Sections"
+                                  size="large"
+                                  startIcon={
+                                    <PlusIcon
+                                      color={theme.palette.secondary.main}
+                                    />
+                                  }
+                                  onClick={(e) => {
+                                    handleClose();
+                                    toggleEditModal();
+                                    e.stopPropagation();
+                                  }}
+                                >
+                                  Add Task
+                                </Button>
+                              </div>
+                            )}
                           </div>
                         </>
                       )}

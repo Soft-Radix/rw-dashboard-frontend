@@ -136,7 +136,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
       });
     const projectData = [...navigationConfig];
   };
-
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return useMemo(
     () => (
       <Root
@@ -188,7 +188,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
             name: item?.title,
           }}
         />
-        {item?.isProject && (
+        {item?.isProject && userDetails?.role != "agent" && (
           <>
             <Button aria-describedby={id} onClick={handleClick}>
               <ProjectNavIcon className="threeDots-icon" color="inherit" />

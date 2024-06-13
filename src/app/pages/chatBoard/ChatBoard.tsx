@@ -26,6 +26,7 @@ import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
+import { Typography } from "@mui/material";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
@@ -71,15 +72,15 @@ function ChatBoard() {
     style: tabItemStyle,
     isActive: true,
     childView: (
-      <div className="flex">
-        <div className="w-[279px] h-[calc(100vh-150px)]">
+      <div className="flex h-[calc(100vh-150px)]">
+        <div className="w-[279px]">
           <CometChatConversations
             onItemClick={(group) => setConversationDetails(group)}
           />
         </div>
 
-        {conversationDetails && conversationDetails.conversationId && (
-          <div className="w-[calc(100%-279px)] h-[calc(100vh-150px)]">
+        {conversationDetails && conversationDetails.conversationId ? (
+          <div className="w-full">
             {conversationDetails.conversationType === "user" ? (
               <CometChatMessages
                 user={conversationDetails.conversationWith}
@@ -100,9 +101,7 @@ function ChatBoard() {
                             usersRequestBuilder:
                               new CometChat.UsersRequestBuilder()
                                 .setLimit(100)
-                                .setUIDs([
-                                  ...users
-                                ]),
+                                .setUIDs([...users]),
                           }
                         : {}
                     ),
@@ -111,51 +110,18 @@ function ChatBoard() {
               />
             )}
           </div>
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <img src={import.meta.env.VITE_API_BASE_IMAGE_URL+"chat/no-msg.png"} />
+            <h2 className="font-bold" style={{ color: "#111827" }}>
+              No Message !
+            </h2>
+            <p style={{ color: "#757982" }}>
+              Please select list to view messages.
+            </p>
+          </div>
         )}
       </div>
-      // <CometChatConversationsWithMessages
-      //   startConversationConfiguration={
-      //     new ContactsConfiguration({
-      //       usersConfiguration: new UsersConfiguration(
-      //         client_id.role_id !== ROLES.ADMIN
-      //           ? {
-      //               usersRequestBuilder: new CometChat.UsersRequestBuilder()
-      //                 .setLimit(100)
-      //                 .setUIDs([...users]),
-      //               onItemClick: (group) => handleOnItemClick(group),
-      //             }
-      //           : {}
-      //       ),
-      //       groupsConfiguration: new GroupsConfiguration({
-      //         groupsRequestBuilder: new CometChat.GroupsRequestBuilder()
-      //           .joinedOnly(true)
-      //           .setLimit(100),
-      //         onItemClick: (group) => handleOnItemClick(group),
-      //       }),
-      //     })
-      //   }
-      //   messagesConfiguration={
-      //     new MessagesConfiguration({
-      //       detailsConfiguration: new DetailsConfiguration({
-      //         addMembersConfiguration: new AddMembersConfiguration({
-      //           usersConfiguration: new UsersConfiguration(
-      //             client_id.role_id !== ROLES.ADMIN
-      //               ? {
-      //                   usersRequestBuilder: new CometChat.UsersRequestBuilder()
-      //                     .setLimit(100)
-      //                     .setUIDs([...users]),
-      //                 }
-      //               : {}
-      //           ),
-      //         }),
-      //       }),
-      //       messageComposerConfiguration: new MessageComposerConfiguration({
-      //         disableMentions: true,
-      //       }),
-      //     })
-      //   }
-      //   isMobileView={isMobileView}
-      // />
     ),
   });
 
@@ -167,6 +133,7 @@ function ChatBoard() {
     childView: (
       <CometChatUsersWithMessages
         isMobileView={isMobileView}
+
         usersConfiguration={
           new UsersConfiguration(
             client_id.role_id !== ROLES.ADMIN
@@ -195,7 +162,7 @@ function ChatBoard() {
     iconURL: groupsTabIcon,
     style: tabItemStyle,
     childView: (
-      <div className="flex">
+      <div className="flex h-[calc(100vh-150px)]">
         {addGroup && (
           <div className="absolute h-full w-full bg-black bg-opacity-75 z-99">
             <CreateGroupWrapper
@@ -220,8 +187,8 @@ function ChatBoard() {
           />
         </div>
 
-        {groupDetails && groupDetails.guid && (
-          <div className="w-[calc(100%-279px)] h-[calc(100vh-150px)]">
+        {groupDetails && groupDetails.guid ? (
+          <div className="w-full">
             <CometChatMessages
               group={groupDetails}
               detailsConfiguration={
@@ -232,15 +199,23 @@ function ChatBoard() {
                           usersRequestBuilder:
                             new CometChat.UsersRequestBuilder()
                               .setLimit(100)
-                              .setUIDs([
-                                ...users
-                              ]),
+                              .setUIDs([...users]),
                         }
                       : {}
                   ),
                 })
               }
             />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <img src={import.meta.env.VITE_API_BASE_IMAGE_URL+"chat/no-msg.png"} />
+            <h2 className="font-bold" style={{ color: "#111827" }}>
+              No Message !
+            </h2>
+            <p style={{ color: "#757982" }}>
+              Please select list to view messages.
+            </p>
           </div>
         )}
       </div>
