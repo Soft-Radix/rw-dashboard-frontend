@@ -20,10 +20,12 @@ export const initCometChat = () => {
 };
 
 export const loginCometChat = async (uid) => {
-  return CometChatUIKit.login(uid)
+  let userData = null;
+  await CometChatUIKit.login(uid)
     .then(
       (user) => {
         console.log("Chat Login Successful:", { user });
+        userData = user
       },
       (error) => {
         console.log("Chat Login failed with exception:", { error });
@@ -32,6 +34,7 @@ export const loginCometChat = async (uid) => {
     .catch((err) => {
       console.log("login chat eerrrr=-----", err);
     });
+    return userData;
 };
 
 export const logoutCometChat = async () => {

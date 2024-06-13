@@ -40,7 +40,7 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
     <ThemeProvider theme={toolbarTheme}>
       <AppBar
         id="fuse-toolbar"
-        className={clsx("relative z-20 flex shadow", className)}
+        className={clsx("relative z-1 flex shadow", className)}
         color="default"
         sx={{
           backgroundColor: (theme) =>

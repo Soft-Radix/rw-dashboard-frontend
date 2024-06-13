@@ -26,6 +26,7 @@ import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
+import { Typography } from "@mui/material";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
@@ -78,7 +79,7 @@ function ChatBoard() {
           />
         </div>
 
-        {conversationDetails && conversationDetails.conversationId && (
+        {conversationDetails && conversationDetails.conversationId ? (
           <div className="w-full">
             {conversationDetails.conversationType === "user" ? (
               <CometChatMessages
@@ -100,9 +101,7 @@ function ChatBoard() {
                             usersRequestBuilder:
                               new CometChat.UsersRequestBuilder()
                                 .setLimit(100)
-                                .setUIDs([
-                                  ...users
-                                ]),
+                                .setUIDs([...users]),
                           }
                         : {}
                     ),
@@ -110,6 +109,16 @@ function ChatBoard() {
                 }
               />
             )}
+          </div>
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <img src={"public/assets/images/pages/chat-board/no-msg.png"} />
+            <h2 className="font-bold" style={{ color: "#111827" }}>
+              No Message !
+            </h2>
+            <p style={{ color: "#757982" }}>
+              Please select list to view messages.
+            </p>
           </div>
         )}
       </div>
@@ -124,6 +133,7 @@ function ChatBoard() {
     childView: (
       <CometChatUsersWithMessages
         isMobileView={isMobileView}
+        
         usersConfiguration={
           new UsersConfiguration(
             client_id.role_id !== ROLES.ADMIN
@@ -177,7 +187,7 @@ function ChatBoard() {
           />
         </div>
 
-        {groupDetails && groupDetails.guid && (
+        {groupDetails && groupDetails.guid ? (
           <div className="w-full">
             <CometChatMessages
               group={groupDetails}
@@ -189,15 +199,23 @@ function ChatBoard() {
                           usersRequestBuilder:
                             new CometChat.UsersRequestBuilder()
                               .setLimit(100)
-                              .setUIDs([
-                                ...users
-                              ]),
+                              .setUIDs([...users]),
                         }
                       : {}
                   ),
                 })
               }
             />
+          </div>
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center gap-3">
+            <img src={"public/assets/images/pages/chat-board/no-msg.png"} />
+            <h2 className="font-bold" style={{ color: "#111827" }}>
+              No Message !
+            </h2>
+            <p style={{ color: "#757982" }}>
+              Please select list to view messages.
+            </p>
           </div>
         )}
       </div>
