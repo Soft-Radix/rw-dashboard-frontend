@@ -42,6 +42,7 @@ import VerificationConfig from "../main/testing/VerificationConfig";
 import SucessConfig from "../main/subscriptionSuccess/SucessConfig";
 import CancelConfig from "../main/subscriptionCancel/CancelConfig";
 import MyAgentsConfig from "../pages/myAgent/MyAgentsConfig";
+import WhiteBoardConfig from "../pages/whiteBoard/whiteBoardConfig";
 
 const commonRoutes = [
   {
@@ -78,7 +79,8 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   VerificationConfig,
   SucessConfig,
   CancelConfig,
-  ChatBoardConfig
+  ChatBoardConfig,
+  WhiteBoardConfig
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [
@@ -109,6 +111,7 @@ const clientRouteConfigs: FuseRouteConfigsType = [
   SucessConfig,
   CancelConfig,
   AgentOnBoardConfig,
+  WhiteBoardConfig
 ];
 const agentRouteConfigs: FuseRouteConfigsType = [
   AgentDashboardConfig,
