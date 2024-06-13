@@ -58,6 +58,7 @@
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
     "notistack": "1.0.6-next.3",
+    "patch-package": "^8.0.0",
     "perfect-scrollbar": "1.5.5",
     "postcss-import": "^16.1.0",
     "prismjs": "1.29.0",
@@ -200,7 +201,7 @@
     "build-docs": "ts-node --esm ./src/app/main/documentation/material-ui-components/build.ts",
     "ext-rename-js-to-ts": "ts-node --esm ./src/node-scripts/file-ext-rename-js-to-ts.ts",
     "analyze": "react-app-rewired build && source-map-explorer 'build/static/js/*.js' --html analyze-result.html",
-    "postinstall": "node --loader ts-node/esm ./src/node-scripts/fuse-react-message.ts",
+    "postinstall": "node --loader ts-node/esm ./src/node-scripts/fuse-react-message.ts && patch-package",
     "poststart": "node --loader ts-node/esm ./src/node-scripts/fuse-react-message.ts",
     "audit": "npm audit --production"
   },
