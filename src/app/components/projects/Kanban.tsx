@@ -196,7 +196,7 @@ const Kanban = (props: IProps): JSX.Element => {
     if (savedOrder) {
       setColumnList(JSON.parse(savedOrder));
     } else {
-      listData(2);
+      listData(20);
     }
   }, [id]);
 

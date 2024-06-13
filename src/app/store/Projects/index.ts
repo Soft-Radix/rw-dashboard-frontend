@@ -112,6 +112,21 @@ export const projectColumnList = createAsyncThunk(
     };
   }
 );
+
+export const projectTaskTableList = createAsyncThunk(
+  "project/columns/task-list",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/columns/list`,
+      method: "post",
+      data: payload,
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const TaskAdd = createAsyncThunk(
   "project/task/add",
   async (payload: Taskadd | FormData) => {
@@ -325,6 +340,7 @@ export const projectSlice = createSlice({
         const { data } = action.payload?.data;
         state.fetchStatusNew = "idle";
         state.projectInfo = data;
+        // console.log(state.projectInfo, "state.projectInfo");
       })
       .addCase(projectColumnList.rejected, (state) => {
         state.fetchStatusNew = "idle";
