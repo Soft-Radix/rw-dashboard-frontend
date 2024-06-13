@@ -44,15 +44,40 @@ const rows = [
     priority: "Medium",
   },
 ];
+type InProgressType = {
+  id?: string | number;
+  title?: string;
+  isEmpty?: boolean;
+  callListApi?: any;
+  dataList?: any;
+  dataListLength?: any;
+  tasks?: any[];
+  project_id?: number | string;
+  key?: any;
+  index?: any;
+  column?: any;
+};
 
-const InProgress = (props) => {
-  const { tableSelectedItemDesign } = props;
+const InProgress = ({
+  title,
+  isEmpty,
+  id,
+  dataList,
+  callListApi,
+  dataListLength,
+  tasks,
+  project_id,
+  key,
+  index,
+  column,
+}: InProgressType) => {
   const theme: Theme = useTheme();
 
   const [showData, setShowData] = useState(false);
   const handleShowTable = () => {
     setShowData(!showData);
   };
+  console.log("=-09==", column);
   return (
     <div>
       <div className="block gap-20  pt-10  w-full  my-10 bg-white rounded-lg h-fit border-1 border-solid border-[#D1D7DB] mb-24  ">
@@ -116,7 +141,13 @@ const InProgress = (props) => {
                       <TableCell align="center">
                         <span
                           className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-                ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                ${
+                  row.priority === "Low"
+                    ? "text-[#4CAF50] bg-[#4CAF502E]"
+                    : row.priority === "Medium"
+                    ? "text-[#FF5F15] bg-[#FF5F152E]"
+                    : "text-[#F44336] bg-[#F443362E]"
+                }`}
                         >
                           {row.priority}
                         </span>

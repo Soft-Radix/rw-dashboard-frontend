@@ -1,7 +1,7 @@
 import { Button, Tab, Tabs, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Kanban from "src/app/components/projects/Kanban";
 import ProjectTaskTabel from "./ProjectTaskTabel";
 import {
@@ -18,6 +18,7 @@ import {
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
 import WhiteBoard from "./ViewPopUp/WhiteBoard";
+import { useNavigate } from "react-router";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -60,10 +61,56 @@ export default function ProjectTabPanel() {
   const theme: Theme = useTheme();
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
-  const [selectedTab, setSelectedTab] = useState(0);
+
+  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  //   setSelectedTab(newValue);
+  // };
+
+  const navigate = useNavigate();
+
+  const getTabIndexFromType = (type) => {
+    switch (type) {
+      case "kanban":
+        return 0;
+      case "task-table":
+        return 1;
+      case "task-list":
+        return 2;
+      case "calendar":
+        return 3;
+      default:
+        return 0;
+    }
+  };
+  const params = new URLSearchParams(location.search);
+  const type = params.get("type") || "kanban";
+  const [selectedTab, setSelectedTab] = useState(getTabIndexFromType(type));
+  // Helper function to get the type from the tab index
+  const getTypeFromTabIndex = (index) => {
+    switch (index) {
+      case 0:
+        return "kanban";
+      case 1:
+        return "task-table&subtype=to-do";
+      case 2:
+        return "task-list";
+      case 3:
+        return "calendar";
+      default:
+        return "kanban";
+    }
+  };
+
+  useEffect(() => {
+    setSelectedTab(getTabIndexFromType(type));
+  }, [location.search]);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const newType = getTypeFromTabIndex(newValue);
+    navigate(`?type=${newType}`);
     setSelectedTab(newValue);
   };
+
   const showWhiteBoard = () => {
     setShowViewWindow(!showViewWindow);
     console.log(showViewWindow, "find");
@@ -100,7 +147,7 @@ export default function ProjectTabPanel() {
             >
               <Tab
                 label="Kanban Board"
-                {...a11yProps(0)}
+                {...a11yProps(selectedTab)}
                 iconPosition="start"
                 // icon={<KanbanIcon />}
                 icon={selectedTab === 0 ? <KanbanIconActive /> : <KanbanIcon />}
@@ -108,7 +155,7 @@ export default function ProjectTabPanel() {
 
               <Tab
                 label=" Task Table"
-                {...a11yProps(1)}
+                {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={
                   selectedTab === 1 ? (
@@ -121,7 +168,7 @@ export default function ProjectTabPanel() {
 
               <Tab
                 label="Task List"
-                {...a11yProps(2)}
+                {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={
                   selectedTab == 2 ? <TaskListIconActive /> : <TaskListIcon />
@@ -129,7 +176,7 @@ export default function ProjectTabPanel() {
               />
               <Tab
                 label="Calender"
-                {...a11yProps(3)}
+                {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={
                   selectedTab == 3 ? <CalenderIconActive /> : <CalenderIcon />
@@ -159,7 +206,7 @@ export default function ProjectTabPanel() {
         <Kanban />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={1}>
-        <ProjectTaskTabel customSelectedTab={selectedTab} />
+        {/* <ProjectTaskTabel customSelectedTab={selectedTab} /> */}
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={2}>
         <ProjectTaskList customSelectedTab={selectedTab} />

@@ -165,7 +165,7 @@ export default function MainCard({
         if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
           // Increased threshold
           setIsFetching(true);
-          callListApi(4, column.id).finally(() => {
+          callListApi(20, column.id).finally(() => {
             setIsFetching(false);
           });
         }
