@@ -17,6 +17,9 @@ import DeleteClient from "../client/DeleteClient";
 import { deleteTask } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import AddTaskModal from "./AddTask";
+import ListLoading from "@fuse/core/ListLoading";
+import { useSelector } from "react-redux";
+import { ProjectRootState } from "app/store/Projects/Interface";
 
 function ThemePageTable(props) {
   const {
@@ -32,6 +35,10 @@ function ThemePageTable(props) {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const [deleteId, setIsDeleteId] = useState<any>(null);
+  const [taskId, setTaskId] = useState<number>(null);
+  const { fetchStatusNew } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const theme: Theme = useTheme();
   // console.log(tableSelectedItemDesign, "kkkklkvkjdkgjdgjdgdg");
@@ -77,87 +84,94 @@ function ThemePageTable(props) {
         <CommonTable
           headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
         >
-          {columnList?.map((row, index) => (
-            <TableRow
-              key={index}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-                "& td": {
-                  borderBottom: "1px solid #EDF2F6",
-                  paddingTop: "12px",
-                  paddingBottom: "12px",
-                  color: theme.palette.primary.main,
-                },
-              }}
-            >
-              <TableCell scope="row">
-                <span className="flex items-center gap-10">
-                  <Checkbox
-                    sx={{ padding: "4px" }}
-                    color="primary"
-                    defaultChecked={row.defaultChecked}
-                    inputProps={{
-                      "aria-labelledby": `table-checkbox-${index}`,
-                    }}
-                  />{" "}
-                  {row.title}
-                </span>
-              </TableCell>
-              <TableCell align="center">
-                <div className="flex -space-x-2 mt-10">
-                  {row?.assigned_task_users?.assigned_task_users?.map(
-                    (item) => {
-                      // console.log(item, "itemmmm");
-                      return (
-                        <img
-                          className="w-28 h-28 rounded-full border-2 border-white"
-                          src={
-                            item.user_image
-                              ? urlForImage + item.user_image
-                              : "../assets/images/logo/images.jpeg"
-                          }
-                          alt="User 1"
-                        />
-                      );
-                    }
-                  )}
-                </div>
-              </TableCell>
-              <TableCell align="center">Feb 12,2024</TableCell>
-              <TableCell align="center">
-                <span
-                  className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-              ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
-                >
-                  {row.priority}
-                </span>
-              </TableCell>
-              <TableCell align="left" className="w-[1%]">
-                <div className="flex gap-20 items-center">
-                  <span className="p-2 cursor-pointer">
-                    <DeleteIcon
-                      onClick={() => {
-                        setIsOpenDeletedModal(true);
-                        setIsDeleteId(row.id);
-                      }}
-                    />
-                  </span>
-                  <span className="p-2 cursor-pointer">
-                    <EditIcon
-                      onClick={() => {
-                        setIsOpenAddModal(true);
-                      }}
-                    />
-                  </span>
-                  <Link to={`/tasks/detail/9`}>
-                    <span className="p-2 cursor-pointer">
-                      <ArrowRightCircleIcon />
-                    </span>
-                  </Link>
-                </div>
-              </TableCell>
+          {columnList.length == 0 ? (
+            <TableRow>
+              <TableCell colSpan={5}>{/* <ListLoading /> */}</TableCell>
             </TableRow>
-          ))}
+          ) : (
+            <>
+              {columnList?.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "&:last-child td, &:last-child th": { border: 0 },
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell scope="row">
+                    <span className="flex items-center gap-10">
+                      <Checkbox
+                        sx={{ padding: "4px" }}
+                        color="primary"
+                        defaultChecked={row.defaultChecked}
+                        inputProps={{
+                          "aria-labelledby": `table-checkbox-${index}`,
+                        }}
+                      />{" "}
+                      {row.title}
+                    </span>
+                  </TableCell>
+                  <TableCell align="center">
+                    <div className="flex -space-x-2 mt-10 items-center justify-center">
+                      {row.assigned_task_users?.map((item) => {
+                        // console.log(item, "itemmmm");
+                        return (
+                          <img
+                            className="w-28 h-28 rounded-full border-2 border-white mr-[-10px] "
+                            src={
+                              item.user_image
+                                ? urlForImage + item.user_image
+                                : "../assets/images/logo/images.jpeg"
+                            }
+                            alt={`User ${index + 1}`}
+                          />
+                        );
+                      })}
+                    </div>
+                  </TableCell>
+                  <TableCell align="center">Feb 12,2024</TableCell>
+                  <TableCell align="center">
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
+                  ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                    >
+                      {row.priority}
+                    </span>
+                  </TableCell>
+                  <TableCell align="left" className="w-[1%]">
+                    <div className="flex gap-20 items-center">
+                      <span className="p-2 cursor-pointer">
+                        <DeleteIcon
+                          onClick={() => {
+                            setIsOpenDeletedModal(true);
+                            setIsDeleteId(row.id);
+                          }}
+                        />
+                      </span>
+                      <span className="p-2 cursor-pointer">
+                        <EditIcon
+                          onClick={() => {
+                            setIsOpenAddModal(true);
+                            setTaskId(row.id);
+                          }}
+                        />
+                      </span>
+                      <Link to={`/tasks/detail/${row.id}`}>
+                        <span className="p-2 cursor-pointer">
+                          <ArrowRightCircleIcon />
+                        </span>
+                      </Link>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          )}
         </CommonTable>
       )}
       <DeleteClient
@@ -171,7 +185,7 @@ function ThemePageTable(props) {
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
         project_id={project_id}
-        ColumnId={ColumnId}
+        ColumnId={taskId}
         callListApi={ListData}
         Edit
       />
