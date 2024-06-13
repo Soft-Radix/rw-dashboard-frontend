@@ -6,7 +6,7 @@ const IncomingCallHandler = () => {
   const [call, setCall] = useState(null);
 
   useEffect(() => {
-    const listenerID = new Date().toISOString();
+    const listenerID = new Date().toUTCString();
 
     CometChat.addCallListener(
       listenerID,
