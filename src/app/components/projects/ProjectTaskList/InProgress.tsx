@@ -77,7 +77,6 @@ const InProgress = ({
   const handleShowTable = () => {
     setShowData(!showData);
   };
-  console.log("=-09==", column);
   return (
     <div>
       <div className="block gap-20  pt-10  w-full  my-10 bg-white rounded-lg h-fit border-1 border-solid border-[#D1D7DB] mb-24  ">

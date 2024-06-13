@@ -77,6 +77,7 @@ export default function MainCard({
   /** Menu states */
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
@@ -219,56 +220,62 @@ export default function MainCard({
                         >
                           {column?.title}
                         </Typography>
+
                         <div className="flex gap-10">
                           <DragIcon className="cursor-pointer" />
-                          <span
-                            id="basic-button"
-                            aria-controls={open ? "basic-menu" : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? "true" : undefined}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleClick(e);
-                            }}
-                          >
-                            <ThreeDotsIcon className="cursor-pointer" />
-                          </span>
-                          <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                              "aria-labelledby": "basic-button",
-                            }}
-                            transformOrigin={{
-                              horizontal: "right",
-                              vertical: "top",
-                            }}
-                            anchorOrigin={{
-                              horizontal: "right",
-                              vertical: "bottom",
-                            }}
-                          >
-                            <MenuItem
-                              onClick={() => {
-                                handleClose();
-                                toggleEditModal();
-                              }}
-                            >
-                              Edit Title
-                            </MenuItem>
-                            <MenuItem
-                              onClick={() => {
-                                handleClose();
-                                toggleDeleteModal();
-                              }}
-                            >
-                              Delete Column
-                            </MenuItem>
-                          </Menu>
+                          {userDetails?.role != "agent" && (
+                            <>
+                              <span
+                                id="basic-button"
+                                aria-controls={open ? "basic-menu" : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? "true" : undefined}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleClick(e);
+                                }}
+                              >
+                                <ThreeDotsIcon className="cursor-pointer" />
+                              </span>
+                              <Menu
+                                id="basic-menu"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                  "aria-labelledby": "basic-button",
+                                }}
+                                transformOrigin={{
+                                  horizontal: "right",
+                                  vertical: "top",
+                                }}
+                                anchorOrigin={{
+                                  horizontal: "right",
+                                  vertical: "bottom",
+                                }}
+                              >
+                                <MenuItem
+                                  onClick={() => {
+                                    handleClose();
+                                    toggleEditModal();
+                                  }}
+                                >
+                                  Edit Title
+                                </MenuItem>
+                                <MenuItem
+                                  onClick={() => {
+                                    handleClose();
+                                    toggleDeleteModal();
+                                  }}
+                                >
+                                  Delete Column
+                                </MenuItem>
+                              </Menu>
+                            </>
+                          )}
                         </div>
                       </div>
+
                       <Typography color="primary.light">
                         Please review your to-do list below.
                       </Typography>
@@ -292,17 +299,19 @@ export default function MainCard({
                                 You don’t have any tasks yet in this Column
                               </Typography>
                             </div>
-                            <Button
-                              variant="contained"
-                              color="secondary"
-                              className="h-[40px] text-[16px] flex gap-8"
-                              aria-label="Add Tasks"
-                              size="large"
-                              onClick={() => setIsOpenAddModal(true)}
-                              startIcon={<PlusIcon color="white" />}
-                            >
-                              Add Task
-                            </Button>
+                            {userDetails?.role != "agent" && (
+                              <Button
+                                variant="contained"
+                                color="secondary"
+                                className="h-[40px] text-[16px] flex gap-8"
+                                aria-label="Add Tasks"
+                                size="large"
+                                onClick={() => setIsOpenAddModal(true)}
+                                startIcon={<PlusIcon color="white" />}
+                              >
+                                Add Task
+                              </Button>
+                            )}
                           </>
                         ) : (
                           tasks.map((item, index) => (
@@ -326,7 +335,7 @@ export default function MainCard({
 
                         {provided.placeholder}
                       </div>
-                      {tasks.length > 0 && (
+                      {tasks.length > 0 && userDetails?.role != "agent" && (
                         <Button
                           variant="contained"
                           color="secondary"

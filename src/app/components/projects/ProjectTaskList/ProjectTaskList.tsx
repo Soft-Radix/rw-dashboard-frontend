@@ -41,6 +41,9 @@ import { useParams } from "react-router";
 import { useAppDispatch } from "app/store/store";
 import { projectColumnList } from "app/store/Projects";
 import DragLayout from "./DragLayout";
+import ListLoading from "@fuse/core/ListLoading";
+import { ProjectRootState } from "app/store/Projects/Interface";
+import { useSelector } from "react-redux";
 const rows = [
   {
     title: "Brand logo design",
@@ -85,6 +88,9 @@ const ProjectTaskList = (props: TaskList) => {
     "Priority"
   );
   const [showData, setShowData] = useState(true);
+  const { fetchStatusNew } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
   const handleShowTable = () => {
@@ -93,11 +99,11 @@ const ProjectTaskList = (props: TaskList) => {
   const listData = async (task_limt, columnid = 0) => {
     const payload: any = {
       start: 0,
-      limit: 10,
+      limit: -1,
       search: "",
       project_id: id as string,
       task_start: 0,
-      task_limit: task_limt || 2,
+      task_limit: task_limt || 20,
       project_column_id: columnid,
     };
     try {
@@ -144,6 +150,9 @@ const ProjectTaskList = (props: TaskList) => {
       listData(2);
     }
   }, [id]);
+  if (fetchStatusNew == "loading") {
+    return <ListLoading />;
+  }
   return (
     <>
       {customSelectedTab && (

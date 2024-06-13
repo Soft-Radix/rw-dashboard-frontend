@@ -78,6 +78,7 @@ export default function ItemCard({
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
   const projectid = useParams<{ id: string }>();
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
@@ -125,55 +126,57 @@ export default function ItemCard({
   return (
     <>
       <div style={{ position: "relative" }}>
-        <div style={{ position: "absolute", right: 20, top: 19 }}>
-          <span
-            id="basic-button"
-            aria-controls={open ? "basic-menu" : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? "true" : undefined}
-            onClick={handleClick}
-          >
-            <ThreeDotsIcon className="cursor-pointer" />
-          </span>
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem
-              onClick={(e) => {
-                handleClose();
-                toggleEditModal();
-              }}
+        {userDetails?.role != "agent" && (
+          <div style={{ position: "absolute", right: 20, top: 19 }}>
+            <span
+              id="basic-button"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
             >
-              Edit Task
-            </MenuItem>
-            <MenuItem
-              onClick={(e) => {
-                handleClose();
-                toggleDeleteModal();
-                e.stopPropagation();
+              <ThreeDotsIcon className="cursor-pointer" />
+            </span>
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={open}
+              onClose={handleClose}
+              MenuListProps={{
+                "aria-labelledby": "basic-button",
               }}
+              transformOrigin={{ horizontal: "right", vertical: "top" }}
+              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              Delete Task
-            </MenuItem>
-            <MenuItem
-              onClick={(e) => {
-                handleClose();
-                e.stopPropagation();
-                navigate(`/tasks/detail/${id}`);
-              }}
-            >
-              View
-            </MenuItem>
-          </Menu>
-        </div>
+              <MenuItem
+                onClick={(e) => {
+                  handleClose();
+                  toggleEditModal();
+                }}
+              >
+                Edit Task
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  handleClose();
+                  toggleDeleteModal();
+                  e.stopPropagation();
+                }}
+              >
+                Delete Task
+              </MenuItem>
+              <MenuItem
+                onClick={(e) => {
+                  handleClose();
+                  e.stopPropagation();
+                  navigate(`/tasks/detail/${id}`);
+                }}
+              >
+                View
+              </MenuItem>
+            </Menu>
+          </div>
+        )}
         <ActionModal
           modalTitle="Delete Task"
           modalSubTitle="Are you sure you want to delete this task?"
@@ -230,7 +233,11 @@ export default function ItemCard({
                     >
                       <TruncateText text={title} maxWidth={150} />
                     </Typography>
-                    <div className="flex gap-4 mr-[30px]">
+                    <div
+                      className={`flex gap-4 ${
+                        userDetails?.role != "agent" ? "mr-[30px]" : ""
+                      }`}
+                    >
                       <span
                         className={`${
                           priority === "Medium"
