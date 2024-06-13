@@ -174,15 +174,20 @@ function AddTaskModal({
   };
 
   useEffect(() => {
-    dispatch(getAgentList(filterMenu)).then((res) => {
-      setAgentMenuData(res?.payload?.data?.data?.list);
-    });
-  }, [filterMenu.search]);
+    if (isOpen) {
+      dispatch(getAgentList(filterMenu)).then((res) => {
+        setAgentMenuData(res?.payload?.data?.data?.list);
+      });
+    }
+  }, [filterMenu.search, isOpen]);
+
   useEffect(() => {
-    dispatch(getStatusList({ id: project_id })).then((res) => {
-      setStatusMenuData(res?.payload?.data?.data?.list);
-    });
-  }, [project_id]);
+    if (isOpen) {
+      dispatch(getStatusList({ id: project_id })).then((res) => {
+        setStatusMenuData(res?.payload?.data?.data?.list);
+      });
+    }
+  }, [project_id, isOpen]);
 
   useEffect(() => {
     if (labelsMenu) {

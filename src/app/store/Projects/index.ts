@@ -351,7 +351,7 @@ export const projectSlice = createSlice({
         // state.fetchStatusNew = "loading";
       })
       .addCase(projectColumnList.fulfilled, (state, action) => {
-        console.log(state, "statet");
+        // console.log(state, "statet");
         const { data } = action.payload?.data;
         state.fetchStatusNew = "idle";
         state.projectInfo = data;

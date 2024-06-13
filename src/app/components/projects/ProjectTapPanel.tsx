@@ -7,6 +7,8 @@ import ProjectTaskTabel from "./ProjectTaskTabel";
 import {
   CalenderIcon,
   CalenderIconActive,
+  ChatIcon,
+  DocIcon,
   KanbanIcon,
   KanbanIconActive,
   TaskListIcon,
@@ -14,11 +16,15 @@ import {
   TaskTableIcon,
   TaskTableIconActive,
   ViewIcon,
+  WhiteBoardIcon,
 } from "public/assets/icons/projectsIcon";
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
-import WhiteBoard from "./ViewPopUp/WhiteBoard";
+import ViewBoard from "./ViewPopUp/WhiteBoard";
 import { useNavigate } from "react-router";
+import WhiteBoard from "src/app/pages/whiteBoard/WhiteBoard";
+import { useSelector } from "react-redux";
+import { ProjectRootState } from "app/store/Projects/Interface";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -59,13 +65,20 @@ function a11yProps(index: number) {
 export default function ProjectTabPanel() {
   const [showViewWindow, setShowViewWindow] = useState<boolean>(false);
   const theme: Theme = useTheme();
+  const [boardList, setBoardList] = useState({
+    whiteBoard: false,
+    doc: false,
+    chat: false,
+  });
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
   // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   //   setSelectedTab(newValue);
   // };
-
+  const { projectInfo } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const navigate = useNavigate();
 
   const getTabIndexFromType = (type) => {
@@ -78,6 +91,12 @@ export default function ProjectTabPanel() {
         return 2;
       case "calendar":
         return 3;
+      case "whiteboard":
+        return 4;
+      case "doc":
+        return 5;
+      case "chat":
+        return 6;
       default:
         return 0;
     }
@@ -91,11 +110,18 @@ export default function ProjectTabPanel() {
       case 0:
         return "kanban";
       case 1:
-        return "task-table&subtype=to-do";
+        return `task-table&subtype=${projectInfo?.list[0]?.name}`;
+      // return `task-table&subtype=to-do`;
       case 2:
         return "task-list";
       case 3:
         return "calendar";
+      case 4:
+        return "whiteboard";
+      case 5:
+        return "doc";
+      case 6:
+        return "chat";
       default:
         return "kanban";
     }
@@ -182,6 +208,32 @@ export default function ProjectTabPanel() {
                   selectedTab == 3 ? <CalenderIconActive /> : <CalenderIcon />
                 }
               />
+
+              <Tab
+                label="Whiteboard"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={
+                  selectedTab == 4 ? <WhiteBoardIcon /> : <WhiteBoardIcon />
+                }
+                className={`${boardList.whiteBoard ? '' : 'hidden'}`}
+              />
+
+              <Tab
+                label="Doc"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={selectedTab == 5 ? <DocIcon /> : <DocIcon />}
+                className={`${boardList.doc ? '' : 'hidden'}`}
+              />
+
+              <Tab
+                label="Chat"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={selectedTab == 6 ? <ChatIcon /> : <ChatIcon />}
+                className={`${boardList.chat ? '' : 'hidden'}`}
+              />
             </Tabs>
             {/* <Tab
               label="View"
@@ -206,7 +258,7 @@ export default function ProjectTabPanel() {
         <Kanban />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={1}>
-        {/* <ProjectTaskTabel customSelectedTab={selectedTab} /> */}
+        <ProjectTaskTabel customSelectedTab={selectedTab} />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={2}>
         <ProjectTaskList customSelectedTab={selectedTab} />
@@ -214,8 +266,22 @@ export default function ProjectTabPanel() {
       <CustomTabPanel value={selectedTab} index={3}>
         <CalenderPage />
       </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={4}>
+        <WhiteBoard />
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={5}>
+        <div></div>
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={6}>
+        <div></div>
+      </CustomTabPanel>
 
-      <WhiteBoard isOpen={showViewWindow} setIsOpen={setShowViewWindow} />
+      <ViewBoard
+        isOpen={showViewWindow}
+        setIsOpen={setShowViewWindow}
+        boardList={boardList}
+        setBoardList={setBoardList}
+      />
     </div>
   );
 }

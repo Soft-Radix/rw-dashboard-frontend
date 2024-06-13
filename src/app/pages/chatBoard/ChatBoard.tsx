@@ -26,7 +26,6 @@ import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
-import { Typography } from "@mui/material";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
