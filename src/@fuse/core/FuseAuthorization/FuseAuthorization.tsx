@@ -48,7 +48,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       this.state.accessGranted
     );
     if (!this.state.accessGranted) {
-      // this.redirectRoute();
+      this.redirectRoute();
     }
   }
 
