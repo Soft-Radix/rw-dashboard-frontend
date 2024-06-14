@@ -182,7 +182,7 @@ function AddTaskModal({
   }, [filterMenu.search, isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
+    if (project_id) {
       dispatch(getStatusList({ id: project_id })).then((res) => {
         setStatusMenuData(res?.payload?.data?.data?.list);
       });
@@ -676,7 +676,7 @@ function AddTaskModal({
       }
     });
   };
-
+  console.log("====selectedStatusId==", selectedStatusId, statusMenuData);
   const handleSelectAllAgents = () => {
     if (selectedAgents.length == agentMenuData.length) {
       // If all agents are already selected, deselect all
@@ -725,7 +725,7 @@ function AddTaskModal({
                     ? selectedAgents
                         ?.map(
                           (agentId) =>
-                            agentMenuData.find((item) => item.id === agentId)
+                            agentMenuData?.find((item) => item.id === agentId)
                               ?.first_name
                         )
                         .join(", ")
@@ -1105,9 +1105,10 @@ function AddTaskModal({
                 onClick={handleStatusMenuClick}
                 // label={selectedStatus}
                 label={
-                  selectedStatusId && selectedStatusId != "0"
-                    ? statusMenuData.find((item) => item.id == selectedStatusId)
-                        ?.name
+                  selectedStatusId
+                    ? statusMenuData?.find(
+                        (item) => item.id == selectedStatusId
+                      )?.name
                     : selectedStatus
                 }
                 icon={<StatusIcon />}
