@@ -15,9 +15,16 @@ import CommonChip from "../../chip";
 import { StatusIcon } from "public/assets/icons/task-icons";
 import { styled, useTheme } from "@mui/styles";
 import AddTaskModal from "../../tasks/AddTask";
-import { TaskAdd, TaskListColumn, deleteTask } from "app/store/Projects";
+import * as Yup from "yup";
+import {
+  TaskAdd,
+  TaskListColumn,
+  deleteTask,
+  projectColumnAdd,
+} from "app/store/Projects";
 import toast from "react-hot-toast";
 import ActionModal from "../../ActionModal";
+import { useFormik } from "formik";
 
 const localizer = momentLocalizer(moment);
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
@@ -34,6 +41,7 @@ const CalenderDesign = ({ events }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [disable, setDisabled] = useState(false);
+  const [disabled, setDisable] = useState(false);
   const [columnId, setColumnId] = useState(null);
   const [calendarState, setCalendarState] = useState({
     events: events,
@@ -70,7 +78,7 @@ const CalenderDesign = ({ events }) => {
       start: 0,
       limit: -1,
       search: "",
-      type: 0,
+      type: 1,
     };
     await dispatch(TaskListColumn(payload)).then((res) => {
       // setStatusMenuData(res?.payload?.data?.data?.list);
@@ -90,6 +98,7 @@ const CalenderDesign = ({ events }) => {
   const open = Boolean(anchorEl);
 
   const handleClose = () => {
+    formik.resetForm();
     setCalendarState({
       ...calendarState,
       openSlot: false,
@@ -173,18 +182,31 @@ const CalenderDesign = ({ events }) => {
     formData.append("voice_record_file", "");
     formData.append("screen_record_file", "");
     formData.append("due_date_time", moment(start).format("YYYY-MM-DD HH:mm"));
-    formData.append("business_due_date", "");
+    formData.append(
+      "business_due_date",
+      moment(start).format("YYYY-MM-DD HH:mm")
+    );
     formData.append("reminders", "");
     formData.append("files", "");
 
     try {
       const res = await dispatch(TaskAdd(formData));
-      setDisabled(false);
-      setCalendarState({
-        ...calendarState,
-        openSlot: false,
-      });
-      getAllEvents();
+      if (res?.payload?.data?.status == 1) {
+        setDisabled(false);
+        setCalendarState({
+          ...calendarState,
+          openSlot: false,
+        });
+        getAllEvents();
+        toast.success(res?.payload?.data?.message);
+      } else {
+        setDisabled(false);
+        toast.error(res?.payload?.data?.message);
+        setCalendarState({
+          ...calendarState,
+          openSlot: false,
+        });
+      }
     } catch (error) {
       setDisabled(false);
       console.error("Error fetching data:", error);
@@ -262,14 +284,58 @@ const CalenderDesign = ({ events }) => {
         });
     }
   };
+
+  const validationSchema = Yup.object({
+    name: Yup.string()
+      .trim()
+      .required("Name is required")
+      .min(1, "Name is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      fetchData(values);
+    },
+  });
+
+  const fetchData = async (payload: any) => {
+    setDisable(true);
+    const data: any = {
+      project_id: id as string,
+      name: payload.name,
+    };
+    try {
+      const res = await dispatch(projectColumnAdd(data));
+      if (res?.payload?.data?.status == 1) {
+        toast.success(res?.payload?.data?.message);
+        formik.setFieldValue("name", "");
+        formik.resetForm();
+
+        setDisable(false);
+        dispatch(getStatusList({ id: id })).then((res) => {
+          setStatusMenuData(res?.payload?.data?.data?.list);
+          setSelectedStatusId(res?.payload?.data?.data?.list?.[0]?.id);
+        });
+      } else {
+        setDisable(false);
+      }
+    } catch (error) {
+      setDisable(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+  const handleSave = () => {
+    formik.handleSubmit();
+  };
+
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <>
-      <div
-        className={`h-[80vh] overflow-auto ${
-          userDetails?.role == "client" ? "client" : ""
-        }`}
-      >
+      <div className={` ${userDetails?.role == "client" ? "client" : ""}`}>
         <Calendar
           localizer={localizer}
           events={calendarState.events}
@@ -301,88 +367,132 @@ const CalenderDesign = ({ events }) => {
             },
           }}
         >
-          <div className="flex items-center justify-between mb-20">
-            <Typography className="text-[16px] font-500">
-              Create Task
-            </Typography>
-            {calendarState.start && (
-              <Typography
-                variant="subtitle1"
-                className="text-[14px] text-[#757982]"
-              >
-                {moment(calendarState.start).format("MMMM Do YYYY")}
+          <>
+            <div className="flex items-center justify-between mb-20">
+              <Typography className="text-[16px] font-500">
+                Create Task
               </Typography>
-            )}
-          </div>
-          <div className="mb-20">
-            <InputField
-              name="title"
-              label="Title"
-              placeholder="Enter Task Name"
-              value={calendarState.title}
-              onChange={(e) =>
-                setCalendarState({ ...calendarState, title: e.target.value })
-              }
-            />
-          </div>
-          <div className="mb-20">
-            <DropdownMenu
-              anchorEl={statusMenu}
-              handleClose={() => setStatusMenu(null)}
-              button={
-                <CommonChip
-                  onClick={handleStatusMenuClick}
-                  // label={selectedStatus}
-                  style={{ width: "100%" }}
-                  label={
-                    selectedStatusId
-                      ? statusMenuData?.find(
-                          (item) => item.id == selectedStatusId
-                        )?.name
-                      : statusMenuData?.[0]?.name
-                  }
-                  icon={<StatusIcon />}
-                />
-              }
-              popoverProps={{
-                open: !!statusMenu,
-                classes: {
-                  paper: "pt-10 pb-20",
-                },
-              }}
-            >
-              {statusMenuData?.map((item) => {
-                return (
-                  <StyledMenuItem
-                    key={item.id}
-                    onClick={() => handleStatusMenuItemClick(item)}
+              {calendarState.start && (
+                <Typography
+                  variant="subtitle1"
+                  className="text-[14px] text-[#757982]"
+                >
+                  {moment(calendarState.start).format("MMMM Do YYYY")}
+                </Typography>
+              )}
+            </div>
+            <div className="mb-20">
+              <InputField
+                name="title"
+                label="Title"
+                placeholder="Enter Task Name"
+                value={calendarState.title}
+                onChange={(e) =>
+                  setCalendarState({
+                    ...calendarState,
+                    title: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="mb-20">
+              {statusMenuData?.length != 0 ? (
+                <>
+                  <Typography className="block text-[16px] font-medium text-[#111827] mb-5">
+                    Column List
+                  </Typography>
+                  <DropdownMenu
+                    anchorEl={statusMenu}
+                    handleClose={() => setStatusMenu(null)}
+                    button={
+                      <CommonChip
+                        onClick={handleStatusMenuClick}
+                        // label={selectedStatus}
+                        style={{ width: "100%" }}
+                        label={
+                          selectedStatusId
+                            ? statusMenuData?.find(
+                                (item) => item.id == selectedStatusId
+                              )?.name
+                            : statusMenuData?.[0]?.name
+                        }
+                        icon={<StatusIcon />}
+                      />
+                    }
+                    popoverProps={{
+                      open: !!statusMenu,
+                      classes: {
+                        paper: "pt-10 pb-20",
+                      },
+                    }}
                   >
-                    {item.name}
-                  </StyledMenuItem>
-                );
-              })}
-            </DropdownMenu>
-          </div>
-          <div className="flex">
-            <Button
-              variant="contained"
-              color="secondary"
-              className="w-[95px] h-[30px] text-[16px] rounded-[28px]"
-              onClick={setNewAppointment}
-              disabled={calendarState.title == "" || disable}
-            >
-              Save
-            </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className="w-[95px] h-[30px] text-[16px] ml-14 rounded-[28px]"
-              onClick={handleClose}
-              disabled={disable}
-            >
-              Cancel
-            </Button>
-          </div>
+                    {statusMenuData?.map((item) => {
+                      return (
+                        <StyledMenuItem
+                          key={item.id}
+                          onClick={() => handleStatusMenuItemClick(item)}
+                        >
+                          {item.name}
+                        </StyledMenuItem>
+                      );
+                    })}
+                  </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-4" style={{ alignItems: "center" }}>
+                    <InputField
+                      className="!w-[200px]"
+                      formik={formik}
+                      name="name"
+                      label="Column Name"
+                      placeholder="Enter Column Name"
+                    />
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className="w-[95px] h-[30px] text-[16px] rounded-[28px] mt-[12px]"
+                      onClick={handleSave}
+                      // disabled={
+                      //   calendarState.title == "" ||
+                      //   statusMenuData?.length == 0 ||
+                      //   disable
+                      // }
+                    >
+                      Add
+                    </Button>
+                  </div>
+                  <span className=" text-red   block ">
+                    You don't have column please add column first
+                  </span>
+                </>
+              )}
+            </div>
+            <div className="flex">
+              <Button
+                variant="contained"
+                color="secondary"
+                className="w-[95px] h-[30px] text-[16px] rounded-[28px]"
+                onClick={setNewAppointment}
+                disabled={
+                  calendarState.title == "" ||
+                  statusMenuData?.length == 0 ||
+                  disable
+                }
+              >
+                Save
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                className="w-[95px] h-[30px] text-[16px] ml-14 rounded-[28px]"
+                onClick={handleClose}
+                disabled={disable}
+              >
+                Cancel
+              </Button>
+            </div>
+          </>
         </Dialog>
 
         <div style={{ position: "absolute", right: 20, top: 19 }}>

@@ -85,8 +85,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     (store: ProjectRootState) => store?.project
   );
   // console.log(projectInfo.list, "projectInfo");
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
-    useState<object>();
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState<
+    object
+  >();
 
   const navigate = useNavigate();
   const getTabIndexFromSubtype = (subtype) => {
@@ -287,7 +288,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                 cursor-pointer text-[12px]"
                   />
                 </div>
-                {userDetails?.role != "agent" && (
+                {userDetails?.role != "agent" && columnList.length > 0 && (
                   <Button
                     variant="text"
                     color="secondary"
