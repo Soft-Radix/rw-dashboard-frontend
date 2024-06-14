@@ -173,7 +173,10 @@ const CalenderDesign = ({ events }) => {
     formData.append("voice_record_file", "");
     formData.append("screen_record_file", "");
     formData.append("due_date_time", moment(start).format("YYYY-MM-DD HH:mm"));
-    formData.append("business_due_date", "");
+    formData.append(
+      "business_due_date",
+      moment(start).format("YYYY-MM-DD HH:mm")
+    );
     formData.append("reminders", "");
     formData.append("files", "");
 
@@ -262,14 +265,11 @@ const CalenderDesign = ({ events }) => {
         });
     }
   };
+
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <>
-      <div
-        className={`h-[80vh] overflow-auto ${
-          userDetails?.role == "client" ? "client" : ""
-        }`}
-      >
+      <div className={` ${userDetails?.role == "client" ? "client" : ""}`}>
         <Calendar
           localizer={localizer}
           events={calendarState.events}
