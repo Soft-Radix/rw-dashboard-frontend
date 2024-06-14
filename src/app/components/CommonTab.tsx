@@ -9,7 +9,7 @@ import {
 interface Tab {
   id: string;
   label: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
   actionBtn?: () => React.ReactNode;
 }
 
