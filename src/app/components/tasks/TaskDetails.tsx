@@ -56,6 +56,7 @@ import ActionModal from "../ActionModal";
 import toast from "react-hot-toast";
 import DropdownMenu from "../Dropdown";
 import CommonChip from "../chip";
+import ListLoading from "@fuse/core/ListLoading";
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
@@ -66,7 +67,7 @@ const TaskDetails = () => {
   const { taskId } = useParams();
   const { projectId } = useParams();
   const dispatch = useAppDispatch();
-  const { taskDetailInfo } = useSelector(
+  const { taskDetailInfo, fetchSatus } = useSelector(
     (store: ProjectRootState) => store.project
   );
 
@@ -232,6 +233,9 @@ const TaskDetails = () => {
 
     setStatusMenu(null); // Close the dropdown menu after selection
   };
+  // if (fetchSatus === "loading") {
+  //   <ListLoading />;
+  // }
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div>
@@ -417,21 +421,35 @@ const TaskDetails = () => {
                     <div className="w-1/4 text-[#757982] font-500">
                       Assignees
                     </div>
-                    <div className="flex -space-x-2 mt-10">
-                      {taskDetailInfo?.assigned_task_users?.map((item) => {
-                        // console.log(item, "itemmmm");
-                        return (
-                          <img
-                            className="w-28 h-28 rounded-full border-2 border-white"
-                            src={
-                              item.user_image
-                                ? urlForImage + item.user_image
-                                : "../assets/images/logo/images.jpeg"
-                            }
-                            alt="User 1"
-                          />
-                        );
-                      })}
+                    <div className="flex mt-10">
+                      {taskDetailInfo?.assigned_task_users
+                        ?.slice(0, 3)
+                        .map((item, index) => {
+                          // console.log(item, "itemmmm");
+                          return (
+                            <img
+                              className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                                taskDetailInfo.assigned_task_users?.length > 1
+                                  ? "ml-[-16px]"
+                                  : ""
+                              } z-0`}
+                              src={
+                                item.user_image
+                                  ? urlForImage + item.user_image
+                                  : "../assets/images/logo/images.jpeg"
+                              }
+                              alt={`User ${index + 1}`}
+                            />
+                          );
+                        })}
+                      {taskDetailInfo.assigned_task_users?.length > 0 && (
+                        <span
+                          className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
+                        items-center justify-center text-[12px] font-500 text-white"
+                        >
+                          +{taskDetailInfo.assigned_task_users?.length - 3}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>

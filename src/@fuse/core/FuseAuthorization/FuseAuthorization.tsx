@@ -56,7 +56,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     if (this.timer) {
       clearTimeout(this.timer);
     }
-  }
+  } 
 
   shouldComponentUpdate(nextProps: FuseAuthorizationProps, nextState: State) {
     const { accessGranted } = this.state;
