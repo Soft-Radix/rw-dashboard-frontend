@@ -25,9 +25,12 @@ import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
 import ViewBoard from "./ViewPopUp/WhiteBoard";
 import { useNavigate } from "react-router";
-import WhiteBoard from "src/app/pages/whiteBoard/WhiteBoard";
+import WhiteBoard from "./WhiteBoard/WhiteBoard";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
+import ChatBoard from "./ChatBoard/ChatBoard";
+import DocumentBoard from "./DocumentBoard/DocumentBoard";
+import { ROLES } from "src/app/constants/constants";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -68,13 +71,20 @@ function a11yProps(index: number) {
 export default function ProjectTabPanel() {
   const [showViewWindow, setShowViewWindow] = useState<boolean>(false);
   const theme: Theme = useTheme();
+  const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const [boardList, setBoardList] = useState({
     whiteBoard: false,
     doc: false,
     chat: false,
   });
 
-  const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const updateBoardList = (data) => {
+    setBoardList({ ...data });
+    localStorage.setItem(
+      "view-board-data-project",
+      JSON.stringify({ ...data })
+    );
+  };
 
   // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
   //   setSelectedTab(newValue);
@@ -132,6 +142,10 @@ export default function ProjectTabPanel() {
 
   useEffect(() => {
     setSelectedTab(getTabIndexFromType(type));
+    const data = localStorage.getItem("view-board-data-project");
+    if (data && data.length > 5) {
+      setBoardList({ ...JSON.parse(data) });
+    }
   }, [location.search]);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -153,7 +167,7 @@ export default function ProjectTabPanel() {
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
-              className="min-h-0 pb-14 pt-20 px-20 gap-[50px] w-[calc(100%-170px)] overflow-y-auto"
+              className={`min-h-0 pb-14 pt-20 px-20 gap-[50px] ${client_id?.role_id !== ROLES.AGENT ? "w-[calc(100%-170px)]" : "w-full"} overflow-y-auto`}
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
@@ -168,7 +182,7 @@ export default function ProjectTabPanel() {
                   color: theme.palette.secondary.main,
                   borderBottomWidth: "2px",
                   borderBottomColor: theme.palette.secondary.main,
-                  borderBottom: "solid"
+                  borderBottom: "solid",
                 },
                 "& .MuiTabs-indicator": {
                   visibility: "hidden",
@@ -247,14 +261,7 @@ export default function ProjectTabPanel() {
                 className={`${boardList.chat ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
               />
             </Tabs>
-            {/* <Tab
-              label="View"
-              {...a11yProps(4)}
-              iconPosition="start"
-              icon={<ViewIcon />}
-              onClick={showWhiteBoard}
-            /> */}
-            <span className="border-l-1">
+            <span className={`border-l-1 ${client_id?.role_id !== ROLES.AGENT ? "" : "hidden"}`}>
               <Button
                 onClick={showWhiteBoard}
                 startIcon={<ViewIcon />}
@@ -282,17 +289,17 @@ export default function ProjectTabPanel() {
         <WhiteBoard />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={5}>
-        <div></div>
+        <DocumentBoard />
       </CustomTabPanel>
       <CustomTabPanel value={selectedTab} index={6}>
-        <div></div>
+        <ChatBoard />
       </CustomTabPanel>
 
       <ViewBoard
         isOpen={showViewWindow}
         setIsOpen={setShowViewWindow}
         boardList={boardList}
-        setBoardList={setBoardList}
+        setBoardList={updateBoardList}
       />
     </div>
   );
