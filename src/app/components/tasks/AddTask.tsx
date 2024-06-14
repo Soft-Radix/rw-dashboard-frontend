@@ -571,7 +571,7 @@ function AddTaskModal({
       );
       const userId = data?.assigned_task_users?.map((user) => user.user_id);
       setSelectedAgent(userNames.join(", "));
-      if (data?.assigned_task_users.length == 0) {
+      if (data?.assigned_task_users?.length == 0) {
         setSelectedAgent("Assign To");
       }
       setSelectedAgents(userId);
@@ -647,7 +647,7 @@ function AddTaskModal({
   const handleAgentSelect = (agentId) => {
     if (selectedAgents.includes(agentId)) {
       setSelectedAgents(selectedAgents.filter((id) => id != agentId));
-      if (selectedAgents.length == 1) {
+      if (selectedAgents?.length == 1) {
         setSelectedAgent("Assign To");
       }
     } else {
@@ -678,7 +678,7 @@ function AddTaskModal({
   };
   console.log("====selectedStatusId==", selectedStatusId, statusMenuData);
   const handleSelectAllAgents = () => {
-    if (selectedAgents.length == agentMenuData.length) {
+    if (selectedAgents?.length == agentMenuData?.length) {
       // If all agents are already selected, deselect all
       setSelectedAgents([]);
     } else {
@@ -760,7 +760,7 @@ function AddTaskModal({
                     onClick={handleSelectAllAgents}
                   >
                     <Checkbox
-                      checked={selectedAgents.length === agentMenuData.length}
+                      checked={selectedAgents?.length === agentMenuData?.length}
                       onChange={handleSelectAllAgents}
                     />
                     <span>Select All</span>

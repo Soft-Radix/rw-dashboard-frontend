@@ -52,7 +52,7 @@ export default function CreatePassword() {
   const handleButtonClick = async () => {
     const payload = new FormData();
     if (frontID) {
-      payload.append("file", frontfile);
+      payload.append("files", frontfile);
     }
 
     try {
