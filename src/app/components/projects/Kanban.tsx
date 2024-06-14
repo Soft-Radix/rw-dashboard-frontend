@@ -90,7 +90,7 @@ const Kanban = (props: IProps): JSX.Element => {
         toast.success(res?.payload?.data?.message);
         formik.setFieldValue("name", "");
         formik.resetForm();
-        listData(2);
+        listData(20);
         if (setIsOpen) setIsOpen((prev) => !prev);
         if (setIsEditing) setIsEditing(false);
         if (setId) setId(null);

@@ -115,6 +115,12 @@ export interface ProjectAdd {
   name: string;
 }
 
+export interface WhiteBoardData {
+  project_id: string;
+  xml_data: string;
+  xml_img: string;
+}
+
 export interface Taskadd {
   project_id: number;
   project_column_id: number;

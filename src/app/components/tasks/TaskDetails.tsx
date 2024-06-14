@@ -354,7 +354,13 @@ const TaskDetails = () => {
                     {userDetails?.role != "agent" && (
                       <div className="flex items-center w-1/4 ">
                         <span className=" mt-10 text-[14px] font-500 whitespace-nowrap">
-                          {taskDetailInfo?.status || "N/A"}
+                          {taskDetailInfo?.status
+                            ? taskDetailInfo?.status
+                              ? statusMenuData.find(
+                                  (item) => item.id == taskDetailInfo?.status
+                                )?.name
+                              : "N/A"
+                            : "N/A"}
                         </span>
                       </div>
                     )}

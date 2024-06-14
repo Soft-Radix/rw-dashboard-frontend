@@ -78,7 +78,7 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   VerificationConfig,
   SucessConfig,
   CancelConfig,
-  ChatBoardConfig
+  ChatBoardConfig,
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [

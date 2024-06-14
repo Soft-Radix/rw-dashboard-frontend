@@ -7,6 +7,10 @@ import ProjectTaskTabel from "./ProjectTaskTabel";
 import {
   CalenderIcon,
   CalenderIconActive,
+  ChatIcon,
+  ChatIconActive,
+  DocIcon,
+  DocIconActive,
   KanbanIcon,
   KanbanIconActive,
   TaskListIcon,
@@ -14,11 +18,14 @@ import {
   TaskTableIcon,
   TaskTableIconActive,
   ViewIcon,
+  WhiteBoardIcon,
+  WhiteBoardIconActive,
 } from "public/assets/icons/projectsIcon";
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
-import WhiteBoard from "./ViewPopUp/WhiteBoard";
+import ViewBoard from "./ViewPopUp/WhiteBoard";
 import { useNavigate } from "react-router";
+import WhiteBoard from "src/app/pages/whiteBoard/WhiteBoard";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 
@@ -61,6 +68,11 @@ function a11yProps(index: number) {
 export default function ProjectTabPanel() {
   const [showViewWindow, setShowViewWindow] = useState<boolean>(false);
   const theme: Theme = useTheme();
+  const [boardList, setBoardList] = useState({
+    whiteBoard: false,
+    doc: false,
+    chat: false,
+  });
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
 
@@ -82,6 +94,12 @@ export default function ProjectTabPanel() {
         return 2;
       case "calendar":
         return 3;
+      case "whiteboard":
+        return 4;
+      case "doc":
+        return 5;
+      case "chat":
+        return 6;
       default:
         return 0;
     }
@@ -101,6 +119,12 @@ export default function ProjectTabPanel() {
         return "task-list";
       case 3:
         return "calendar";
+      case 4:
+        return "whiteboard";
+      case 5:
+        return "doc";
+      case 6:
+        return "chat";
       default:
         return "kanban";
     }
@@ -122,17 +146,18 @@ export default function ProjectTabPanel() {
   };
   return (
     <div>
-      <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20">
-        <div className="basis-full lg:basis-auto lg:grow  ">
-          <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px]   ">
+      <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20  w-full">
+        <div className="basis-full lg:basis-auto lg:grow  w-full">
+          <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px] w-full">
             <Tabs
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
-              className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
+              className="min-h-0 pb-14 pt-20 px-20 gap-[50px] w-[calc(100%-170px)] overflow-y-auto"
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
+                  overflowY: "auto",
                   // "@media (max-width: 425px)": {
                   //   gap: "6px", // Change gap to 6px on small screens
                   //   flexWrap: "wrap",
@@ -141,8 +166,12 @@ export default function ProjectTabPanel() {
 
                 "& .MuiTab-root.Mui-selected": {
                   color: theme.palette.secondary.main,
+                  borderBottomWidth: "2px",
+                  borderBottomColor: theme.palette.secondary.main,
+                  borderBottom: "solid"
                 },
                 "& .MuiTabs-indicator": {
+                  visibility: "hidden",
                   backgroundColor: theme.palette.secondary.main,
                   // "@media (max-width: 425px)": {
                   //   visibility: "hidden",
@@ -187,6 +216,36 @@ export default function ProjectTabPanel() {
                   selectedTab == 3 ? <CalenderIconActive /> : <CalenderIcon />
                 }
               />
+
+              <Tab
+                label="Whiteboard"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={
+                  selectedTab == 4 ? (
+                    <WhiteBoardIconActive />
+                  ) : (
+                    <WhiteBoardIcon />
+                  )
+                }
+                className={`${boardList.whiteBoard ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+              />
+
+              <Tab
+                label="Doc"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={selectedTab == 5 ? <DocIconActive /> : <DocIcon />}
+                className={`${boardList.doc ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+              />
+
+              <Tab
+                label="Chat"
+                {...a11yProps(selectedTab)}
+                iconPosition="start"
+                icon={selectedTab == 6 ? <ChatIconActive /> : <ChatIcon />}
+                className={`${boardList.chat ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+              />
             </Tabs>
             {/* <Tab
               label="View"
@@ -219,8 +278,22 @@ export default function ProjectTabPanel() {
       <CustomTabPanel value={selectedTab} index={3}>
         <CalenderPage />
       </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={4}>
+        <WhiteBoard />
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={5}>
+        <div></div>
+      </CustomTabPanel>
+      <CustomTabPanel value={selectedTab} index={6}>
+        <div></div>
+      </CustomTabPanel>
 
-      <WhiteBoard isOpen={showViewWindow} setIsOpen={setShowViewWindow} />
+      <ViewBoard
+        isOpen={showViewWindow}
+        setIsOpen={setShowViewWindow}
+        boardList={boardList}
+        setBoardList={setBoardList}
+      />
     </div>
   );
 }
