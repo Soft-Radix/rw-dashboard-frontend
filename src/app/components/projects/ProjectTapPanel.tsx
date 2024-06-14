@@ -8,7 +8,9 @@ import {
   CalenderIcon,
   CalenderIconActive,
   ChatIcon,
+  ChatIconActive,
   DocIcon,
+  DocIconActive,
   KanbanIcon,
   KanbanIconActive,
   TaskListIcon,
@@ -17,6 +19,7 @@ import {
   TaskTableIconActive,
   ViewIcon,
   WhiteBoardIcon,
+  WhiteBoardIconActive,
 } from "public/assets/icons/projectsIcon";
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
@@ -143,17 +146,18 @@ export default function ProjectTabPanel() {
   };
   return (
     <div>
-      <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20">
-        <div className="basis-full lg:basis-auto lg:grow  ">
-          <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px]   ">
+      <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20  w-full">
+        <div className="basis-full lg:basis-auto lg:grow  w-full">
+          <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px] w-full">
             <Tabs
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
-              className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
+              className="min-h-0 pb-14 pt-20 px-20 gap-[50px] w-[calc(100%-170px)] overflow-y-auto"
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
+                  overflowY: "auto",
                   // "@media (max-width: 425px)": {
                   //   gap: "6px", // Change gap to 6px on small screens
                   //   flexWrap: "wrap",
@@ -162,8 +166,12 @@ export default function ProjectTabPanel() {
 
                 "& .MuiTab-root.Mui-selected": {
                   color: theme.palette.secondary.main,
+                  borderBottomWidth: "2px",
+                  borderBottomColor: theme.palette.secondary.main,
+                  borderBottom: "solid"
                 },
                 "& .MuiTabs-indicator": {
+                  visibility: "hidden",
                   backgroundColor: theme.palette.secondary.main,
                   // "@media (max-width: 425px)": {
                   //   visibility: "hidden",
@@ -214,25 +222,29 @@ export default function ProjectTabPanel() {
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={
-                  selectedTab == 4 ? <WhiteBoardIcon /> : <WhiteBoardIcon />
+                  selectedTab == 4 ? (
+                    <WhiteBoardIconActive />
+                  ) : (
+                    <WhiteBoardIcon />
+                  )
                 }
-                className={`${boardList.whiteBoard ? '' : 'hidden'}`}
+                className={`${boardList.whiteBoard ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
               />
 
               <Tab
                 label="Doc"
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
-                icon={selectedTab == 5 ? <DocIcon /> : <DocIcon />}
-                className={`${boardList.doc ? '' : 'hidden'}`}
+                icon={selectedTab == 5 ? <DocIconActive /> : <DocIcon />}
+                className={`${boardList.doc ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
               />
 
               <Tab
                 label="Chat"
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
-                icon={selectedTab == 6 ? <ChatIcon /> : <ChatIcon />}
-                className={`${boardList.chat ? '' : 'hidden'}`}
+                icon={selectedTab == 6 ? <ChatIconActive /> : <ChatIcon />}
+                className={`${boardList.chat ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
               />
             </Tabs>
             {/* <Tab
