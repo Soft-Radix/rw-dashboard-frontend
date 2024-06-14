@@ -90,7 +90,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
 
   const navigate = useNavigate();
   const getTabIndexFromSubtype = (subtype) => {
-    let indexOfItem = projectInfo.list?.findIndex(
+    let indexOfItem = projectInfo?.list?.findIndex(
       (item) => item.name == subtype
     );
     return indexOfItem || 0;
@@ -137,7 +137,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
       const res = await dispatch(projectTaskTableList(payload));
       const updatedList = res?.payload?.data?.data?.list;
 
-      const columnObject = updatedList.find((item) => item.id == columnid);
+      const columnObject = updatedList?.find((item) => item.id == columnid);
 
       if (!!columnObject) {
         // Update the columnList state with the updated column

@@ -237,6 +237,7 @@ const TaskDetails = () => {
   //   <ListLoading />;
   // }
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
+  console.log(taskDetailInfo, "taskDetailInfo");
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -429,7 +430,7 @@ const TaskDetails = () => {
                           return (
                             <img
                               className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
-                                taskDetailInfo.assigned_task_users?.length > 1
+                                taskDetailInfo?.assigned_task_users?.length > 1
                                   ? "ml-[-16px]"
                                   : ""
                               } z-0`}
@@ -442,12 +443,12 @@ const TaskDetails = () => {
                             />
                           );
                         })}
-                      {taskDetailInfo.assigned_task_users?.length > 0 && (
+                      {taskDetailInfo?.assigned_task_users?.length > 0 && (
                         <span
                           className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
                         >
-                          +{taskDetailInfo.assigned_task_users?.length - 3}
+                          +{taskDetailInfo?.assigned_task_users?.length - 3}
                         </span>
                       )}
                     </div>
@@ -476,13 +477,15 @@ const TaskDetails = () => {
                               <AttachmentIcon />
                             </div>
                             <div className="absolute top-7 right-7">
-                              <AttachmentDeleteIcon
-                                onClick={() => {
-                                  setIsOpenDeletedModal(true);
-                                  setType(3);
-                                  setIsDeleteId(item.id);
-                                }}
-                              />
+                              {userDetails?.role != "agent" && (
+                                <AttachmentDeleteIcon
+                                  onClick={() => {
+                                    setIsOpenDeletedModal(true);
+                                    setType(3);
+                                    setIsDeleteId(item.id);
+                                  }}
+                                />
+                              )}
                             </div>
                           </div>
                         );
@@ -647,6 +650,7 @@ const TaskDetails = () => {
             setIsOpen={setIsOpenAddModal}
             ColumnId={taskId}
             callListApi={callListApi}
+            project_id={projectId}
             Edit
           />
         )}
