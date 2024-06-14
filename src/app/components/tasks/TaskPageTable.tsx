@@ -35,6 +35,7 @@ function ThemePageTable(props) {
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
 
   const [deleteId, setIsDeleteId] = useState<any>(null);
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const [taskId, setTaskId] = useState<number>(null);
   const { fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
@@ -57,7 +58,7 @@ function ThemePageTable(props) {
     setIsOpenDeletedModal(false);
   };
   // setIsOpenDeletedModal(false);
-
+  // console.log(project_id, "fhsfhbkfksjf");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -118,8 +119,8 @@ function ThemePageTable(props) {
                   </TableCell>
                   <TableCell align="center">
                     <div className="flex -space-x-2 mt-10 items-center justify-center">
-                      {row.assigned_task_users?.map((item) => {
-                        // console.log(item, "itemmmm");
+                      {row.assigned_task_users.map((item) => {
+                        console.log(item, "itemmmm");
                         return (
                           <img
                             className="w-28 h-28 rounded-full border-2 border-white mr-[-10px] "
@@ -145,23 +146,27 @@ function ThemePageTable(props) {
                   </TableCell>
                   <TableCell align="left" className="w-[1%]">
                     <div className="flex gap-20 items-center">
-                      <span className="p-2 cursor-pointer">
-                        <DeleteIcon
-                          onClick={() => {
-                            setIsOpenDeletedModal(true);
-                            setIsDeleteId(row.id);
-                          }}
-                        />
-                      </span>
-                      <span className="p-2 cursor-pointer">
-                        <EditIcon
-                          onClick={() => {
-                            setIsOpenAddModal(true);
-                            setTaskId(row.id);
-                          }}
-                        />
-                      </span>
-                      <Link to={`/tasks/detail/${row.id}`}>
+                      {userDetails?.role != "agent" && (
+                        <>
+                          <span className="p-2 cursor-pointer">
+                            <DeleteIcon
+                              onClick={() => {
+                                setIsOpenDeletedModal(true);
+                                setIsDeleteId(row.id);
+                              }}
+                            />
+                          </span>
+                          <span className="p-2 cursor-pointer">
+                            <EditIcon
+                              onClick={() => {
+                                setIsOpenAddModal(true);
+                                setTaskId(row.id);
+                              }}
+                            />
+                          </span>
+                        </>
+                      )}
+                      <Link to={`/${project_id}/tasks/detail/${row.id}`}>
                         <span className="p-2 cursor-pointer">
                           <ArrowRightCircleIcon />
                         </span>

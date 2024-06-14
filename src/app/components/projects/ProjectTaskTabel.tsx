@@ -70,6 +70,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   // console.log(id, "iddfjksdfd");
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   // const [selectedTab, setSelectedTab] = useState(0);
@@ -281,21 +282,21 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                 cursor-pointer text-[12px]"
                   />
                 </div>
-                {}
-                <Button
-                  variant="text"
-                  color="secondary"
-                  className="h-[40px] text-[16px] flex gap-8 font-[600] px-20"
-                  aria-label="Add Tasks"
-                  size="large"
-                  onClick={() => {
-                    setIsOpenAddModal(true);
-                  }}
-                >
-                  <PlusIcon color={theme.palette.secondary.main} />
-                  Add Task
-                </Button>
-
+                {userDetails?.role != "agent" && (
+                  <Button
+                    variant="text"
+                    color="secondary"
+                    className="h-[40px] text-[16px] flex gap-8 font-[600] px-20"
+                    aria-label="Add Tasks"
+                    size="large"
+                    onClick={() => {
+                      setIsOpenAddModal(true);
+                    }}
+                  >
+                    <PlusIcon color={theme.palette.secondary.main} />
+                    Add Task
+                  </Button>
+                )}
                 <CustomTabPanel
                   value={selectedTab}
                   index={0}

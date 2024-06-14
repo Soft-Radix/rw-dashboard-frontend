@@ -10,6 +10,7 @@ import {
   ProjectAddDoc,
   Taskadd,
   ApiResponse,
+  WhiteBoardData
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 import { clientIDType } from "../Client/Interface";
@@ -274,6 +275,34 @@ export const projectTaskMove: any = createAsyncThunk(
   async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `project/task/sort`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getWhiteBoardData = createAsyncThunk(
+  "project/whiteboard/get",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/whiteboard/get/${id}`,
+      method: "get",
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const addWhiteBoardData: any = createAsyncThunk(
+  "project/whiteboard/add",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/whiteboard/add`,
       method: "post",
       data: payload,
     });
