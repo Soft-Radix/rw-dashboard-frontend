@@ -79,6 +79,7 @@ export type initialStateProps = {
   taskDetailInfo?: taskDetailType;
   projectInfo?: any;
   actionDisable?: boolean;
+  fetchSatus?: string;
 };
 // export interface ClientRootState {
 //   client: initialStateProps; // Add other slices if needed

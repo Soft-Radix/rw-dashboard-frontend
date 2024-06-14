@@ -20,7 +20,12 @@
 
 html {
   font-size: 62.5%;
-  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
+  font-family:
+    "Inter",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
   background-color: #121212;
 }
 
@@ -531,6 +536,80 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
   align-items: center;
 }
 
+.rbc-overlay {
+  z-index: 999 !important;
+}
+.rbc-calendar {
+  min-height: 100vh !important;
+  background-color: #fff !important;
+}
+.rbc-month-header {
+  background-color: #e7e8e9;
+}
+.rbc-month-row,
+.rbc-row-content {
+  height: 100px !important;
+  min-height: 100px !important;
+}
+header {
+  z-index: 99 !important;
+}
+
+.rbc-date-cell {
+  position: relative !important;
+  height: 100%;
+}
+.active-slot {
+  position: relative;
+}
+.active-slot:after {
+  content: "+";
+  position: absolute;
+  top: 18.5%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #4f46e5;
+  background-color: white;
+  border: 2px solid #4f46e5;
+  border-radius: 50%;
+  box-sizing: border-box;
+  z-index: 10;
+  cursor: pointer;
+}
+.rbc-event {
+  background-color: #f6f6f6 !important;
+}
+.rbc-show-more {
+  color: #4f46e5 !important;
+}
+.client .rbc-date-cell:hover:after {
+  content: "+";
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 17px;
+  font-weight: bold;
+  color: #4f46e5;
+  background-color: white;
+  border: 2px solid #4f46e5;
+  border-radius: 50%;
+  box-sizing: border-box;
+  z-index: 10;
+  cursor: pointer;
+}
 .geBigButton {
   background-color: red !important;
 }

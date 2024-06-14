@@ -81,6 +81,9 @@ export default function Item({
   project_id,
   agent,
 }: CardType) {
+  const maxVisibleImages = 3;
+  const visibleAgents = agent.slice(0, maxVisibleImages);
+  const extraAgentsCount = agent.length - maxVisibleImages;
   const theme: Theme = useTheme();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -121,7 +124,7 @@ export default function Item({
         .then((res) => {
           if (res?.data?.status == 1) {
             setOpenDeleteModal(false);
-            callListApi(2);
+            callListApi(20);
             toast.success(res?.data?.message, {
               duration: 4000,
             });
@@ -132,6 +135,7 @@ export default function Item({
   };
 
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -196,7 +200,8 @@ export default function Item({
                       <span className="flex items-center gap-10">{title}</span>
                     </div>
                     <div className="table-cell">
-                      {agent?.map((item) => (
+                      <div className="flex ">
+                        {/* {agent?.map((item) => (
                         <img
                           className={`h-[34px] w-[34px] rounded-full border-2 border-white
                   ml-[-10px]
@@ -211,7 +216,32 @@ export default function Item({
                           alt={item}
                           loading="lazy"
                         />
-                      ))}
+                      ))} */}
+                        {visibleAgents?.map((item, idx) => (
+                          <img
+                            className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                              agent.length > 1 ? "ml-[-10px]" : ""
+                            } z-0`}
+                            key={idx}
+                            src={
+                              //@ts-ignore
+                              !item?.user_image
+                                ? "../assets/images/logo/images.jpeg"
+                                : `${urlForImage}${
+                                    //@ts-ignore
+                                    item?.user_image
+                                  }`
+                            }
+                            alt={item}
+                            loading="lazy"
+                          />
+                        ))}
+                        {extraAgentsCount > 0 && (
+                          <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-gray-300 flex items-center justify-center text-xs text-white">
+                            +{extraAgentsCount}
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="table-cell">
                       {!date ? "N/A" : moment(date).format("ll")}

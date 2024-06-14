@@ -182,7 +182,7 @@ function AddTaskModal({
   }, [filterMenu.search, isOpen]);
 
   useEffect(() => {
-    if (isOpen) {
+    if (project_id) {
       dispatch(getStatusList({ id: project_id })).then((res) => {
         setStatusMenuData(res?.payload?.data?.data?.list);
       });
@@ -571,7 +571,7 @@ function AddTaskModal({
       );
       const userId = data?.assigned_task_users?.map((user) => user.user_id);
       setSelectedAgent(userNames.join(", "));
-      if (data?.assigned_task_users.length == 0) {
+      if (data?.assigned_task_users?.length == 0) {
         setSelectedAgent("Assign To");
       }
       setSelectedAgents(userId);
@@ -647,7 +647,7 @@ function AddTaskModal({
   const handleAgentSelect = (agentId) => {
     if (selectedAgents.includes(agentId)) {
       setSelectedAgents(selectedAgents.filter((id) => id != agentId));
-      if (selectedAgents.length == 1) {
+      if (selectedAgents?.length == 1) {
         setSelectedAgent("Assign To");
       }
     } else {
@@ -676,9 +676,9 @@ function AddTaskModal({
       }
     });
   };
-
+  console.log("====selectedStatusId==", selectedStatusId, statusMenuData);
   const handleSelectAllAgents = () => {
-    if (selectedAgents.length == agentMenuData.length) {
+    if (selectedAgents?.length == agentMenuData?.length) {
       // If all agents are already selected, deselect all
       setSelectedAgents([]);
     } else {
@@ -760,7 +760,7 @@ function AddTaskModal({
                     onClick={handleSelectAllAgents}
                   >
                     <Checkbox
-                      checked={selectedAgents.length === agentMenuData.length}
+                      checked={selectedAgents?.length === agentMenuData?.length}
                       onChange={handleSelectAllAgents}
                     />
                     <span>Select All</span>
@@ -772,7 +772,7 @@ function AddTaskModal({
                     >
                       <label className="flex items-center gap-10 w-full cursor-pointer">
                         <Checkbox
-                          checked={selectedAgents.includes(item.id)}
+                          checked={selectedAgents?.includes(item.id)}
                           onChange={() => handleAgentSelect(item.id)}
                         />
                         <span>{item.first_name}</span>
@@ -804,7 +804,7 @@ function AddTaskModal({
                 }
                 icon={<AssignIcon />}
               />
-            }
+            }selectedStatusId
             popoverProps={{
               open: !!AgentMenu,
               classes: {
@@ -1105,9 +1105,10 @@ function AddTaskModal({
                 onClick={handleStatusMenuClick}
                 // label={selectedStatus}
                 label={
-                  selectedStatusId && selectedStatusId != "0"
-                    ? statusMenuData?.find((item) => item.id == selectedStatusId)
-                        ?.name
+                  selectedStatusId
+                    ? statusMenuData?.find(
+                        (item) => item.id == selectedStatusId
+                      )?.name
                     : selectedStatus
                 }
                 icon={<StatusIcon />}
