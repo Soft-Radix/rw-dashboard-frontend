@@ -1,9 +1,16 @@
-import { Checkbox, TableCell, TableRow, Theme } from "@mui/material";
+import {
+  Checkbox,
+  TableCell,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import {
   ArrowRightCircleIcon,
   DeleteIcon,
   EditIcon,
+  NoDataFound,
 } from "public/assets/icons/common";
 import CommonTable from "../commonTable";
 import ImagesOverlap from "../ImagesOverlap";
@@ -29,6 +36,7 @@ function ThemePageTable(props) {
     setColumnList,
     project_id,
     ColumnId,
+    showLoader,
   } = props;
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -57,8 +65,11 @@ function ThemePageTable(props) {
     // ListData();
     setIsOpenDeletedModal(false);
   };
+
+  // const extraAgentsCount = agent.length - maxVisibleImages;
+  const extraAgents = columnList.assigned_task_users?.length - 3;
   // setIsOpenDeletedModal(false);
-  // console.log(project_id, "fhsfhbkfksjf");
+  console.log(extraAgents, "visibleAgents");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -85,11 +96,29 @@ function ThemePageTable(props) {
         <CommonTable
           headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
         >
-          {columnList.length == 0 ? (
+          {!showLoader && columnList.length == 0 ? (
             <TableRow>
-              <TableCell colSpan={5}>{/* <ListLoading /> */}</TableCell>
+              <TableCell colSpan={5} align="center">
+                {/* <ListLoading /> */}
+                <div
+                  className="flex flex-col justify-center align-items-center gap-20  bg-[#F7F9FB]  py-20"
+                  style={{ alignItems: "center" }}
+                >
+                  <NoDataFound />
+                </div>
+                <Typography className="text-[24px] text-center font-600 leading-normal">
+                  No data found !
+                </Typography>
+              </TableCell>
+            </TableRow>
+          ) : showLoader ? (
+            <TableRow>
+              <TableCell colSpan={7} align="center">
+                <ListLoading /> {/* Render loader component */}
+              </TableCell>
             </TableRow>
           ) : (
+            // )}
             <>
               {columnList?.map((row, index) => (
                 <TableRow
@@ -118,12 +147,16 @@ function ThemePageTable(props) {
                     </span>
                   </TableCell>
                   <TableCell align="center">
-                    <div className="flex -space-x-2 mt-10 items-center justify-center">
-                      {row.assigned_task_users.map((item) => {
-                        console.log(item, "itemmmm");
+                    <div className="flex mt-10 items-center justify-center">
+                      {row.assigned_task_users?.slice(0, 3).map((item, idx) => {
+                        // console.log(item, "itemmmm");
                         return (
                           <img
-                            className="w-28 h-28 rounded-full border-2 border-white mr-[-10px] "
+                            className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                              row.assigned_task_users?.length > 1
+                                ? "ml-[-16px]"
+                                : ""
+                            } z-0`}
                             src={
                               item.user_image
                                 ? urlForImage + item.user_image
@@ -133,6 +166,14 @@ function ThemePageTable(props) {
                           />
                         );
                       })}
+                      {row.assigned_task_users?.length > 0 && (
+                        <span
+                          className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
+                        items-center justify-center text-[12px] font-500 text-white"
+                        >
+                          +{row.assigned_task_users?.length - 3}
+                        </span>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell align="center">Feb 12,2024</TableCell>

@@ -571,7 +571,7 @@ function AddTaskModal({
       );
       const userId = data?.assigned_task_users?.map((user) => user.user_id);
       setSelectedAgent(userNames.join(", "));
-      if (data?.assigned_task_users.length == 0) {
+      if (data?.assigned_task_users?.length == 0) {
         setSelectedAgent("Assign To");
       }
       setSelectedAgents(userId);
@@ -772,7 +772,7 @@ function AddTaskModal({
                     >
                       <label className="flex items-center gap-10 w-full cursor-pointer">
                         <Checkbox
-                          checked={selectedAgents.includes(item.id)}
+                          checked={selectedAgents?.includes(item.id)}
                           onChange={() => handleAgentSelect(item.id)}
                         />
                         <span>{item.first_name}</span>
@@ -804,7 +804,7 @@ function AddTaskModal({
                 }
                 icon={<AssignIcon />}
               />
-            }
+            }selectedStatusId
             popoverProps={{
               open: !!AgentMenu,
               classes: {
