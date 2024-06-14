@@ -485,6 +485,48 @@ export const WhiteBoardIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+
+export const WhiteBoardIconActive: React.FC<SVGProps<SVGSVGElement>> = (
+  props
+) => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M11.0007 1.83398C5.9379 1.83398 1.83398 5.9379 1.83398 11.0007C1.83398 16.0634 5.9379 20.1673 11.0007 20.1673C16.0634 20.1673 20.1673 16.0634 20.1673 11.0007C20.1673 5.9379 16.0634 1.83398 11.0007 1.83398Z"
+      stroke="#4F46E5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M7.33398 19.4053V14.8346L11.0007 8.41797L14.6673 14.8346V19.4053"
+      stroke="#4F46E5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M7.33398 14.834C7.33398 14.834 8.36707 15.7507 9.16732 15.7507C9.96757 15.7507 11.0007 14.834 11.0007 14.834C11.0007 14.834 12.0337 15.7507 12.834 15.7507C13.6342 15.7507 14.6673 14.834 14.6673 14.834"
+      stroke="#4F46E5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M9.88672 5C9.88672 5 9.26867 6.23513 9.47579 7.00811C9.68291 7.7811 10.8357 8.54173 10.8357 8.54173"
+      stroke="#4F46E5"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);
 export const DocIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="22"
@@ -511,6 +553,33 @@ export const DocIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     </defs>
   </svg>
 );
+export const DocIconActive: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <g clip-path="url(#clip0_334_7605)">
+      <path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M16.0625 8.75V18.3125H5.9375V3.6875H11V6.78125C11 7.868 11.882 8.75 12.9688 8.75H16.0625ZM15.9264 7.0625L12.6875 3.82363V6.78125C12.6875 6.9365 12.8135 7.0625 12.9688 7.0625H15.9264ZM4.25 3.125C4.25 2.82663 4.36853 2.54048 4.5795 2.3295C4.79048 2.11853 5.07663 2 5.375 2H12.7843C13.0826 2.00006 13.3687 2.11863 13.5796 2.32963L17.4204 6.17037C17.6314 6.3813 17.7499 6.66741 17.75 6.96575V18.875C17.75 19.1734 17.6315 19.4595 17.4205 19.6705C17.2095 19.8815 16.9234 20 16.625 20H5.375C5.07663 20 4.79048 19.8815 4.5795 19.6705C4.36853 19.4595 4.25 19.1734 4.25 18.875V3.125ZM8.46875 11C8.24497 11 8.03036 11.0889 7.87213 11.2471C7.71389 11.4054 7.625 11.62 7.625 11.8438C7.625 12.0675 7.71389 12.2821 7.87213 12.4404C8.03036 12.5986 8.24497 12.6875 8.46875 12.6875H13.5312C13.755 12.6875 13.9696 12.5986 14.1279 12.4404C14.2861 12.2821 14.375 12.0675 14.375 11.8438C14.375 11.62 14.2861 11.4054 14.1279 11.2471C13.9696 11.0889 13.755 11 13.5312 11H8.46875ZM7.625 14.6562C7.625 14.4325 7.71389 14.2179 7.87213 14.0596C8.03036 13.9014 8.24497 13.8125 8.46875 13.8125H11.2812C11.505 13.8125 11.7196 13.9014 11.8779 14.0596C12.0361 14.2179 12.125 14.4325 12.125 14.6562C12.125 14.88 12.0361 15.0946 11.8779 15.2529C11.7196 15.4111 11.505 15.5 11.2812 15.5H8.46875C8.24497 15.5 8.03036 15.4111 7.87213 15.2529C7.71389 15.0946 7.625 14.88 7.625 14.6562Z"
+        fill="#4F46E5"
+        stroke="#F6F6F6"
+        stroke-width="0.2"
+      />
+    </g>
+    <defs>
+      <clipPath id="clip0_334_7605">
+        <rect width="18" height="18" fill="white" transform="translate(2 2)" />
+      </clipPath>
+    </defs>
+  </svg>
+);
+
 export const ChatIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   <svg
     width="22"
@@ -535,6 +604,32 @@ export const ChatIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <circle cx="6.16594" cy="8.32414" r="0.925705" fill="#393F4C" />
     <circle cx="9.40617" cy="8.32414" r="0.925705" fill="#393F4C" />
     <circle cx="12.6464" cy="8.32414" r="0.925705" fill="#393F4C" />
+  </svg>
+);
+export const ChatIconActive: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="22"
+    height="22"
+    viewBox="0 0 22 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M8.08984 13.8337V14.8469C8.08984 16.1429 9.14052 17.1913 10.4342 17.1913H14.5096L17.0136 19.2602L17.458 17.189C18.7285 17.1635 19.7537 16.1244 19.7537 14.8469V11.1881C19.7537 9.89443 18.7031 8.84375 17.4094 8.84375H16.501"
+      stroke="#4F46E5"
+      stroke-width="1.4"
+      stroke-miterlimit="10"
+    />
+    <path
+      d="M13.6824 3H4.93911C3.3145 3 2 4.3145 2 5.93911V10.5237C2 12.1251 3.28442 13.4258 4.87894 13.4582L5.43668 16.0548L8.57482 13.4605H13.6824C15.3047 13.4605 16.6215 12.146 16.6215 10.5214V5.93911C16.6215 4.31682 15.307 3 13.6824 3Z"
+      stroke="#4F46E5"
+      stroke-width="1.4"
+      stroke-miterlimit="10"
+    />
+    <circle cx="6.16594" cy="8.32414" r="0.925705" fill="#4F46E5" />
+    <circle cx="9.40617" cy="8.32414" r="0.925705" fill="#4F46E5" />
+    <circle cx="12.6464" cy="8.32414" r="0.925705" fill="#4F46E5" />
   </svg>
 );
 export const WhiteBoardPageIcon: React.FC<SVGProps<SVGSVGElement>> = (

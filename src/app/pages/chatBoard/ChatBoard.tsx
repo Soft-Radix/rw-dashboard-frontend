@@ -26,6 +26,7 @@ import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
+import { Typography } from "@mui/material";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
@@ -111,10 +112,12 @@ function ChatBoard() {
           </div>
         ) : (
           <div className="w-full flex flex-col items-center justify-center gap-3">
-            <img src={import.meta.env.VITE_API_BASE_IMAGE_URL+"chat/no-msg.png"} />
-            <h2 className="font-bold" style={{ color: "#111827" }}>
+            <img
+              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
+            />
+            <Typography className="text-[24px] text-center font-600 leading-normal">
               No Message !
-            </h2>
+            </Typography>
             <p style={{ color: "#757982" }}>
               Please select list to view messages.
             </p>
@@ -132,7 +135,6 @@ function ChatBoard() {
     childView: (
       <CometChatUsersWithMessages
         isMobileView={isMobileView}
-
         usersConfiguration={
           new UsersConfiguration(
             client_id.role_id !== ROLES.ADMIN
@@ -208,7 +210,9 @@ function ChatBoard() {
           </div>
         ) : (
           <div className="w-full flex flex-col items-center justify-center gap-3">
-            <img src={import.meta.env.VITE_API_BASE_IMAGE_URL+"chat/no-msg.png"} />
+            <img
+              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
+            />
             <h2 className="font-bold" style={{ color: "#111827" }}>
               No Message !
             </h2>

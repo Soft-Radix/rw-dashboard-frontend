@@ -725,7 +725,7 @@ function AddTaskModal({
                     ? selectedAgents
                         ?.map(
                           (agentId) =>
-                            agentMenuData.find((item) => item.id === agentId)
+                            agentMenuData?.find((item) => item.id === agentId)
                               ?.first_name
                         )
                         .join(", ")
@@ -1106,7 +1106,7 @@ function AddTaskModal({
                 // label={selectedStatus}
                 label={
                   selectedStatusId && selectedStatusId != "0"
-                    ? statusMenuData.find((item) => item.id == selectedStatusId)
+                    ? statusMenuData?.find((item) => item.id == selectedStatusId)
                         ?.name
                     : selectedStatus
                 }
