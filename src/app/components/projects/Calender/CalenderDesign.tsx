@@ -78,7 +78,7 @@ const CalenderDesign = ({ events }) => {
       start: 0,
       limit: -1,
       search: "",
-      type: 0,
+      type: 1,
     };
     await dispatch(TaskListColumn(payload)).then((res) => {
       // setStatusMenuData(res?.payload?.data?.data?.list);
@@ -198,7 +198,7 @@ const CalenderDesign = ({ events }) => {
           openSlot: false,
         });
         getAllEvents();
-        toast.success(res?.payload?.data?.data?.message);
+        toast.success(res?.payload?.data?.message);
       } else {
         setDisabled(false);
         toast.error(res?.payload?.data?.message);
@@ -397,42 +397,47 @@ const CalenderDesign = ({ events }) => {
             </div>
             <div className="mb-20">
               {statusMenuData?.length != 0 ? (
-                <DropdownMenu
-                  anchorEl={statusMenu}
-                  handleClose={() => setStatusMenu(null)}
-                  button={
-                    <CommonChip
-                      onClick={handleStatusMenuClick}
-                      // label={selectedStatus}
-                      style={{ width: "100%" }}
-                      label={
-                        selectedStatusId
-                          ? statusMenuData?.find(
-                              (item) => item.id == selectedStatusId
-                            )?.name
-                          : statusMenuData?.[0]?.name
-                      }
-                      icon={<StatusIcon />}
-                    />
-                  }
-                  popoverProps={{
-                    open: !!statusMenu,
-                    classes: {
-                      paper: "pt-10 pb-20",
-                    },
-                  }}
-                >
-                  {statusMenuData?.map((item) => {
-                    return (
-                      <StyledMenuItem
-                        key={item.id}
-                        onClick={() => handleStatusMenuItemClick(item)}
-                      >
-                        {item.name}
-                      </StyledMenuItem>
-                    );
-                  })}
-                </DropdownMenu>
+                <>
+                  <Typography className="block text-[16px] font-medium text-[#111827] mb-5">
+                    Column List
+                  </Typography>
+                  <DropdownMenu
+                    anchorEl={statusMenu}
+                    handleClose={() => setStatusMenu(null)}
+                    button={
+                      <CommonChip
+                        onClick={handleStatusMenuClick}
+                        // label={selectedStatus}
+                        style={{ width: "100%" }}
+                        label={
+                          selectedStatusId
+                            ? statusMenuData?.find(
+                                (item) => item.id == selectedStatusId
+                              )?.name
+                            : statusMenuData?.[0]?.name
+                        }
+                        icon={<StatusIcon />}
+                      />
+                    }
+                    popoverProps={{
+                      open: !!statusMenu,
+                      classes: {
+                        paper: "pt-10 pb-20",
+                      },
+                    }}
+                  >
+                    {statusMenuData?.map((item) => {
+                      return (
+                        <StyledMenuItem
+                          key={item.id}
+                          onClick={() => handleStatusMenuItemClick(item)}
+                        >
+                          {item.name}
+                        </StyledMenuItem>
+                      );
+                    })}
+                  </DropdownMenu>
+                </>
               ) : (
                 <>
                   <div className="flex gap-4" style={{ alignItems: "center" }}>
