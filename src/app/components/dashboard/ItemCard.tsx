@@ -126,6 +126,7 @@ export default function ItemCard({
         });
     }
   };
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -308,14 +309,17 @@ export default function ItemCard({
                             //@ts-ignore
                             !item?.user_image
                               ? "../assets/images/logo/images.jpeg"
-                              : `/assets/images/avatars/${item}`
+                              : `${urlForImage}${
+                                  //@ts-ignore
+                                  item?.user_image
+                                }`
                           }
                           alt={item}
                           loading="lazy"
                         />
                       ))}
                       {extraAgentsCount > 0 && (
-                        <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-gray-300 flex items-center justify-center text-xs text-white">
+                        <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-[#4f46e5] bg-[#4f46e5] flex items-center justify-center text-xs text-white">
                           +{extraAgentsCount}
                         </span>
                       )}
