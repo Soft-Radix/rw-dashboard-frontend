@@ -24,13 +24,19 @@ import {
 import ProjectTaskList from "./ProjectTaskList/ProjectTaskList";
 import CalenderPage from "./Calender/CalenderPage";
 import ViewBoard from "./ViewPopUp/WhiteBoard";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import WhiteBoard from "./WhiteBoard/WhiteBoard";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import ChatBoard from "./ChatBoard/ChatBoard";
 import DocumentBoard from "./DocumentBoard/DocumentBoard";
 import { ROLES } from "src/app/constants/constants";
+import {
+  getWhiteBoardData,
+  projectGetMenu,
+  projectUpdateMenu,
+} from "app/store/Projects";
+import { useAppDispatch } from "app/store/store";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -78,12 +84,26 @@ export default function ProjectTabPanel() {
     chat: false,
   });
 
-  const updateBoardList = (data) => {
+  const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
+
+  const updateBoardList = async (data) => {
+    const payload = [];
+    if (data.whiteBoard) {
+      payload.push(3);
+    }
+    if (data.doc) {
+      payload.push(2);
+    }
+    if (data.chat) {
+      payload.push(1);
+    }
+    try {
+      await dispatch(projectUpdateMenu({ project_id: id, menu: payload }));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
     setBoardList({ ...data });
-    localStorage.setItem(
-      "view-board-data-project",
-      JSON.stringify({ ...data })
-    );
   };
 
   // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -141,12 +161,27 @@ export default function ProjectTabPanel() {
   };
 
   useEffect(() => {
-    setSelectedTab(getTabIndexFromType(type));
-    const data = localStorage.getItem("view-board-data-project");
-    if (data && data.length > 5) {
-      setBoardList({ ...JSON.parse(data) });
+    fetchMenuData();
+  }, [location.search, id]);
+
+  const fetchMenuData = async () => {
+    try {
+      const res = await dispatch(projectGetMenu(id));
+      if (res?.payload?.data) {
+        if (res.payload.data.data) {
+          const data = res.payload.data.data.map((menuData)=>menuData.menu);
+          console.log(data);
+          setBoardList({
+            whiteBoard: data.includes(3),
+            doc: data.includes(2),
+            chat: data.includes(1),
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
     }
-  }, [location.search]);
+  };
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     const newType = getTypeFromTabIndex(newValue);
@@ -261,7 +296,9 @@ export default function ProjectTabPanel() {
                 className={`${boardList.chat ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
               />
             </Tabs>
-            <span className={`border-l-1 ${client_id?.role_id !== ROLES.AGENT ? "" : "hidden"}`}>
+            <span
+              className={`border-l-1 ${client_id?.role_id !== ROLES.AGENT ? "" : "hidden"}`}
+            >
               <Button
                 onClick={showWhiteBoard}
                 startIcon={<ViewIcon />}

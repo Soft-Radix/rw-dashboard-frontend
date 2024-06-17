@@ -1,5 +1,4 @@
-import TitleBar from "src/app/components/TitleBar";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import {
   CometChatUsersWithMessages,
@@ -18,10 +17,7 @@ import {
   TabItemStyle,
   UsersConfiguration,
 } from "@cometchat/uikit-shared";
-import {
-  CometChat,
-  ConversationsRequestBuilder,
-} from "@cometchat/chat-sdk-javascript";
+import { CometChat } from "@cometchat/chat-sdk-javascript";
 import usersTabIcon from "public/assets/icons/user.svg";
 import groupsTabIcon from "public/assets/icons/groupIcon.svg";
 import chatsTabIcon from "public/assets/icons/chat.svg";
@@ -33,12 +29,12 @@ import { useParams } from "react-router";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
+  const [convUsersList, setConvUsersList] = useState([]);
   const [addGroup, setAddGroup] = useState(false);
   const [groupDetails, setGroupDetails] = useState<any>({});
   const [conversationDetails, setConversationDetails] = useState<any>({});
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const { id } = useParams<{ id: string }>();
-  const divRef = useRef(null);
 
   const dispatch = useDispatch();
 
@@ -49,21 +45,28 @@ function ChatBoard() {
         .then((res) => {
           if (res?.data && res?.data?.data) {
             setUsersList([...res?.data?.data.map((d) => d.toString())]);
+
+            const list = res?.data?.data.map(
+              (data) => (client_id.id + "_user_" + data.toString())
+            );
+            const newList = res?.data?.data.map(
+              (data) => (data.toString() + "_user_" + client_id.id)
+            );
+            setConvUsersList([...list, ...newList]);
           }
         });
     }
   }, [id]);
 
-
   const checkElements = () => {
     const elements = document.getElementsByTagName("cometchat-list-item");
-    const list = users.map(
-      (data) => data != client_id.id && client_id.id + "_user_" + data
-    );
     for (const iterator of elements) {
       if (iterator.id.includes("_user_")) {
-        if (!list.includes(iterator.id)) {
+        if (!convUsersList.includes(iterator.id)) {
+          console.log(!convUsersList.includes(iterator.id), convUsersList, "ayaaa..", iterator.id);
           iterator.parentElement.style.display = "none";
+        } else {
+          iterator.parentElement.style.display = "";
         }
       }
     }
@@ -90,6 +93,23 @@ function ChatBoard() {
     tabPaneHeight: "100%",
     tabPaneWidth: "100%",
   });
+
+  useEffect(() => {
+    window.addEventListener("click", (e) => {
+      if (
+        e &&
+        e.target &&
+        //@ts-ignore
+        e.target?.tagName &&
+        //@ts-ignore
+        e.target?.tagName === "COMETCHAT-ICON-BUTTON"
+      ) {
+        setTimeout(() => {
+          checkElements();
+        }, 500);
+      }
+    });
+  }, []);
 
   const chatsTab = new CometChatTabItem({
     id: "chats",
@@ -267,23 +287,3 @@ function ChatBoard() {
 }
 
 export default ChatBoard;
-
-export function useIsVisible(ref) {
-  const [isIntersecting, setIntersecting] = useState(false);
-
-  useEffect(() => {
-    if(ref && ref.current) {
-      const observer = new IntersectionObserver(([entry]) =>
-        setIntersecting(entry.isIntersecting)
-      );
-  
-      observer.observe(ref.current);
-      return () => {
-        observer.disconnect();
-      };
-
-    }
-  }, [ref]);
-
-  return isIntersecting;
-}
