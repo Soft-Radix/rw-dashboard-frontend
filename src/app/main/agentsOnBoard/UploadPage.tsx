@@ -1,6 +1,7 @@
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { setPassword } from "app/store/Auth";
+import { RefreshToken, UpdateSuccess, setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
@@ -10,9 +11,10 @@ import {
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
 import { resetPassSchema } from "src/formSchema";
 
@@ -26,6 +28,8 @@ export default function UploadPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams();
   const dispatch = useAppDispatch();
+  const { jwtService } = useAuth();
+  const [disable, setDisable] = useState(false);
   const navigate = useNavigate();
 
   const store = useSelector((store: AuthRootState) => store.auth);
@@ -54,9 +58,50 @@ export default function UploadPage() {
       navigate("/sign-in");
     }
   }
+
+  const redirect = async () => {
+    console.log("calling");
+    await jwtService.agentSignIn();
+  };
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      redirect();
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const onSuccess = async () => {
+    setDisable(true);
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(UpdateSuccess(payload));
+      fetchData();
+      setDisable(false);
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setDisable(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const handleButtonClick = async () => {
     // Navigate to '/photo-id' route
-    navigate(`/agent/dashboard`);
+    onSuccess();
   };
 
   return (
@@ -89,10 +134,25 @@ export default function UploadPage() {
                 time to process. We'll notify you once it's completed.
               </p>
             </div>
+            {disable && (
+              <Box
+                id="spinner"
+                sx={{
+                  "& > div": {
+                    backgroundColor: "palette.secondary.main",
+                  },
+                }}
+              >
+                <div className="bounce1" />
+                <div className="bounce2" />
+                <div className="bounce3" />
+              </Box>
+            )}
             <Button
               variant="contained"
               color="secondary"
               size="large"
+              disabled={disable}
               className="text-[18px] font-500 sm:min-w-[417px] w-[300px]"
               onClick={handleButtonClick}
             >

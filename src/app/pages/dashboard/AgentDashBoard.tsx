@@ -15,7 +15,7 @@ import {
   ShowIcon,
   SubTaskIcon,
 } from "public/assets/icons/projectsIcon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import CommonTable from "src/app/components/commonTable";
@@ -27,6 +27,8 @@ import { DateCalendar } from "@mui/x-date-pickers";
 import { FilterIcon } from "public/assets/icons/user-icon";
 import SelectField from "src/app/components/selectField";
 import { ArrowRightCircleIcon } from "public/assets/icons/common";
+import { RefreshToken } from "app/store/Auth";
+import { useAppDispatch } from "app/store/store";
 
 const rows = [
   {
@@ -130,6 +132,7 @@ interface CheckboxState {
 }
 export default function Dashboard() {
   const theme: Theme = useTheme();
+  const dispatch = useAppDispatch();
   const [isChecked, setIsChecked] = useState<CheckboxState>({
     agents: true,
     activity: true,
@@ -170,6 +173,25 @@ export default function Dashboard() {
       [key]: !prevState[key],
     }));
   };
+  const token = localStorage.getItem("jwt_access_token");
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div>
@@ -284,8 +306,8 @@ export default function Dashboard() {
                           row.status === "Completed"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status === "In Progress"
-                              ? "text-[#F44336] bg-[#F443362E]"
-                              : "text-[#F0B402] bg-[#FFEEBB]"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : "text-[#F0B402] bg-[#FFEEBB]"
                         }`}
                       >
                         {row.status}

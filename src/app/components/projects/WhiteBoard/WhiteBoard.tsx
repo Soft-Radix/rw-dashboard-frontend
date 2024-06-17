@@ -34,12 +34,26 @@ function WhiteBoard() {
   }, [client_id]);
 
   // useEffect(() => {
-  //   const element = document.getElementsByClassName("diagrams-iframe");
-  //   if (element && element[0]) {
-  //     // @ts-ignore
-  //     console.log(element[0].contentWindow.window.document?.body);
-  //   }
-  // }, [drawioRef.current]);
+  //   setTimeout(() => {
+  //     var iframe = document.querySelector("iframe");
+
+  //     console.log("frame...", iframe);
+
+  //     if (iframe) {
+  //       // Access the content document inside the iframe
+  //       var iframeDocument =
+  //         iframe.contentDocument || iframe.contentWindow.document;
+
+  //       // Find the element inside the iframe
+  //       var element = iframeDocument.querySelector(".gePrimaryBtn");
+
+  //       if (element) {
+  //         // @ts-ignore
+  //         element.style.backgroundColor = "red";
+  //     }
+  //     }
+  //   }, 2000);
+  // }, [drawioRef.current, loadingDrawIo]);
 
   useEffect(() => {
     fetchData();
@@ -108,44 +122,54 @@ function WhiteBoard() {
 
   return (
     <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap h-[calc(100vh-270px)]">
-      {(loading || (show && loadingDrawIo)) && (
-        <div className="w-full h-full flex justify-center items-center">
-          <FuseLoading />
-        </div>
-      )}
-      {!loading && !show && (
-        <div className="p-5 bg-white rounded-lg shadow-sm w-full h-full flex justify-center items-center">
-          {imgData ? (
-            <img src={imgData} />
-          ) : (
-            <div className="flex gap-5 flex-col justify-center items-center">
-              <NoDataFound />
-              <Typography className="text-[24px] text-center font-600 leading-normal">
-                No data found !
-              </Typography>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="w-full h-full bg-white rounded-lg shadow-sm flex justify-center items-center relative">
+        {(loading || (show && loadingDrawIo)) && (
+          <div className="w-full h-full flex justify-center items-center absolute">
+            <FuseLoading />
+          </div>
+        )}
+        {!loading && !show && (
+          <div className="p-5 w-full h-full flex justify-center items-center">
+            {imgData ? (
+              <img src={imgData} />
+            ) : (
+              <div className="flex gap-5 flex-col justify-center items-center">
+                <NoDataFound />
+                <Typography className="text-[24px] text-center font-600 leading-normal">
+                  No data found !
+                </Typography>
+              </div>
+            )}
+          </div>
+        )}
 
-      {!loading && show && (
-        <DrawIoEmbed
-          xml={data}
-          urlParameters={{
-            ui: "kennedy",
-            spin: true,
-            libraries: true,
-            saveAndExit: false,
-            noExitBtn: true,
-          }}
-          onLoad={(data) => {
-            setLoadingDrawIo(false);
-          }}
-          configuration={{}}
-          onExport={(data) => setImgData(data.data)}
-          onSave={onSave}
-        />
-      )}
+        {!loading && show && (
+          <div
+            className={`w-full h-full bg-white rounded-lg shadow-sm ${loadingDrawIo ? "opacity-0" : "opacity-100"}`}
+          >
+            <DrawIoEmbed
+              xml={data}
+              urlParameters={{
+                ui: "min",
+                spin: false,
+                libraries: false,
+                saveAndExit: false,
+                noExitBtn: true,
+              }}
+              onLoad={(data) => {
+                setLoadingDrawIo(false);
+              }}
+              configuration={{
+                spinner: false,
+                toolbar: false,
+                menubar: false,
+              }}
+              onExport={(data) => setImgData(data.data)}
+              onSave={onSave}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }

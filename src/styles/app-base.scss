@@ -20,7 +20,12 @@
 
 html {
   font-size: 62.5%;
-  font-family: "Inter", Roboto, Helvetica Neue, Arial, sans-serif;
+  font-family:
+    "Inter",
+    Roboto,
+    Helvetica Neue,
+    Arial,
+    sans-serif;
   background-color: #121212;
 }
 
@@ -607,4 +612,19 @@ header {
 }
 .geBigButton {
   background-color: red !important;
+}
+
+.ql-container.ql-snow {
+  border: none !important;
+  height: calc(100vh - 390px) !important;
+}
+
+.ql-toolbar.ql-snow {
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.cc-decorator-message--empty {
+  display: none !important;
 }

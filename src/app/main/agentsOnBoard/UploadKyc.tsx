@@ -2,11 +2,11 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { setPassword } from "app/store/Auth";
+import { RefreshToken, setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
@@ -22,6 +22,8 @@ import { Camera } from "public/assets/icons/common";
 import { useNavigation } from "react-router";
 import { Uploadkyc } from "app/store/Agent";
 import toast from "react-hot-toast";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
+import { Box } from "@mui/material";
 
 type FormType = {
   cnfPassword: string;
@@ -32,6 +34,8 @@ export default function UploadKyc() {
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams();
+  const { jwtService } = useAuth();
+  const [disable, setDisabled] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [frontID, setFrontID] = useState(null);
@@ -68,20 +72,46 @@ export default function UploadKyc() {
 
   const handleButtonClick = async () => {
     // Navigate to '/photo-id' route
+    setDisabled(true);
     const payload = new FormData();
     payload.append("front_id", frontfile);
     payload.append("back_id", backfile);
     try {
       const res = await dispatch(Uploadkyc({ payload, token }));
-      if (res?.payload?.data?.status == 0) {
+      if (res?.payload?.data?.status == 1) {
         navigate(`/photo-id/${token}`);
         toast.success(res?.payload?.data?.message);
+        setDisabled(false);
       }
     } catch (error) {
       toast.error(error?.message);
+      setDisabled(false);
       console.error("Error fetching data:", error);
     }
   };
+
+  const redirect = async () => {
+    console.log("calling");
+    await jwtService.agentSignIn();
+  };
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      redirect();
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -163,12 +193,26 @@ export default function UploadKyc() {
           </div>
         </div>
         {/* <Link to="/photo-id"> */}
+        {disable && (
+          <Box
+            id="spinner"
+            sx={{
+              "& > div": {
+                backgroundColor: "palette.secondary.main",
+              },
+            }}
+          >
+            <div className="bounce1" />
+            <div className="bounce2" />
+            <div className="bounce3" />
+          </Box>
+        )}
         <Button
           variant="contained"
           color="secondary"
           size="large"
           className="text-[18px] font-700 min-w-[196px]"
-          disabled={!frontID || !backID}
+          disabled={!frontID || !backID || disable}
           onClick={handleButtonClick}
         >
           Next

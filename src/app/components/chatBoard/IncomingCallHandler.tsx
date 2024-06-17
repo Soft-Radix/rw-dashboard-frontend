@@ -32,7 +32,7 @@ const IncomingCallHandler = () => {
   }, []);
 
   if (call) {
-    return <CometChatIncomingCall call={call} disableSoundForCalls={true}/>;
+    return <CometChatIncomingCall call={call} disableSoundForCalls={false}/>;
   }
   return null;
 };

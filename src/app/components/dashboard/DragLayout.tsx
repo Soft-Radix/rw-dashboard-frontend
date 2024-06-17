@@ -160,6 +160,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
 
     console.log(destination, source, draggableId);
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="all-column" type="column" direction="horizontal">
@@ -188,6 +189,7 @@ const DragLayout = ({ columnList, callListApi, id }) => {
                   id={column?.id}
                   project_id={id}
                   callListApi={callListApi}
+                  is_defalut={column.is_defalut}
                 />
               );
             })}

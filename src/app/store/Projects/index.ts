@@ -10,7 +10,7 @@ import {
   ProjectAddDoc,
   Taskadd,
   ApiResponse,
-  WhiteBoardData
+  WhiteBoardData,
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 import { clientIDType } from "../Client/Interface";
@@ -216,6 +216,20 @@ export const deleteTask: any = createAsyncThunk(
   }
 );
 
+export const CheckedTask: any = createAsyncThunk(
+  "project/complete-task/",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/complete-task/${payload}`,
+      method: "get",
+      data: payload,
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const TaskStatusUpdate: any = createAsyncThunk(
   "project/task/status-update",
   async (payload: any) => {
@@ -298,11 +312,52 @@ export const getWhiteBoardData = createAsyncThunk(
   }
 );
 
+export const getChatBoardData: any = createAsyncThunk(
+  "project/assigned-userIds",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/assigned-userIds/${id}`,
+      method: "get",
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const addWhiteBoardData: any = createAsyncThunk(
   "project/whiteboard/add",
   async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `project/whiteboard/add`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getDocBoardData: any = createAsyncThunk(
+  "project/document/get",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/document/get/${id}`,
+      method: "get",
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const addDocBoardData: any = createAsyncThunk(
+  "project/document/add",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/document/add`,
       method: "post",
       data: payload,
     });
@@ -327,6 +382,37 @@ export const projectTaskMoveCol: any = createAsyncThunk(
     };
   }
 );
+
+export const projectUpdateMenu: any = createAsyncThunk(
+  "project/enable-menu",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/enable-menu`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const projectGetMenu: any = createAsyncThunk(
+  "project/menu-list",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/menu-list/${id}`,
+      method: "get",
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+
 
 /**
  * The initial state of the auth slice.

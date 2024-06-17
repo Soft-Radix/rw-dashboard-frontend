@@ -85,7 +85,13 @@ const TaskListDueData = () => {
               <TableCell align="center">
                 <span
                   className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-               ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
+               ${
+                 row.priority === "Low"
+                   ? "text-[#4CAF50] bg-[#4CAF502E]"
+                   : row.priority === "Medium"
+                   ? "text-[#FF5F15] bg-[#FF5F152E]"
+                   : "text-[#F44336] bg-[#F443362E]"
+               }`}
                 >
                   {row.priority}
                 </span>

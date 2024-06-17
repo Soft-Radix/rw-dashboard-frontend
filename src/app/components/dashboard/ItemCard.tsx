@@ -13,7 +13,7 @@ import { MouseEvent, useEffect, useRef, useState } from "react";
 import ActionModal from "../ActionModal";
 import { useAppDispatch } from "app/store/store";
 import toast from "react-hot-toast";
-import { deleteTask } from "app/store/Projects";
+import { CheckedTask, deleteTask } from "app/store/Projects";
 import AddTaskModal from "../tasks/AddTask";
 import { Clock, ClockTask } from "public/assets/icons/common";
 import { debounce } from "lodash";
@@ -32,6 +32,7 @@ type CardType = {
   index?: any;
   project_id?: any;
   agent?: [];
+  is_defalut?: any;
 };
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -72,6 +73,7 @@ export default function ItemCard({
   index,
   project_id,
   agent,
+  is_defalut,
 }: CardType) {
   const maxVisibleImages = 3;
   const visibleAgents = agent.slice(0, maxVisibleImages);
@@ -117,7 +119,7 @@ export default function ItemCard({
         .then((res) => {
           if (res?.data?.status == 1) {
             setOpenDeleteModal(false);
-            callListApi(2);
+            callListApi(20);
             toast.success(res?.data?.message, {
               duration: 4000,
             });
@@ -126,7 +128,24 @@ export default function ItemCard({
         });
     }
   };
+
+  const handleCompleteTask = () => {
+    if (id) {
+      dispatch(CheckedTask(id))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            callListApi(20);
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+          }
+        });
+    }
+  };
+
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -169,7 +188,7 @@ export default function ItemCard({
               >
                 Delete Task
               </MenuItem>
-              <MenuItem
+              {/* <MenuItem
                 onClick={(e) => {
                   handleClose();
                   e.stopPropagation();
@@ -177,7 +196,7 @@ export default function ItemCard({
                 }}
               >
                 View
-              </MenuItem>
+              </MenuItem> */}
             </Menu>
           </div>
         )}
@@ -265,11 +284,21 @@ export default function ItemCard({
                     <Typography color="primary.light" className="text-[12px] ">
                       <TruncateText text={taskName} maxWidth={150} />
                     </Typography>
-                    <Checkbox
-                      onClick={(e) => {
-                        e.stopPropagation();
-                      }}
-                    />
+                    {is_defalut == 1 ? (
+                      <Checkbox
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                        checked={true}
+                      />
+                    ) : (
+                      <Checkbox
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCompleteTask();
+                        }}
+                      />
+                    )}
                   </div>
                   <div className="mt-10 flex justify-between">
                     <div className="flex items-center">
@@ -279,7 +308,7 @@ export default function ItemCard({
                         className="text-[12px] ml-10 "
                       >
                         {/* {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")} */}
-                        {date ? moment(date).format("ll") : ""}
+                        {date ? moment(date).format("ll") : "N/A"}
                       </Typography>
                     </div>
                     <div className="flex ">
