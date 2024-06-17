@@ -198,7 +198,7 @@ export default function AddSubscription() {
   const SubButton = (): JSX.Element => {
     return (
       <>
-        <div className="flex items-center gap-20 mr-20 ">
+        <div className="flex items-center gap-20 mr-20  ">
           <DropdownMenu
             marginTop={"mt-20"}
             button={
@@ -209,7 +209,7 @@ export default function AddSubscription() {
                 <Button
                   variant="text"
                   color="secondary"
-                  className="h-[40px] ps-[2rem] sm:text-[16px] flex gap-8  leading-none bg-secondary_bg rounded-[.7rem]"
+                  className="h-[40px] ps-[2rem] sm:text-[16px] flex gap-8 leading-none bg-secondary_bg rounded-[.7rem] ml-[20px] w-[30rem] md:ml-0 md:w-auto"
                   aria-label="Lines"
                   endIcon={<DownArrowIcon className="cursor-pointer" />}
                 >
@@ -1002,7 +1002,7 @@ export default function AddSubscription() {
       <TitleBar title="Add Subscriptions" />
       <div className="px-[3rem]">
         <div className="bg-white rounded-lg shadow-sm pb-[2.7rem] mb-[3rem] ">
-          <div className="flex items-center justify-between py-[14px]">
+          <div className="flex items-center justify-between py-[14px] flex-wrap">
             <div>
               <TextField
                 hiddenLabel
@@ -1643,8 +1643,8 @@ export default function AddSubscription() {
                       ${recurring.toFixed(2)}/ month
                     </span>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <div className="flex">
+                  <div className="flex justify-between items-center flex-wrap gap-10">
+                    <div className="flex flex-wrap gap-10">
                       <div className="relative">
                         <TextField
                           hiddenLabel
@@ -1700,8 +1700,8 @@ export default function AddSubscription() {
                       </div>
 
                       <div
-                        className="border-[0.5px] w-max border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
-                     justify-center gap-10"
+                        className="border-[0.5px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
+                     justify-center gap-10 w-[30rem] md:ml-0 md:w-auto"
                       >
                         <div className="border-r-1 border-solid border-[#9DA0A6] ">
                           <SelectField
