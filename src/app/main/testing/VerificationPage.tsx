@@ -105,7 +105,7 @@ export default function VerificationPage() {
     <>
       {loading && <FuseLoading />}
       {!loading && (
-        <div className="flex justify-center items-center flex-col h-screen gap-60 px-28 ">
+        <div className="flex justify-center items-center flex-col py-20 gap-60 px-28 ">
           <CircleRightIcon className="hidden sm:block absolute top-0 sm:right-0 z-[-1]" />
           <CircleLeft1Icon className=" hidden sm:block absolute bottom-0 left-0 z-[-1]" />
           <CircleLeft2Icon className="hidden sm:block absolute bottom-[28px] left-0 z-[-1]" />

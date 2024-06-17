@@ -80,7 +80,7 @@ function ToolbarLayout1(props: ToolbarLayout1Props) {
           <div className="flex items-center h-full px-8 overflow-x-auto">
             <Notifications />
             {/* <LanguageSwitcher /> */}
-            <AdjustFontSize />
+            {/* <AdjustFontSize /> */}
             {/* <FullScreenToggle /> */}
             {/* <NavigationSearch /> */}
             {/* <QuickPanelToggleButton /> */}

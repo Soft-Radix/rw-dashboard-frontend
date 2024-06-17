@@ -29,6 +29,7 @@ import { useSelector } from "react-redux";
 import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import moment from "moment";
+import Tooltip from "@mui/material/Tooltip";
 
 // interface svgColor {
 //   color: string;
@@ -230,9 +231,11 @@ const ManagerProfile = () => {
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
                         />
-                        <p className="truncate">
-                          {accManagerDetail?.address || "N/A"}
-                        </p>
+                        <Tooltip title={accManagerDetail?.address || "N/A"}>
+                          <p className="truncate max-w-xs">
+                            {accManagerDetail?.address || "N/A"}
+                          </p>
+                        </Tooltip>
                       </div>
                     </div>
                   </div>

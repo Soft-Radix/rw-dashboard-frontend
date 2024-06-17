@@ -276,7 +276,7 @@ export default function AgentDetails() {
                     </div>
                     <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 overflow-hidden">
                       <div className="flex flex-col pr-10 gap-7">
-                        <span className="text-[20px] text-title font-500">
+                        <span className="text-[20px] text-title font-500 w-max">
                           Address
                         </span>
                         <div className="grid grid-cols-[auto,1fr] items-center text-[#757982] text-[20px] font-400 mb-5">
@@ -284,7 +284,7 @@ export default function AgentDetails() {
                             src="../assets/icons/loaction.svg"
                             className="mr-4"
                           />
-                          <p className="truncate">
+                          <p className="truncate max-w-full">
                             {agentDetail?.address || "N/A"}
                           </p>
                         </div>
