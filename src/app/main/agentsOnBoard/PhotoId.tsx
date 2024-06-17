@@ -17,7 +17,7 @@ import { RefreshToken } from "app/store/Auth";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import { Box } from "@mui/material";
 
-export default function CreatePassword() {
+export default function PhotoId() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [frontID, setFrontID] = useState<string | null>(null);
   const { jwtService } = useAuth();
@@ -115,14 +115,14 @@ export default function CreatePassword() {
             </p>
           </Typography>
           <div className="flex justify-center">
-            {!showWebcam ? (
+            {/* {!showWebcam ? (
               <button
                 onClick={() => setShowWebcam(true)}
                 className="text-white px-4 py-2"
               >
                 <Camera />
               </button>
-            ) : null}
+            ) : null} */}
             {showWebcam ? (
               <div
                 className="flex flex-col gap-[20px] "
