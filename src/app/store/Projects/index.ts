@@ -10,7 +10,7 @@ import {
   ProjectAddDoc,
   Taskadd,
   ApiResponse,
-  WhiteBoardData
+  WhiteBoardData,
 } from "./Interface";
 import { deleteAccManagerType } from "../AccountManager/Interface";
 import { clientIDType } from "../Client/Interface";
@@ -208,6 +208,19 @@ export const deleteTask: any = createAsyncThunk(
     const response = await ApiHelperFunction({
       url: `/project/task-delete/${payload}`,
       method: "delete",
+      data: payload,
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+export const CheckedTask: any = createAsyncThunk(
+  "project/complete-task/",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/complete-task/${payload}`,
+      method: "get",
       data: payload,
     });
     return {

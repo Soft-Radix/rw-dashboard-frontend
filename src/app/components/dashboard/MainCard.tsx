@@ -32,6 +32,7 @@ type MainCardType = {
   key?: any;
   index?: any;
   column?: any;
+  is_defalut?: any;
 };
 import {
   DragDropContext,
@@ -53,6 +54,7 @@ export default function MainCard({
   key,
   index,
   column,
+  is_defalut,
 }: MainCardType) {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [originalTitle, setOriginalTitle] = useState(title);
@@ -90,7 +92,7 @@ export default function MainCard({
       .required("Name is required")
       .min(1, "Name is required"),
   });
-
+  // alert(is_defalut);
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
@@ -223,7 +225,7 @@ export default function MainCard({
 
                         <div className="flex gap-10">
                           <DragIcon className="cursor-pointer" />
-                          {userDetails?.role != "agent" && (
+                          {userDetails?.role != "agent" && is_defalut != 1 && (
                             <>
                               <span
                                 id="basic-button"
@@ -328,6 +330,7 @@ export default function MainCard({
                               key={item.id}
                               project_id={project_id}
                               agent={item.assigned_task_users}
+                              is_defalut={is_defalut}
                             />
                             // <Task key={task.id} task={task} index={index} />
                           ))

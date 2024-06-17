@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import Webcam from "react-webcam";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -13,10 +13,13 @@ import {
   CircleRightIcon,
 } from "public/assets/icons/welcome";
 import { Camera } from "public/assets/icons/common";
+import { RefreshToken } from "app/store/Auth";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
 
 export default function CreatePassword() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [frontID, setFrontID] = useState<string | null>(null);
+  const { jwtService } = useAuth();
   const [frontfile, setFrontFile] = useState<File | null>(null);
   const [webcamCapture, setWebcamCapture] = useState<string | null>(null);
   const [showWebcam, setShowWebcam] = useState<boolean>(false);
@@ -49,6 +52,25 @@ export default function CreatePassword() {
     }
   }, [webcamRef]);
 
+  const redirect = async () => {
+    console.log("calling");
+    await jwtService.agentSignIn();
+  };
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      redirect();
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleButtonClick = async () => {
     const payload = new FormData();
     if (frontID) {
@@ -57,15 +79,19 @@ export default function CreatePassword() {
 
     try {
       const res = await dispatch(UploadImage({ payload, token }));
-      if (res?.payload?.data?.status === 0) {
+      if (res?.payload?.data?.status == 1) {
+        navigate(`/upload-doc/${token}`);
         toast.success(res?.payload?.data?.message);
-        navigate("/upload-doc");
       }
     } catch (error) {
       toast.error(error?.message);
       console.error("Error fetching data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <div className="flex items-center flex-col gap-32 px-28 py-32">
