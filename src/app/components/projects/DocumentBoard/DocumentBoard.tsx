@@ -124,7 +124,7 @@ function DocumentBoard() {
           <div className="w-full flex flex-col justify-between">
             <ReactQuill
               className="w-full h-[calc(100vh-330px)]"
-              modules={show ? {...modules, toolbar: false} :{...modules}}
+              modules={show ? { ...modules, toolbar: false } : { ...modules }}
               formats={formats}
               theme="snow"
               value={value}

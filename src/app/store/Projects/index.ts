@@ -215,6 +215,7 @@ export const deleteTask: any = createAsyncThunk(
     };
   }
 );
+
 export const CheckedTask: any = createAsyncThunk(
   "project/complete-task/",
   async (payload: any) => {
@@ -311,7 +312,7 @@ export const getWhiteBoardData = createAsyncThunk(
   }
 );
 
-export const getChatBoardData:any = createAsyncThunk(
+export const getChatBoardData: any = createAsyncThunk(
   "project/assigned-userIds",
   async (id: any) => {
     const response = await ApiHelperFunction({
@@ -339,7 +340,7 @@ export const addWhiteBoardData: any = createAsyncThunk(
   }
 );
 
-export const getDocBoardData:any = createAsyncThunk(
+export const getDocBoardData: any = createAsyncThunk(
   "project/document/get",
   async (id: any) => {
     const response = await ApiHelperFunction({

@@ -21,12 +21,13 @@ import { useState } from "react";
 import DueDate from "../projects/DueDate";
 import { Link } from "react-router-dom";
 import DeleteClient from "../client/DeleteClient";
-import { deleteTask } from "app/store/Projects";
+import { CheckedTask, deleteTask } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import AddTaskModal from "./AddTask";
 import ListLoading from "@fuse/core/ListLoading";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
+import toast from "react-hot-toast";
 
 function ThemePageTable(props) {
   const {
@@ -37,6 +38,8 @@ function ThemePageTable(props) {
     project_id,
     ColumnId,
     showLoader,
+    handleCompleteTask,
+    isDefault,
   } = props;
   const dispatch = useAppDispatch();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -67,9 +70,9 @@ function ThemePageTable(props) {
   };
 
   // const extraAgentsCount = agent.length - maxVisibleImages;
-  const extraAgents = columnList.assigned_task_users?.length - 3;
+  const extraAgents = columnList?.assigned_task_users?.length - 3;
   // setIsOpenDeletedModal(false);
-  console.log(extraAgents, "visibleAgents");
+  console.log(columnList, "visibleAgents");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -96,7 +99,7 @@ function ThemePageTable(props) {
         <CommonTable
           headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
         >
-          {!showLoader && columnList.length == 0 ? (
+          {!showLoader && columnList?.length == 0 ? (
             <TableRow>
               <TableCell colSpan={5} align="center">
                 {/* <ListLoading /> */}
@@ -135,14 +138,27 @@ function ThemePageTable(props) {
                 >
                   <TableCell scope="row">
                     <span className="flex items-center gap-10">
-                      <Checkbox
-                        sx={{ padding: "4px" }}
-                        color="primary"
-                        defaultChecked={row.defaultChecked}
-                        inputProps={{
-                          "aria-labelledby": `table-checkbox-${index}`,
-                        }}
-                      />{" "}
+                      {isDefault == 1 ? (
+                        <Checkbox
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                          checked={true}
+                        />
+                      ) : (
+                        <Checkbox
+                          sx={{ padding: "4px" }}
+                          color="primary"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCompleteTask(row.id, ColumnId);
+                          }}
+                          defaultChecked={row.defaultChecked}
+                          inputProps={{
+                            "aria-labelledby": `table-checkbox-${index}`,
+                          }}
+                        />
+                      )}{" "}
                       {row.title}
                     </span>
                   </TableCell>
@@ -159,7 +175,7 @@ function ThemePageTable(props) {
                             } z-0`}
                             src={
                               item.user_image
-                                ? urlForImage + item.user_image
+                                ? urlForImage + item?.user_image
                                 : "../assets/images/logo/images.jpeg"
                             }
                             alt={`User ${index + 1}`}
@@ -171,7 +187,7 @@ function ThemePageTable(props) {
                           className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
                         >
-                          +{row.assigned_task_users?.length - 3}
+                          +{row.assigned_task_users?.length}
                         </span>
                       )}
                     </div>
@@ -180,7 +196,13 @@ function ThemePageTable(props) {
                   <TableCell align="center">
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
-                  ${row.priority === "Low" ? "text-[#4CAF50] bg-[#4CAF502E]" : row.priority === "Medium" ? "text-[#FF5F15] bg-[#FF5F152E]" : "text-[#F44336] bg-[#F443362E]"}`}
+                  ${
+                    row.priority === "Low"
+                      ? "text-[#4CAF50] bg-[#4CAF502E]"
+                      : row.priority === "Medium"
+                      ? "text-[#FF5F15] bg-[#FF5F152E]"
+                      : "text-[#F44336] bg-[#F443362E]"
+                  }`}
                     >
                       {row.priority}
                     </span>
@@ -227,14 +249,16 @@ function ThemePageTable(props) {
         heading={"Delete Task"}
         description={"Are you sure you want to delete this Task? "}
       />
-      <AddTaskModal
-        isOpen={isOpenAddModal}
-        setIsOpen={setIsOpenAddModal}
-        project_id={project_id}
-        ColumnId={taskId}
-        callListApi={ListData}
-        Edit
-      />
+      {isOpenAddModal && (
+        <AddTaskModal
+          isOpen={isOpenAddModal}
+          setIsOpen={setIsOpenAddModal}
+          project_id={project_id}
+          ColumnId={taskId}
+          callListApi={ListData}
+          Edit
+        />
+      )}
     </>
   );
 }
