@@ -56,27 +56,12 @@ const FilterPage = (props: FilterDesign) => {
     <div className="px-4 ">
       <div
         className="relative bg-[#ffff] py-5
-      sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl"
+      sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl overflow-hidden"
       >
-        {/* <div className="mb-3 sm:mb-0 w-full sm:w-auto">
-          <InputField
-            name="search"
-            placeholder="Search Board"
-            className="hello"
-            inputProps={{
-              className: "ps-[4rem] w-full sm:w-[227px]",
-            }}
-          />
-          <SearchIcon
-            width={18}
-            height={18}
-            className="absolute left-[2.4rem] sm:left-28 top-[26%] sm:top-[46%] translate-y-[-50%] text-para_light"
-          />
-        </div> */}
         <div>
           <SearchInput
             name="search"
-            placeholder="Search Board"
+            placeholder="Search Task"
             onChange={handleSearchChange}
             // handleInputClear={handleInputClear}
             inputValue={inputValue}
@@ -160,13 +145,13 @@ const FilterPage = (props: FilterDesign) => {
               <ProjectMenuItems
                 label={"Filter"}
                 icon={<FilterIcon />}
-                className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#757982] font-400
                 cursor-pointer text-[16px]"
               />
             </div>
           )}
 
-          <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[238px] w-full">
+          <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[200px] w-full">
             <Typography className="text-[14px] sm:text-[16px] text-[#9DA0A6]">
               Sort By
             </Typography>

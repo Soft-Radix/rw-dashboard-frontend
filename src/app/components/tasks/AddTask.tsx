@@ -795,7 +795,7 @@ function AddTaskModal({
                     >
                       <label className="flex items-center gap-10 w-full cursor-pointer">
                         <Checkbox
-                          checked={selectedAgents.includes(item.id)}
+                          checked={selectedAgents?.includes(item.id)}
                           onChange={() => handleAgentSelect(item.id)}
                         />
                         <span>{item.first_name}</span>
@@ -827,7 +827,7 @@ function AddTaskModal({
                 }
                 icon={<AssignIcon />}
               />
-            }
+            }selectedStatusId
             popoverProps={{
               open: !!AgentMenu,
               classes: {

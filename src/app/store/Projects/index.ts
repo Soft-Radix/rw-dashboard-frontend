@@ -311,11 +311,52 @@ export const getWhiteBoardData = createAsyncThunk(
   }
 );
 
+export const getChatBoardData:any = createAsyncThunk(
+  "project/assigned-userIds",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/assigned-userIds/${id}`,
+      method: "get",
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const addWhiteBoardData: any = createAsyncThunk(
   "project/whiteboard/add",
   async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `project/whiteboard/add`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getDocBoardData:any = createAsyncThunk(
+  "project/document/get",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/document/get/${id}`,
+      method: "get",
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const addDocBoardData: any = createAsyncThunk(
+  "project/document/add",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/document/add`,
       method: "post",
       data: payload,
     });

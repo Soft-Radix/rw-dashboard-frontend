@@ -24,6 +24,7 @@ import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router";
+import ListLoading from "@fuse/core/ListLoading";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -75,11 +76,12 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const [isFetching, setIsFetching] = useState(false);
   // const [selectedTab, setSelectedTab] = useState(0);
   const [columnId, setcolumnId] = useState();
+  const [showLoader, setShowLoader] = useState<boolean>(false);
   // console.log(columnId, "columnId");
   const [columnList, setColumnList] = useState<any[]>([]);
   // const [tableSelectedItemDesign, setTableSelectedItemDesign] =
   //   useState<object>();
-  const { projectInfo } = useSelector(
+  const { projectInfo, fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
   );
   // console.log(projectInfo.list, "projectInfo");
@@ -87,13 +89,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     object
   >();
 
-  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  //   setSelectedTab(newValue);
-
-  // };
   const navigate = useNavigate();
   const getTabIndexFromSubtype = (subtype) => {
-    let indexOfItem = projectInfo.list?.findIndex(
+    let indexOfItem = projectInfo?.list?.findIndex(
       (item) => item.name == subtype
     );
     return indexOfItem || 0;
@@ -118,7 +116,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     setSelectedTab(newValue);
     const newSubtype = getSubtypeFromTabIndex(newValue);
     const params = new URLSearchParams(location.search);
-    console.log(newSubtype, "newSubtype654");
+    // console.log(newSubtype, "newSubtype654");
 
     params.set("subtype", newSubtype);
     navigate(`${location.pathname}?${params.toString()}`);
@@ -136,10 +134,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     };
     try {
       // if (!columnId) return "";
+      setShowLoader(true);
       const res = await dispatch(projectTaskTableList(payload));
       const updatedList = res?.payload?.data?.data?.list;
 
-      const columnObject = updatedList.find((item) => item.id == columnid);
+      const columnObject = updatedList?.find((item) => item.id == columnid);
 
       if (!!columnObject) {
         // Update the columnList state with the updated column
@@ -157,8 +156,10 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
           // Convert the map back to an array
           return Array.from(taskMap.values());
         });
+        setShowLoader(false);
       }
     } catch (error) {
+      setShowLoader(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -215,20 +216,24 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     // if (!columnId) return "";
     dispatch(projectColumnList(payload));
   }, [dispatch, id]);
-
+  if (fetchStatusNew == "loading") {
+    return <ListLoading />;
+  }
+  console.log(columnList, "updatedList");
   return (
     <>
       {props.customSelectedTab && (
-        <div>
+        <>
           <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap ">
             <div className="basis-full lg:basis-auto lg:grow w-1/2">
               <div className="shadow-md bg-white rounded-lg">
                 {/* <div style={{ overflowX: "auto", whiteSpace: "nowrap" }}> */}
+
                 <Tabs
                   value={selectedTab}
                   onChange={handleChange}
                   aria-label="basic tabs example"
-                  className="min-h-0 pb-14 pt-20 px-20 gap-[50px]"
+                  className="min-h-0 pb-14 pt-20 px-20 "
                   sx={{
                     "& .MuiTabs-flexContainer": {
                       gap: "50px",
@@ -262,24 +267,24 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                 <div className="px-4">
                   <FilterPage />
                 </div>
-                <div className="px-20  pb-10 flex gap-32 ">
+                <div className="px-20  pb-10 flex sm:gap-32 sm:flex-row flex-col gap-10 py-10 ">
                   <ProjectMenuItems
                     label={"Group By"}
                     icon={<GroupIcon />}
-                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#757982] font-400
                 cursor-pointer text-[12px]"
                     setTableSelectedItemDesign={setTableSelectedItemDesign}
                   />
                   <ProjectMenuItems
                     label={"Show/Hide Subtasks"}
                     icon={<SubTaskIcon />}
-                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#757982] font-400
                 cursor-pointer text-[12px]"
                   />
                   <ProjectMenuItems
                     label="Show Closed"
                     icon={<ShowIcon />}
-                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#9DA0A6] font-400
+                    className="bg-[#F6F6F6] rounded-md px-10 py-20 text-[#757982] font-400
                 cursor-pointer text-[12px]"
                   />
                 </div>
@@ -311,6 +316,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                     ListData={() => listData(20, columnId)}
                     project_id={id}
                     ColumnId={columnId}
+                    showLoader={showLoader}
                   />
                 </CustomTabPanel>
               </div>
@@ -326,7 +332,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
             ColumnId={columnId}
             callListApi={() => listData(20, columnId)}
           />
-        </div>
+        </>
       )}
     </>
   );

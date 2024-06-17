@@ -17,6 +17,8 @@ export function CreateGroupWrapper({
     JSX.IntrinsicElements["cometchat-create-group"] | null
   >(null);
   const navigate = useNavigate();
+  const client_id = JSON.parse(localStorage.getItem("userDetail"));
+
   const { theme } = useContext(CometChatThemeContext);
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export function CreateGroupWrapper({
         name: e.name,
         type: e.type,
         guid: e.guid,
+        tags: [client_id.id.toString()]
       }).then((res) => {
         onClose();
       });
