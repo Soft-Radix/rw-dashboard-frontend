@@ -4,8 +4,8 @@ import CreatePassword from "./CreatePassWord";
 import SignDocuement from "../clientOnBoard/SignDocuement";
 import AgentSignDocument from "./AgentSignDocument";
 import UploadKyc from "./UploadKyc";
-import PhotoId from "./PhotoId";
 import UploadPage from "./UploadPage";
+import PhotoId from "./PhotoId";
 // import SignDocuement from "./SignDocuement";
 
 const AgentOnBoardConfig: FuseRouteConfigType = {
