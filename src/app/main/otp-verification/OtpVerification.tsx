@@ -36,6 +36,8 @@ export default function OtpVerification() {
     if (payload?.data?.status) {
       setIsLoading(false);
       navigate("/reset-password");
+    } else {
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -82,7 +84,7 @@ export default function OtpVerification() {
               aria-label="Log In"
               size="large"
               onClick={onSubmit}
-              disabled={isLoading}
+              disabled={!otp || isLoading}
             >
               Submit
             </Button>
