@@ -137,6 +137,7 @@ const agentRouteConfigs: FuseRouteConfigsType = [
   SucessConfig,
   CancelConfig,
   AgentOnBoardConfig,
+  ChatBoardConfig
 ];
 
 /**

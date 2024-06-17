@@ -382,6 +382,37 @@ export const projectTaskMoveCol: any = createAsyncThunk(
   }
 );
 
+export const projectUpdateMenu: any = createAsyncThunk(
+  "project/enable-menu",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/enable-menu`,
+      method: "post",
+      data: payload,
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const projectGetMenu: any = createAsyncThunk(
+  "project/menu-list",
+  async (id: any) => {
+    const response = await ApiHelperFunction({
+      url: `project/menu-list/${id}`,
+      method: "get",
+    });
+
+    return {
+      data: response.data,
+    };
+  }
+);
+
+
+
 /**
  * The initial state of the auth slice.
  */
