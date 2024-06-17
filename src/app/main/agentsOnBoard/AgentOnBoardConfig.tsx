@@ -49,7 +49,7 @@ const AgentOnBoardConfig: FuseRouteConfigType = {
       element: <PhotoId />,
     },
     {
-      path: "upload-doc",
+      path: "upload-doc/:token",
       element: <UploadPage />,
     },
   ],

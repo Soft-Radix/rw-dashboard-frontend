@@ -57,6 +57,7 @@ export type JwtAuth<User, SignUpPayload> = {
   signIn: (U: SignInPayload) => void;
   socialSignIn: (U: SocialSignInPayload) => void;
   autoSignIng: () => void;
+  agentSignIn: () => void;
   signOut: () => void;
   signUp: (U: SignUpPayload) => Promise<AxiosResponse<User, AxiosError>>;
   updateUser: (U: PartialDeep<User>) => void;
@@ -267,6 +268,8 @@ const useJwtAuth = <User, SignUpPayload>(
           window.location.href = `/kyc-doc/${accessToken}`;
         } else if (response?.payload.data?.user?.is_complete_profile == 3) {
           window.location.href = `/photo-id/${accessToken}`;
+        } else if (response?.payload.data?.user?.is_complete_profile == 4) {
+          window.location.href = `/upload-doc/${accessToken}`;
         } else {
           handleSignInSuccess(userData, accessToken);
           window.location.reload();
@@ -359,6 +362,45 @@ const useJwtAuth = <User, SignUpPayload>(
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
       }
+    }
+  };
+
+  const agentSignIn = () => {
+    let response = getLocalStorage("response");
+    const accessToken = response?.access_token;
+    const userData = response?.user;
+    dispatch(setInitialState(userData));
+
+    const currentUrl = window.location.href;
+
+    if (response?.user?.is_complete_profile == 1) {
+      const docusignLink = response?.payload.data?.user?.docusign_link;
+      if (docusignLink && response?.user?.is_complete_profile == 1) {
+        window.location.href = docusignLink;
+      } else {
+        console.log("Docusign link is not valid.");
+      }
+    } else if (response?.user?.is_complete_profile == 2) {
+      if (!currentUrl.includes("/kyc-doc/")) {
+        window.location.href = `/kyc-doc/${accessToken}`;
+      } else {
+        console.log("Already on /kyc-doc/ page, not redirecting.");
+      }
+    } else if (response?.user?.is_complete_profile == 3) {
+      if (!currentUrl.includes("/photo-id/")) {
+        window.location.href = `/photo-id/${accessToken}`;
+      } else {
+        console.log("Already on /photo-id/ page, not redirecting.");
+      }
+    } else if (response?.user?.is_complete_profile == 4) {
+      if (!currentUrl.includes("/upload-doc/")) {
+        window.location.href = `/upload-doc/${accessToken}`;
+      } else {
+        console.log("Already on /photo-id/ page, not redirecting.");
+      }
+    } else {
+      handleSignInSuccess(userData, accessToken);
+      window.location.reload();
     }
   };
 
@@ -500,6 +542,7 @@ const useJwtAuth = <User, SignUpPayload>(
     isLoading,
     signIn,
     autoSignIng,
+    agentSignIn,
     socialSignIn,
     signUp,
     signOut,

@@ -97,8 +97,6 @@ export default function Item({
     setAnchorEl(null);
   };
 
-  // const Date = date.split(",");
-  // console.log("=====date==", Date[0]);
   const [disable, setDisabled] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -199,6 +197,7 @@ export default function Item({
                     <div className="table-cell">
                       <span className="flex items-center gap-10">{title}</span>
                     </div>
+
                     <div className="table-cell">
                       <div className="flex ">
                         {/* {agent?.map((item) => (
@@ -243,9 +242,11 @@ export default function Item({
                         )}
                       </div>
                     </div>
+
                     <div className="table-cell">
                       {!date ? "N/A" : moment(date).format("ll")}
                     </div>
+
                     <div className="table-cell">
                       <span
                         style={{ width: "fit-content" }}
@@ -266,6 +267,7 @@ export default function Item({
                         {priority}
                       </span>
                     </div>
+
                     <div className="table-cell action-cell">
                       <div className="flex gap-20 px-10">
                         {userDetails?.role != "agent" && (

@@ -433,7 +433,15 @@ function AddTaskModal({
     setRecordingTime(0);
     setVisible(false);
   };
+  function formatDate(dateString) {
+    // Parse the date string using moment
+    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
 
+    // Format the date to yyyy-mm-dd hh:mm
+    const formattedDate = date.format("YYYY-MM-DD HH:mm");
+
+    return formattedDate;
+  }
   const onSubmit = async () => {
     formik.handleSubmit();
     const screenRecordFile = videoRef?.current?.src || "";
@@ -445,11 +453,18 @@ function AddTaskModal({
     formData.append("priority", selectedPriority);
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
     // formData.append("status", ColumnId);
-    formData.append("status", selectedStatusId);
+    formData.append("status", selectedStatusId || "0");
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder);
     formData.append("screen_record_file", screenRecorder);
-    formData.append("due_date_time", calculatedDate ? calculatedDate : "");
+    formData.append(
+      "due_date_time",
+      calculatedDate
+        ? calculatedDate
+        : selectedDate == "Due Date & Time"
+        ? ""
+        : formatDate(selectedDate)
+    );
     formData.append("business_due_date", selectedDate);
     formData.append(
       "reminders",
@@ -476,7 +491,7 @@ function AddTaskModal({
       console.error("Error fetching data:", error);
     }
   };
-
+  console.log("======selectedDate==", selectedDate);
   const handleUploadFile = (event) => {
     const files = event.target.files;
     const filesArray = Array.from(files);
@@ -618,7 +633,14 @@ function AddTaskModal({
     formData.append("agent_ids", selectedAgents as any);
     formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
     formData.append("screen_record_file", screenRecorder);
-    formData.append("due_date_time", calculatedDate ? calculatedDate : "");
+    formData.append(
+      "due_date_time",
+      calculatedDate
+        ? calculatedDate
+        : selectedDate == "Due Date & Time"
+        ? ""
+        : formatDate(selectedDate)
+    );
     formData.append("business_due_date", selectedDate);
     formData.append("delete_agent_ids", "");
     formData.append("delete_file_ids", "");
@@ -662,6 +684,7 @@ function AddTaskModal({
       search: searchValue,
     }));
   }, 300);
+
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     debouncedSearch(value);
@@ -676,7 +699,7 @@ function AddTaskModal({
       }
     });
   };
-  console.log("====selectedStatusId==", selectedStatusId, statusMenuData);
+
   const handleSelectAllAgents = () => {
     if (selectedAgents?.length == agentMenuData?.length) {
       // If all agents are already selected, deselect all
@@ -1105,11 +1128,11 @@ function AddTaskModal({
                 onClick={handleStatusMenuClick}
                 // label={selectedStatus}
                 label={
-                  selectedStatusId
+                  selectedStatusId != "0" && selectedStatusId
                     ? statusMenuData?.find(
                         (item) => item.id == selectedStatusId
                       )?.name
-                    : selectedStatus
+                    : selectedStatus || "Status"
                 }
                 icon={<StatusIcon />}
               />
