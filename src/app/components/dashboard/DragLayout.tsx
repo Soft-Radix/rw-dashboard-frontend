@@ -161,7 +161,6 @@ const DragLayout = ({ columnList, callListApi, id }) => {
     console.log(destination, source, draggableId);
   };
 
-  console.log("===columns", starter);
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="all-column" type="column" direction="horizontal">

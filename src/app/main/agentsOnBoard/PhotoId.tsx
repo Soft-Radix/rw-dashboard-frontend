@@ -15,14 +15,16 @@ import {
 import { Camera } from "public/assets/icons/common";
 import { RefreshToken } from "app/store/Auth";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
+import { Box } from "@mui/material";
 
-export default function CreatePassword() {
+export default function PhotoId() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [frontID, setFrontID] = useState<string | null>(null);
   const { jwtService } = useAuth();
   const [frontfile, setFrontFile] = useState<File | null>(null);
   const [webcamCapture, setWebcamCapture] = useState<string | null>(null);
-  const [showWebcam, setShowWebcam] = useState<boolean>(false);
+  const [showWebcam, setShowWebcam] = useState<boolean>(true);
+  const [disable, setDisabled] = useState(false);
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -72,6 +74,7 @@ export default function CreatePassword() {
   };
 
   const handleButtonClick = async () => {
+    setDisabled(true);
     const payload = new FormData();
     if (frontID) {
       payload.append("files", frontfile);
@@ -81,10 +84,12 @@ export default function CreatePassword() {
       const res = await dispatch(UploadImage({ payload, token }));
       if (res?.payload?.data?.status == 1) {
         navigate(`/upload-doc/${token}`);
+        setDisabled(false);
         toast.success(res?.payload?.data?.message);
       }
     } catch (error) {
       toast.error(error?.message);
+      setDisabled(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -110,14 +115,14 @@ export default function CreatePassword() {
             </p>
           </Typography>
           <div className="flex justify-center">
-            {!showWebcam && !frontID ? (
+            {/* {!showWebcam ? (
               <button
                 onClick={() => setShowWebcam(true)}
                 className="text-white px-4 py-2"
               >
                 <Camera />
               </button>
-            ) : null}
+            ) : null} */}
             {showWebcam ? (
               <div
                 className="flex flex-col gap-[20px] "
@@ -144,12 +149,26 @@ export default function CreatePassword() {
           </div>
         </div>
       </div>
+      {disable && (
+        <Box
+          id="spinner"
+          sx={{
+            "& > div": {
+              backgroundColor: "palette.secondary.main",
+            },
+          }}
+        >
+          <div className="bounce1" />
+          <div className="bounce2" />
+          <div className="bounce3" />
+        </Box>
+      )}
       <Button
         variant="contained"
         color="secondary"
         size="large"
         onClick={handleButtonClick}
-        disabled={!frontID}
+        disabled={!frontID || disable}
         className="text-[18px] font-500 min-w-[196px]"
       >
         Next

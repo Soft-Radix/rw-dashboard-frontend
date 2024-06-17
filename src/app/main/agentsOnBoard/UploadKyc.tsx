@@ -23,6 +23,7 @@ import { useNavigation } from "react-router";
 import { Uploadkyc } from "app/store/Agent";
 import toast from "react-hot-toast";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
+import { Box } from "@mui/material";
 
 type FormType = {
   cnfPassword: string;
@@ -34,6 +35,7 @@ export default function UploadKyc() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams();
   const { jwtService } = useAuth();
+  const [disable, setDisabled] = useState(false);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [frontID, setFrontID] = useState(null);
@@ -70,6 +72,7 @@ export default function UploadKyc() {
 
   const handleButtonClick = async () => {
     // Navigate to '/photo-id' route
+    setDisabled(true);
     const payload = new FormData();
     payload.append("front_id", frontfile);
     payload.append("back_id", backfile);
@@ -78,9 +81,11 @@ export default function UploadKyc() {
       if (res?.payload?.data?.status == 1) {
         navigate(`/photo-id/${token}`);
         toast.success(res?.payload?.data?.message);
+        setDisabled(false);
       }
     } catch (error) {
       toast.error(error?.message);
+      setDisabled(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -188,12 +193,26 @@ export default function UploadKyc() {
           </div>
         </div>
         {/* <Link to="/photo-id"> */}
+        {disable && (
+          <Box
+            id="spinner"
+            sx={{
+              "& > div": {
+                backgroundColor: "palette.secondary.main",
+              },
+            }}
+          >
+            <div className="bounce1" />
+            <div className="bounce2" />
+            <div className="bounce3" />
+          </Box>
+        )}
         <Button
           variant="contained"
           color="secondary"
           size="large"
           className="text-[18px] font-700 min-w-[196px]"
-          disabled={!frontID || !backID}
+          disabled={!frontID || !backID || disable}
           onClick={handleButtonClick}
         >
           Next
