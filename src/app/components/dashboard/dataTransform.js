@@ -13,6 +13,7 @@ const transformData = (data) => {
       id: column?.id.toString(),
       title: column.name,
       taskIds,
+      is_defalut: column.is_defalut,
     };
 
     columnOrder.push(column?.id.toString());

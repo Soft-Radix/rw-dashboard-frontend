@@ -106,6 +106,24 @@ export const RefreshToken = createAsyncThunk(
   }
 );
 
+export const UpdateSuccess = createAsyncThunk(
+  "agent/complete-profile",
+  async (payload: refreshToken) => {
+    console.log("🚀 ~ payload:", payload.token);
+    const response = await ApiHelperFunction({
+      url: "agent/complete-profile",
+      method: "get",
+      headers: { Authorization: `Bearer ${payload.token}` },
+    });
+    // console.log(response, "response");
+    // localStorage.setItem("response", JSON.stringify(response?.data?.data));
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const verifyOtp = createAsyncThunk(
   "otp-verify",
   async (payload: ForgotPassPayload) => {
@@ -151,7 +169,7 @@ export const authSlice = createSlice({
   reducers: {
     restAll: (state) => {
       state.error = "";
-      
+
       // state.selectedColumn = [];
     },
   },
@@ -211,6 +229,6 @@ export const authSlice = createSlice({
   },
 });
 
-export const {restAll} = authSlice.actions;
+export const { restAll } = authSlice.actions;
 
 export default authSlice.reducer;

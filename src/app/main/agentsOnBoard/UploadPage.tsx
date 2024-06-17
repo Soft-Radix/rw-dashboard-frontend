@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import { setPassword } from "app/store/Auth";
+import { RefreshToken, UpdateSuccess, setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
@@ -10,9 +10,10 @@ import {
   CircleLeft2Icon,
   CircleRightIcon,
 } from "public/assets/icons/welcome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
 import InputField from "src/app/components/InputField";
 import { resetPassSchema } from "src/formSchema";
 
@@ -26,6 +27,7 @@ export default function UploadPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams();
   const dispatch = useAppDispatch();
+  const { jwtService } = useAuth();
   const navigate = useNavigate();
 
   const store = useSelector((store: AuthRootState) => store.auth);
@@ -54,9 +56,47 @@ export default function UploadPage() {
       navigate("/sign-in");
     }
   }
+
+  const redirect = async () => {
+    console.log("calling");
+    await jwtService.agentSignIn();
+  };
+
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      redirect();
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const onSuccess = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+      const res = await dispatch(UpdateSuccess(payload));
+      fetchData();
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
   const handleButtonClick = async () => {
     // Navigate to '/photo-id' route
-    navigate(`/agent/dashboard`);
+    onSuccess();
   };
 
   return (
