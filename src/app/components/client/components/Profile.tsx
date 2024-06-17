@@ -123,7 +123,7 @@ export default function Profile({
                     </MenuItem>
                   </Menu>
                 </div>
-                <div className="flex text-[2rem] text-para_light ">
+                <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-10px ">
                   <div className="flex">
                     <img
                       src="../assets/icons/ic_outline-email.svg"
@@ -131,7 +131,7 @@ export default function Profile({
                     />
                     <span>{clientDetail?.email}</span>
                   </div>
-                  <div className="flex items-center px-20">
+                  <div className="flex items-center sm:px-20">
                     <span>
                       <img
                         src="../assets/icons/ph_phone.svg"
@@ -145,7 +145,7 @@ export default function Profile({
                   </div>
                 </div>
 
-                <div className="flex items-baseline justify-between w-full py-20 gap-31">
+                <div className="flex items-baseline justify-between w-full py-20 gap-31 flex-col sm:flex-row">
                   <div className="flex flex-col pr-10 gap-7 ">
                     <span className="text-[20px] text-title font-500 w-max">
                       Status
@@ -165,18 +165,21 @@ export default function Profile({
                     </span>
                   </div>
                 </div>
-                <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31">
-                  <div className="flex flex-col pr-10 gap-7 ">
-                    <span className="text-[20px] text-title font-500 w-max">
+
+                <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 overflow-hidden">
+                  <div className="flex flex-col pr-10 gap-7">
+                    <span className="text-[20px] text-title font-500">
                       Address
                     </span>
-                    <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
+                    <div className="grid grid-cols-[auto,1fr] items-center text-[#757982] text-[20px] font-400 mb-5">
                       <img
                         src="../assets/icons/loaction.svg"
                         className="mr-4"
                       />
-                      {clientDetail?.address || "N/A"}
-                    </span>
+                      <p className="truncate">
+                        {clientDetail?.address || "N/A"}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -184,7 +187,11 @@ export default function Profile({
           </div>
         </Grid>
 
-        <Grid item lg={12} className="basis-full mt-[30px] flex gap-28">
+        <Grid
+          item
+          lg={12}
+          className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row"
+        >
           <div className="flex-1">
             <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
               <div className="flex gap-[20px]  justify-center">

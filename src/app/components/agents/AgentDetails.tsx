@@ -143,8 +143,8 @@ export default function AgentDetails() {
               className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto
              sm:h-auto  rounded-12 xs:px-20 "
             >
-              <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
-                <div className="flex gap-40">
+              <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start sm:p-[3rem] p-[1rem] flex-col sm:flex-row">
+                <div className="flex gap-40 flex-col sm:flex-row overflow-hidden">
                   <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                     {/* <img src="../assets/images/pages/agent/luis_.jpg" /> */}
                     <img
@@ -248,7 +248,7 @@ export default function AgentDetails() {
                               src="../assets/icons/ic_outline-email.svg"
                               className="mr-4"
                             />
-                            <span className="text-para_light text-[20px]">
+                            <span className="text-para_light text-[20px] truncate">
                               {agentDetail?.email || "N/A"}
                             </span>
                           </div>
@@ -274,18 +274,20 @@ export default function AgentDetails() {
                         {/* </div> */}
                       </div>
                     </div>
-                    <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 ">
-                      <div className="flex flex-col pr-10 gap-7 ">
-                        <span className="text-[1.8rem] text-title font-500 w-max">
+                    <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 overflow-hidden">
+                      <div className="flex flex-col pr-10 gap-7">
+                        <span className="text-[20px] text-title font-500 w-max">
                           Address
                         </span>
-                        <span className=" text-[#757982]  text-[1.8rem] font-400 mb-5 flex ">
+                        <div className="grid grid-cols-[auto,1fr] items-center text-[#757982] text-[20px] font-400 mb-5">
                           <img
                             src="../assets/icons/loaction.svg"
                             className="mr-4"
                           />
-                          {agentDetail?.address || "N/A"}
-                        </span>
+                          <p className="truncate max-w-full">
+                            {agentDetail?.address || "N/A"}
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>

@@ -67,7 +67,7 @@ const FilterPage = (props: FilterDesign) => {
             inputValue={inputValue}
           />
         </div>
-        <div className="w-full sm:w-auto flex  flex-row items-center justify-between gap-3 sm:gap-40 cursor-pointer">
+        <div className="w-full sm:w-auto flex  flex-row sm:items-center justify-between gap-3 sm:gap-40 cursor-pointer">
           {!filterDesign ? (
             <DropdownMenu
               handleClose={() => setFilterMenu(null)}
@@ -141,7 +141,7 @@ const FilterPage = (props: FilterDesign) => {
               </div>
             </DropdownMenu>
           ) : (
-            <div className="px-20 flex gap-32 text-para_light  ">
+            <div className="sm:px-20 pr-10 flex gap-32 text-para_light  ">
               <ProjectMenuItems
                 label={"Filter"}
                 icon={<FilterIcon />}

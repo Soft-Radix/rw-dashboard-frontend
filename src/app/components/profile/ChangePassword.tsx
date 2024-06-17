@@ -87,7 +87,12 @@ function ChangePassword({ isOpen, setIsOpen, role }: IProps) {
           name="new_password"
           label="New Password"
           type="password"
-          placeholder="Enter New Password "
+          placeholder="Enter New Password"
+          sx={{
+            ".MuiInputBase-input": {
+              paddingRight: "34px",
+            },
+          }}
         />
         <InputField
           formik={formik}
@@ -95,6 +100,11 @@ function ChangePassword({ isOpen, setIsOpen, role }: IProps) {
           type="password"
           label="Confirm Password"
           placeholder="Enter Confirm Password"
+          sx={{
+            ".MuiInputBase-input": {
+              paddingRight: "34px",
+            },
+          }}
         />
       </div>
     </CommonModal>

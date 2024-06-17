@@ -79,8 +79,8 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
   };
 
   const handleToggle = (e: React.MouseEvent) => {
-    setIsOpen((prev) => !prev);
     formik.resetForm(); // Reset form values when closing the modal
+    setIsOpen((prev) => !prev);
   };
   return (
     <CommonModal
