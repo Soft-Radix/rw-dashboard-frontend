@@ -34,12 +34,26 @@ function WhiteBoard() {
   }, [client_id]);
 
   // useEffect(() => {
-  //   const element = document.getElementsByClassName("diagrams-iframe");
-  //   if (element && element[0]) {
-  //     // @ts-ignore
-  //     console.log(element[0].contentWindow.window.document?.body);
-  //   }
-  // }, [drawioRef.current]);
+  //   setTimeout(() => {
+  //     var iframe = document.querySelector("iframe");
+
+  //     console.log("frame...", iframe);
+
+  //     if (iframe) {
+  //       // Access the content document inside the iframe
+  //       var iframeDocument =
+  //         iframe.contentDocument || iframe.contentWindow.document;
+
+  //       // Find the element inside the iframe
+  //       var element = iframeDocument.querySelector(".gePrimaryBtn");
+
+  //       if (element) {
+  //         // @ts-ignore
+  //         element.style.backgroundColor = "red";
+  //     }
+  //     }
+  //   }, 2000);
+  // }, [drawioRef.current, loadingDrawIo]);
 
   useEffect(() => {
     fetchData();
@@ -130,13 +144,15 @@ function WhiteBoard() {
         )}
 
         {!loading && show && (
-          <div className={`w-full h-full ${loadingDrawIo ? "opacity-0" : "opacity-100"}`}>
+          <div
+            className={`w-full h-full bg-white rounded-lg shadow-sm ${loadingDrawIo ? "opacity-0" : "opacity-100"}`}
+          >
             <DrawIoEmbed
               xml={data}
               urlParameters={{
-                ui: "kennedy",
+                ui: "min",
                 spin: false,
-                libraries: true,
+                libraries: false,
                 saveAndExit: false,
                 noExitBtn: true,
               }}
@@ -145,6 +161,8 @@ function WhiteBoard() {
               }}
               configuration={{
                 spinner: false,
+                toolbar: false,
+                menubar: false,
               }}
               onExport={(data) => setImgData(data.data)}
               onSave={onSave}

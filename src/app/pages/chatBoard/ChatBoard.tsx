@@ -33,6 +33,7 @@ function ChatBoard() {
   const [addGroup, setAddGroup] = useState(false);
   const [groupDetails, setGroupDetails] = useState<any>({});
   const [conversationDetails, setConversationDetails] = useState<any>({});
+  const [chatDetails, setChatDetails] = useState<any>({});
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
 
   const dispatch = useDispatch();
@@ -75,15 +76,15 @@ function ChatBoard() {
       <div className="flex h-[calc(100vh-150px)]">
         <div className="w-[279px]">
           <CometChatConversations
-            onItemClick={(group) => setConversationDetails(group)}
+            onItemClick={(group) => setChatDetails(group)}
           />
         </div>
 
-        {conversationDetails && conversationDetails.conversationId ? (
+        {chatDetails && chatDetails.conversationId ? (
           <div className="w-[calc(100%-279px)]">
-            {conversationDetails.conversationType === "user" ? (
+            {chatDetails.conversationType === "user" ? (
               <CometChatMessages
-                user={conversationDetails.conversationWith}
+                user={chatDetails.conversationWith}
                 messageComposerConfiguration={
                   new MessageComposerConfiguration({
                     disableMentions: true,
@@ -92,7 +93,7 @@ function ChatBoard() {
               />
             ) : (
               <CometChatMessages
-                group={conversationDetails.conversationWith}
+                group={chatDetails.conversationWith}
                 detailsConfiguration={
                   new DetailsConfiguration({
                     addMembersConfiguration: new AddMembersConfiguration(
@@ -133,27 +134,61 @@ function ChatBoard() {
     iconURL: usersTabIcon,
     style: tabItemStyle,
     childView: (
-      <CometChatUsersWithMessages
-        isMobileView={isMobileView}
-        usersConfiguration={
-          new UsersConfiguration(
-            client_id.role_id !== ROLES.ADMIN
-              ? {
-                  usersRequestBuilder: new CometChat.UsersRequestBuilder()
-                    .setLimit(100)
-                    .setUIDs([...users]),
-                }
-              : {}
-          )
-        }
-        messagesConfiguration={
-          new MessagesConfiguration({
-            messageComposerConfiguration: new MessageComposerConfiguration({
-              disableMentions: true,
-            }),
-          })
-        }
-      />
+      <div className="flex h-[calc(100vh-150px)]">
+        <div className="w-[279px]">
+          <CometChatUsersWithMessages
+            isMobileView={isMobileView}
+            usersConfiguration={
+              new UsersConfiguration(
+                client_id.role_id !== ROLES.ADMIN
+                  ? {
+                      usersRequestBuilder: new CometChat.UsersRequestBuilder()
+                        .setLimit(100)
+                        .setUIDs([...users]),
+                      onItemClick: (conversation) =>
+                        setConversationDetails(conversation),
+                    }
+                  : {
+                      onItemClick: (conversation) =>
+                        setConversationDetails(conversation),
+                    }
+              )
+            }
+            messagesConfiguration={
+              new MessagesConfiguration({
+                messageComposerConfiguration: new MessageComposerConfiguration({
+                  disableMentions: true,
+                }),
+              })
+            }
+          />
+        </div>
+
+        {conversationDetails && conversationDetails.uid ? (
+          <div className="w-[calc(100%-279px)]">
+            <CometChatMessages
+              user={conversationDetails}
+              messageComposerConfiguration={
+                new MessageComposerConfiguration({
+                  disableMentions: true,
+                })
+              }
+            />
+          </div>
+        ) : (
+          <div className="w-[calc(100%-279px)] flex flex-col items-center justify-center gap-3">
+            <img
+              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
+            />
+            <Typography className="text-[24px] text-center font-600 leading-normal">
+              No Message !
+            </Typography>
+            <p style={{ color: "#757982" }}>
+              Please select list to view messages.
+            </p>
+          </div>
+        )}
+      </div>
     ),
   });
 
@@ -213,9 +248,9 @@ function ChatBoard() {
             <img
               src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
             />
-            <h2 className="font-bold" style={{ color: "#111827" }}>
+            <Typography className="text-[24px] text-center font-600 leading-normal">
               No Message !
-            </h2>
+            </Typography>
             <p style={{ color: "#757982" }}>
               Please select list to view messages.
             </p>
