@@ -177,7 +177,7 @@ export default function ManageProducts() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[36px] text-[16px] flex gap-8 font-[600]"
+          className="h-[36px] text-[16px] flex gap-8 font-[600] leading-none"
           aria-label="Add Tasks"
           size="large"
           onClick={() => setIsOpenAddModal(true)}

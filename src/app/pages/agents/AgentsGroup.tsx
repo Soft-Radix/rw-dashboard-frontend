@@ -133,7 +133,7 @@ export default function AgentsGroup() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          className="h-[40px] text-[16px] flex gap-8 font-[600] leading-none"
           aria-label="Add New Group"
           size="large"
           onClick={() => {

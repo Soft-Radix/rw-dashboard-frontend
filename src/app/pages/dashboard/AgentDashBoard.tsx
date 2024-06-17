@@ -326,7 +326,7 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <div className="px-28 mb-[3rem] flex  justify-between gap-20 ">
+      <div className="px-28 mb-[3rem] flex justify-between gap-20 ">
         <div className="bg-white rounded-lg flex-1 flex ">
           <div className="w-3/4">
             {/* <Box

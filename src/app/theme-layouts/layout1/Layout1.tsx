@@ -71,7 +71,7 @@ function Layout1(props: Layout1Props) {
             <Configurator />
           </div> */}
 
-          <div className="relative z-10 flex flex-col flex-auto min-h-0">
+          <div className="relative z-9 flex flex-col flex-auto min-h-0">
             <FuseSuspense>{useRoutes(routes)}</FuseSuspense>
 
             <Suspense>

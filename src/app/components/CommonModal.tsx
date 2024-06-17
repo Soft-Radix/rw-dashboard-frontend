@@ -12,7 +12,9 @@ const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
     borderRadius: "10px",
     margin: 0,
-    width: "100%",
+    [theme.breakpoints.up("sm")]: {
+      width: "80%",
+    },
   },
   "& .MuiDialogContent-root": {
     padding: theme.spacing(2),

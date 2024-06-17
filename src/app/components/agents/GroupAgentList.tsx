@@ -161,7 +161,7 @@ export default function GroupAgentsList() {
         <Button
           variant="outlined"
           color="secondary"
-          className="h-[40px] text-[16px] flex gap-8 font-[600]"
+          className="h-[40px] text-[16px] flex gap-8 font-[600] leading-none"
           aria-label="Add New Agent"
           size="large"
           onClick={() => setIsOpenAddModal(true)}
@@ -173,7 +173,7 @@ export default function GroupAgentsList() {
       <div className="px-28 mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <form onSubmit={formik.handleSubmit}>
-            <div className="p-[2rem] flex items-end gap-20 flex-col sm:flex-row w-full">
+            <div className="p-[2rem] flex sm:items-end gap-20 flex-col sm:flex-row w-full">
               {/* Use formik.handleSubmit as the onSubmit handler */}
               <div className="relative">
                 <InputField
@@ -258,7 +258,7 @@ export default function GroupAgentsList() {
                           {row.member_details.last_name}
                         </TableCell>
 
-                        <TableCell align="left" className="w-[18%]  px-[7px]">
+                        <TableCell align="left" className="  px-[7px]">
                           <div className="flex gap-5 pe-20 items-center justify-center">
                             <span className="p-2 cursor-pointer">
                               <DeleteIcon
@@ -311,4 +311,3 @@ export default function GroupAgentsList() {
     </>
   );
 }
- 

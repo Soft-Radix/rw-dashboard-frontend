@@ -305,7 +305,7 @@ function AddAgentModel({
         />
         {/* <div className="flex gap-20 sm:flex-row flex-col"> */}
         {!isEditing && ( // Use logical NOT operator ! to conditionally render if !isEditing is true
-          <div className="flex-1 w-[50%]">
+          <div className="flex-1 sm:w-[50%] w-full">
             <Typography className="text-[16px] font-500 text-[#111827] pb-10">
               Attachments
             </Typography>

@@ -626,3 +626,7 @@ header {
 .cc-decorator-message--empty {
   display: none !important;
 }
+
+cometchat-callscreen-wrapper {
+  z-index: 99999 !important;
+}

@@ -76,18 +76,12 @@ const changePasswordByClient = Yup.object({
 const addClientSchema = Yup.object({
   first_name: Yup.string()
     .required("First name is required")
-    .matches(
-      /^[A-Za-z]+$/,
-      "First name should only contain letters and no spaces"
-    ) // Disallow spaces
+    .matches(/^[A-Za-z]+$/, "First name is required") // Disallow spaces
     .max(20, maxLengthFirstMessage),
 
   last_name: Yup.string()
     .required("Last name is required")
-    .matches(
-      /^[A-Za-z]+$/,
-      "Last name should only contain letters and no spaces"
-    ) // Disallow spaces
+    .matches(/^[A-Za-z]+$/, "Last name is required") // Disallow spaces
     .max(20, maxLengthLastMessage),
 
   ...emailField,
@@ -125,6 +119,10 @@ const editClientSchema = Yup.object({
 
     .matches(/^\S.*\S$|^\S$/, "No spaces allowed")
     .matches(/^\S.*\S$|^\S$/, noSpaceMessage),
+  address: Yup.string()
+    .required("Address is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
 });
 
 const editAgentSchema = Yup.object({
