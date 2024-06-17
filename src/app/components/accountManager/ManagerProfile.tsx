@@ -87,8 +87,8 @@ const ManagerProfile = () => {
         <Grid item xs={12} sm={12} md={9} className="">
           {/* <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 "> */}
           <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto sm:h-auto  rounded-12 xs:px-20 ">
-            <div className="border border-[#E7E8E9] rounded-lg flex   justify-between gap-[30px] items-start p-[3rem] flex-col sm:flex-row">
-              <div className="flex gap-40 flex-wrap">
+            <div className="border border-[#E7E8E9] rounded-lg flex justify-between gap-[10px] items-start p-[3rem] flex-col sm:flex-row">
+              <div className="flex gap-40 flex-col sm:flex-row ">
                 <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[99px] rounded-full overflow-hidden ">
                   <img
                     src={
@@ -99,7 +99,7 @@ const ManagerProfile = () => {
                   ></img>
                   // <img src="../assets/images/pages/agent/luis_.jpg" />
                 </div>
-                <div className="pt-[20px]">
+                <div className="pt-[20px] pr-10">
                   <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">
                     <span className="text-[24px] text-[#111827] font-semibold inline-block">
                       {accManagerDetail?.first_name +
@@ -113,10 +113,10 @@ const ManagerProfile = () => {
                         selectedItem === "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                           : selectedItem === "Cancelled"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : selectedItem == "Pending"
-                          ? "text-[#FF5F15] bg-[#ffe2d5]"
-                          : "text-[#F0B402]  bg-[#FFEEBB]"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : selectedItem == "Pending"
+                              ? "text-[#FF5F15] bg-[#ffe2d5]"
+                              : "text-[#F0B402]  bg-[#FFEEBB]"
                       }`}
                       endIcon={
                         <DownGreenIcon
@@ -124,10 +124,10 @@ const ManagerProfile = () => {
                             selectedItem === "Active"
                               ? "#4CAF50"
                               : selectedItem === "Cancelled"
-                              ? "#F44336"
-                              : selectedItem == "Pending"
-                              ? "#FF5F15"
-                              : "#F0B402"
+                                ? "#F44336"
+                                : selectedItem == "Pending"
+                                  ? "#FF5F15"
+                                  : "#F0B402"
                           }
                         />
                       }
@@ -183,18 +183,18 @@ const ManagerProfile = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row">
+                  <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row overflow-hidden">
                     <div className="flex pr-10 gap-32 sm:flex-row flex-col">
-                      <div className="flex flex-col gap-5">
+                      <div className="grid gap-5">
                         <span className="text-[#111827] text-[18px] font-500">
                           Email Address
                         </span>
-                        <div className="flex">
+                        <div className="grid grid-cols-[auto,1fr] items-center">
                           <img
                             src="../assets/icons/ic_outline-email.svg"
                             className="mr-4"
                           />
-                          <span className="text-para_light text-[20px]">
+                          <span className="text-para_light text-[20px] truncate">
                             {accManagerDetail?.email || "N/A"}
                           </span>
                         </div>
@@ -221,17 +221,19 @@ const ManagerProfile = () => {
                     </div>
                   </div>
                   <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 ">
-                    <div className="flex flex-col pr-10 gap-7 ">
+                    <div className="grid pr-10 gap-7">
                       <span className="text-[1.8rem] text-title font-500 w-max">
                         Address
                       </span>
-                      <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
+                      <div className="grid grid-cols-[auto,1fr] items-center text-[#757982] text-[20px] font-400 mb-5">
                         <img
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
                         />
-                        {accManagerDetail?.address || "N/A"}
-                      </span>
+                        <p className="truncate">
+                          {accManagerDetail?.address || "N/A"}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -329,71 +329,7 @@ export default function Clients() {
   return (
     <>
       <TitleBar title="Clients">
-        <div className="flex flex-col items-start gap-20 sm:items-center sm:flex-row">
-          {/* <DropdownMenu
-            marginTop={"mt-20"}
-            button={
-              <div
-                className="relative flex items-center"
-                onClick={handleButtonClick}
-              >
-                <Button
-                  variant="contained"
-                  className="h-[40px] sm:text-[16px] text-secondary flex gap-8 bg-[#EDEDFC] leading-none hover:bg-[#EDEDFC]"
-                  aria-label="Manage Sections"
-                  size="large"
-                  style={{
-                    border: anchorEl ? "1px #4F46E5 solid" : "none",
-                  }}
-                >
-                  Assign to account manager
-                </Button>
-              </div>
-            }
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-          >
-            <div className="w-[375px]">
-              <div className="flex w-full border-b-1">
-                <TextField
-                  hiddenLabel
-                  id="filled-hidden-label-small"
-                  defaultValue=""
-                  variant="standard"
-                  sx={{
-                    pl: 2,
-                    pr: 2,
-                    pt: 1,
-                    width: "43ch",
-                    "& .MuiInputBase-input": {
-                      textDecoration: "none", // Example: Remove text decoration (not typically used for input)
-                      border: "none", // Hide the border of the input element
-                    },
-                    "& .MuiInput-underline:before": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                    "& .MuiInput-underline:after": {
-                      borderBottom: "none !important", // Hide the underline (if using underline variant)
-                    },
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    ),
-                  }}
-                />
-              </div>
-            </div>
-            <div className="flex items-center gap-10 p-20 px-20">
-              <span>
-                <img src={img1} alt=""></img>
-              </span>
-              <span>Hello</span>
-            </div>
-          </DropdownMenu> */}
-
+        <div className="flex items-start gap-10 sm:items-center flex-row">
           {selectedIds?.length > 0 && (
             <Button
               variant="contained"
