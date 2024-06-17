@@ -131,6 +131,7 @@ const TaskDetails = () => {
     if (!taskId) return null;
     dispatch(getTaskDetails(taskId));
   }, [dispatch]);
+
   const handleDeleteAttachment = async (id: number) => {
     // const { payload } = await dispatch(deleteAttachment({ attachment_id: id }));
     const { payload } = await dispatch(

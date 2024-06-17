@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { RefreshToken, UpdateSuccess, setPassword } from "app/store/Auth";
@@ -28,6 +29,7 @@ export default function UploadPage() {
   const { token } = useParams();
   const dispatch = useAppDispatch();
   const { jwtService } = useAuth();
+  const [disable, setDisable] = useState(false);
   const navigate = useNavigate();
 
   const store = useSelector((store: AuthRootState) => store.auth);
@@ -77,6 +79,7 @@ export default function UploadPage() {
   };
 
   const onSuccess = async () => {
+    setDisable(true);
     try {
       const payload = {
         token,
@@ -84,9 +87,11 @@ export default function UploadPage() {
       //@ts-ignore
       const res = await dispatch(UpdateSuccess(payload));
       fetchData();
+      setDisable(false);
       // toast.success(res?.payload?.data?.message);
     } catch (error) {
       console.error("Error fetching data:", error);
+      setDisable(false);
     }
   };
 
@@ -129,10 +134,25 @@ export default function UploadPage() {
                 time to process. We'll notify you once it's completed.
               </p>
             </div>
+            {disable && (
+              <Box
+                id="spinner"
+                sx={{
+                  "& > div": {
+                    backgroundColor: "palette.secondary.main",
+                  },
+                }}
+              >
+                <div className="bounce1" />
+                <div className="bounce2" />
+                <div className="bounce3" />
+              </Box>
+            )}
             <Button
               variant="contained"
               color="secondary"
               size="large"
+              disabled={disable}
               className="text-[18px] font-500 sm:min-w-[417px] w-[300px]"
               onClick={handleButtonClick}
             >

@@ -145,6 +145,7 @@ export default function ItemCard({
   };
 
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
   return (
     <>
       <div style={{ position: "relative" }}>

@@ -18,13 +18,18 @@ import FilterPage from "./FilterPage";
 import ThemePageTable from "../tasks/TaskPageTable";
 import { PlusIcon } from "public/assets/icons/dashboardIcons";
 import { useAppDispatch } from "app/store/store";
-import { projectColumnList, projectTaskTableList } from "app/store/Projects";
+import {
+  CheckedTask,
+  projectColumnList,
+  projectTaskTableList,
+} from "app/store/Projects";
 import { useParams } from "react-router";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { debounce } from "lodash";
 import { useNavigate } from "react-router";
 import ListLoading from "@fuse/core/ListLoading";
+import toast from "react-hot-toast";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -71,9 +76,11 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   // console.log(id, "iddfjksdfd");
   const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
+  const [show, setShow] = useState(null);
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
+  const [isDefault, setIsDefault] = useState();
   // const [selectedTab, setSelectedTab] = useState(0);
   const [columnId, setcolumnId] = useState();
   const [showLoader, setShowLoader] = useState<boolean>(false);
@@ -137,9 +144,8 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
       setShowLoader(true);
       const res = await dispatch(projectTaskTableList(payload));
       const updatedList = res?.payload?.data?.data?.list;
-
       const columnObject = updatedList?.find((item) => item.id == columnid);
-
+      setIsDefault(res?.payload?.data?.data?.list[0]?.is_defalut);
       if (!!columnObject) {
         // Update the columnList state with the updated column
         setColumnList((prevColumnList) => {
@@ -147,15 +153,43 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
           const taskMap = new Map(
             prevColumnList?.map((task) => [task.id, task])
           );
-
           // Add new tasks to the map
           columnObject?.tasks.forEach((task) => {
             taskMap.set(task.id, task);
           });
-
           // Convert the map back to an array
           return Array.from(taskMap.values());
         });
+        setShowLoader(false);
+      }
+    } catch (error) {
+      setShowLoader(false);
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const listMoveData = async (task_limt, columnid = 0) => {
+    // console.log(task_limt, "task_limt");
+    const payload: any = {
+      start: 0,
+      limit: 20,
+      search: "",
+      project_id: id as string,
+      task_start: 0,
+      task_limit: task_limt || 20,
+      project_column_id: columnid,
+    };
+    try {
+      // if (!columnId) return "";
+      setShowLoader(true);
+      const res = await dispatch(projectTaskTableList(payload));
+      const updatedList = res?.payload?.data?.data?.list;
+
+      const columnObject = updatedList?.find((item) => item.id == columnid);
+
+      if (!!columnObject) {
+        // Update the columnList state with the updated column
+        setColumnList([...columnObject?.tasks]);
         setShowLoader(false);
       }
     } catch (error) {
@@ -220,6 +254,22 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     return <ListLoading />;
   }
   console.log(columnList, "updatedList");
+
+  const handleCompleteTask = async (id, ColumnId) => {
+    if (id) {
+      await dispatch(CheckedTask(id))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+            toast.dismiss();
+            listMoveData(20, ColumnId);
+          }
+        });
+    }
+  };
   return (
     <>
       {props.customSelectedTab && (
@@ -316,7 +366,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
                     ListData={() => listData(20, columnId)}
                     project_id={id}
                     ColumnId={columnId}
+                    handleCompleteTask={handleCompleteTask}
                     showLoader={showLoader}
+                    isDefault={isDefault}
                   />
                 </CustomTabPanel>
               </div>
@@ -325,13 +377,15 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
               <RecentData />
             </div>
           </div>
-          <AddTaskModal
-            isOpen={isOpenAddModal}
-            setIsOpen={setIsOpenAddModal}
-            project_id={id}
-            ColumnId={columnId}
-            callListApi={() => listData(20, columnId)}
-          />
+          {isOpenAddModal && (
+            <AddTaskModal
+              isOpen={isOpenAddModal}
+              setIsOpen={setIsOpenAddModal}
+              project_id={id}
+              ColumnId={columnId}
+              callListApi={() => listData(20, columnId)}
+            />
+          )}
         </>
       )}
     </>
