@@ -197,7 +197,7 @@ function jwtSignInTab() {
       <div className="flex justify-center mt-16">
         <Button
           variant="contained"
-          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
+          className="w-full max-w-[345px] h-[56px] max-h-[56px] text-[18px] focus:bg-white font-medium border bg-white border-solid border-[#E7E8E9] shadow-lg rounded-full"
           aria-label="Log In"
           onClick={() => login()}
         >
@@ -213,7 +213,7 @@ function jwtSignInTab() {
             // autoLoad
             testusers={true}
             callback={responseFacebook}
-            className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
+            className="w-full !w-[345px] !h-[56px] max-h-[56px] text-[18px] focus:bg-white  font-medium border !bg-white border-solid !border-[#E7E8E9] !shadow-lg !rounded-full buttonNew mx-auto"
             icon={
               <img src="assets/icons/facebook.svg" alt="" className="mr-14" />
             }
