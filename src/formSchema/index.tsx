@@ -123,6 +123,24 @@ const editClientSchema = Yup.object({
     .required("Address is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "Address should not start with a space"),
+  address2: Yup.string()
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
+  City: Yup.string()
+    .required("City is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "City should not start with a space"),
+  State: Yup.string()
+    .required("State is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "State should not start with a space"),
+  Zipcode: Yup.string()
+    .required("Zipcode is required")
+    .max(6, "Zipcode must be 6 digits long.")
+    .matches(/^\d{6}$/, {
+      message: "Zipcode must be 6 digits long.",
+      excludeEmptyString: true,
+    }),
 });
 
 const editAgentSchema = Yup.object({
@@ -158,6 +176,25 @@ const editAgentSchema = Yup.object({
     .required("Address is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "Address should not start with a space"),
+
+  address2: Yup.string()
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
+  City: Yup.string()
+    .required("City is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "City should not start with a space"),
+  State: Yup.string()
+    .required("State is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "State should not start with a space"),
+  Zipcode: Yup.string()
+    .required("Zipcode is required")
+    .max(6, "Zipcode must be 6 digits long.")
+    .matches(/^\d{6}$/, {
+      message: "Zipcode must be 6 digits long.",
+      excludeEmptyString: true,
+    }),
   // .max(30, "Address should be less than or equal to 30 characters"),
 });
 // const AgentGroupSchema = Yup.object({
@@ -203,6 +240,24 @@ const accManagerSchema = Yup.object({
   address: Yup.string()
     .required("Address is required")
     .matches(/^[^\s].*$/, "Address should not start with a space"),
+  address2: Yup.string()
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "Address should not start with a space"),
+  city: Yup.string()
+    .required("City is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "City should not start with a space"),
+  state: Yup.string()
+    .required("State is required")
+    .test("no-initial-space", noSpaceMessage, noInitialSpace)
+    .matches(/^[^\s].*$/, "State should not start with a space"),
+  zipcode: Yup.string()
+    .required("Zipcode is required")
+    .max(6, "Zipcode must be 6 digits long.")
+    .matches(/^\d{6}$/, {
+      message: "Zipcode must be 6 digits long.",
+      excludeEmptyString: true,
+    }),
   // .max(30, "Address should be less than or equal to 30 characters"),
 });
 

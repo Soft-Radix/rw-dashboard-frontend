@@ -19,7 +19,6 @@ import {
   InputAdornment,
   ListItemText,
   Menu,
-  MenuItem,
   TextField,
   Typography,
 } from "@mui/material";
@@ -47,6 +46,8 @@ import {
 } from "app/store/AccountManager";
 import { useParams } from "react-router-dom";
 import { ClientType } from "app/store/Client/Interface";
+import SelectField from "../selectField";
+import { MenuItem, styled, useTheme } from "@mui/material";
 
 interface IProps {
   isOpen: boolean;
@@ -60,7 +61,55 @@ type FormType = {
   email: string;
   phone_number: number | string;
   address: string;
+  address2: string;
+  city: string;
+  state: string;
+  zipcode: number | string;
+  country: string;
 };
+
+type profileState = {
+  value: string;
+  label: string;
+};
+
+export const profileStatus: profileState[] = [
+  { value: "Active", label: "Active" },
+  { value: "Suspended", label: "Suspended" },
+  { value: "Cancelled", label: "Cancelled" },
+  { value: "Pending", label: "Pending" },
+];
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+  "& .radioIcon": {
+    color: "#9DA0A6",
+    border: "2px solid currentColor",
+    height: "16px",
+    aspectRatio: 1,
+    borderRadius: "50%",
+    position: "relative",
+  },
+  "&.Mui-selected": {
+    backgroundColor: "transparent",
+    "& .radioIcon": {
+      color: theme.palette.secondary.main,
+      "&::after": {
+        content: '""',
+        display: "block",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        height: "7px",
+        aspectRatio: 1,
+        borderRadius: "50%",
+        backgroundColor: "currentColor",
+      },
+    },
+  },
+}));
 
 function AddAccountManagerModel({
   isOpen,
@@ -113,6 +162,11 @@ function AddAccountManagerModel({
       if (selectedImage) {
         formData.append("files", selectedImage);
       }
+      formData.append("address2", values.address2);
+      formData.append("city", values.city);
+      formData.append("state", values.state);
+      formData.append("country", values.country);
+      formData.append("zipcode", values.zipcode.toString());
 
       payload = await dispatch(
         updateAccManagerList({
@@ -151,6 +205,11 @@ function AddAccountManagerModel({
       phone_number: null,
       email: "",
       address: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      country: "",
     },
     validationSchema: accManagerSchema,
     onSubmit,
@@ -235,6 +294,11 @@ function AddAccountManagerModel({
         email: accManagerDetail.email || "",
         phone_number: accManagerDetail.phone_number || "",
         address: accManagerDetail.address,
+        address2: accManagerDetail?.address || "",
+        city: accManagerDetail?.address,
+        state: accManagerDetail?.address,
+        zipcode: accManagerDetail?.phone_number,
+        country: accManagerDetail?.address,
       });
       if (accManagerDetail.user_image) {
         setpreviewUrl(urlForImage + accManagerDetail.user_image);
@@ -337,12 +401,71 @@ function AddAccountManagerModel({
             disabled={isEditing}
           />
         </div>
-        <InputField
-          formik={formik}
-          name="address"
-          label="Address"
-          placeholder="Enter Address"
-        />
+        {!isEditing && (
+          <InputField
+            formik={formik}
+            name="address"
+            label="Address"
+            placeholder="Enter Address"
+          />
+        )}
+        {isEditing && (
+          <>
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="address"
+                label="Address 1"
+                placeholder="Enter Address 1"
+              />
+              <InputField
+                formik={formik}
+                name="address2"
+                label="Address 2"
+                placeholder="Enter Address 2"
+              />
+            </div>
+
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="city"
+                label="City"
+                placeholder="Enter City"
+              />
+              <InputField
+                formik={formik}
+                name="state"
+                label="State"
+                placeholder="Enter State"
+              />
+            </div>
+
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="zipcode"
+                label="Zipcode"
+                placeholder="Enter Zipcode"
+              />
+              <SelectField
+                formik={formik}
+                name="country"
+                label="Country"
+                placeholder="Select Country"
+                sx={{
+                  "& .radioIcon": { display: "none" },
+                }}
+              >
+                {profileStatus.map((item) => (
+                  <StyledMenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </StyledMenuItem>
+                ))}
+              </SelectField>
+            </div>
+          </>
+        )}
       </div>
     </CommonModal>
   );

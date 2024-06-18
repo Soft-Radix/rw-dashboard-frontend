@@ -103,7 +103,13 @@ export default function AgentsList() {
       start: 0,
     }));
   };
+  const agent = [{ id: "1" }, { id: "2" }, { id: "3" }, { id: "4" }];
+  const maxVisibleImages = 3;
+  const visibleAgents = agent.slice(0, maxVisibleImages);
+  const extraAgentsCount = agent.length - maxVisibleImages;
   console.log("==agentState==", agentState);
+
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <>
       <TitleBar title="Agents">

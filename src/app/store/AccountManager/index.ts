@@ -20,6 +20,7 @@ import {
 export const addAccManager = createAsyncThunk(
   "accountManager/add",
   async (payload: AccManagerType) => {
+    // async (payload: any) => {
     const response = await ApiHelperFunction({
       url: "accountManager/add",
       method: "post",

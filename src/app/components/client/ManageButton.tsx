@@ -15,7 +15,14 @@ import { ClientRootState } from "app/store/Client/Interface";
 import { useSelector } from "react-redux";
 import { updateSelectedColumn } from "app/store/Client";
 
-const names = ["Id", "Name", "Company Name", "Joining Date", "Status"];
+const names = [
+  "Id",
+  "Name",
+  "Company Name",
+  "Joining Date",
+  "Subscription Status",
+  "Account Status",
+];
 
 export default function ManageButton() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

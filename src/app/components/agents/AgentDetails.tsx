@@ -41,6 +41,8 @@ import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
+import { UpdateStatus } from "app/store/Client";
+import toast from "react-hot-toast";
 
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
@@ -78,7 +80,9 @@ export default function AgentDetails() {
       dispatch(changeFetchStatus());
     };
   }, []);
-
+  useEffect(() => {
+    setSelectedItem(agentDetail?.status);
+  }, [agentDetail]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -89,9 +93,13 @@ export default function AgentDetails() {
   };
 
   // Menu item click handler
-  const handleMenuItemClick = (status) => {
+  const handleMenuItemClick = async (status) => {
     setSelectedItem(status);
-
+    const res = await dispatch(
+      UpdateStatus({ user_id: agent_id, status: status == "InActive" ? 2 : 1 })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,22 +174,12 @@ export default function AgentDetails() {
                         className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                           selectedItem === "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                            : selectedItem === "Cancelled"
-                              ? "text-[#F44336] bg-[#F443362E]"
-                              : selectedItem == "Pending"
-                                ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                : "text-[#F0B402]  bg-[#FFEEBB]"
+                            : "text-[#F44336] bg-[#F443362E]"
                         }`}
                         endIcon={
                           <DownGreenIcon
                             color={
-                              selectedItem === "Active"
-                                ? "#4CAF50"
-                                : selectedItem === "Cancelled"
-                                  ? "#F44336"
-                                  : selectedItem == "Pending"
-                                    ? "#FF5F15"
-                                    : "#F0B402"
+                              selectedItem === "Active" ? "#4CAF50" : "#F44336"
                             }
                           />
                         }
@@ -200,19 +198,9 @@ export default function AgentDetails() {
                           Active
                         </MenuItem>
                         <MenuItem
-                          onClick={() => handleMenuItemClick("Suspended")}
+                          onClick={() => handleMenuItemClick("InActive")}
                         >
-                          Suspended
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => handleMenuItemClick("Pending")}
-                        >
-                          Pending
-                        </MenuItem>
-                        <MenuItem
-                          onClick={() => handleMenuItemClick("Cancelled")}
-                        >
-                          Cancelled
+                          Inactive
                         </MenuItem>
                       </Menu>
                     </div>

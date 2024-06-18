@@ -30,6 +30,8 @@ import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import moment from "moment";
 import Tooltip from "@mui/material/Tooltip";
+import { UpdateStatus } from "app/store/Client";
+import toast from "react-hot-toast";
 
 // interface svgColor {
 //   color: string;
@@ -56,8 +58,16 @@ const ManagerProfile = () => {
   };
 
   // Menu item click handler
-  const handleMenuItemClick = (status) => {
+  const handleMenuItemClick = async (status) => {
     setSelectedItem(status);
+    const res = await dispatch(
+      UpdateStatus({
+        user_id: accountManager_id,
+        status: status == "InActive" ? 2 : 1,
+      })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
@@ -72,6 +82,9 @@ const ManagerProfile = () => {
       dispatch(resetFormManagrData());
     };
   }, []);
+  useEffect(() => {
+    setSelectedItem(accManagerDetail?.status);
+  }, [accManagerDetail]);
 
   if (fetchStatus === "loading") {
     return <ListLoading />;
@@ -113,22 +126,12 @@ const ManagerProfile = () => {
                       className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                         selectedItem === "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                          : selectedItem === "Cancelled"
-                            ? "text-[#F44336] bg-[#F443362E]"
-                            : selectedItem == "Pending"
-                              ? "text-[#FF5F15] bg-[#ffe2d5]"
-                              : "text-[#F0B402]  bg-[#FFEEBB]"
+                          : "text-[#F44336] bg-[#F443362E]"
                       }`}
                       endIcon={
                         <DownGreenIcon
                           color={
-                            selectedItem === "Active"
-                              ? "#4CAF50"
-                              : selectedItem === "Cancelled"
-                                ? "#F44336"
-                                : selectedItem == "Pending"
-                                  ? "#FF5F15"
-                                  : "#F0B402"
+                            selectedItem === "Active" ? "#4CAF50" : "#F44336"
                           }
                         />
                       }
@@ -146,18 +149,8 @@ const ManagerProfile = () => {
                       <MenuItem onClick={() => handleMenuItemClick("Active")}>
                         Active
                       </MenuItem>
-                      <MenuItem
-                        onClick={() => handleMenuItemClick("Suspended")}
-                      >
-                        Suspended
-                      </MenuItem>
-                      <MenuItem onClick={() => handleMenuItemClick("Pending")}>
-                        Pending
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => handleMenuItemClick("Cancelled")}
-                      >
-                        Cancelled
+                      <MenuItem onClick={() => handleMenuItemClick("InActive")}>
+                        Inactive
                       </MenuItem>
                     </Menu>
                   </div>

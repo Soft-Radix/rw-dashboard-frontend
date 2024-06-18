@@ -127,8 +127,8 @@ export const Action: SelectProp[] = [
 ];
 
 export const BillingTermsOptions: SelectProp[] = [
-  { value: "1", label: "Fixed number of payments" },
   { value: "2", label: "Automatically renew until cancelled" },
+  { value: "1", label: "Fixed number of payments" },
 ];
 
 const columnKey = {
@@ -136,7 +136,8 @@ const columnKey = {
   Name: "first_name",
   ["Company Name"]: "company_name",
   ["Joining Date"]: "created_at",
-  Status: "subscription_status",
+  ["Subscription Status"]: "subscription_status",
+  ["Account Status"]: "status",
 };
 
 // export const sortList = (column: string, isAsc: boolean, list: any) => {

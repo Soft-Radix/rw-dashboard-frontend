@@ -16,6 +16,7 @@ import { filterAgentType } from "app/store/Agent/Interafce";
 import { NoDataFound } from "public/assets/icons/common";
 import { addAgentInagentGroup } from "app/store/Agent group";
 import { filterType } from "app/store/Agent group/Interface";
+import { Link } from "react-router-dom";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
@@ -129,7 +130,13 @@ export default function AssignedAgents({
                             : "../assets/images/logo/images.jpeg"
                         }
                       ></img>
-                      <span className="ml-5">{row.first_name}</span>
+                      <Link
+                        to={`/admin/agents/agent-detail/${row.agent_id}`}
+                        className="ml-5 cursor-pointer  font-500 "
+                        // style={{ textDecoration: "none", color: "#111827" }}
+                      >
+                        {row.first_name}
+                      </Link>
                     </TableCell>
 
                     <TableCell

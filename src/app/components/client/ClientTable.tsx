@@ -75,8 +75,17 @@ function ClientTable({
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
               : status
-                ? ["ID", "Name", "Company Name", "Joining Date", "Status", ""]
-                : ["ID", "Name", "Company Name", "Joining Date", ""]
+              ? [
+                  "ID",
+                  "Name",
+                  "Company Name",
+                  "Joining Date",
+                  "Subscription Status",
+                  "Account Status",
+
+                  "",
+                ]
+              : ["ID", "Name", "Company Name", "Joining Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
@@ -165,7 +174,7 @@ function ClientTable({
                       {moment(row.created_at).format("ll")}
                     </TableCell>
                   )}
-                  {status && renderCell("Status") && (
+                  {status && renderCell("Subscription Status") && (
                     <TableCell
                       align="left"
                       className="whitespace-nowrap font-500"
@@ -176,15 +185,33 @@ function ClientTable({
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subscription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subscription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subscription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subscription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subscription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                       >
                         {row.subscription_status || "N/A"}
+                      </span>
+                    </TableCell>
+                  )}
+
+                  {status && renderCell("Account Status") && (
+                    <TableCell
+                      align="left"
+                      className="whitespace-nowrap font-500"
+                    >
+                      <span
+                        className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
+                        ${
+                          row.status == "Active"
+                            ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                            : "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                        }`}
+                      >
+                        {row.status || "N/A"}
                       </span>
                     </TableCell>
                   )}

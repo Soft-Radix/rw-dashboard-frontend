@@ -103,7 +103,7 @@ export default function SubscriptionList() {
     });
   };
 
-  const currentRows = rows.slice(
+  const currentRows = rows?.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -188,7 +188,7 @@ export default function SubscriptionList() {
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.subscription_start_date}
+                    {row?.subscription_start_date}
                   </TableCell>
 
                   <TableCell align="center" className="whitespace-nowrap">
@@ -197,8 +197,8 @@ export default function SubscriptionList() {
                       ${StatusMapping(row.status)}`}
                     >
                       {`${
-                        row.status == 0 || row.status == 1 ? "In " : ""
-                      }${StatusMapping(row.status)}`}
+                        row?.status == 0 || row?.status == 1 ? "In " : ""
+                      }${StatusMapping(row?.status)}`}
                     </span>
                   </TableCell>
 

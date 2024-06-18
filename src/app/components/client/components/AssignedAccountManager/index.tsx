@@ -20,6 +20,7 @@ import CommonPagination from "src/app/components/pagination";
 import { start } from "repl";
 import { getAccManagerList } from "app/store/AccountManager";
 import { NoDataFound } from "public/assets/icons/common";
+import { Link } from "react-router-dom";
 
 export default function AssignedAccountManager({
   setManagerFilterMenu,
@@ -75,13 +76,17 @@ export default function AssignedAccountManager({
 
   useEffect(() => {
     if (assignAccManagerDetail.length > 0) {
-      // Set the first element's account_manager_id as the default checked
-      setDefaultAccManagerId(assignAccManagerDetail[0].account_manager_id);
+      // Find the element with is_default = 1
+      const defaultManager = assignAccManagerDetail.find(
+        (manager) => manager.is_default == 1
+      );
+
+      if (defaultManager) {
+        // Set the account_manager_id of the found element as the default checked
+        setDefaultAccManagerId(defaultManager.account_manager_id);
+      }
     }
   }, [assignAccManagerDetail]);
-
-  // console.log(assignAccManagerDetail.length, "length");
-  // console.log(totalPageCount, "totalPageCount");
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
@@ -145,7 +150,13 @@ export default function AssignedAccountManager({
                             : "../assets/images/logo/images.jpeg"
                         }
                       ></img>
-                      <span className="ml-5">{row.first_name}</span>
+                      <Link
+                        to={`/admin/acc-manager/detail/${row.account_manager_id}`}
+                        className="ml-5 cursor-pointer  font-500 "
+                        // style={{ textDecoration: "none", color: "#111827" }}
+                      >
+                        {row.first_name}
+                      </Link>
                     </TableCell>
                     <TableCell
                       align="center"

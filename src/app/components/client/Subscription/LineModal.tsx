@@ -140,7 +140,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
       unit_price: null,
       quantity: null,
       billing_frequency: "",
-      billing_terms: "",
+      billing_terms: "2",
       no_of_payments: 0,
       billing_start_date: "",
       is_delay_in_billing: 0,
