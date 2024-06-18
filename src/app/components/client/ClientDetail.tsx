@@ -59,7 +59,7 @@ export default function ClientDetail() {
     useSelector((store: ClientRootState) => store?.client);
   // console.log(assignAccManagerDetail, "detailsffffs");
   const { role } = useSelector((store: any) => store?.user);
-  const { searchAgentList } = useSelector(
+  const { searchAgentList, status } = useSelector(
     (store: AgentGroupRootState) => store.agentGroup
   );
   const { list } = useSelector(
@@ -107,6 +107,8 @@ export default function ClientDetail() {
       prevList.filter((item) => !checkedItems.includes(item.id))
     );
     setCheckedItems([]); // Clear the checked items
+    setInitialRender(false);
+    setSearch("");
   };
 
   // console.log(list,"fdkfdlfkkdfsdfl")
@@ -122,6 +124,8 @@ export default function ClientDetail() {
   //custom dropdown
   const [anchorEl3, setAnchorEl3] = useState<HTMLElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [search, setSearch] = useState("");
+  const [initialRender, setInitialRender] = useState(false);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -144,6 +148,8 @@ export default function ClientDetail() {
     setAnchorEl(null);
     setCheckedItems([]);
     debouncedSearch("");
+    setInitialRender(false);
+    setSearch("");
   };
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -158,10 +164,12 @@ export default function ClientDetail() {
       ...prevFilters,
       search: searchValue,
     }));
+    setInitialRender(true);
   }, 300); // Adjust the delay as needed (300ms in this example)
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setSearch(value);
     debouncedSearch(value);
   };
 
@@ -172,12 +180,12 @@ export default function ClientDetail() {
         account_manager_ids: checkedItems,
       })
     );
-    // dispatch(
-    //   GetAssignAgentsInfo({
-    //     client_id,
-    //     managerfilterMenu,
-    //   })
-    // );
+    dispatch(
+      GetAssignAgentsInfo({
+        client_id,
+        managerfilterMenu,
+      })
+    );
     handleClose();
     setIsOpenEditModal(false);
 
@@ -186,6 +194,8 @@ export default function ClientDetail() {
       prevList.filter((item) => !checkedItems.includes(item.id))
     );
     setCheckedItems([]); // Clear the checked items
+    setInitialRender(false);
+    setSearch("");
   };
   const fetchManagerList = useCallback(() => {
     dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
@@ -215,10 +225,15 @@ export default function ClientDetail() {
   };
 
   useEffect(() => {
-    callAgentApi();
+    if (initialRender) {
+      callAgentApi();
+    }
   }, [agentfilterMenu]);
+
   useEffect(() => {
+    // if (initialRender) {
     managerCallApi();
+    // }
   }, [managerfilterMenu]);
   const CustomDropDown = (): JSX.Element => {
     return (
@@ -257,20 +272,30 @@ export default function ClientDetail() {
               onChange={handleSearchChange}
             />
             <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-              {filteredAgentList.map((item: any) => (
-                <div
-                  className="flex items-center gap-10 px-20 w-full"
-                  key={item.id}
-                >
-                  <label className="flex items-center gap-10 w-full cursor-pointer">
-                    <Checkbox
-                      checked={checkedItems.includes(item.id)}
-                      onChange={() => handleCheckboxChange(item.id)}
-                    />
-                    <span>{item.first_name}</span>
-                  </label>
-                </div>
-              ))}
+              {status == "loading" ? (
+                <ListLoading />
+              ) : (
+                <>
+                  {initialRender && search != "" && (
+                    <>
+                      {filteredAgentList.map((item: any) => (
+                        <div
+                          className="flex items-center gap-10 px-20 w-full"
+                          key={item.id}
+                        >
+                          <label className="flex items-center gap-10 w-full cursor-pointer">
+                            <Checkbox
+                              checked={checkedItems.includes(item.id)}
+                              onChange={() => handleCheckboxChange(item.id)}
+                            />
+                            <span>{item.first_name}</span>
+                          </label>
+                        </div>
+                      ))}
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
           <div className="flex pt-10">
@@ -337,20 +362,30 @@ export default function ClientDetail() {
                 onChange={handleSearchChange}
               />
               <div className=" max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-                {filteredAccMaangerList.map((item: any) => (
-                  <div
-                    className="flex items-center gap-10 px-20 w-full"
-                    key={item.id}
-                  >
-                    <label className="flex items-center gap-10 w-full cursor-pointer">
-                      <Checkbox
-                        checked={checkedItems.includes(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      />
-                      <span>{item.first_name}</span>
-                    </label>
-                  </div>
-                ))}
+                {status == "loading" ? (
+                  <ListLoading />
+                ) : (
+                  <>
+                    {initialRender && search != "" && (
+                      <>
+                        {filteredAccMaangerList.map((item: any) => (
+                          <div
+                            className="flex items-center gap-10 px-20 w-full"
+                            key={item.id}
+                          >
+                            <label className="flex items-center gap-10 w-full cursor-pointer">
+                              <Checkbox
+                                checked={checkedItems.includes(item.id)}
+                                onChange={() => handleCheckboxChange(item.id)}
+                              />
+                              <span>{item.first_name}</span>
+                            </label>
+                          </div>
+                        ))}
+                      </>
+                    )}
+                  </>
+                )}
               </div>
             </div>
             <div className="flex pt-10">

@@ -17,6 +17,7 @@ export interface AgentType {
   agent_id?: any;
   formData?: FormData;
   attachments?: any[];
+  two_factor_authentication?: number | string;
 }
 
 export interface filterAgentType {
