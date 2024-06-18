@@ -4,41 +4,12 @@ import CommonTable from "../../commonTable";
 import { TableCell, TableRow, useTheme } from "@mui/material";
 import { useFormik } from "formik";
 import { getLabelByValue } from "src/utils";
+import moment from "moment";
 
-const rows = [
-  {
-    name: "Penelope",
-    agents: "Feb 13, 2024",
-    task: "Lorem ipsum dolor sit amet",
-    DueDate: 300,
-    status: "Unassigned",
-  },
-  {
-    name: "Penelope",
-    agents: "Feb 13, 2024",
-    task: "Lorem ipsum dolor sit amet",
-    DueDate: 300,
-    status: "Unassigned",
-  },
-  {
-    name: "Penelope",
-    agents: "Feb 13, 2024",
-    task: "Lorem ipsum dolor sit amet",
-    DueDate: 300,
-    status: "Unassigned",
-  },
-  {
-    name: "Penelope",
-    agents: "Feb 13, 2024",
-    task: "Lorem ipsum dolor sit amet",
-    DueDate: 300,
-    status: "Unassigned",
-  },
-];
-const ItemTable = ({ row }) => {
+const ItemTable = ({ rows }) => {
   const theme = useTheme();
   const [filterMenu, setFilterMenu] = useState<HTMLElement | null>(null);
-  const [data, setData] = useState(row?.subscription_plans);
+  const [data, setData] = useState(rows?.subscription_plans);
   const formik = useFormik({
     initialValues: {
       month: "",
@@ -48,17 +19,29 @@ const ItemTable = ({ row }) => {
     onSubmit: (values) => {},
   });
   useEffect(() => {
-    setData(row?.subscription_plans);
-  }, [row]);
+    setData(rows?.subscription_plans);
+  }, [rows]);
   return (
     <div className="bg-white rounded-lg shadow-sm py-[2rem] mx-28 mb-[3rem]">
-      <div className="flex items-center justify-between  pb-24 px-[2rem] ">
+      <div className="flex items-center gap-[18px] pb-24 px-[2rem] flex-wrap">
         <h5 className="text-title text-xl font-600 flex items-center gap-12">
-          Subscription Details
+          {rows?.title} items
         </h5>
       </div>
+
       <CommonTable
-        headings={["Product Name", "Frequency", "Unit Price", "Quantity"]}
+        headings={[
+          "Name",
+          "Description",
+          "Frequency",
+          "No. of Payment",
+          "Unit Discount",
+          "Unit Price",
+          "Net Price",
+          "Quantity",
+          "Billing Terms",
+          "Start Date",
+        ]}
         headingRowProps={{
           sx: {
             textAlign: "center",
@@ -89,18 +72,72 @@ const ItemTable = ({ row }) => {
                 {row?.product_name ? row?.product_name : "---"}
               </TableCell>
               <TableCell align="center" className="font-500">
+                {row?.description ? row?.description : "---"}
+              </TableCell>
+
+              <TableCell align="center" className="font-500">
                 {getLabelByValue(row.billing_frequency)}
               </TableCell>
+
               <TableCell align="center" className="font-500">
-                $ {row?.unit_price ? row?.unit_price : "---"}
+                {rows?.no_of_payments ? rows?.no_of_payments : ""}
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                {/* {row?.unit_discount ? row?.unit_discount : "N/A"} */}
+                {row?.unit_discount
+                  ? `${row?.unit_discount_type == 2 ? "$" : ""}${
+                      row.unit_discount
+                    }${row?.unit_discount_type == 1 ? "%" : ""}`
+                  : "N/A"}
+              </TableCell>
+              <TableCell align="center" className="font-500">
+                ${row?.unit_price ? row?.unit_price : "---"}
               </TableCell>
               <TableCell align="center" className="whitespace-nowrap font-500">
+                ${row?.net_price ? row?.net_price : "---"}
+              </TableCell>
+
+              <TableCell align="center" className="whitespace-nowrap font-500">
                 {row?.quantity ? row?.quantity : "---"}
+              </TableCell>
+              <TableCell align="center" className="whitespace-nowrap font-500">
+                {row?.billing_frequency == 1
+                  ? "Fixed Number"
+                  : "Automatically" || "Automatically"}
+              </TableCell>
+              <TableCell align="center" className="whitespace-nowrap font-500">
+                {row?.createdAt
+                  ? moment(row?.createdAt).format("DD/MM/yyyy")
+                  : "N/A"}
               </TableCell>
             </TableRow>
           ))}
         </>
       </CommonTable>
+      <div className="bg-[#F7F9FB] mt-[44px] mx-[16px] px-[22px] py-[18px] rounded-8">
+        <div className="flex items-center gap-[18px]  ">
+          <p className="text-title text-xl font-600 ">Subtotal</p>
+          <div className="border-1 border-dashed w-full"></div>
+          <p className="text-title text-xl font-600 ">${rows?.subtotal}</p>
+        </div>
+        <div className="flex items-center gap-[18px] mt-[16px] ">
+          <p className="text-title text-[20px] font-500 w-max whitespace-pre-line md:whitespace-nowrap">
+            Additional discount{" "}
+          </p>
+          <div className="border-1 border-dashed w-full"></div>
+          <p className="text-title text-xl font-600 ">
+            {rows?.one_time_discount
+              ? `${rows?.one_time_discount_type == 2 ? "$" : ""}${
+                  rows.one_time_discount
+                }${rows?.one_time_discount_type == 1 ? "%" : ""}`
+              : "N/A"}
+          </p>
+        </div>
+      </div>
+      <p className="text-[#4F46E5] text-[20px] font-700 text-right mt-[16px] mr-[38px]">
+        <span className="text-[#111827] text-[20px] font-500 ">Total : </span>$
+        {rows?.total_price ? rows?.total_price : "0"}
+      </p>
     </div>
   );
 };

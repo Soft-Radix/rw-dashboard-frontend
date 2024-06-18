@@ -30,6 +30,11 @@ type FormType = {
   status: string;
   company_name: string;
   country_code: number | string;
+  address2: string;
+  city: string;
+  state: string;
+  zipcode: number | string;
+  country: string;
 };
 
 interface IProps {
@@ -109,6 +114,11 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       company_name: "",
       country_code: "+1",
       address: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      country: "",
     },
     validationSchema: editClientSchema,
     onSubmit,
@@ -126,6 +136,11 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         company_name: clientDetail.company_name || "",
         country_code: clientDetail.country_code || "",
         address: clientDetail.address,
+        address2: clientDetail?.address || "",
+        city: clientDetail?.address,
+        state: clientDetail?.address,
+        zipcode: clientDetail?.phone_number,
+        country: clientDetail?.address,
       });
       if (clientDetail.user_image) {
         setpreviewUrl(urlForImage + clientDetail.user_image);
@@ -240,6 +255,60 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
           label="Address"
           placeholder="Enter Address"
         />
+
+        <div className="flex gap-20">
+          <InputField
+            formik={formik}
+            name="address"
+            label="Address 1"
+            placeholder="Enter Address 1"
+          />
+          <InputField
+            formik={formik}
+            name="address2"
+            label="Address 2"
+            placeholder="Enter Address 2"
+          />
+        </div>
+
+        <div className="flex gap-20">
+          <InputField
+            formik={formik}
+            name="City"
+            label="City"
+            placeholder="Enter City"
+          />
+          <InputField
+            formik={formik}
+            name="State"
+            label="State"
+            placeholder="Enter State"
+          />
+        </div>
+
+        <div className="flex gap-20">
+          <InputField
+            formik={formik}
+            name="Zipcode"
+            label="Zipcode"
+            placeholder="Enter Zipcode"
+          />
+          <SelectField
+            formik={formik}
+            name="Country"
+            label="Country"
+            placeholder="Select Country"
+            sx={{
+              "& .radioIcon": { display: "none" },
+            }}
+          >
+            {profileStatus.map((item) => (
+              <StyledMenuItem key={item.value} value={item.value}>
+                {item.label}
+              </StyledMenuItem>
+            ))}
+          </SelectField>
+        </div>
       </div>
     </CommonModal>
   );

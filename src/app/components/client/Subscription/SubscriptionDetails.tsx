@@ -108,7 +108,8 @@ export default function SubscriptionDetails() {
     new Date(rows?.subscription_start_date),
     Number(rows?.billing_frequency)
   );
-  console.log("🚀 ~ FutureDate:", FutureDate);
+
+  console.log("======tytyty===", rows);
   return (
     <>
       <TitleBar title="Subscriptions Details"></TitleBar>
@@ -143,10 +144,10 @@ export default function SubscriptionDetails() {
                       />
                     </div>
                     <div className="pt-20">
-                      <div className="flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center absolute right-[2rem] top-[2rem]">
+                      {/* <div className="flex rounded-full py-[1rem] px-[2rem] text-secondary bg-secondary_bg w-max gap-[20px] text-lg font-600 items-center absolute right-[2rem] top-[2rem]">
                         Edit
                         <EditIcon fill="#4F46E5" />
-                      </div>
+                      </div> */}
 
                       <div className="flex items-center gap-40 mb-10">
                         <span className="text-[24px] text-[#111827] font-semibold inline-block">
@@ -190,7 +191,9 @@ export default function SubscriptionDetails() {
                               className="mr-4"
                             />{" "}
                           </span>
-                          <span>{rows?.phone ? rows?.phone : "N/A"}</span>
+                          <span>
+                            {rows?.phone_number ? rows?.phone_number : "N/A"}
+                          </span>
                         </div>
                       </div>
 
@@ -250,23 +253,35 @@ export default function SubscriptionDetails() {
                     className="p-16 pe-20 rounded-[10px] bg-bgGrey basis-full lg:basis-[calc(50%_-_16px)]"
                     // key={index}
                   >
-                    <div className="flex items-center gap-[1.8rem]">
-                      <div className="w-[86px] h-[68px] rounded-8 bg-white flex items-center justify-center shrink-0">
-                        <img
-                          src="/assets/images/pages/billing/visa.svg"
-                          className="max-w-[64px]"
-                          alt="visa"
-                        />
-                      </div>
-                      <div className="flex items-start justify-between gap-10 grow">
-                        <div>
-                          <h4 className="text-title text-xl font-700 mb-8">
-                            **** **** **** 2020
-                          </h4>
-                          <p className="text-lg text-title_light">Visa</p>
+                    {rows?.card ? (
+                      <div className="flex items-center gap-[1.8rem]">
+                        <div className="w-[86px] h-[68px] rounded-8 bg-white flex items-center justify-center shrink-0">
+                          <img
+                            src={`/assets/images/pages/billing/${
+                              rows?.card == "visa"
+                                ? "visa.svg"
+                                : rows?.card == "mastercard"
+                                ? "mastercard.svg"
+                                : "card.svg"
+                            }`}
+                            className="max-w-[64px]"
+                            alt={rows?.card}
+                          />
+                        </div>
+                        <div className="flex items-start justify-between gap-10 grow">
+                          <div>
+                            <h4 className="text-title text-xl font-700 mb-8">
+                              **** **** **** {rows?.card_last_digit}
+                            </h4>
+                            <p className="text-lg text-title_light">
+                              {rows?.card}
+                            </p>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    ) : (
+                      "N/A"
+                    )}
                   </div>
                 </div>
               </Grid>
@@ -318,7 +333,7 @@ export default function SubscriptionDetails() {
           </Box>
         </div>
       </div>
-      <ItemTable row={rows} />
+      <ItemTable rows={rows} />
       <SubLogTable />
       <AddAgentModel
         isOpen={isOpenAddModal}

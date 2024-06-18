@@ -165,7 +165,7 @@ export const DownGreenIcon: React.FC<SVGProps<SVGSVGElement>> = ({
 
 export const NoSubscription: React.FC<SVGProps<SVGSVGElement>> = () => (
   <svg
-    width="429"
+    width="310"
     height="270"
     viewBox="0 0 429 270"
     fill="none"

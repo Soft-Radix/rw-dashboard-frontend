@@ -19,6 +19,11 @@ export interface AccManagerType {
   assigned_clients?: [];
   account_manager_id?: number;
   formData?: FormData;
+  address2?: string;
+  city?: string;
+  state?: string;
+  zipcode?: string | number;
+  country?: string;
   two_factor_authentication?: number | string;
 }
 

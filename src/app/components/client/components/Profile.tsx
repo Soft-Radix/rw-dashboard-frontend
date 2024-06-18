@@ -1,5 +1,5 @@
 import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
-import { resetPassword } from "app/store/Client";
+import { UpdateStatus, resetPassword } from "app/store/Client";
 import { ClientType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import {
@@ -8,7 +8,8 @@ import {
   EditIcon,
   LastPayment,
 } from "public/assets/icons/common";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useParams } from "react-router";
 
 interface ProfileProps {
@@ -34,9 +35,15 @@ export default function Profile({
   // console.log(client_id, "client");
 
   // Menu item click handler
-  const handleMenuItemClick = (status) => {
+  const handleMenuItemClick = async (status) => {
     console.log(`Selected status: ${status}`);
     setSelectedItem(status);
+
+    const res = await dispatch(
+      UpdateStatus({ user_id: client_id, status: status == "InActive" ? 2 : 1 })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
 
     handleClose(); // Close the menu after handling the click
   };
@@ -44,6 +51,11 @@ export default function Profile({
     await dispatch(resetPassword({ client_id: client_id }));
   };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
+  useEffect(() => {
+    setSelectedItem(clientDetail?.status);
+  }, [clientDetail]);
+  console.log("====clientDetail==", selectedItem);
   return (
     <>
       <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
@@ -79,23 +91,11 @@ export default function Profile({
                     className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                       selectedItem === "Active"
                         ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                        : selectedItem === "Cancelled"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : selectedItem == "Pending"
-                            ? "text-[#FF5F15] bg-[#ffe2d5]"
-                            : "text-[#F0B402]  bg-[#FFEEBB]"
+                        : "text-[#F44336] bg-[#F443362E]"
                     }`}
                     endIcon={
                       <DownGreenIcon
-                        color={
-                          selectedItem === "Active"
-                            ? "#4CAF50"
-                            : selectedItem === "Cancelled"
-                              ? "#F44336"
-                              : selectedItem == "Pending"
-                                ? "#FF5F15"
-                                : "#F0B402"
-                        }
+                        color={selectedItem == "Active" ? "#4CAF50" : "#F44336"}
                       />
                     }
                     onClick={handleClick}
@@ -106,20 +106,21 @@ export default function Profile({
                   <Menu
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
-                    onClose={handleClose} // Close the menu when clicking outside or selecting an item
+                    onClose={handleClose}
+                    // Close the menu when clicking outside or selecting an item
                   >
                     {/* Define menu items */}
-                    <MenuItem onClick={() => handleMenuItemClick("Active")}>
+                    <MenuItem
+                      onClick={() => handleMenuItemClick("Active")}
+                      selected={selectedItem == "Active"}
+                    >
                       Active
                     </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Suspended")}>
-                      Suspended
-                    </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Pending")}>
-                      Pending
-                    </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Cancelled")}>
-                      Cancelled
+                    <MenuItem
+                      onClick={() => handleMenuItemClick("InActive")}
+                      selected={selectedItem == "Inactive"}
+                    >
+                      Inactive
                     </MenuItem>
                   </Menu>
                 </div>
@@ -152,7 +153,7 @@ export default function Profile({
                     </span>
                     <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                       <img src="../assets/icons/circle.svg" className="mr-4" />
-                      {clientDetail?.status || "N/A"}
+                      {clientDetail?.subscription_status || "N/A"}
                     </span>
                   </div>
                   <div className="flex flex-col items-start w-8/12 gap-7">

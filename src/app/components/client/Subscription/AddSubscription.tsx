@@ -209,7 +209,7 @@ export default function AddSubscription() {
                 <Button
                   variant="text"
                   color="secondary"
-                  className="h-[40px] ps-[2rem] sm:text-[16px] flex gap-8 leading-none bg-secondary_bg rounded-[.7rem] ml-[20px] w-[30rem] md:ml-0 md:w-auto"
+                  className="h-[40px] ps-[2rem] sm:text-[16px] flex gap-8 leading-none bg-secondary_bg rounded-[.7rem] ml-[20px] w-[27rem] md:ml-0 md:w-auto"
                   aria-label="Lines"
                   endIcon={<DownArrowIcon className="cursor-pointer" />}
                 >
@@ -370,7 +370,7 @@ export default function AddSubscription() {
 
   const handleListFromChild = (arg) => {
     if (!arg || !arg.length) return;
-
+    console.log("==arg===", arg);
     // Extract common data from the first item in arg
     const billingFrequency = arg[0].billing_frequency;
     const billingTerms = arg[0].billing_terms;
@@ -845,7 +845,7 @@ export default function AddSubscription() {
         net_price: item.net_price,
         quantity: item.quantity || 1,
         billing_frequency: item.billing_frequency || "2",
-        billing_terms: item.billing_terms || 1,
+        billing_terms: item.billing_terms || 2,
         no_of_payments: item.no_of_payments || 1,
         is_delay_in_billing: item.is_delay_in_billing || 0,
         billing_start_date: item.billing_start_date || "",
@@ -1006,7 +1006,7 @@ export default function AddSubscription() {
             <div>
               <TextField
                 hiddenLabel
-                className="ml-20 justify-center w-[30rem] pe-6"
+                className="ml-20 justify-center w-[27rem] pe-6"
                 id="filled-hidden-label-small"
                 defaultValue=""
                 name={"title"}
@@ -1460,9 +1460,9 @@ export default function AddSubscription() {
                         <SelectField
                           formik={formik}
                           name="billing_terms"
-                          defaultValue={"1"}
+                          defaultValue={"2"}
                           value={
-                            row.billing_terms != 0 ? row.billing_terms : "1"
+                            row.billing_terms != 0 ? row.billing_terms : "2"
                           }
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
@@ -1648,7 +1648,7 @@ export default function AddSubscription() {
                       <div className="relative">
                         <TextField
                           hiddenLabel
-                          className="me-20 justify-center w-[30rem] pe-6"
+                          className="me-20 justify-center w-[27rem] pe-6"
                           id="filled-hidden-label-small"
                           defaultValue=""
                           name="one_time_discount_name"
@@ -1701,7 +1701,7 @@ export default function AddSubscription() {
 
                       <div
                         className="border-[0.5px]  border-solid border-[#9DA0A6] rounded-[7px] flex bg-bgGrey items-center
-                     justify-center gap-10 w-[30rem] md:ml-0 md:w-auto"
+                     justify-center gap-10 w-[27rem] md:ml-0 md:w-auto"
                       >
                         <div className="border-r-1 border-solid border-[#9DA0A6] ">
                           <SelectField

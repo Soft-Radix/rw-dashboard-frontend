@@ -1,4 +1,5 @@
 export interface ClientType {
+  subscription_status?: string;
   first_name?: string;
   last_name?: string;
   email?: string;

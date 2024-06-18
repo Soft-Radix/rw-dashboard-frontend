@@ -139,6 +139,22 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const UpdateStatus = createAsyncThunk(
+  "user/status-update",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `user/status-update`,
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 // --------------subscription------
 
 export const subscriptionList = createAsyncThunk(
@@ -327,7 +343,15 @@ export const initialState: initialStateProps = {
   errorMsg: "",
   list: [],
   clientDetail: {},
-  selectedColumn: ["Id", "Name", "Company Name", "Joining Date", "Status", ""],
+  selectedColumn: [
+    "Id",
+    "Name",
+    "Company Name",
+    "Joining Date",
+    "Subscription Status",
+    "Account Status",
+    "",
+  ],
   assignedAgentDetail: [],
   assignAccManagerDetail: [],
   total_records: 0,
@@ -360,7 +384,7 @@ export const addAssignAgents = createAsyncThunk(
     };
   }
 );
-export const GetAssignAgentsInfo:any = createAsyncThunk(
+export const GetAssignAgentsInfo: any = createAsyncThunk(
   "client/assign-agents-list",
   async (payload: ClientInfo) => {
     const response = await ApiHelperFunction({
@@ -390,7 +414,7 @@ export const deleteAgentList = createAsyncThunk(
     };
   }
 );
-export const getAssignAccMangerInfo:any = createAsyncThunk(
+export const getAssignAccMangerInfo: any = createAsyncThunk(
   "client/assign-account-manager-list",
   async (payload: ClientInfo) => {
     const response = await ApiHelperFunction({

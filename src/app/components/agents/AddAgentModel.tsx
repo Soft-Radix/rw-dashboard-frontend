@@ -24,6 +24,8 @@ import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
 import { AttachmentUploadIcon } from "public/assets/icons/supportIcons";
 import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
+import SelectField from "../selectField";
+import { MenuItem, styled, useTheme } from "@mui/material";
 
 interface IProps {
   isOpen: boolean;
@@ -31,6 +33,10 @@ interface IProps {
   fetchAgentList?: () => void;
   isEditing?: boolean;
 }
+type profileState = {
+  value: string;
+  label: string;
+};
 
 type FormType = {
   first_name: string;
@@ -38,8 +44,49 @@ type FormType = {
   email: string;
   phone_number: number | string;
   address: string;
+  address2: string;
+  city: string;
+  state: string;
+  zipcode: number | string;
+  country: string;
 };
-
+export const profileStatus: profileState[] = [
+  { value: "Active", label: "Active" },
+  { value: "Suspended", label: "Suspended" },
+  { value: "Cancelled", label: "Cancelled" },
+  { value: "Pending", label: "Pending" },
+];
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  gap: "16px",
+  "& .radioIcon": {
+    color: "#9DA0A6",
+    border: "2px solid currentColor",
+    height: "16px",
+    aspectRatio: 1,
+    borderRadius: "50%",
+    position: "relative",
+  },
+  "&.Mui-selected": {
+    backgroundColor: "transparent",
+    "& .radioIcon": {
+      color: theme.palette.secondary.main,
+      "&::after": {
+        content: '""',
+        display: "block",
+        position: "absolute",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        height: "7px",
+        aspectRatio: 1,
+        borderRadius: "50%",
+        backgroundColor: "currentColor",
+      },
+    },
+  },
+}));
 function AddAgentModel({
   isOpen,
   setIsOpen,
@@ -134,6 +181,11 @@ function AddAgentModel({
       phone_number: null,
       email: "",
       address: "",
+      address2: "",
+      city: "",
+      state: "",
+      zipcode: "",
+      country: "",
     },
     validationSchema: editAgentSchema,
     onSubmit,
@@ -196,6 +248,11 @@ function AddAgentModel({
         email: agentDetail.email || "",
         phone_number: agentDetail.phone_number || "",
         address: agentDetail.address,
+        address2: agentDetail?.address || "",
+        city: agentDetail?.address,
+        state: agentDetail?.address,
+        zipcode: agentDetail?.phone_number,
+        country: agentDetail?.address,
       });
       if (agentDetail.user_image) {
         setpreviewUrl(urlForImage + agentDetail.user_image);
@@ -297,12 +354,71 @@ function AddAgentModel({
             disabled={isEditing}
           />
         </div>
-        <InputField
-          formik={formik}
-          name="address"
-          label="Address"
-          placeholder="Enter Address"
-        />
+        {!isEditing && (
+          <InputField
+            formik={formik}
+            name="address"
+            label="Address"
+            placeholder="Enter Address"
+          />
+        )}
+        {isEditing && (
+          <>
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="address"
+                label="Address 1"
+                placeholder="Enter Address 1"
+              />
+              <InputField
+                formik={formik}
+                name="address2"
+                label="Address 2"
+                placeholder="Enter Address 2"
+              />
+            </div>
+
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="City"
+                label="City"
+                placeholder="Enter City"
+              />
+              <InputField
+                formik={formik}
+                name="State"
+                label="State"
+                placeholder="Enter State"
+              />
+            </div>
+
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="Zipcode"
+                label="Zipcode"
+                placeholder="Enter Zipcode"
+              />
+              <SelectField
+                formik={formik}
+                name="Country"
+                label="Country"
+                placeholder="Select Country"
+                sx={{
+                  "& .radioIcon": { display: "none" },
+                }}
+              >
+                {profileStatus.map((item) => (
+                  <StyledMenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </StyledMenuItem>
+                ))}
+              </SelectField>
+            </div>
+          </>
+        )}
         {/* <div className="flex gap-20 sm:flex-row flex-col"> */}
         {!isEditing && ( // Use logical NOT operator ! to conditionally render if !isEditing is true
           <div className="flex-1 sm:w-[50%] w-full">

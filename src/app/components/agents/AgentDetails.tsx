@@ -42,6 +42,8 @@ import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
+import { UpdateStatus } from "app/store/Client";
+import toast from "react-hot-toast";
 import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
@@ -87,7 +89,9 @@ export default function AgentDetails() {
       dispatch(changeFetchStatus());
     };
   }, []);
-
+  useEffect(() => {
+    setSelectedItem(agentDetail?.status);
+  }, [agentDetail]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -98,9 +102,13 @@ export default function AgentDetails() {
   };
 
   // Menu item click handler
-  const handleMenuItemClick = (status) => {
+  const handleMenuItemClick = async (status) => {
     setSelectedItem(status);
-
+    const res = await dispatch(
+      UpdateStatus({ user_id: agent_id, status: status == "InActive" ? 2 : 1 })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
