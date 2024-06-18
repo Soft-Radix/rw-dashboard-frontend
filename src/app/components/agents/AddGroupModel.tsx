@@ -52,6 +52,8 @@ function AddGroupModel({
 
   const [searchText, setSearchText] = useState("");
   const [isValid, setisValid] = useState<boolean>(false);
+  const [searchList, setSearchList] = useState("");
+  const [initialRender, setInitialRender] = useState(false);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -94,6 +96,8 @@ function AddGroupModel({
     dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     dispatch(getGroupMemberDetail({ ...filterPagination, group_id }));
     setIsOpen(false);
+    setInitialRender(false);
+    setSearchList("");
     setCheckedItems([]);
 
     // Handle the case when there is an id (e.g., updating an existing group)
@@ -121,16 +125,18 @@ function AddGroupModel({
       ...prevFilters,
       search: searchValue,
     }));
+    setInitialRender(true);
   }, 300); // Adjust the delay as needed (300ms in this example)
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    setSearchList(value);
     debouncedSearch(value);
   };
   // console.log(filterMenu, "ggg");
 
   useEffect(() => {
-    if (isNewAgent && isOpen) {
+    if (isNewAgent && isOpen && initialRender) {
       dispatch(addAgentInagentGroup({ ...filterMenu, group_id: group_id }));
     }
   }, [start, limit, search, isOpen]);
@@ -156,6 +162,8 @@ function AddGroupModel({
     //   ...prevFilters,
     //   search: "",
     // }));
+    setInitialRender(false);
+    setSearchList("");
     debouncedSearch("");
     setCheckedItems([]);
     setIsOpen(false);
@@ -208,24 +216,28 @@ function AddGroupModel({
                 <ListLoading />
               ) : (
                 <>
-                  {searchAgentList.map((item: any) => (
-                    <label
-                      className="flex items-center gap-10 px-20 w-1/3 cursor-pointer"
-                      key={item.id}
-                      // onClick={() => handleCheckboxChange(item.id)}
-                    >
-                      <Checkbox
-                        checked={checkedItems.includes(item.id)}
-                        onChange={() => handleCheckboxChange(item.id)}
-                      />
-                      <span
-                        className=""
-                        // onClick={() => handleCheckboxChange(item.id)}
-                      >
-                        {item.first_name}
-                      </span>
-                    </label>
-                  ))}
+                  {initialRender && searchList != "" && (
+                    <>
+                      {searchAgentList.map((item: any) => (
+                        <label
+                          className="flex items-center gap-10 px-20 w-1/3 cursor-pointer"
+                          key={item.id}
+                          // onClick={() => handleCheckboxChange(item.id)}
+                        >
+                          <Checkbox
+                            checked={checkedItems.includes(item.id)}
+                            onChange={() => handleCheckboxChange(item.id)}
+                          />
+                          <span
+                            className=""
+                            // onClick={() => handleCheckboxChange(item.id)}
+                          >
+                            {item.first_name}
+                          </span>
+                        </label>
+                      ))}
+                    </>
+                  )}
                 </>
               )}
             </div>

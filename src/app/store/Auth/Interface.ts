@@ -20,6 +20,10 @@ export interface SetPasswordType {
   token: string;
   password: string;
 }
+export interface TwoFactorAuthentication {
+  user_id: number | string;
+  status: number;
+}
 export interface Pyalod {
   code?: number | undefined;
   data: any;

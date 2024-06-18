@@ -1,6 +1,12 @@
 import { Button } from "@mui/base";
 import { TextField, Typography } from "@mui/material";
-import { Send } from "public/assets/icons/common";
+import { ChatEditIcon } from "public/assets/icons/clienIcon";
+import {
+  ArrowRightCircleIcon,
+  DeleteIcon,
+  Send,
+} from "public/assets/icons/common";
+import { AttachmentDeleteIcon } from "public/assets/icons/supportIcons";
 import React, { useState } from "react";
 
 const recentClients = [
@@ -40,7 +46,7 @@ function RecentData() {
         </div>
         <div className="px-[20px] py-4 space-y-4 flex-grow overflow-y-auto">
           {messages.map((item, index) => (
-            <div className="gap-10 my-[20px]" key={index}>
+            <div className="gap-10 my-[20px]  flex" key={index}>
               {/* <span className="shrink-0">
               <img
                 className="rounded-full object-cover"
@@ -51,15 +57,21 @@ function RecentData() {
               />
             </span> */}
               <div className="bg-[#F6F6F6] rounded-[10px] p-[16px] ">
-                <Typography className="text-[#111827] text-sm w-full">
-                  {item.description}
-                </Typography>
-                <div className="mb-2">
-                  {/* <Typography className="font-600">{item.name}</Typography> */}
-                  <Typography className="text-[#111827] text-xs text-right ">
-                    Feb 12, 2024
+                <div>
+                  <Typography className="text-[#111827] text-sm w-full">
+                    {item.description}
                   </Typography>
+                  <div className="mb-2">
+                    {/* <Typography className="font-600">{item.name}</Typography> */}
+                    <Typography className="text-[#111827] text-xs text-right ">
+                      Feb 12, 2024
+                    </Typography>
+                  </div>
                 </div>
+              </div>
+              <div className="flex flex-col gap-10">
+                <ChatEditIcon />
+                <AttachmentDeleteIcon />
               </div>
             </div>
           ))}

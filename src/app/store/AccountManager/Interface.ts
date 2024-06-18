@@ -19,6 +19,7 @@ export interface AccManagerType {
   assigned_clients?: [];
   account_manager_id?: number;
   formData?: FormData;
+  two_factor_authentication?: number | string;
 }
 
 export interface filterType {

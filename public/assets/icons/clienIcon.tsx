@@ -55,3 +55,26 @@ export const UpArrowBlank: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     <path d="M12 10L8 14H16L12 10Z" fill="#9DA0A6" />
   </svg>
 );
+export const ChatEditIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle
+      cx="12"
+      cy="12"
+      r="11.5"
+      fill="white"
+      fill-opacity="0.36"
+      stroke="#4F46E5"
+    />
+    <path
+      d="M9.0514 14.3947L15.1455 8.30063L14.2959 7.45099L8.20176 13.5451V14.3947H9.0514ZM9.54952 15.5965H7V13.047L13.871 6.17593C13.9837 6.06328 14.1365 6 14.2959 6C14.4552 6 14.608 6.06328 14.7207 6.17593L16.4206 7.87581C16.5332 7.98849 16.5965 8.1413 16.5965 8.30063C16.5965 8.45996 16.5332 8.61277 16.4206 8.72545L9.54952 15.5965ZM7 16.7982H17.8158V18H7V16.7982Z"
+      fill="#4F46E5"
+    />
+  </svg>
+);

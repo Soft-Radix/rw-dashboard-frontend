@@ -69,10 +69,10 @@ const AgentDetail = () => {
                       selectedItem === "Active"
                         ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                         : selectedItem === "Cancelled"
-                        ? "text-[#F44336] bg-[#F443362E]"
-                        : selectedItem == "Pending"
-                        ? "text-[#FF5F15] bg-[#ffe2d5]"
-                        : "text-[#F0B402]  bg-[#FFEEBB]"
+                          ? "text-[#F44336] bg-[#F443362E]"
+                          : selectedItem == "Pending"
+                            ? "text-[#FF5F15] bg-[#ffe2d5]"
+                            : "text-[#F0B402]  bg-[#FFEEBB]"
                     }`}
                     endIcon={
                       <DownGreenIcon
@@ -80,10 +80,10 @@ const AgentDetail = () => {
                           selectedItem === "Active"
                             ? "#4CAF50"
                             : selectedItem === "Cancelled"
-                            ? "#F44336"
-                            : selectedItem == "Pending"
-                            ? "#FF5F15"
-                            : "#F0B402"
+                              ? "#F44336"
+                              : selectedItem == "Pending"
+                                ? "#FF5F15"
+                                : "#F0B402"
                         }
                       />
                     }
