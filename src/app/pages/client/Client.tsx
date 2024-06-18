@@ -186,7 +186,11 @@ export default function Clients() {
           sx={{
             height: "45px",
             pl: "5px", // Adjusted padding to accommodate the icon
-            width: "286px",
+            width: {
+              xs: "100%", // Full width on extra-small screens
+              sm: "100%", // Full width on small screens
+              md: "286px", // 286px on medium and larger screens
+            },
             pr: 2,
             backgroundColor: "#F6F6F6",
             borderRadius: "8px",
@@ -355,9 +359,9 @@ export default function Clients() {
         </div>
       </TitleBar>
 
-      <div className="flex flex-wrap gap-20 px-28 lg:flex-nowrap">
+      <div className="gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-sm pt-[2rem]  ">
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem]   ">
             <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>

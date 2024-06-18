@@ -24,6 +24,7 @@ export interface AccManagerType {
   state?: string;
   zipcode?: string | number;
   country?: string;
+  two_factor_authentication?: number | string;
 }
 
 export interface filterType {

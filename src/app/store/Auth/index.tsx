@@ -8,6 +8,7 @@ import {
   LoginPayload,
   LoginSocialPayload,
   SetPasswordType,
+  TwoFactorAuthentication,
   initialStateProps,
   refreshToken,
 } from "./Interface";
@@ -156,6 +157,21 @@ export const setPassword = createAsyncThunk(
   }
 );
 
+export const twoFactorAuthentication = createAsyncThunk(
+  "user/two-factor-authentication",
+  async (payload: TwoFactorAuthentication) => {
+    const response = await ApiHelperFunction({
+      url: "user/two-factor-authentication",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 /**
  * The initial state of the auth slice.
  */

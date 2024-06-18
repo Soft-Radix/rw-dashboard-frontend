@@ -231,8 +231,8 @@ export default function AgentsList() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status == "Completed"
-                      ? "Expired"
-                      : "Pending"
+                        ? "Expired"
+                        : "Pending"
                   }`}
                     >
                       {row.status || "Pending"}

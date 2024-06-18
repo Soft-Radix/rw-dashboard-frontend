@@ -12,7 +12,7 @@ import { changePasswordByAdmin, changePasswordByClient } from "src/formSchema";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  role: string;
+  role?: string;
 }
 const userType = {
   admin: 2,

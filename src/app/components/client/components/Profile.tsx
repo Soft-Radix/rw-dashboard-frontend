@@ -291,7 +291,7 @@ export default function Profile({
               </Typography>
               <p className="text-para_light">
                 <span className="text-secondary">$230</span>, Feb 23, 2024
-              </p>
+              </p>   
             </div>
             <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
               <LastPayment />

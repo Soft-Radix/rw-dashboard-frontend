@@ -108,7 +108,7 @@ const editClientSchema = Yup.object({
     .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
   phone_number: Yup.string()
-    .required("Phone number is required")
+
     .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
       message: "Phone number must be 10 digits long.",
@@ -166,7 +166,7 @@ const editAgentSchema = Yup.object({
 
   ...emailField,
   phone_number: Yup.string()
-    .required("Phone number is required")
+
     .max(10, "Phone number must be 10 digits long.")
     .matches(/^\d{10}$/, {
       message: "Phone number must be 10 digits long.",
@@ -232,7 +232,7 @@ const accManagerSchema = Yup.object({
     .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
   phone_number: Yup.string()
-    .required("Phone number is required")
+
     .matches(/^\d{10}$/, {
       message: "Phone number must be 10 digits long.",
       excludeEmptyString: true,

@@ -3,6 +3,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  Switch,
   TableCell,
   TableRow,
   Theme,
@@ -32,6 +33,9 @@ import moment from "moment";
 import Tooltip from "@mui/material/Tooltip";
 import { UpdateStatus } from "app/store/Client";
 import toast from "react-hot-toast";
+import { resetPassword } from "app/store/Client";
+import ChangePassword from "../profile/ChangePassword";
+import { twoFactorAuthentication } from "app/store/Auth";
 
 // interface svgColor {
 //   color: string;
@@ -40,11 +44,13 @@ const ManagerProfile = () => {
   const { accountManager_id } = useParams();
   // console.log(accountManager_id, "opop");
   const dispatch = useAppDispatch();
-
+  const [status, setStatus] = useState(0); //switch button
+  const [checked, setChecked] = useState(false);
   const { accManagerDetail, fetchStatus } = useSelector(
     (store: AccManagerRootState) => store?.accManagerSlice
   );
-  // console.log(accManagerDetail, "pp");
+  const { role } = useSelector((store: any) => store?.user);
+
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   // Open menu handler
@@ -71,12 +77,16 @@ const ManagerProfile = () => {
     handleClose(); // Close the menu after handling the click
   };
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
   useEffect(() => {
     if (!accountManager_id) return null;
     dispatch(getAccManagerInfo({ account_manager_id: accountManager_id }));
+
     return () => {
       dispatch(changeFetchStatus());
       dispatch(resetFormManagrData());
@@ -84,13 +94,34 @@ const ManagerProfile = () => {
   }, []);
   useEffect(() => {
     setSelectedItem(accManagerDetail?.status);
+    if (accManagerDetail.two_factor_authentication) {
+      setChecked(true);
+    }
   }, [accManagerDetail]);
 
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
-
+  // const handleResetPassword = async () => {
+  //   await dispatch(resetPassword({ client_id: client_id }));
+  // };
+  const handleResetPassword = async () => {
+    await dispatch(resetPassword({ client_id: accountManager_id }));
+  };
+  const handleTwoFactor = async () => {
+    const newStatus = status === 0 ? 1 : 0;
+    setStatus(newStatus);
+    await dispatch(
+      twoFactorAuthentication({ user_id: accountManager_id, status: newStatus })
+    );
+  };
+  const handleChange = (event) => {
+    setChecked(event.target.checked);
+    console.log(
+      event.target.checked ? "Switch is enabled" : "Switch is disabled"
+    );
+  };
   return (
     <>
       <div className="px-16">
@@ -98,7 +129,7 @@ const ManagerProfile = () => {
       </div>
       <div className="px-40 xs:px-10">
         {/* <Grid container spacing={3} className="sm:px-10 xs:px-10 bg-red-200"> */}
-        <Grid item xs={12} sm={12} md={9} className="">
+        <Grid item xs={12} sm={12} md={9} className="px-20">
           {/* <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto md:h-[calc(100vh-164px)] sm:h-auto  rounded-12 xs:px-20 "> */}
           <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto sm:h-auto  rounded-12 xs:px-20 ">
             <div className="border border-[#E7E8E9] rounded-lg flex justify-between gap-[10px] items-start p-[3rem] flex-col sm:flex-row">
@@ -180,7 +211,7 @@ const ManagerProfile = () => {
                   <div className="flex items-baseline justify-start w-full py-20 gap-28 flex-col sm:flex-row overflow-hidden">
                     <div className="flex pr-10 gap-32 sm:flex-row flex-col">
                       <div className="grid gap-5">
-                        <span className="text-[#111827] text-[18px] font-500">
+                        <span className="text-[#111827] text-[18px] font-500 w-max">
                           Email Address
                         </span>
                         <div className="grid grid-cols-[auto,1fr] items-center">
@@ -188,9 +219,11 @@ const ManagerProfile = () => {
                             src="../assets/icons/ic_outline-email.svg"
                             className="mr-4"
                           />
-                          <span className="text-para_light text-[20px] truncate">
-                            {accManagerDetail?.email || "N/A"}
-                          </span>
+                          <Tooltip title={accManagerDetail?.email || "N/A"}>
+                            <p className="text-para_light text-[20px] truncate max-w-xs">
+                              {accManagerDetail?.email || "N/A"}
+                            </p>
+                          </Tooltip>
                         </div>
                       </div>
                       {/* <div className="flex pr-10 gap-32 "> */}
@@ -245,9 +278,127 @@ const ManagerProfile = () => {
                 </Button>
               </div>
             </div>
+            <Grid
+              item
+              lg={12}
+              className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-3/4"
+            >
+              <div className="flex-1">
+                <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
+                  <div className="flex gap-[20px]  justify-center">
+                    <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
+                      <img src="../assets/icons/lock.svg" />
+                    </div>
+                    <div>
+                      <Typography
+                        component="h4"
+                        className="mb-8 text-2xl text-title font-600"
+                      >
+                        Change Password
+                      </Typography>
+                      <p className="text-para_light">
+                        For security purposes, if you wish to change your
+                        password, please click here to change.
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                    onClick={() => {
+                      setIsOpenChangePassModal(true);
+                    }}
+                  >
+                    <ArrowRightCircleIcon />
+                  </div>
+                </div>
+              </div>
+              <div className="flex-1 ">
+                <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg h-full">
+                  <div className="flex gap-[20px] justify-center">
+                    <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
+                      <img src="../assets/icons/lock.svg" />
+                    </div>
+                    <div>
+                      <Typography
+                        component="h4"
+                        className="mb-8 text-2xl text-title font-600"
+                      >
+                        Reset Password
+                      </Typography>
+                      <p className="text-para_light">
+                        It will send a link to the client to reset their
+                        password.
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+
+                    // onClick={() => {
+                    //   setIsOpenChangePassModal(true);
+                    // }}
+                  >
+                    <div
+                      className="text-[#4F46E5] font-500 text-[14px] underline"
+                      onClick={handleResetPassword}
+                    >
+                      Reset
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Grid>
           </div>
+          <Grid
+            item
+            lg={12}
+            className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-full"
+          >
+            <div className="w-full bg-[#FFFFFF] rounded-[8px] px-20 py-20 flex items-center justify-between">
+              <div>
+                <Typography className="text-[#111827] font-600 text-[20px]">
+                  Two-Factors Authentication
+                </Typography>
+                <p className="text-[#757982] text-[14px]">
+                  <a href="#" style={{ textDecoration: "none" }}>
+                    {accManagerDetail?.email || "N/A"}
+                  </a>{" "}
+                  is linked for Two-Factor Authentication.
+                </p>
+              </div>
+              <div onClick={handleTwoFactor}>
+                <Switch
+                  checked={checked}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                />
+              </div>
+            </div>
+          </Grid>
+          <Grid
+            item
+            lg={12}
+            className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row w-full  bg-[#ffffff]"
+          >
+            <Typography className="text-[#0A0F18] font-600 text-[20px] px-20 py-10">
+              Assigned Clients
+            </Typography>
+            <CommonTable
+              headings={[
+                "ID",
+                "Name",
+                "Company Name",
+                "Subscription Status",
+                "Account Status",
+                "",
+              ]}
+            >
+              <TableRow>
+                <TableCell></TableCell>
+              </TableRow>
+            </CommonTable>
+          </Grid>
         </Grid>
-        {/* </Grid> */}
       </div>
 
       <div className="px-28 mb-[3rem]">
@@ -255,6 +406,11 @@ const ManagerProfile = () => {
           isOpen={isOpenAddModal}
           setIsOpen={setIsOpenAddModal}
           isEditing={true}
+        />
+        <ChangePassword
+          role={role}
+          isOpen={isOpenChangePassModal}
+          setIsOpen={setIsOpenChangePassModal}
         />
       </div>
     </>

@@ -30,6 +30,8 @@ export default function AssignedAgents({
   });
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
+  const [search, setSearch] = useState("");
+  const [initialRender, setInitialRender] = useState(false);
   const [filters, setfilters] = useState<filterAgentType>({
     start: 0,
     limit: -1,
@@ -163,8 +165,8 @@ export default function AssignedAgents({
                      row.status === "Unassign"
                        ? "text-secondary bg-secondary_bg"
                        : row.status === "Unassigned"
-                       ? "text-[#F44336] bg-[#F443362E]"
-                       : "text-[#4F46E5] bg-[#EDEDFC]"
+                         ? "text-[#F44336] bg-[#F443362E]"
+                         : "text-[#4F46E5] bg-[#EDEDFC]"
                    }`}
                       >
                         {row.status ? row.status : "Unassign"}
