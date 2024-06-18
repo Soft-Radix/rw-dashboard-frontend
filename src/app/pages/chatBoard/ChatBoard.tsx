@@ -27,6 +27,7 @@ import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
 import { Typography } from "@mui/material";
+import EmptyChat from "src/app/components/chatBoard/EmptyChat";
 
 function ChatBoard() {
   const [users, setUsersList] = useState([]);
@@ -112,17 +113,7 @@ function ChatBoard() {
             )}
           </div>
         ) : (
-          <div className="w-[calc(100%-279px)] flex flex-col items-center justify-center gap-3">
-            <img
-              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
-            />
-            <Typography className="text-[24px] text-center font-600 leading-normal">
-              No Message !
-            </Typography>
-            <p style={{ color: "#757982" }}>
-              Please select list to view messages.
-            </p>
-          </div>
+          <EmptyChat />
         )}
       </div>
     ),
@@ -176,17 +167,7 @@ function ChatBoard() {
             />
           </div>
         ) : (
-          <div className="w-[calc(100%-279px)] flex flex-col items-center justify-center gap-3">
-            <img
-              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
-            />
-            <Typography className="text-[24px] text-center font-600 leading-normal">
-              No Message !
-            </Typography>
-            <p style={{ color: "#757982" }}>
-              Please select list to view messages.
-            </p>
-          </div>
+          <EmptyChat />
         )}
       </div>
     ),
@@ -244,17 +225,7 @@ function ChatBoard() {
             />
           </div>
         ) : (
-          <div className="w-[calc(100%-279px)] flex flex-col items-center justify-center gap-3">
-            <img
-              src={import.meta.env.VITE_API_BASE_IMAGE_URL + "chat/no-msg.png"}
-            />
-            <Typography className="text-[24px] text-center font-600 leading-normal">
-              No Message !
-            </Typography>
-            <p style={{ color: "#757982" }}>
-              Please select list to view messages.
-            </p>
-          </div>
+          <EmptyChat />
         )}
       </div>
     ),
