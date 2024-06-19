@@ -512,7 +512,8 @@ export const clientSlice = createSlice({
         Name: 1,
         "Company Name": 2,
         "Joining Date": 3,
-        Status: 4,
+        "Subscription Status": 4,
+        "Account Status": 5,
         "": -1, // Place "Actions" at the end
       };
 

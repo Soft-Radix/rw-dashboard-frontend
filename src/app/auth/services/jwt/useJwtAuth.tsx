@@ -255,8 +255,25 @@ const useJwtAuth = <User, SignUpPayload>(
       if (response?.payload.data?.user?.role == "admin") {
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
+      } else if (response?.payload.data?.user?.role == "account manager") {
+        if (response?.payload.data?.user?.two_factor_authentication == 1) {
+          localStorage.setItem(
+            "email",
+            JSON.stringify(response?.payload.data?.user?.email)
+          );
+          window.location.href = `/2fa-verification/${accessToken}`;
+        } else {
+          handleSignInSuccess(userData, accessToken);
+          window.location.reload();
+        }
       } else if (response?.payload.data?.user?.role == "agent") {
-        if (response?.payload.data?.user?.is_complete_profile == 1) {
+        if (response?.payload.data?.user?.two_factor_authentication == 1) {
+          localStorage.setItem(
+            "email",
+            JSON.stringify(response?.payload.data?.user?.email)
+          );
+          window.location.href = `/2fa-verification/${accessToken}`;
+        } else if (response?.payload.data?.user?.is_complete_profile == 1) {
           // window.location.href = response?.payload.data?.user?.docusign_link;
           const docusignLink = response?.payload.data?.user?.docusign_link;
           if (docusignLink) {
@@ -372,9 +389,8 @@ const useJwtAuth = <User, SignUpPayload>(
     dispatch(setInitialState(userData));
 
     const currentUrl = window.location.href;
-
     if (response?.user?.is_complete_profile == 1) {
-      const docusignLink = response?.payload.data?.user?.docusign_link;
+      const docusignLink = response?.user?.docusign_link;
       if (docusignLink && response?.user?.is_complete_profile == 1) {
         window.location.href = docusignLink;
       } else {

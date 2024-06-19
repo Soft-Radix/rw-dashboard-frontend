@@ -42,6 +42,7 @@ import VerificationConfig from "../main/testing/VerificationConfig";
 import SucessConfig from "../main/subscriptionSuccess/SucessConfig";
 import CancelConfig from "../main/subscriptionCancel/CancelConfig";
 import MyAgentsConfig from "../pages/myAgent/MyAgentsConfig";
+import TwoFactorAuthenticationConfig from "../main/otp-verification/TwoFactorAuthenticationConfig";
 
 const commonRoutes = [
   {
@@ -79,13 +80,14 @@ const adminRouteConfigs: FuseRouteConfigsType = [
   SucessConfig,
   CancelConfig,
   ChatBoardConfig,
+  TwoFactorAuthenticationConfig,
 ];
 
 const clientRouteConfigs: FuseRouteConfigsType = [
   ClientDashboardConfig,
   ProjectsConfig,
   TasksConfig,
-
+  TwoFactorAuthenticationConfig,
   MyAgentsConfig,
   SignOutConfig,
   SignInConfig,
@@ -114,7 +116,7 @@ const agentRouteConfigs: FuseRouteConfigsType = [
   AgentDashboardConfig,
   ProjectsConfig,
   TasksConfig,
-
+  TwoFactorAuthenticationConfig,
   MyAgentsConfig,
   SignOutConfig,
   SignInConfig,
@@ -137,7 +139,7 @@ const agentRouteConfigs: FuseRouteConfigsType = [
   SucessConfig,
   CancelConfig,
   AgentOnBoardConfig,
-  ChatBoardConfig
+  ChatBoardConfig,
 ];
 
 /**
@@ -159,6 +161,7 @@ export const adminRoutes: FuseRoutesType = [
 /**
  * The routes of the Client application.
  */
+
 export const clientRoutes: FuseRoutesType = [
   ...FuseUtils.generateRoutesFromConfigs(
     clientRouteConfigs,
@@ -179,7 +182,7 @@ export const agentRoutes: FuseRoutesType = [
   ),
   {
     path: "/",
-    element: <Navigate to="/agent/dashboard" />,
+    element: <Navigate to={"/agent/dashboard"} />,
     auth: settingsConfig.defaultAuth,
   },
   ...commonRoutes,

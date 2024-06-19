@@ -31,8 +31,9 @@ const dynamicInstance = createDynamicMiddleware();
 
 export const { middleware: dynamicMiddleware } = dynamicInstance;
 
-export const addAppMiddleware =
-  dynamicInstance.addMiddleware.withTypes<Config>();
+export const addAppMiddleware = dynamicInstance.addMiddleware.withTypes<
+  Config
+>();
 
 const middlewares: Middleware[] = [apiService.middleware, dynamicMiddleware];
 
@@ -74,8 +75,9 @@ const staticReducers: ReducersMapObject = {
 /**
  * The root reducer.
  */
-export const rootReducer =
-  combineSlices(staticReducers).withLazyLoadedSlices<LazyLoadedSlices>();
+export const rootReducer = combineSlices(staticReducers).withLazyLoadedSlices<
+  LazyLoadedSlices
+>();
 
 /**
  * The type definition for the root state.
@@ -133,8 +135,9 @@ type Config = {
   dispatch: AppDispatch;
 };
 
-export const withAppMiddleware =
-  dynamicInstance.withMiddleware.withTypes<Config>();
+export const withAppMiddleware = dynamicInstance.withMiddleware.withTypes<
+  Config
+>();
 
 const store = configureAppStore();
 
