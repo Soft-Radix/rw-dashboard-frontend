@@ -25,6 +25,7 @@ export interface AccManagerType {
   zipcode?: string | number;
   country?: string;
   two_factor_authentication?: number | string;
+  assigned_account_manager_client?: any[];
 }
 
 export interface filterType {
