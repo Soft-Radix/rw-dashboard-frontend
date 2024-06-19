@@ -177,13 +177,13 @@ const Kanban = (props: IProps): JSX.Element => {
     }
 
     const reorderedColumns = Array.from(columnList);
-    const [removed] = reorderedColumns.splice(result.source.index, 1);
-    reorderedColumns.splice(result.destination.index, 0, removed);
+    const [removed] = reorderedColumns?.splice(result.source.index, 1);
+    reorderedColumns.splice(result?.destination?.index, 0, removed);
 
     // Directly create the payload here with the new column order
     const payload = {
       project_id: id,
-      column_ids: reorderedColumns.map((column) => column.id),
+      column_ids: reorderedColumns?.map((column) => column.id),
     };
 
     try {

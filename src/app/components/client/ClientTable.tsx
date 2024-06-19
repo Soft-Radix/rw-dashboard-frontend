@@ -1,22 +1,31 @@
 import ListLoading from "@fuse/core/ListLoading";
 import {
+  Button,
   Checkbox,
+  Menu,
   TableCell,
   TableRow,
   Theme,
+  MenuItem,
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { sortColumn } from "app/store/Client";
+import { UpdateStatus, sortColumn } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import moment from "moment";
-import { ArrowRightCircleIcon, NoDataFound } from "public/assets/icons/common";
+import {
+  ArrowRightCircleIcon,
+  DownGreenIcon,
+  NoDataFound,
+} from "public/assets/icons/common";
 import { ChangeEvent, useState } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import AddNewTicket from "src/app/components/support/AddNewTicket";
 import { sortList } from "src/utils";
+import ClientStatus from "./Subscription/ClientStatus";
 
 function ClientTable({
   clientState,
@@ -32,6 +41,17 @@ function ClientTable({
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [sortBy, setSortBy] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
+  const [selectedItem, setSelectedItem] = useState("Active");
+  // Open menu handler
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
+  };
+
+  // Close menu handler
+  const handleClose = () => {
+    setAnchorEl(null); // Reset anchor element to hide the menu
+  };
   const dispatch = useAppDispatch();
 
   const sortData = (column: string) => {
@@ -66,6 +86,20 @@ function ClientTable({
       }
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
+  };
+
+  const handleMenuItemClick = async (status, id) => {
+    setSelectedItem(status);
+    const res = await dispatch(
+      UpdateStatus({
+        user_id: id,
+        status: status == "InActive" ? 2 : 1,
+      })
+    );
+
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
+    handleClose(); // Close the menu after handling the click
   };
   return (
     <>
@@ -203,7 +237,7 @@ function ClientTable({
                       align="left"
                       className="whitespace-nowrap font-500"
                     >
-                      <span
+                      {/* <span
                         className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
                         ${
                           row.status == "Active"
@@ -212,7 +246,9 @@ function ClientTable({
                         }`}
                       >
                         {row.status || "N/A"}
-                      </span>
+                      </span> */}
+
+                      <ClientStatus rowstatus={row.status} id={row.id} />
                     </TableCell>
                   )}
 

@@ -77,6 +77,7 @@ const ManagerProfile = () => {
     toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
+  
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] =
     useState<boolean>(false);
@@ -102,6 +103,7 @@ const ManagerProfile = () => {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
+
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   // const handleResetPassword = async () => {
   //   await dispatch(resetPassword({ client_id: client_id }));
@@ -142,7 +144,7 @@ const ManagerProfile = () => {
                         : "../assets/images/logo/images.jpeg"
                     }
                   ></img>
-                  // <img src="../assets/images/pages/agent/luis_.jpg" />
+                  {/* // <img src="../assets/images/pages/agent/luis_.jpg" /> */}
                 </div>
                 <div className="pt-[20px] pr-10">
                   <div className="flex items-center sm:gap-[7rem] gap-[1rem] mb-10">

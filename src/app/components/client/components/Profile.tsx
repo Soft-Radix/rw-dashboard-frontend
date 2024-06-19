@@ -55,7 +55,6 @@ export default function Profile({
   useEffect(() => {
     setSelectedItem(clientDetail?.status);
   }, [clientDetail]);
-  console.log("====clientDetail==", selectedItem);
   return (
     <>
       <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
