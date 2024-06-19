@@ -18,6 +18,7 @@ export interface AgentType {
   formData?: FormData;
   attachments?: any[];
   two_factor_authentication?: number | string;
+  assigned_agent_client?: any[];
 }
 
 export interface filterAgentType {

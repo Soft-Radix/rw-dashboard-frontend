@@ -42,8 +42,6 @@ import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
-import { UpdateStatus } from "app/store/Client";
-import toast from "react-hot-toast";
 import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
@@ -89,9 +87,7 @@ export default function AgentDetails() {
       dispatch(changeFetchStatus());
     };
   }, []);
-  useEffect(() => {
-    setSelectedItem(agentDetail?.status);
-  }, [agentDetail]);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -102,13 +98,9 @@ export default function AgentDetails() {
   };
 
   // Menu item click handler
-  const handleMenuItemClick = async (status) => {
+  const handleMenuItemClick = (status) => {
     setSelectedItem(status);
-    const res = await dispatch(
-      UpdateStatus({ user_id: agent_id, status: status == "InActive" ? 2 : 1 })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
+
     handleClose(); // Close the menu after handling the click
   };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -170,7 +162,7 @@ export default function AgentDetails() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-
+  console.log(agentDetail.assigned_agent_client, "agentdetail");
   return (
     <>
       <div className="px-16">
@@ -583,33 +575,104 @@ export default function AgentDetails() {
                 </div>
               </div>
             </Grid>
-            <Grid
-              item
-              lg={12}
-              className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row w-full  px-20 bg-[#ffffff]"
-            >
-              <Typography className="text-[#0A0F18] font-600 text-[20px]">
-                Assigned Clients
-              </Typography>
-              <CommonTable
-                headings={[
-                  "ID",
-                  "Name",
-                  "Company Name",
-                  "Subscription Status",
-                  "Account Status",
-
-                  "",
-                ]}
-              >
-                <TableRow>
-                  <TableCell></TableCell>
-                </TableRow>
-              </CommonTable>
-            </Grid>
           </Grid>
         </div>
         <RecentData />
+      </div>
+      <div className=" w-[75%] px-20">
+        <Grid
+          item
+          lg={6}
+          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row   px-20 bg-[#ffffff]"
+        >
+          <Typography className="text-[#0A0F18] font-600 text-[20px]">
+            Assigned Clients
+          </Typography>
+          <CommonTable
+            headings={[
+              "ID",
+              "Name",
+              "Company Name",
+              "Subscription Status",
+              "Account Status",
+
+              "",
+            ]}
+          >
+            {agentDetail?.assigned_agent_client?.map((row, index) => {
+              console.log(row, "roewww");
+              return (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell scope="row" className="font-500 pl-[20px]">
+                    {row.id}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.first_name}
+                  </TableCell>
+
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.last_name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {moment(row.created_at).format("MMMM Do, YYYY")}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {moment(row.updated_at).format("MMMM Do, YYYY")}
+                  </TableCell>
+
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                        ${
+                          row.status == "Active"
+                            ? "text-[#4CAF50] bg-[#4CAF502E]"
+                            : row.status == "Completed"
+                              ? "Expired"
+                              : "Pending"
+                        }`}
+                    >
+                      {row.status || "Pending"}
+                    </span>
+                  </TableCell>
+                  <TableCell align="left" className="w-[1%] font-500">
+                    <div className="flex gap-20 pe-20">
+                      <span className="p-2 cursor-pointer">
+                        {/* <Link to={`/admin/agents/agent-detail/${row.id}`}>
+                          <ArrowRightCircleIcon />
+                        </Link> */}
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </CommonTable>
+        </Grid>
       </div>
 
       <div className="px-28 mb-[3rem]">

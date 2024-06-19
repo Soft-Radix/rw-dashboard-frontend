@@ -92,7 +92,7 @@ const rows = [
 
 export default function DashboardRecentActivity() {
   const theme: Theme = useTheme();
-
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [showUpdateTable, setShowUpdateTable] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -165,29 +165,30 @@ export default function DashboardRecentActivity() {
           </CommonTable>
         </div>
       </Grid>
-      {/* <Grid item xs={12} lg={6}> */}
-      {/* <div className="shadow-sm bg-white rounded-lg">
-          <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
-            <Typography className="text-[16px] font-600">
-              Logged Hours
-            </Typography>
-
-            <div className="flex sm:mr-20 items-center justify-center sm:gap-32">
-              <Typography className="text-[16px] font-500">
-                Total Logged Hours
+      <Grid item xs={12} lg={6}>
+        {userDetails.role == "client" && (
+          <div className="shadow-sm bg-white rounded-lg">
+            <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
+              <Typography className="text-[16px] font-600">
+                Logged Hours
               </Typography>
-              <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
-                {" "}
-                34
-              </span>
+
+              <div className="flex sm:mr-20 items-center justify-center sm:gap-32">
+                <Typography className="text-[16px] font-500">
+                  Total Logged Hours
+                </Typography>
+                <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
+                  {" "}
+                  34
+                </span>
+              </div>
+            </div>
+            <div className="pb-10">
+              <ActivityChart />
             </div>
           </div>
-          <div className="pb-10">
-            {/* <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" /> */}
-      {/* <ActivityChart /> */}
-      {/* </div> */}
-      {/* </div> */}
-      {/* </Grid> */}
+        )}
+      </Grid>
     </Grid>
   );
 }
