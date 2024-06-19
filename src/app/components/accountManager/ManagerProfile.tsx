@@ -76,6 +76,7 @@ const ManagerProfile = () => {
     toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
+  
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
     false

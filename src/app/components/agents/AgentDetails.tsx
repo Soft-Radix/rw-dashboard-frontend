@@ -48,6 +48,7 @@ import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
+import ClientStatus from "../client/Subscription/ClientStatus";
 
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
@@ -68,8 +69,9 @@ export default function AgentDetails() {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -208,16 +210,16 @@ export default function AgentDetails() {
                                 agentDetail?.last_name}
                               {/* Bernadette Jone */}
                             </span>
-                            <Button
+                            {/* <Button
                               variant="outlined"
                               className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                                 selectedItem === "Active"
                                   ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                                   : selectedItem === "Cancelled"
-                                    ? "text-[#F44336] bg-[#F443362E]"
-                                    : selectedItem == "Pending"
-                                      ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                      : "text-[#F0B402]  bg-[#FFEEBB]"
+                                  ? "text-[#F44336] bg-[#F443362E]"
+                                  : selectedItem == "Pending"
+                                  ? "text-[#FF5F15] bg-[#ffe2d5]"
+                                  : "text-[#F0B402]  bg-[#FFEEBB]"
                               }`}
                               endIcon={
                                 <DownGreenIcon
@@ -225,16 +227,15 @@ export default function AgentDetails() {
                                     selectedItem === "Active"
                                       ? "#4CAF50"
                                       : selectedItem === "Cancelled"
-                                        ? "#F44336"
-                                        : selectedItem == "Pending"
-                                          ? "#FF5F15"
-                                          : "#F0B402"
+                                      ? "#F44336"
+                                      : selectedItem == "Pending"
+                                      ? "#FF5F15"
+                                      : "#F0B402"
                                   }
                                 />
                               }
                               onClick={handleClick}
                             >
-                              {/* {agentDetail?.status || "N/A"} */}
                               {selectedItem}
                             </Button>
                             <Menu
@@ -242,7 +243,6 @@ export default function AgentDetails() {
                               open={Boolean(anchorEl)}
                               onClose={handleClose} // Close the menu when clicking outside or selecting an item
                             >
-                              {/* Define menu items */}
                               <MenuItem
                                 onClick={() => handleMenuItemClick("Active")}
                               >
@@ -263,7 +263,21 @@ export default function AgentDetails() {
                               >
                                 Cancelled
                               </MenuItem>
-                            </Menu>
+                            </Menu> */}
+                            {agentDetail.status == "Pending" ? (
+                              <Button
+                                variant="outlined"
+                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none text-[#F0B402]  bg-[#ffeebb]
+                              `}
+                              >
+                                {agentDetail.status}
+                              </Button>
+                            ) : (
+                              <ClientStatus
+                                rowstatus={agentDetail.status}
+                                id={agent_id}
+                              />
+                            )}
                           </div>
                           <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                             <div className="flex">

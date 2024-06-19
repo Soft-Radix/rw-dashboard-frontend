@@ -141,6 +141,23 @@ export const verifyOtp = createAsyncThunk(
   }
 );
 
+export const verify2faOtp = createAsyncThunk(
+  "otp-verify",
+  async (payload: any, token) => {
+    const response = await ApiHelperFunction({
+      url: "otp-verify",
+      method: "post",
+      data: payload.data,
+      headers: { Authorization: `Bearer ${payload?.token}` },
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const setPassword = createAsyncThunk(
   "client/set-password",
   async (payload: SetPasswordType) => {
@@ -205,6 +222,19 @@ export const authSlice = createSlice({
           localStorage.setItem("userDetail", JSON.stringify(data?.data?.user));
         }
       })
+      // .addCase(verify2faOtp.fulfilled, (state, action) => {
+      //   const { data } = action.payload as ApiResponse; // Assert type
+      //   if (data.status) {
+      //     state.userData = data?.data?.user?.subscription_and_docusign || [];
+      //     state.UserResponse = data?.data;
+      //     localStorage.setItem("response", JSON.stringify(data?.data));
+      //     localStorage.setItem(
+      //       "userData",
+      //       JSON.stringify(data?.data?.user?.subscription_and_docusign || [])
+      //     );
+      //     localStorage.setItem("userDetail", JSON.stringify(data?.data?.user));
+      //   }
+      // })
 
       .addCase(logIn.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
@@ -228,7 +258,14 @@ export const authSlice = createSlice({
       })
       .addCase(verifyOtp.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
+        const { data } = action.payload as ApiResponse;
         if (payload?.data?.status) {
+          localStorage.setItem("response", JSON.stringify(data?.data));
+          localStorage.setItem(
+            "userData",
+            JSON.stringify(data?.data?.user?.subscription_and_docusign || [])
+          );
+          localStorage.setItem("userDetail", JSON.stringify(data?.data?.user));
           toast.success(payload?.data?.message);
         } else {
           toast.error(payload?.data?.message);
