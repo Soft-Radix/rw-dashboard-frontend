@@ -107,6 +107,39 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
+export const GetCountry = createAsyncThunk(
+  "country-list",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `country-list`,
+      method: "get",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getAllState = createAsyncThunk(
+  "state-list",
+  async (payload: any) => {
+    console.log("====payload==", payload?.data?.country_name);
+    const response = await ApiHelperFunction({
+      url: `state-list/${payload?.data?.country_name}`,
+      method: "get",
+      data: payload?.data,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const changePassword = createAsyncThunk(
   "auth/change-password",
   async (payload: ChangePassword) => {

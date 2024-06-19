@@ -55,6 +55,19 @@ export default function Profile({
   useEffect(() => {
     setSelectedItem(clientDetail?.status);
   }, [clientDetail]);
+
+  const renderAddress = (accManagerDetail) => {
+    const addressComponents = [
+      accManagerDetail?.address,
+      accManagerDetail?.address2,
+      accManagerDetail?.city,
+      accManagerDetail?.state,
+      accManagerDetail?.country,
+      accManagerDetail?.zipcode,
+    ].filter(Boolean); // Filter out any falsy values (null, undefined, empty string)
+
+    return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
+  };
   return (
     <>
       <Grid container className="h-auto p-0 mb-[30px] px-[2rem]">
@@ -176,8 +189,12 @@ export default function Profile({
                         src="../assets/icons/loaction.svg"
                         className="mr-4"
                       />
-                      <p className="truncate">
+                      {/* <p className="truncate">
                         {clientDetail?.address || "N/A"}
+                      </p> */}
+                      <p style={{ wordBreak: "break-all" }}>
+                        {/* {accManagerDetail?.address || "N/A"} */}
+                        {renderAddress(clientDetail)}
                       </p>
                     </div>
                   </div>
@@ -290,7 +307,7 @@ export default function Profile({
               </Typography>
               <p className="text-para_light">
                 <span className="text-secondary">$230</span>, Feb 23, 2024
-              </p>   
+              </p>
             </div>
             <div className="shrink-0 w-[5rem] aspect-square flex items-center justify-center border rounded-lg border-borderColor">
               <LastPayment />
