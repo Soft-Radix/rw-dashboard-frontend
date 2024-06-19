@@ -64,9 +64,8 @@ export default function AgentDetails() {
   );
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -673,12 +672,12 @@ export default function AgentDetails() {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                     >
                       {row.subcription_status || "N/A"}
@@ -695,8 +694,8 @@ export default function AgentDetails() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status == "Completed"
-                      ? "Expired"
-                      : "Pending"
+                        ? "Expired"
+                        : "Pending"
                   }`}
                     >
                       {row.status || "Pending"}
