@@ -3,6 +3,7 @@ import {
   Grid,
   Menu,
   MenuItem,
+  SwitchProps,
   Switch,
   TableCell,
   TableRow,
@@ -10,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-
+import FormControlLabel from "@mui/material/FormControlLabel";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
@@ -46,12 +47,64 @@ import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
-import ClientStatus from "../client/Subscription/ClientStatus";
 import { Link } from "react-router-dom";
+import { styled } from "@mui/material/styles";
+// import Switch from '@mui/joy/Switch';
+import Stack from "@mui/joy/Stack";
+import { width } from "@mui/system";
+// import Typography from '@mui/joy/Typography';
+
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
 // const resetForm
 
+const Android12Switch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  "& .MuiSwitch-track": {
+    borderRadius: 22 / 2,
+    // backgroundColor: "#4F46E5",
+    // opacity: 1,
+    // backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+    "&::before, &::after": {
+      content: '""',
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: 13,
+      height: 16,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: theme.palette.getContrastText(theme.palette.primary.main),
+      fontSize: 8,
+      fontWeight: "bold",
+    },
+    "&::before": {
+      content: '"ON"',
+      left: 13,
+    },
+    "&::after": {
+      content: '"OFF"',
+      right: 13,
+    },
+  },
+  "& .MuiSwitch-switchBase": {
+    "&.Mui-checked": {
+      "& .MuiSwitch-thumb:before": {},
+      "& + .MuiSwitch-track": {
+        opacity: 0.9,
+        backgroundColor: theme.palette.mode === "dark" ? "#4F46E5" : "#4F46E5",
+      },
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    backgroundColor: "white",
+    boxShadow: "none",
+    width: 18,
+    height: 18,
+    margin: 1,
+  },
+}));
 export default function AgentDetails() {
   const theme: Theme = useTheme();
   const { agent_id } = useParams();
@@ -62,7 +115,10 @@ export default function AgentDetails() {
   const { agentDetail, fetchStatus } = useSelector(
     (store: AgentRootState) => store?.agent
   );
+  // console.log(agentDetail.attachments, "agent");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
+  const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenChangePassModal, setIsOpenChangePassModal] =
     useState<boolean>(false);
@@ -86,6 +142,21 @@ export default function AgentDetails() {
     };
   }, []);
 
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
+  };
+
+  // Close menu handler
+  const handleClose = () => {
+    setAnchorEl(null); // Reset anchor element to hide the menu
+  };
+
+  // Menu item click handler
+  const handleMenuItemClick = (status) => {
+    setSelectedItem(status);
+
+    handleClose(); // Close the menu after handling the click
+  };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -183,16 +254,16 @@ export default function AgentDetails() {
                                 agentDetail?.last_name}
                               {/* Bernadette Jone */}
                             </span>
-                            {/* <Button
+                            <Button
                               variant="outlined"
                               className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                                 selectedItem === "Active"
                                   ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                                   : selectedItem === "Cancelled"
-                                  ? "text-[#F44336] bg-[#F443362E]"
-                                  : selectedItem == "Pending"
-                                  ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                  : "text-[#F0B402]  bg-[#FFEEBB]"
+                                    ? "text-[#F44336] bg-[#F443362E]"
+                                    : selectedItem == "Pending"
+                                      ? "text-[#FF5F15] bg-[#ffe2d5]"
+                                      : "text-[#F0B402]  bg-[#FFEEBB]"
                               }`}
                               endIcon={
                                 <DownGreenIcon
@@ -200,15 +271,16 @@ export default function AgentDetails() {
                                     selectedItem === "Active"
                                       ? "#4CAF50"
                                       : selectedItem === "Cancelled"
-                                      ? "#F44336"
-                                      : selectedItem == "Pending"
-                                      ? "#FF5F15"
-                                      : "#F0B402"
+                                        ? "#F44336"
+                                        : selectedItem == "Pending"
+                                          ? "#FF5F15"
+                                          : "#F0B402"
                                   }
                                 />
                               }
                               onClick={handleClick}
                             >
+                              {/* {agentDetail?.status || "N/A"} */}
                               {selectedItem}
                             </Button>
                             <Menu
@@ -216,6 +288,7 @@ export default function AgentDetails() {
                               open={Boolean(anchorEl)}
                               onClose={handleClose} // Close the menu when clicking outside or selecting an item
                             >
+                              {/* Define menu items */}
                               <MenuItem
                                 onClick={() => handleMenuItemClick("Active")}
                               >
@@ -236,21 +309,7 @@ export default function AgentDetails() {
                               >
                                 Cancelled
                               </MenuItem>
-                            </Menu> */}
-                            {agentDetail.status == "Pending" ? (
-                              <Button
-                                variant="outlined"
-                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none text-[#F0B402]  bg-[#ffeebb]
-                              `}
-                              >
-                                {agentDetail.status}
-                              </Button>
-                            ) : (
-                              <ClientStatus
-                                rowstatus={agentDetail.status}
-                                id={agent_id}
-                              />
-                            )}
+                            </Menu>
                           </div>
                           <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                             <div className="flex">
@@ -562,26 +621,28 @@ export default function AgentDetails() {
                   </p>
                 </div>
                 <div onClick={handleTwoFactor}>
-                  <Switch
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    {" "}
+                    <FormControlLabel
+                      control={<Android12Switch defaultChecked />}
+                      label=""
+                    />{" "}
+                  </div>
+                  {/* <Switch
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ "aria-label": "controlled" }}
                     sx={{
                       "& .MuiSwitch-root": {
-                        width: "60px",
+                        width: "100px",
+                        height: "100px",
                       },
-                      "& .MuiSwitch-thumb": {
-                        height: "26px",
-                        width: "26px",
-                      },
-                      "--Switch-thumbSize": "26px",
-                      "--Switch-trackWidth": "120px",
-                      "--Switch-trackHeight": "30px",
+
+                      "--Switch-thumbSize": "27px",
+                      "--Switch-trackWidth": "100px",
+                      "--Switch-trackHeight": "100px",
                       position: "relative", // Ensure relative positioning for the track
                       "& .MuiSwitch-track": {
-                        width: "120px",
-                        height: "25px",
-                        borderRadius: "13px",
                         background: "red",
                         position: "relative",
                         "&::before, &::after": {
@@ -604,7 +665,7 @@ export default function AgentDetails() {
                         },
                       },
                     }}
-                  />
+                  /> */}
                 </div>
               </div>
             </Grid>
