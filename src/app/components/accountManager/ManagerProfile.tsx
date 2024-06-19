@@ -1,5 +1,6 @@
 import {
   Button,
+  FormControlLabel,
   Grid,
   Menu,
   MenuItem,
@@ -37,10 +38,54 @@ import { resetPassword } from "app/store/Client";
 import ChangePassword from "../profile/ChangePassword";
 import { twoFactorAuthentication } from "app/store/Auth";
 import { Link } from "react-router-dom";
-
-// interface svgColor {
-//   color: string;
-// }
+import { styled } from "@mui/material/styles";
+const Android12Switch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  "& .MuiSwitch-track": {
+    borderRadius: 22 / 2,
+    // backgroundColor: "#4F46E5",
+    // opacity: 1,
+    // backgroundColor: theme.palette.mode === "light" ? "#E9E9EA" : "#39393D",
+    "&::before, &::after": {
+      content: '""',
+      position: "absolute",
+      top: "50%",
+      transform: "translateY(-50%)",
+      width: 13,
+      height: 16,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: theme.palette.getContrastText(theme.palette.primary.main),
+      fontSize: 8,
+      fontWeight: "bold",
+    },
+    "&::before": {
+      content: '"ON"',
+      left: 13,
+    },
+    "&::after": {
+      content: '"OFF"',
+      right: 13,
+    },
+  },
+  "& .MuiSwitch-switchBase": {
+    "&.Mui-checked": {
+      "& .MuiSwitch-thumb:before": {},
+      "& + .MuiSwitch-track": {
+        opacity: 0.9,
+        backgroundColor: theme.palette.mode === "dark" ? "#4F46E5" : "#4F46E5",
+      },
+    },
+  },
+  "& .MuiSwitch-thumb": {
+    backgroundColor: "white",
+    boxShadow: "none",
+    width: 18,
+    height: 18,
+    margin: 1,
+  },
+}));
 const ManagerProfile = () => {
   const { accountManager_id } = useParams();
   // console.log(accountManager_id, "opop");
@@ -385,11 +430,13 @@ const ManagerProfile = () => {
                 </p>
               </div>
               <div onClick={handleTwoFactor}>
-                <Switch
-                  checked={checked}
-                  onChange={handleChange}
-                  inputProps={{ "aria-label": "controlled" }}
-                />
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  {" "}
+                  <FormControlLabel
+                    control={<Android12Switch defaultChecked />}
+                    label=""
+                  />{" "}
+                </div>
               </div>
             </div>
           </Grid>
