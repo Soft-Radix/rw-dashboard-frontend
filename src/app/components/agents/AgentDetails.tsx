@@ -569,7 +569,7 @@ export default function AgentDetails() {
                   </Typography>
                   <p className="text-[#757982] text-[14px]">
                     <a href="#" style={{ textDecoration: "none" }}>
-                      dum@gmail.com
+                      {agentDetail?.email || "N/A"}
                     </a>{" "}
                     is linked for Two-Factor Authentication.
                   </p>
