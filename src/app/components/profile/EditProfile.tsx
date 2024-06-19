@@ -12,7 +12,7 @@ import CommonModal from "../CommonModal";
 import InputField from "../InputField";
 import SelectField from "../selectField";
 import { ClientType } from "app/store/Client/Interface";
-import { updateProfile } from "app/store/Client";
+import { GetCountry, getAllState, updateProfile } from "app/store/Client";
 import { useAppDispatch } from "app/store/store";
 import { addClientSchema, editClientSchema } from "src/formSchema";
 
@@ -29,7 +29,6 @@ type FormType = {
   address: string;
   status: string;
   company_name: string;
-  country_code: number | string;
   address2: string;
   city: string;
   state: string;
@@ -84,13 +83,17 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
+  const [allCountries, setAllCountries] = useState([]);
+  const [allState, setAllState] = useState([]);
   const dispatch = useAppDispatch();
   const onSubmit = async (values: FormType) => {
     const formData = new FormData();
+
     // Append form fields to FormData
     Object.entries(values).forEach(([key, value]) => {
       formData.append(key, String(value));
     });
+
     formData.append("client_id", String(clientDetail.id));
     if (selectedImage) {
       formData.append("files", selectedImage); // Add the selected image to the FormData
@@ -112,7 +115,6 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       email: "",
       phone_number: null,
       company_name: "",
-      country_code: "+1",
       address: "",
       address2: "",
       city: "",
@@ -134,13 +136,12 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         email: clientDetail.email || "",
         phone_number: clientDetail.phone_number || "",
         company_name: clientDetail.company_name || "",
-        country_code: clientDetail.country_code || "",
         address: clientDetail.address,
-        address2: clientDetail?.address || "",
-        city: clientDetail?.address,
-        state: clientDetail?.address,
-        zipcode: clientDetail?.phone_number,
-        country: clientDetail?.address,
+        address2: clientDetail?.address2 || "",
+        city: clientDetail?.city,
+        state: clientDetail?.state,
+        zipcode: clientDetail?.zipcode,
+        country: clientDetail?.country,
       });
       if (clientDetail.user_image) {
         setpreviewUrl(urlForImage + clientDetail.user_image);
@@ -161,6 +162,42 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       setpreviewUrl(imageUrl); // Set the new image
     }
   };
+
+  const getCountries = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+    };
+    try {
+      const { payload } = await dispatch(GetCountry({ data }));
+      setAllCountries(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  const statecode = formik?.values?.country;
+  const getState = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+      country_name: statecode,
+    };
+    try {
+      const { payload } = await dispatch(getAllState({ data }));
+      setAllState(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  useEffect(() => {
+    getCountries();
+  }, []);
+
+  useEffect(() => {
+    if (statecode) {
+      getState();
+    }
+  }, [statecode]);
 
   return (
     <CommonModal
@@ -249,12 +286,6 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
           label="Company Name"
           placeholder="Enter Company Name"
         />
-        <InputField
-          formik={formik}
-          name="address"
-          label="Address"
-          placeholder="Enter Address"
-        />
 
         <div className="flex gap-20">
           <InputField
@@ -274,39 +305,57 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
         <div className="flex gap-20">
           <InputField
             formik={formik}
-            name="City"
+            name="city"
             label="City"
             placeholder="Enter City"
           />
-          <InputField
+
+          <SelectField
             formik={formik}
-            name="State"
-            label="State"
-            placeholder="Enter State"
-          />
+            name="state"
+            label="state"
+            placeholder="Select State"
+            sx={{
+              "& .radioIcon": { display: "none" },
+            }}
+          >
+            {allState?.length > 0 ? (
+              allState?.map((item) => (
+                <StyledMenuItem key={item.name} value={item.name}>
+                  {item.name}
+                </StyledMenuItem>
+              ))
+            ) : (
+              <StyledMenuItem>No Data</StyledMenuItem>
+            )}
+          </SelectField>
         </div>
 
         <div className="flex gap-20">
           <InputField
             formik={formik}
-            name="Zipcode"
+            name="zipcode"
             label="Zipcode"
             placeholder="Enter Zipcode"
           />
           <SelectField
             formik={formik}
-            name="Country"
+            name="country"
             label="Country"
             placeholder="Select Country"
             sx={{
               "& .radioIcon": { display: "none" },
             }}
           >
-            {profileStatus.map((item) => (
-              <StyledMenuItem key={item.value} value={item.value}>
-                {item.label}
-              </StyledMenuItem>
-            ))}
+            {allCountries.length > 0 ? (
+              allCountries?.map((item) => (
+                <StyledMenuItem key={item.iso_code} value={item.name}>
+                  {item.name}
+                </StyledMenuItem>
+              ))
+            ) : (
+              <StyledMenuItem>No Data</StyledMenuItem>
+            )}
           </SelectField>
         </div>
       </div>

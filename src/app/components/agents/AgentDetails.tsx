@@ -148,6 +148,19 @@ export default function AgentDetails() {
     return <ListLoading />;
   }
   console.log(agentDetail.assigned_agent_client, "agentdetail");
+
+  const renderAddress = (accManagerDetail) => {
+    const addressComponents = [
+      accManagerDetail?.address,
+      accManagerDetail?.address2,
+      accManagerDetail?.city,
+      accManagerDetail?.state,
+      accManagerDetail?.country,
+      accManagerDetail?.zipcode,
+    ].filter(Boolean); // Filter out any falsy values (null, undefined, empty string)
+
+    return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
+  };
   return (
     <>
       <div className="px-16">
@@ -325,11 +338,16 @@ export default function AgentDetails() {
                                   src="../assets/icons/loaction.svg"
                                   className="mr-4"
                                 />
-                                <Tooltip title={agentDetail?.address || "N/A"}>
+                                {/* <Tooltip title={agentDetail?.address || "N/A"}>
                                   <p className="truncate max-w-xs">
                                     {agentDetail?.address || "N/A"}
                                   </p>
-                                </Tooltip>
+                                </Tooltip> */}
+
+                                <p style={{ wordBreak: "break-all" }}>
+                                  {/* {accManagerDetail?.address || "N/A"} */}
+                                  {renderAddress(agentDetail)}
+                                </p>
                               </div>
                             </div>
                           </div>

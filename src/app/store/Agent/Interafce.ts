@@ -19,6 +19,11 @@ export interface AgentType {
   attachments?: any[];
   two_factor_authentication?: number | string;
   assigned_agent_client?: any[];
+  address2?: string;
+  city?: string;
+  state?: string;
+  zipcode?: number | string;
+  country?: string;
 }
 
 export interface filterAgentType {

@@ -48,6 +48,7 @@ import { useParams } from "react-router-dom";
 import { ClientType } from "app/store/Client/Interface";
 import SelectField from "../selectField";
 import { MenuItem, styled, useTheme } from "@mui/material";
+import { GetCountry, getAllState } from "app/store/Client";
 
 interface IProps {
   isOpen: boolean;
@@ -122,6 +123,8 @@ function AddAccountManagerModel({
   const [selectedItems, setSelectedItems] = useState<any>([]);
   // console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [allCountries, setAllCountries] = useState([]);
+  const [allState, setAllState] = useState([]);
   // const agentState = useSelector((store: AgentRootState) => store.agent);
   const accmanagerState = useSelector(
     (store: AccManagerRootState) => store.accManagerSlice
@@ -299,11 +302,11 @@ function AddAccountManagerModel({
         email: accManagerDetail.email || "",
         phone_number: accManagerDetail.phone_number || "",
         address: accManagerDetail.address,
-        address2: accManagerDetail?.address || "",
-        city: accManagerDetail?.address,
-        state: accManagerDetail?.address,
-        zipcode: accManagerDetail?.phone_number,
-        country: accManagerDetail?.address,
+        address2: accManagerDetail?.address2 || "",
+        city: accManagerDetail?.city,
+        state: accManagerDetail?.state,
+        zipcode: accManagerDetail?.zipcode,
+        country: accManagerDetail?.country,
       });
       if (accManagerDetail.user_image) {
         setpreviewUrl(urlForImage + accManagerDetail.user_image);
@@ -313,6 +316,42 @@ function AddAccountManagerModel({
       }
     }
   }, [accManagerDetail, isOpen]);
+
+  const getCountries = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+    };
+    try {
+      const { payload } = await dispatch(GetCountry({ data }));
+      setAllCountries(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  const statecode = formik?.values?.country;
+  const getState = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+      country_name: statecode,
+    };
+    try {
+      const { payload } = await dispatch(getAllState({ data }));
+      setAllState(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  useEffect(() => {
+    getCountries();
+  }, []);
+
+  useEffect(() => {
+    if (statecode) {
+      getState();
+    }
+  }, [statecode]);
   // console.log("🚀 ~ isOpen:", isOpen);
 
   return (
@@ -438,12 +477,26 @@ function AddAccountManagerModel({
               label="City"
               placeholder="Enter City"
             />
-            <InputField
+
+            <SelectField
               formik={formik}
               name="state"
-              label="State"
-              placeholder="Enter State"
-            />
+              label="state"
+              placeholder="Select State"
+              sx={{
+                "& .radioIcon": { display: "none" },
+              }}
+            >
+              {allState?.length > 0 ? (
+                allState?.map((item) => (
+                  <StyledMenuItem key={item.name} value={item.name}>
+                    {item.name}
+                  </StyledMenuItem>
+                ))
+              ) : (
+                <StyledMenuItem>No Data</StyledMenuItem>
+              )}
+            </SelectField>
           </div>
 
           <div className="flex gap-20">
@@ -462,11 +515,15 @@ function AddAccountManagerModel({
                 "& .radioIcon": { display: "none" },
               }}
             >
-              {profileStatus.map((item) => (
-                <StyledMenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </StyledMenuItem>
-              ))}
+              {allCountries.length > 0 ? (
+                allCountries?.map((item) => (
+                  <StyledMenuItem key={item.iso_code} value={item.name}>
+                    {item.name}
+                  </StyledMenuItem>
+                ))
+              ) : (
+                <StyledMenuItem>No Data</StyledMenuItem>
+              )}
             </SelectField>
           </div>
         </>

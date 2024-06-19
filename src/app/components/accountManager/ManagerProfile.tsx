@@ -77,10 +77,11 @@ const ManagerProfile = () => {
     toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
-  
+
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -124,6 +125,20 @@ const ManagerProfile = () => {
       event.target.checked ? "Switch is enabled" : "Switch is disabled"
     );
   };
+
+  const renderAddress = (accManagerDetail) => {
+    const addressComponents = [
+      accManagerDetail?.address,
+      accManagerDetail?.address2,
+      accManagerDetail?.city,
+      accManagerDetail?.state,
+      accManagerDetail?.country,
+      accManagerDetail?.zipcode,
+    ].filter(Boolean); // Filter out any falsy values (null, undefined, empty string)
+
+    return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
+  };
+
   return (
     <>
       <div className="px-16">
@@ -259,11 +274,12 @@ const ManagerProfile = () => {
                           src="../assets/icons/loaction.svg"
                           className="mr-4"
                         />
-                        <Tooltip title={accManagerDetail?.address || "N/A"}>
-                          <p className="truncate max-w-xs">
-                            {accManagerDetail?.address || "N/A"}
-                          </p>
-                        </Tooltip>
+                        {/* <Tooltip title={accManagerDetail?.address}> */}
+                        <p style={{ wordBreak: "break-all" }}>
+                          {/* {accManagerDetail?.address || "N/A"} */}
+                          {renderAddress(accManagerDetail)}
+                        </p>
+                        {/* </Tooltip> */}
                       </div>
                     </div>
                   </div>
@@ -437,12 +453,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subcription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subcription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subcription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subcription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -459,8 +475,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                              ? "Expired"
-                              : "Pending"
+                            ? "Expired"
+                            : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}
