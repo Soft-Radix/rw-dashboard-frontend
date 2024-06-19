@@ -48,7 +48,6 @@ import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
 import ClientStatus from "../client/Subscription/ClientStatus";
 import { Link } from "react-router-dom";
-
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
 // const resetForm
@@ -65,9 +64,8 @@ export default function AgentDetails() {
   );
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -586,6 +584,44 @@ export default function AgentDetails() {
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ "aria-label": "controlled" }}
+                    sx={{
+                      "& .MuiSwitch-root": {
+                        width: "60px",
+                      },
+                      "& .MuiSwitch-thumb": {
+                        height: "26px",
+                        width: "26px",
+                      },
+                      "--Switch-thumbSize": "26px",
+                      "--Switch-trackWidth": "120px",
+                      "--Switch-trackHeight": "30px",
+                      position: "relative", // Ensure relative positioning for the track
+                      "& .MuiSwitch-track": {
+                        width: "120px",
+                        height: "25px",
+                        borderRadius: "13px",
+                        background: "red",
+                        position: "relative",
+                        "&::before, &::after": {
+                          content: '""',
+                          position: "absolute",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          color: "white",
+                          fontSize: "12px",
+                        },
+                        "&::before": {
+                          content: '"On"',
+                          left: "10px",
+                          display: checked ? "block" : "none",
+                        },
+                        "&::after": {
+                          content: '"Off"',
+                          right: "8px",
+                          display: checked ? "none" : "block",
+                        },
+                      },
+                    }}
                   />
                 </div>
               </div>
@@ -654,12 +690,12 @@ export default function AgentDetails() {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                     >
                       {row.subcription_status || "N/A"}
@@ -676,8 +712,8 @@ export default function AgentDetails() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status == "Completed"
-                      ? "Expired"
-                      : "Pending"
+                        ? "Expired"
+                        : "Pending"
                   }`}
                     >
                       {row.status || "Pending"}
