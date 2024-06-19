@@ -48,7 +48,6 @@ import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
 import ClientStatus from "../client/Subscription/ClientStatus";
 import { Link } from "react-router-dom";
-
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
 // const resetForm
@@ -568,6 +567,44 @@ export default function AgentDetails() {
                     checked={checked}
                     onChange={handleChange}
                     inputProps={{ "aria-label": "controlled" }}
+                    sx={{
+                      "& .MuiSwitch-root": {
+                        width: "60px",
+                      },
+                      "& .MuiSwitch-thumb": {
+                        height: "26px",
+                        width: "26px",
+                      },
+                      "--Switch-thumbSize": "26px",
+                      "--Switch-trackWidth": "120px",
+                      "--Switch-trackHeight": "30px",
+                      position: "relative", // Ensure relative positioning for the track
+                      "& .MuiSwitch-track": {
+                        width: "120px",
+                        height: "25px",
+                        borderRadius: "13px",
+                        background: "red",
+                        position: "relative",
+                        "&::before, &::after": {
+                          content: '""',
+                          position: "absolute",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          color: "white",
+                          fontSize: "12px",
+                        },
+                        "&::before": {
+                          content: '"On"',
+                          left: "10px",
+                          display: checked ? "block" : "none",
+                        },
+                        "&::after": {
+                          content: '"Off"',
+                          right: "8px",
+                          display: checked ? "none" : "block",
+                        },
+                      },
+                    }}
                   />
                 </div>
               </div>
