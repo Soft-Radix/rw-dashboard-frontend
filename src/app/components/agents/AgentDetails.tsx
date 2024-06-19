@@ -46,6 +46,7 @@ import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
+import { Link } from "react-router-dom";
 
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
@@ -583,9 +584,9 @@ export default function AgentDetails() {
         <Grid
           item
           lg={6}
-          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row   px-20 bg-[#ffffff]"
+          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row bg-[#ffffff]"
         >
-          <Typography className="text-[#0A0F18] font-600 text-[20px]">
+          <Typography className="text-[#0A0F18] font-600 text-[20px] px-20 py-10">
             Assigned Clients
           </Typography>
           <CommonTable
@@ -600,7 +601,7 @@ export default function AgentDetails() {
             ]}
           >
             {agentDetail?.assigned_agent_client?.map((row, index) => {
-              console.log(row, "roewww");
+              // console.log(row, "roewww");
               return (
                 <TableRow
                   key={index}
@@ -614,7 +615,7 @@ export default function AgentDetails() {
                   }}
                 >
                   <TableCell scope="row" className="font-500 pl-[20px]">
-                    {row.id}
+                    {row.user_id}
                   </TableCell>
                   <TableCell
                     align="center"
@@ -627,19 +628,28 @@ export default function AgentDetails() {
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {row.last_name}
+                    {row.company_name}
                   </TableCell>
                   <TableCell
                     align="center"
                     className="whitespace-nowrap font-500"
                   >
-                    {moment(row.created_at).format("MMMM Do, YYYY")}
-                  </TableCell>
-                  <TableCell
-                    align="center"
-                    className="whitespace-nowrap font-500"
-                  >
-                    {moment(row.updated_at).format("MMMM Do, YYYY")}
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
+                        ${
+                          row.subcription_status == "Active"
+                            ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                            : row.subcription_status == "Pending"
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
+                        }`}
+                    >
+                      {row.subcription_status || "N/A"}
+                    </span>
                   </TableCell>
 
                   <TableCell
@@ -648,13 +658,13 @@ export default function AgentDetails() {
                   >
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                        ${
-                          row.status == "Active"
-                            ? "text-[#4CAF50] bg-[#4CAF502E]"
-                            : row.status == "Completed"
-                              ? "Expired"
-                              : "Pending"
-                        }`}
+                  ${
+                    row.status == "Active"
+                      ? "text-[#4CAF50] bg-[#4CAF502E]"
+                      : row.status == "Completed"
+                        ? "Expired"
+                        : "Pending"
+                  }`}
                     >
                       {row.status || "Pending"}
                     </span>
@@ -662,9 +672,9 @@ export default function AgentDetails() {
                   <TableCell align="left" className="w-[1%] font-500">
                     <div className="flex gap-20 pe-20">
                       <span className="p-2 cursor-pointer">
-                        {/* <Link to={`/admin/agents/agent-detail/${row.id}`}>
+                        <Link to={`/admin/client/detail/${row.user_id}`}>
                           <ArrowRightCircleIcon />
-                        </Link> */}
+                        </Link>
                       </span>
                     </div>
                   </TableCell>
