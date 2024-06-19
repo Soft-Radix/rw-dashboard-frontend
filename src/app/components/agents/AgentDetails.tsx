@@ -50,8 +50,6 @@ import { twoFactorAuthentication } from "app/store/Auth";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 // import Switch from '@mui/joy/Switch';
-import Stack from "@mui/joy/Stack";
-import { width } from "@mui/system";
 // import Typography from '@mui/joy/Typography';
 
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
@@ -120,8 +118,9 @@ export default function AgentDetails() {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
@@ -273,10 +272,10 @@ export default function AgentDetails() {
                                 selectedItem === "Active"
                                   ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
                                   : selectedItem === "Cancelled"
-                                    ? "text-[#F44336] bg-[#F443362E]"
-                                    : selectedItem == "Pending"
-                                      ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                      : "text-[#F0B402]  bg-[#FFEEBB]"
+                                  ? "text-[#F44336] bg-[#F443362E]"
+                                  : selectedItem == "Pending"
+                                  ? "text-[#FF5F15] bg-[#ffe2d5]"
+                                  : "text-[#F0B402]  bg-[#FFEEBB]"
                               }`}
                               endIcon={
                                 <DownGreenIcon
@@ -284,10 +283,10 @@ export default function AgentDetails() {
                                     selectedItem === "Active"
                                       ? "#4CAF50"
                                       : selectedItem === "Cancelled"
-                                        ? "#F44336"
-                                        : selectedItem == "Pending"
-                                          ? "#FF5F15"
-                                          : "#F0B402"
+                                      ? "#F44336"
+                                      : selectedItem == "Pending"
+                                      ? "#FF5F15"
+                                      : "#F0B402"
                                   }
                                 />
                               }
@@ -751,12 +750,12 @@ export default function AgentDetails() {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subcription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subcription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subcription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subcription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                     >
                       {row.subcription_status || "N/A"}
@@ -773,8 +772,8 @@ export default function AgentDetails() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status == "Completed"
-                        ? "Expired"
-                        : "Pending"
+                      ? "Expired"
+                      : "Pending"
                   }`}
                     >
                       {row.status || "Pending"}
