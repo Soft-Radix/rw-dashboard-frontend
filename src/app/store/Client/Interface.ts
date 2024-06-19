@@ -19,6 +19,11 @@ export interface ClientType {
   updated_at?: string;
   userName?: string;
   agent_ids?: number[];
+  address2?: string;
+  city?: string;
+  country?: string;
+  zipcode?: number | string;
+  state?: string;
 }
 
 export interface filterType {

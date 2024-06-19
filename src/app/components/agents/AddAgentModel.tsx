@@ -26,6 +26,7 @@ import { useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router";
 import SelectField from "../selectField";
 import { MenuItem, styled, useTheme } from "@mui/material";
+import { GetCountry, getAllState } from "app/store/Client";
 
 interface IProps {
   isOpen: boolean;
@@ -96,6 +97,8 @@ function AddAgentModel({
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [allCountries, setAllCountries] = useState([]);
+  const [allState, setAllState] = useState([]);
   const dispatch = useAppDispatch();
   const agentState = useSelector((store: AgentRootState) => store.agent);
   const { agentDetail, actionStatus } = useSelector(
@@ -206,26 +209,42 @@ function AddAgentModel({
     setIsOpen(true);
   };
 
-  // const handleMenuItemClick = (itemName: string) => {
-  //   if (itemName === "All") {
-  //     // Toggle select all
-  //     const allSelected = !selectAll;
-  //     setSelectAll(allSelected);
-  //     setSelectedItems(
-  //       allSelected ? names.filter((name) => name !== "All") : []
-  //     );
-  //   } else {
-  //     // Toggle the selected state of the clicked item
-  //     const updatedSelectedItems = selectedItems.includes(itemName)
-  //       ? selectedItems.filter((item) => item !== itemName)
-  //       : [...selectedItems, itemName];
-  //     setSelectedItems(updatedSelectedItems);
-  //     // Check if all items are selected
+  const getCountries = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+    };
+    try {
+      const { payload } = await dispatch(GetCountry({ data }));
+      setAllCountries(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  const statecode = formik?.values?.country;
+  const getState = async () => {
+    const data = {
+      start: 0,
+      limit: -1,
+      country_name: statecode,
+    };
+    try {
+      const { payload } = await dispatch(getAllState({ data }));
+      setAllState(payload?.data?.data?.list);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
+  };
+  useEffect(() => {
+    getCountries();
+  }, []);
 
-  //     const allSelected = updatedSelectedItems.length === names.length - 1;
-  //     setSelectAll(allSelected);
-  //   }
-  // };
+  useEffect(() => {
+    if (statecode) {
+      getState();
+    }
+  }, [statecode]);
+
   const handleRemoveFile = (file: File) => {
     const filteredFiles = uploadedFiles.filter((f) => f !== file);
     setUploadedFiles(filteredFiles);
@@ -248,11 +267,11 @@ function AddAgentModel({
         email: agentDetail.email || "",
         phone_number: agentDetail.phone_number || "",
         address: agentDetail.address,
-        address2: agentDetail?.address || "",
-        city: agentDetail?.address,
-        state: agentDetail?.address,
-        zipcode: agentDetail?.phone_number,
-        country: agentDetail?.address,
+        address2: agentDetail?.address2 || "",
+        city: agentDetail?.city,
+        state: agentDetail?.state,
+        zipcode: agentDetail?.zipcode,
+        country: agentDetail?.country,
       });
       if (agentDetail.user_image) {
         setpreviewUrl(urlForImage + agentDetail.user_image);
@@ -378,12 +397,25 @@ function AddAgentModel({
               label="City"
               placeholder="Enter City"
             />
-            <InputField
+            <SelectField
               formik={formik}
               name="state"
-              label="State"
-              placeholder="Enter State"
-            />
+              label="state"
+              placeholder="Select State"
+              sx={{
+                "& .radioIcon": { display: "none" },
+              }}
+            >
+              {allState?.length > 0 ? (
+                allState?.map((item) => (
+                  <StyledMenuItem key={item.name} value={item.name}>
+                    {item.name}
+                  </StyledMenuItem>
+                ))
+              ) : (
+                <StyledMenuItem>No Data</StyledMenuItem>
+              )}
+            </SelectField>
           </div>
 
           <div className="flex gap-20">
@@ -402,11 +434,15 @@ function AddAgentModel({
                 "& .radioIcon": { display: "none" },
               }}
             >
-              {profileStatus.map((item) => (
-                <StyledMenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </StyledMenuItem>
-              ))}
+              {allCountries.length > 0 ? (
+                allCountries?.map((item) => (
+                  <StyledMenuItem key={item.iso_code} value={item.name}>
+                    {item.name}
+                  </StyledMenuItem>
+                ))
+              ) : (
+                <StyledMenuItem>No Data</StyledMenuItem>
+              )}
             </SelectField>
           </div>
         </>

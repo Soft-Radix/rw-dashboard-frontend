@@ -126,21 +126,20 @@ const editClientSchema = Yup.object({
   address2: Yup.string()
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "Address should not start with a space"),
-  City: Yup.string()
+  city: Yup.string()
     .required("City is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "City should not start with a space"),
-  State: Yup.string()
-    .required("State is required")
-    .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "State should not start with a space"),
-  Zipcode: Yup.string()
+  state: Yup.string().required("State is required"),
+
+  zipcode: Yup.string()
     .required("Zipcode is required")
     .max(6, "Zipcode must be 6 digits long.")
     .matches(/^\d{6}$/, {
       message: "Zipcode must be 6 digits long.",
       excludeEmptyString: true,
     }),
+  country: Yup.string().required("Country is required"),
 });
 
 const editAgentSchema = Yup.object({
