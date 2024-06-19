@@ -62,7 +62,6 @@ export default function AgentDetails() {
   const { agentDetail, fetchStatus } = useSelector(
     (store: AgentRootState) => store?.agent
   );
-  // console.log(agentDetail.attachments, "agent");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
