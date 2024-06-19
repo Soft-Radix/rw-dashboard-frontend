@@ -111,7 +111,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   },
 }));
 
-function AddAccountManagerModel({
+function EditAccountManagerModel({
   isOpen,
   setIsOpen,
   fetchManagerList,
@@ -181,11 +181,6 @@ function AddAccountManagerModel({
       formData.append("phone_number", String(values.phone_number)); // Convert number to string
       formData.append("email", values.email);
       formData.append("address", values.address);
-      formData.append("address2", values.address2);
-      formData.append("city", values.city);
-      formData.append("state", values.state);
-      formData.append("zipcode", values.zipcode.toString());
-      formData.append("country", values.country);
       if (selectedImage) {
         formData.append("files", selectedImage);
       }
@@ -406,73 +401,74 @@ function AddAccountManagerModel({
             disabled={isEditing}
           />
         </div>
-        {/* {!isEditing && (
+        {!isEditing && (
           <InputField
             formik={formik}
             name="address"
             label="Address"
             placeholder="Enter Address"
           />
-        )} */}
+        )}
+        {isEditing && (
+          <>
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="address"
+                label="Address 1"
+                placeholder="Enter Address 1"
+              />
+              <InputField
+                formik={formik}
+                name="address2"
+                label="Address 2"
+                placeholder="Enter Address 2"
+              />
+            </div>
 
-        <>
-          <div className="flex gap-20">
-            <InputField
-              formik={formik}
-              name="address"
-              label="Address 1"
-              placeholder="Enter Address 1"
-            />
-            <InputField
-              formik={formik}
-              name="address2"
-              label="Address 2"
-              placeholder="Enter Address 2"
-            />
-          </div>
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="city"
+                label="City"
+                placeholder="Enter City"
+              />
+              <InputField
+                formik={formik}
+                name="state"
+                label="State"
+                placeholder="Enter State"
+              />
+            </div>
 
-          <div className="flex gap-20">
-            <InputField
-              formik={formik}
-              name="city"
-              label="City"
-              placeholder="Enter City"
-            />
-            <InputField
-              formik={formik}
-              name="state"
-              label="State"
-              placeholder="Enter State"
-            />
-          </div>
-
-          <div className="flex gap-20">
-            <InputField
-              formik={formik}
-              name="zipcode"
-              label="Zipcode"
-              placeholder="Enter Zipcode"
-            />
-            <SelectField
-              formik={formik}
-              name="country"
-              label="Country"
-              placeholder="Select Country"
-              sx={{
-                "& .radioIcon": { display: "none" },
-              }}
-            >
-              {profileStatus.map((item) => (
-                <StyledMenuItem key={item.value} value={item.value}>
-                  {item.label}
-                </StyledMenuItem>
-              ))}
-            </SelectField>
-          </div>
-        </>
+            <div className="flex gap-20">
+              <InputField
+                formik={formik}
+                name="zipcode"
+                label="Zipcode"
+                placeholder="Enter Zipcode"
+              />
+              <SelectField
+                formik={formik}
+                name="country"
+                label="Country"
+                placeholder="Select Country"
+                sx={{
+                  "& .radioIcon": { display: "none" },
+                }}
+              >
+                {profileStatus.map((item) => (
+                  <StyledMenuItem key={item.value} value={item.value}>
+                    {item.label}
+                  </StyledMenuItem>
+                ))}
+              </SelectField>
+            </div>
+          </>
+        )}
       </div>
     </CommonModal>
   );
 }
 
-export default AddAccountManagerModel;
+export default EditAccountManagerModel;

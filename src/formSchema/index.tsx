@@ -9,7 +9,7 @@ const maxLengthLastMessage =
   "Last name should be less than or equal to 20 characters.";
 const maxLengthGroupMessage =
   "It should be less than or equal to 30 characters.";
-const noInitialSpace = (value) => !value.startsWith(" ");
+const noInitialSpace = (value) => !value?.startsWith(" ");
 
 const emailField = {
   email: Yup.string()
@@ -180,15 +180,15 @@ const editAgentSchema = Yup.object({
   address2: Yup.string()
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "Address should not start with a space"),
-  City: Yup.string()
+  city: Yup.string()
     .required("City is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "City should not start with a space"),
-  State: Yup.string()
+  state: Yup.string()
     .required("State is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
     .matches(/^[^\s].*$/, "State should not start with a space"),
-  Zipcode: Yup.string()
+  zipcode: Yup.string()
     .required("Zipcode is required")
     .max(6, "Zipcode must be 6 digits long.")
     .matches(/^\d{6}$/, {
@@ -231,12 +231,10 @@ const accManagerSchema = Yup.object({
     )
     .max(20, maxLengthLastMessage), // Disallow spaces
   ...emailField,
-  phone_number: Yup.string()
-
-    .matches(/^\d{10}$/, {
-      message: "Phone number must be 10 digits long.",
-      excludeEmptyString: true,
-    }), // ,
+  phone_number: Yup.string().matches(/^\d{10}$/, {
+    message: "Phone number must be 10 digits long.",
+    excludeEmptyString: true,
+  }), // ,
   address: Yup.string()
     .required("Address is required")
     .matches(/^[^\s].*$/, "Address should not start with a space"),

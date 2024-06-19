@@ -354,71 +354,63 @@ function AddAgentModel({
             disabled={isEditing}
           />
         </div>
-        {!isEditing && (
-          <InputField
-            formik={formik}
-            name="address"
-            label="Address"
-            placeholder="Enter Address"
-          />
-        )}
-        {isEditing && (
-          <>
-            <div className="flex gap-20">
-              <InputField
-                formik={formik}
-                name="address"
-                label="Address 1"
-                placeholder="Enter Address 1"
-              />
-              <InputField
-                formik={formik}
-                name="address2"
-                label="Address 2"
-                placeholder="Enter Address 2"
-              />
-            </div>
 
-            <div className="flex gap-20">
-              <InputField
-                formik={formik}
-                name="City"
-                label="City"
-                placeholder="Enter City"
-              />
-              <InputField
-                formik={formik}
-                name="State"
-                label="State"
-                placeholder="Enter State"
-              />
-            </div>
+        <>
+          <div className="flex gap-20">
+            <InputField
+              formik={formik}
+              name="address"
+              label="Address 1"
+              placeholder="Enter Address 1"
+            />
+            <InputField
+              formik={formik}
+              name="address2"
+              label="Address 2"
+              placeholder="Enter Address 2"
+            />
+          </div>
 
-            <div className="flex gap-20">
-              <InputField
-                formik={formik}
-                name="Zipcode"
-                label="Zipcode"
-                placeholder="Enter Zipcode"
-              />
-              <SelectField
-                formik={formik}
-                name="Country"
-                label="Country"
-                placeholder="Select Country"
-                sx={{
-                  "& .radioIcon": { display: "none" },
-                }}
-              >
-                {profileStatus.map((item) => (
-                  <StyledMenuItem key={item.value} value={item.value}>
-                    {item.label}
-                  </StyledMenuItem>
-                ))}
-              </SelectField>
-            </div>
-          </>
-        )}
+          <div className="flex gap-20">
+            <InputField
+              formik={formik}
+              name="city"
+              label="City"
+              placeholder="Enter City"
+            />
+            <InputField
+              formik={formik}
+              name="state"
+              label="State"
+              placeholder="Enter State"
+            />
+          </div>
+
+          <div className="flex gap-20">
+            <InputField
+              formik={formik}
+              name="zipcode"
+              label="Zipcode"
+              placeholder="Enter Zipcode"
+            />
+            <SelectField
+              formik={formik}
+              name="country"
+              label="Country"
+              placeholder="Select Country"
+              sx={{
+                "& .radioIcon": { display: "none" },
+              }}
+            >
+              {profileStatus.map((item) => (
+                <StyledMenuItem key={item.value} value={item.value}>
+                  {item.label}
+                </StyledMenuItem>
+              ))}
+            </SelectField>
+          </div>
+        </>
+
         {/* <div className="flex gap-20 sm:flex-row flex-col"> */}
         {!isEditing && ( // Use logical NOT operator ! to conditionally render if !isEditing is true
           <div className="flex-1 sm:w-[50%] w-full">
