@@ -36,6 +36,7 @@ import toast from "react-hot-toast";
 import { resetPassword } from "app/store/Client";
 import ChangePassword from "../profile/ChangePassword";
 import { twoFactorAuthentication } from "app/store/Auth";
+import { Link } from "react-router-dom";
 
 // interface svgColor {
 //   color: string;
@@ -78,9 +79,8 @@ const ManagerProfile = () => {
   };
   
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -392,12 +392,93 @@ const ManagerProfile = () => {
                 "Company Name",
                 "Subscription Status",
                 "Account Status",
+
                 "",
               ]}
             >
-              <TableRow>
-                <TableCell></TableCell>
-              </TableRow>
+              {accManagerDetail?.assigned_account_manager_client?.map(
+                (row, index) => {
+                  // console.log(row, "roewww");
+                  return (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                        },
+                      }}
+                    >
+                      <TableCell scope="row" className="font-500 pl-[20px]">
+                        {row.user_id}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap font-500"
+                      >
+                        {row.first_name}
+                      </TableCell>
+
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap font-500"
+                      >
+                        {row.company_name}
+                      </TableCell>
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap font-500"
+                      >
+                        <span
+                          className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
+                        ${
+                          row.subcription_status == "Active"
+                            ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                            : row.subcription_status == "Pending"
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
+                        }`}
+                        >
+                          {row.subcription_status || "N/A"}
+                        </span>
+                      </TableCell>
+
+                      <TableCell
+                        align="center"
+                        className="whitespace-nowrap font-500"
+                      >
+                        <span
+                          className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                        ${
+                          row.status == "Active"
+                            ? "text-[#4CAF50] bg-[#4CAF502E]"
+                            : row.status == "Completed"
+                              ? "Expired"
+                              : "Pending"
+                        }`}
+                        >
+                          {row.status || "Pending"}
+                        </span>
+                      </TableCell>
+                      <TableCell align="left" className="w-[1%] font-500">
+                        <div className="flex gap-20 pe-20">
+                          <span className="p-2 cursor-pointer">
+                            <Link to={`/admin/client/detail/${row.user_id}`}>
+                              <ArrowRightCircleIcon />
+                            </Link>
+                          </span>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
+              )}
             </CommonTable>
           </Grid>
         </Grid>

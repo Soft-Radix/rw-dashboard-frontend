@@ -59,7 +59,7 @@ const rows = [
     user: [
       {
         image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Penelope",
+        text: "Pene",
       },
     ],
     taskCompleted: "Logo Design",
@@ -71,28 +71,28 @@ const rows = [
       },
     ],
   },
-  {
-    user: [
-      {
-        image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Penelope",
-      },
-    ],
-    taskCompleted: "Logo Design",
-    punch: "Out",
+  // {
+  //   user: [
+  //     {
+  //       image: "../assets/images/pages/dashBoared/recentTableImg.png",
+  //       text: "Penelope",
+  //     },
+  //   ],
+  //   taskCompleted: "Logo Design",
+  //   punch: "Out",
 
-    updates: [
-      {
-        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
-        text: "Recent Task Updates",
-      },
-    ],
-  },
+  //   updates: [
+  //     {
+  //       arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
+  //       text: "Recent Task Updates",
+  //     },
+  //   ],
+  // },
 ];
 
 export default function DashboardRecentActivity() {
   const theme: Theme = useTheme();
-
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [showUpdateTable, setShowUpdateTable] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
@@ -104,7 +104,7 @@ export default function DashboardRecentActivity() {
     setUpdateTableIndex(i === updateTableIndex ? null : i);
     console.log(updateTableIndex, "tableIndex");
     setShowUpdateTable(!showUpdateTable);
-    console.log(i, "tableIndex");
+    // console.log(i, "tableIndex");
   };
   const hideRecenctTableUpdate = () => {
     setShowUpdateTable(false);
@@ -112,11 +112,13 @@ export default function DashboardRecentActivity() {
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem] ">
       <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg relative ">
+        <div className="shadow-sm bg-white rounded-lg relative h-[426px] overflow-y-scroll">
           <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
-          <CommonTable headings={["User", "Task Completed", "Punch In/Out"]}>
+          <CommonTable
+            headings={["User", "Task Completed", "Punch In/Out", ""]}
+          >
             <>
               {rows.map((row, index) => (
                 <TableRow
@@ -134,7 +136,7 @@ export default function DashboardRecentActivity() {
                 >
                   <TableCell
                     scope="row"
-                    className="flex items-center gap-8 flex-col sm:flex-row  "
+                    className="flex items-center gap-8 flex-col sm:flex-row "
                   >
                     <img src={row.user[0].image} />
                     <span>{row.user[0].text}</span>
@@ -144,7 +146,7 @@ export default function DashboardRecentActivity() {
                   <TableCell scope="row">{row.punch}</TableCell>
                   <TableCell
                     scope="row"
-                    className="flex items-center gap-10 justify-center cursor-pointer "
+                    className="flex items-center gap-4 justify-center cursor-pointer "
                   >
                     <img src={row.updates[0].arrow} />
                     <span
@@ -165,29 +167,30 @@ export default function DashboardRecentActivity() {
           </CommonTable>
         </div>
       </Grid>
-      {/* <Grid item xs={12} lg={6}> */}
-      {/* <div className="shadow-sm bg-white rounded-lg">
-          <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
-            <Typography className="text-[16px] font-600">
-              Logged Hours
-            </Typography>
-
-            <div className="flex sm:mr-20 items-center justify-center sm:gap-32">
-              <Typography className="text-[16px] font-500">
-                Total Logged Hours
+      <Grid item xs={12} lg={6}>
+        {userDetails.role == "client" && (
+          <div className="shadow-sm bg-white rounded-lg">
+            <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
+              <Typography className="text-[16px] font-600">
+                Logged Hours
               </Typography>
-              <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
-                {" "}
-                34
-              </span>
+
+              <div className="flex sm:mr-20 items-center justify-center sm:gap-32">
+                <Typography className="text-[16px] font-500">
+                  Total Logged Hours
+                </Typography>
+                <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
+                  {" "}
+                  34
+                </span>
+              </div>
+            </div>
+            <div className="pb-10">
+              <ActivityChart />
             </div>
           </div>
-          <div className="pb-10">
-            {/* <img src="../assets/images/pages/dashBoared/chart.jpg" alt="" /> */}
-      {/* <ActivityChart /> */}
-      {/* </div> */}
-      {/* </div> */}
-      {/* </Grid> */}
+        )}
+      </Grid>
     </Grid>
   );
 }

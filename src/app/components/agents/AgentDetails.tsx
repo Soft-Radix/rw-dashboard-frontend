@@ -42,13 +42,12 @@ import CommonTable from "../commonTable";
 import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
-import { UpdateStatus } from "app/store/Client";
-import toast from "react-hot-toast";
 import ChangePassword from "../profile/ChangePassword";
 import { resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
 import ClientStatus from "../client/Subscription/ClientStatus";
+import { Link } from "react-router-dom";
 
 // let images = ["female-01.jpg", "female-02.jpg", "female-03.jpg"];
 
@@ -66,8 +65,6 @@ export default function AgentDetails() {
   );
   // console.log(agentDetail.attachments, "agent");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
-  const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
-  const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
     false
@@ -91,28 +88,7 @@ export default function AgentDetails() {
       dispatch(changeFetchStatus());
     };
   }, []);
-  useEffect(() => {
-    setSelectedItem(agentDetail?.status);
-  }, [agentDetail]);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
-  };
 
-  // Close menu handler
-  const handleClose = () => {
-    setAnchorEl(null); // Reset anchor element to hide the menu
-  };
-
-  // Menu item click handler
-  const handleMenuItemClick = async (status) => {
-    setSelectedItem(status);
-    const res = await dispatch(
-      UpdateStatus({ user_id: agent_id, status: status == "InActive" ? 2 : 1 })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
-    handleClose(); // Close the menu after handling the click
-  };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -172,7 +148,7 @@ export default function AgentDetails() {
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-
+  console.log(agentDetail.assigned_agent_client, "agentdetail");
   return (
     <>
       <div className="px-16">
@@ -597,33 +573,113 @@ export default function AgentDetails() {
                 </div>
               </div>
             </Grid>
-            <Grid
-              item
-              lg={12}
-              className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row w-full  px-20 bg-[#ffffff]"
-            >
-              <Typography className="text-[#0A0F18] font-600 text-[20px]">
-                Assigned Clients
-              </Typography>
-              <CommonTable
-                headings={[
-                  "ID",
-                  "Name",
-                  "Company Name",
-                  "Subscription Status",
-                  "Account Status",
-
-                  "",
-                ]}
-              >
-                <TableRow>
-                  <TableCell></TableCell>
-                </TableRow>
-              </CommonTable>
-            </Grid>
           </Grid>
         </div>
         <RecentData />
+      </div>
+      <div className=" w-[75%] px-20">
+        <Grid
+          item
+          lg={6}
+          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row bg-[#ffffff]"
+        >
+          <Typography className="text-[#0A0F18] font-600 text-[20px] px-20 py-10">
+            Assigned Clients
+          </Typography>
+          <CommonTable
+            headings={[
+              "ID",
+              "Name",
+              "Company Name",
+              "Subscription Status",
+              "Account Status",
+
+              "",
+            ]}
+          >
+            {agentDetail?.assigned_agent_client?.map((row, index) => {
+              // console.log(row, "roewww");
+              return (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell scope="row" className="font-500 pl-[20px]">
+                    {row.user_id}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.first_name}
+                  </TableCell>
+
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    {row.company_name}
+                  </TableCell>
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[90px] min-h-[25px] text-sm font-500
+                        ${
+                          row.subcription_status == "Active"
+                            ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                            : row.subcription_status == "Pending"
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subcription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subcription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
+                        }`}
+                    >
+                      {row.subcription_status || "N/A"}
+                    </span>
+                  </TableCell>
+
+                  <TableCell
+                    align="center"
+                    className="whitespace-nowrap font-500"
+                  >
+                    <span
+                      className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
+                  ${
+                    row.status == "Active"
+                      ? "text-[#4CAF50] bg-[#4CAF502E]"
+                      : row.status == "Completed"
+                      ? "Expired"
+                      : "Pending"
+                  }`}
+                    >
+                      {row.status || "Pending"}
+                    </span>
+                  </TableCell>
+                  <TableCell align="left" className="w-[1%] font-500">
+                    <div className="flex gap-20 pe-20">
+                      <span className="p-2 cursor-pointer">
+                        <Link to={`/admin/client/detail/${row.user_id}`}>
+                          <ArrowRightCircleIcon />
+                        </Link>
+                      </span>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </CommonTable>
+        </Grid>
       </div>
 
       <div className="px-28 mb-[3rem]">
