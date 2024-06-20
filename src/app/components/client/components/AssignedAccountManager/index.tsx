@@ -155,7 +155,7 @@ export default function AssignedAccountManager({
                         className="ml-5 cursor-pointer  font-500 "
                         // style={{ textDecoration: "none", color: "#111827" }}
                       >
-                        {row.first_name}
+                        {row.first_name + " " + row.last_name}
                       </Link>
                     </TableCell>
                     <TableCell
@@ -208,8 +208,8 @@ export default function AssignedAccountManager({
                         row.status === "Unassign"
                           ? "text-secondary bg-secondary_bg"
                           : row.status === "Unassigned"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : "text-[#4F46E5] bg-[#EDEDFC]"
+                            ? "text-[#F44336] bg-[#F443362E]"
+                            : "text-[#4F46E5] bg-[#EDEDFC]"
                       }`}
                       >
                         {row.status ? row.status : "Unassign"}

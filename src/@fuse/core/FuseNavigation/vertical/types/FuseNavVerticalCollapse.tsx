@@ -58,6 +58,8 @@ const Root = styled(List)<ListComponentProps>(({ theme, ...props }) => ({
 }));
 
 function needsToBeOpened(location: Location, item: FuseNavItemType) {
+  console.log(item.children, "gdjhdgagashd");
+  console.log(location, "locationsss");
   return location && isUrlInChildren(item, location.pathname);
 }
 
@@ -117,6 +119,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   //   console.log(newData, "nd");
   //   return newData;
   // };
+
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
     if (!destination) {
@@ -159,6 +162,7 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
               <div
                 className="flex items-center justify-between w-full "
                 onClick={(ev) => {
+                  // console.log(ev, "ev");
                   ev.preventDefault();
                   ev.stopPropagation();
                   setOpen(!open);
@@ -238,16 +242,19 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
 
           {items.children && (
             <Collapse in={open} className="collapse-children">
-              {item.children.map((_item) => (
-                <FuseNavItem
-                  key={_item.id}
-                  type={`vertical-${_item.type}`}
-                  item={_item}
-                  nestedLevel={nestedLevel + 1}
-                  onItemClick={onItemClick}
-                  checkPermission={checkPermission}
-                />
-              ))}
+              {item.children.map((_item) => {
+                // console.log(_item, "hfhfhsfhsfhsdjfs");
+                return (
+                  <FuseNavItem
+                    key={_item.id}
+                    type={`vertical-${_item.type}`}
+                    item={_item}
+                    nestedLevel={nestedLevel + 1}
+                    onItemClick={onItemClick}
+                    checkPermission={checkPermission}
+                  />
+                );
+              })}
             </Collapse>
           )}
         </div>

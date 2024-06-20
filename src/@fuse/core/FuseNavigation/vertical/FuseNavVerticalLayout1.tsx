@@ -64,18 +64,20 @@ function FuseNavVerticalLayout1(props: FuseNavigationProps) {
         className
       )}
     >
-      {navigation.map((_item) => (
-        <>
-          <FuseNavItem
-            key={_item.id}
-            type={`vertical-${_item.type}`}
-            item={_item}
-            nestedLevel={0}
-            onItemClick={handleItemClick}
-            checkPermission={checkPermission}
-          />
-        </>
-      ))}
+      {navigation.map((_item) => {
+        return (
+          <>
+            <FuseNavItem
+              key={_item.id}
+              type={`vertical-${_item.type}`}
+              item={_item}
+              nestedLevel={0}
+              onItemClick={handleItemClick}
+              checkPermission={checkPermission}
+            />
+          </>
+        );
+      })}
     </StyledList>
   );
 }
