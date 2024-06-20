@@ -105,7 +105,7 @@ export default function AssignedAgents({
             </div>
           ) : (
             <CommonTable
-              headings={["Agents", "Agendsddts Id", "Assigned Date", ""]}
+              headings={["Agents", "Agents Id", "Assigned Date", ""]}
             >
               <>
                 {assignedAgentDetail?.map((row, index) => (
@@ -137,7 +137,7 @@ export default function AssignedAgents({
                         className="ml-5 cursor-pointer  font-500 "
                         // style={{ textDecoration: "none", color: "#111827" }}
                       >
-                        {row.first_name}
+                        {row.first_name + " " + row.last_name}
                       </Link>
                     </TableCell>
 

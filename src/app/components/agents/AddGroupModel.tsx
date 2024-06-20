@@ -220,7 +220,7 @@ function AddGroupModel({
                     <>
                       {searchAgentList.map((item: any) => (
                         <label
-                          className="flex items-center gap-10 px-20 w-1/3 cursor-pointer"
+                          className="flex items-center gap-10 px-20 cursor-pointer w-full"
                           key={item.id}
                           // onClick={() => handleCheckboxChange(item.id)}
                         >
@@ -232,7 +232,7 @@ function AddGroupModel({
                             className=""
                             // onClick={() => handleCheckboxChange(item.id)}
                           >
-                            {item.first_name}
+                            {item.first_name + " " + item.last_name}
                           </span>
                         </label>
                       ))}
