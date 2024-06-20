@@ -240,8 +240,9 @@ function AddAgentModel({
   }, []);
 
   useEffect(() => {
-    if (statecode) {
+    if (statecode == "United States") {
       getState();
+      formik.setFieldValue("state", "");
     }
   }, [statecode]);
 
@@ -397,25 +398,34 @@ function AddAgentModel({
               label="City"
               placeholder="Enter City"
             />
-            <SelectField
-              formik={formik}
-              name="state"
-              label="state"
-              placeholder="Select State"
-              sx={{
-                "& .radioIcon": { display: "none" },
-              }}
-            >
-              {allState?.length > 0 ? (
-                allState?.map((item) => (
-                  <StyledMenuItem key={item.name} value={item.name}>
-                    {item.name}
-                  </StyledMenuItem>
-                ))
-              ) : (
-                <StyledMenuItem>No Data</StyledMenuItem>
-              )}
-            </SelectField>
+            {statecode == "United States" ? (
+              <SelectField
+                formik={formik}
+                name="state"
+                label="state"
+                placeholder="Select State"
+                sx={{
+                  "& .radioIcon": { display: "none" },
+                }}
+              >
+                {allState?.length > 0 ? (
+                  allState?.map((item) => (
+                    <StyledMenuItem key={item.name} value={item.name}>
+                      {item.name}
+                    </StyledMenuItem>
+                  ))
+                ) : (
+                  <StyledMenuItem>No Data</StyledMenuItem>
+                )}
+              </SelectField>
+            ) : (
+              <InputField
+                formik={formik}
+                name="state"
+                label="state"
+                placeholder="Enter State"
+              />
+            )}
           </div>
 
           <div className="flex gap-20">
