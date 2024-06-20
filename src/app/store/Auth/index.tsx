@@ -106,6 +106,21 @@ export const RefreshToken = createAsyncThunk(
     };
   }
 );
+export const dashboardCount = createAsyncThunk(
+  "get-dashboard-count",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: "get-dashboard-count",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 export const UpdateSuccess = createAsyncThunk(
   "agent/complete-profile",

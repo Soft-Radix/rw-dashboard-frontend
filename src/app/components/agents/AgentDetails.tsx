@@ -44,11 +44,12 @@ import AddAgentModel from "./AddAgentModel";
 import moment from "moment";
 import DeleteClient from "../client/DeleteClient";
 import ChangePassword from "../profile/ChangePassword";
-import { resetPassword } from "app/store/Client";
+import { UpdateStatus, resetPassword } from "app/store/Client";
 import RecentData from "../client/clientAgent/RecentData";
 import { twoFactorAuthentication } from "app/store/Auth";
 import { Link } from "react-router-dom";
 import { styled } from "@mui/material/styles";
+import toast from "react-hot-toast";
 // import Switch from '@mui/joy/Switch';
 // import Typography from '@mui/joy/Typography';
 
@@ -150,12 +151,19 @@ export default function AgentDetails() {
     setAnchorEl(null); // Reset anchor element to hide the menu
   };
 
-  // Menu item click handler
-  const handleMenuItemClick = (status) => {
+  const handleMenuItemClick = async (status) => {
     setSelectedItem(status);
-
+    const res = await dispatch(
+      UpdateStatus({
+        user_id: agent_id,
+        status: status == "InActive" ? 2 : 1,
+      })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
+
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
@@ -207,6 +215,7 @@ export default function AgentDetails() {
   };
 
   useEffect(() => {
+    setSelectedItem(agentDetail?.status);
     if (agentDetail.two_factor_authentication) {
       setChecked(true);
     }
@@ -266,62 +275,66 @@ export default function AgentDetails() {
                                 agentDetail?.last_name}
                               {/* Bernadette Jone */}
                             </span>
-                            <Button
-                              variant="outlined"
-                              className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
-                                selectedItem === "Active"
-                                  ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                                  : selectedItem === "Cancelled"
-                                  ? "text-[#F44336] bg-[#F443362E]"
-                                  : selectedItem == "Pending"
-                                  ? "text-[#FF5F15] bg-[#ffe2d5]"
-                                  : "text-[#F0B402]  bg-[#FFEEBB]"
-                              }`}
-                              endIcon={
-                                <DownGreenIcon
-                                  color={
+                            {agentDetail?.status == "Pending" ? (
+                              <Button
+                                variant="outlined"
+                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none 
+                          
+                                    text-[#f0b402] bg-[#ffeebb]
+                                
+                                `}
+                                // endIcon={<DownGreenIcon color="#f0b402" />}
+                                // onClick={handleClick}
+                              >
+                                {/* {agentDetail?.status || "N/A"} */}
+                                {selectedItem}
+                              </Button>
+                            ) : (
+                              <>
+                                <Button
+                                  variant="outlined"
+                                  className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                                     selectedItem === "Active"
-                                      ? "#4CAF50"
-                                      : selectedItem === "Cancelled"
-                                      ? "#F44336"
-                                      : selectedItem == "Pending"
-                                      ? "#FF5F15"
-                                      : "#F0B402"
+                                      ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
+                                      : "text-[#F44336] bg-[#F443362E]"
+                                  }`}
+                                  endIcon={
+                                    <DownGreenIcon
+                                      color={
+                                        selectedItem === "Active"
+                                          ? "#4CAF50"
+                                          : "#F44336"
+                                      }
+                                    />
                                   }
-                                />
-                              }
-                              onClick={handleClick}
-                            >
-                              {/* {agentDetail?.status || "N/A"} */}
-                              {selectedItem}
-                            </Button>
-                            <Menu
-                              anchorEl={anchorEl}
-                              open={Boolean(anchorEl)}
-                              onClose={handleClose} // Close the menu when clicking outside or selecting an item
-                            >
-                              {/* Define menu items */}
-                              <MenuItem
-                                onClick={() => handleMenuItemClick("Active")}
-                              >
-                                Active
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => handleMenuItemClick("Suspended")}
-                              >
-                                Suspended
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => handleMenuItemClick("Pending")}
-                              >
-                                Pending
-                              </MenuItem>
-                              <MenuItem
-                                onClick={() => handleMenuItemClick("Cancelled")}
-                              >
-                                Cancelled
-                              </MenuItem>
-                            </Menu>
+                                  onClick={handleClick}
+                                >
+                                  {/* {agentDetail?.status || "N/A"} */}
+                                  {selectedItem}
+                                </Button>
+                                <Menu
+                                  anchorEl={anchorEl}
+                                  open={Boolean(anchorEl)}
+                                  onClose={handleClose} // Close the menu when clicking outside or selecting an item
+                                >
+                                  {/* Define menu items */}
+                                  <MenuItem
+                                    onClick={() =>
+                                      handleMenuItemClick("Active")
+                                    }
+                                  >
+                                    Active
+                                  </MenuItem>
+                                  <MenuItem
+                                    onClick={() =>
+                                      handleMenuItemClick("InActive")
+                                    }
+                                  >
+                                    Inactive
+                                  </MenuItem>
+                                </Menu>
+                              </>
+                            )}
                           </div>
                           <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                             <div className="flex">

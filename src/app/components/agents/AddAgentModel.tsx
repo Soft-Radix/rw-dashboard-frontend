@@ -104,6 +104,7 @@ function AddAgentModel({
   const { agentDetail, actionStatus } = useSelector(
     (store: AgentRootState) => store.agent
   );
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   // console.log(agentDetail, "kklkfldkf");
   const [selectedImage, setSelectedImage] = useState<File>(); // Default image path
   const [previewUrl, setpreviewUrl] = useState<string>("");
@@ -236,7 +237,9 @@ function AddAgentModel({
     }
   };
   useEffect(() => {
-    getCountries();
+    if (userDetails?.role == "admin") {
+      getCountries();
+    }
   }, []);
 
   useEffect(() => {
