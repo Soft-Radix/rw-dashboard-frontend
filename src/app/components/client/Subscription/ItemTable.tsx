@@ -67,7 +67,7 @@ const ItemTable = ({ rows }) => {
             >
               <TableCell
                 scope="row"
-                className="flex items-center gap-8 font-500 flex-col sm:flex-row"
+                className="items-center gap-8 font-500 flex-col sm:flex-row"
               >
                 {row?.product_name ? row?.product_name : "---"}
               </TableCell>
