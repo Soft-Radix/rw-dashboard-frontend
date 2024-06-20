@@ -109,6 +109,20 @@ export default function SubscriptionDetails() {
     Number(rows?.billing_frequency)
   );
 
+  const renderAddress = (row) => {
+    console.log(row, "rowssss");
+    const addressComponents = [
+      row?.address,
+      row?.address2,
+      row?.city,
+      row?.state,
+      row?.country,
+      row?.zipcode,
+    ].filter(Boolean); // Filter out any falsy values (null, undefined, empty string)
+
+    return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
+  };
+
   console.log("======tytyty===", rows);
   return (
     <>
@@ -222,8 +236,12 @@ export default function SubscriptionDetails() {
                                 src="../assets/icons/loaction.svg"
                                 className="mr-4"
                               />
+                              <p style={{ wordBreak: "break-all" }}>
+                                {/* {accManagerDetail?.address || "N/A"} */}
+                                {renderAddress(rows)}
+                              </p>
                               <span>
-                                {rows?.address ? rows?.address : "N/A"}
+                                {/* {rows?.address ? rows?.address : "N/A"} */}
                               </span>
                             </span>
                           </div>
@@ -261,8 +279,8 @@ export default function SubscriptionDetails() {
                               rows?.card == "visa"
                                 ? "visa.svg"
                                 : rows?.card == "mastercard"
-                                ? "mastercard.svg"
-                                : "card.svg"
+                                  ? "mastercard.svg"
+                                  : "card.svg"
                             }`}
                             className="max-w-[64px]"
                             alt={rows?.card}
