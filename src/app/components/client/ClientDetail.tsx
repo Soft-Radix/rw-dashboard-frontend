@@ -293,7 +293,9 @@ export default function ClientDetail() {
                               checked={checkedItems.includes(item.id)}
                               onChange={() => handleCheckboxChange(item.id)}
                             />
-                            <span>{item.first_name}</span>
+                            <span>
+                              {item.first_name + " " + item.last_name}
+                            </span>
                           </label>
                         </div>
                       ))}
@@ -383,7 +385,9 @@ export default function ClientDetail() {
                                 checked={checkedItems.includes(item.id)}
                                 onChange={() => handleCheckboxChange(item.id)}
                               />
-                              <span>{item.first_name}</span>
+                              <span>
+                                {item.first_name + " " + item.last_name}
+                              </span>
                             </label>
                           </div>
                         ))}

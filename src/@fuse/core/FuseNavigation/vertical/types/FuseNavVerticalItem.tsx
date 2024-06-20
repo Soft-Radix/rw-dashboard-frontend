@@ -28,6 +28,10 @@ import { AppDispatch } from "app/store/store";
 import navigationConfig from "app/configs/navigationConfig";
 import EditProjectModal from "src/app/pages/projects/EditProjectModal";
 import { useNavigate } from "react-router";
+import {
+  navbarEditModelCloseMobile,
+  navbarEditModelOpenMobile,
+} from "app/theme-layouts/shared-components/navbar/store/navbarSlice";
 
 type ListItemButtonStyleProps = ListItemButtonProps & {
   itempadding: number;
@@ -80,11 +84,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
+    dispatch(navbarEditModelOpenMobile());
   };
 
   const handleClose = () => {
+    dispatch(navbarEditModelCloseMobile());
     setAnchorEl(null);
   };
 
@@ -190,7 +197,11 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
         />
         {item?.isProject && userDetails?.role != "agent" && (
           <>
-            <Button aria-describedby={id} onClick={handleClick}>
+            <Button
+              aria-describedby={id}
+              onClick={handleClick}
+              style={{ position: "relative", zIndex: 11 }}
+            >
               <ProjectNavIcon className="threeDots-icon" color="inherit" />
             </Button>
             <Popover

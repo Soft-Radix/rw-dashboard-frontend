@@ -105,7 +105,7 @@ export default function AssignedAgents({
             </div>
           ) : (
             <CommonTable
-              headings={["Agents", "Agendsddts Id", "Assigned Date", ""]}
+              headings={["Agents", "Agents Id", "Assigned Date", ""]}
             >
               <>
                 {assignedAgentDetail?.map((row, index) => (
@@ -137,7 +137,7 @@ export default function AssignedAgents({
                         className="ml-5 cursor-pointer  font-500 "
                         // style={{ textDecoration: "none", color: "#111827" }}
                       >
-                        {row.first_name}
+                        {row.first_name + " " + row.last_name}
                       </Link>
                     </TableCell>
 
@@ -160,16 +160,17 @@ export default function AssignedAgents({
                           setIsOpenUnassignedModal(true);
                           setIsDeleteId(row.agent_id);
                         }}
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
-                   ${
-                     row.status === "Unassign"
-                       ? "text-secondary bg-secondary_bg"
-                       : row.status === "Unassigned"
-                         ? "text-[#F44336] bg-[#F443362E]"
-                         : "text-[#4F46E5] bg-[#EDEDFC]"
-                   }`}
+                        className="inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px]
+                           text-secondary bg-secondary_bg text-sm font-500 cursor-pointer"
+                        //  ${
+                        //    row.status === "Unassign"
+                        //      ? "text-secondary bg-secondary_bg"
+                        //      : row.status === "Unassigned"
+                        //        ? "text-[#F44336] bg-[#F443362E]"
+                        //        : "text-[#4F46E5] bg-[#EDEDFC]"
+                        //  }`}
                       >
-                        {row.status ? row.status : "Unassign"}
+                        Unassign
                       </span>
                     </TableCell>
                   </TableRow>
