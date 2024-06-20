@@ -12,8 +12,9 @@ import { Button, Menu, MenuItem, ListItemText } from "@mui/material";
 import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
 import { UpArrowBlank } from "public/assets/icons/clienIcon";
 import CommonModal from "../CommonModal";
-import DatePopup from "../DatePopup";
+
 import { DateRangePicker } from "react-date-range";
+import DatePopup from "../DatePopup";
 // import { addDays } from "date-fns";
 
 const sevenDayData = [
@@ -61,8 +62,8 @@ const CustomYAxisTick = (props: any) => {
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-[#ffffff] h-40 w-80 flex items-center justify-center">
-        <p className="label font-500">{` ${payload[0].value} `}</p>
+      <div className="custom-tooltip bg-[#ffffff] h-40 w-[auto] flex items-center justify-center">
+        <p className="label font-400">{`Total Clients: ${payload[0].value} `}</p>
       </div>
     );
   }
@@ -209,13 +210,11 @@ const ActivityChart = ({ graphdata, fetchData }) => {
           open={isModalOpen}
           handleToggle={() => setIsModalOpen(false)}
           modalTitle={"Add Custom Date"}
-          maxWidth="733"
           btnTitle={"Apply"}
           closeTitle="Cancel"
-          onSubmit={handleApplyCustomDates}
           setStartDate={setStartDate}
           setEndDate={setEndDate}
-        ></DatePopup>
+        />
       </Suspense>
     </div>
   );

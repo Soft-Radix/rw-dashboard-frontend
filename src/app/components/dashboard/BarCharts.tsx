@@ -65,7 +65,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
       <div className="custom-tooltip bg-[#ffffff] h-40 w-max flex items-centerp-6 justify-center flex-col">
         <p className="label font-400">{`Total Subscription: ${payload[0].value} `}</p>
 
-        <p className="label font-400">{`Amount: ${payload[0]?.payload?.total_price} `}</p>
+        <p className="label font-400">{`Amount:$${payload[0]?.payload?.total_price} `}</p>
       </div>
     );
   }
@@ -162,11 +162,10 @@ const BarCharts = ({ graphdata, fetchData }) => {
             maxWidth="733"
             btnTitle={"Apply"}
             closeTitle="Cancel"
-            onSubmit={handleApplyCustomDates}
             // disabled={!startDate || !endDate}
             setStartDate={setStartDate}
             setEndDate={setEndDate}
-          ></DatePopup>
+          />
         </Suspense>
       </div>
       <ResponsiveContainer width="100%" height={300}>

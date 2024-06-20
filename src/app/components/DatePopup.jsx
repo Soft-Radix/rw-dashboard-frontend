@@ -52,18 +52,9 @@ export default function DatePopup({
   modalTitle,
   open,
   handleToggle,
-  children,
   btnTitle,
   closeTitle,
-  DeleteModal = false,
   maxWidth = "387",
-  onSubmit,
-  disabled,
-  bgColor,
-  headerBgColor,
-  titleColor,
-  isValid = true,
-  isHeaderDisplay,
   setStartDate,
   setEndDate,
 }) {
@@ -97,7 +88,7 @@ export default function DatePopup({
         },
 
         ".muiltr-5gnc0a-MuiPaper-root-MuiDialog-paper": {
-          backgroundColor: bgColor || "white",
+          backgroundColor: "white",
         },
       }}
     >
@@ -152,7 +143,6 @@ export default function DatePopup({
         </Button>
         <Button
           variant="outlined"
-          disabled={disabled}
           color="secondary"
           className={`
        
