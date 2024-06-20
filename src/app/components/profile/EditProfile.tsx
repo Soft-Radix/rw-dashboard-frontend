@@ -86,6 +86,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
   const [allCountries, setAllCountries] = useState([]);
   const [allState, setAllState] = useState([]);
   const dispatch = useAppDispatch();
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const onSubmit = async (values: FormType) => {
     const formData = new FormData();
 
@@ -190,7 +191,9 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     }
   };
   useEffect(() => {
-    getCountries();
+    if (userDetails?.role == "admin") {
+      getCountries();
+    }
   }, []);
 
   useEffect(() => {

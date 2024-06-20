@@ -79,19 +79,13 @@ const AgentDetail = () => {
                   {agentDetail?.status == "Pending" ? (
                     <Button
                       variant="outlined"
-                      className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
-                        selectedItem === "Active"
-                          ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                          : "text-[#F44336] bg-[#F443362E]"
-                      }`}
-                      endIcon={
-                        <DownGreenIcon
-                          color={
-                            selectedItem === "Active" ? "#4CAF50" : "#F44336"
-                          }
-                        />
-                      }
-                      onClick={handleClick}
+                      className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none 
+              
+                        text-[#f0b402] bg-[#ffeebb]
+                    
+                    `}
+                      // endIcon={<DownGreenIcon color="#f0b402" />}
+                      // onClick={handleClick}
                     >
                       {/* {agentDetail?.status || "N/A"} */}
                       {selectedItem}

@@ -117,7 +117,7 @@ export default function Myagents() {
           <div className="p-[2rem]">
             <SearchInput
               name="search"
-              placeholder="Search Agents"
+              placeholder="Search Agent2s"
               onChange={handleSearchChange}
               handleInputClear={handleInputClear}
               inputValue={inputValue}
