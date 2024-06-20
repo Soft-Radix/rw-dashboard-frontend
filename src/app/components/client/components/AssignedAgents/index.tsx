@@ -160,16 +160,17 @@ export default function AssignedAgents({
                           setIsOpenUnassignedModal(true);
                           setIsDeleteId(row.agent_id);
                         }}
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500 cursor-pointer
-                   ${
-                     row.status === "Unassign"
-                       ? "text-secondary bg-secondary_bg"
-                       : row.status === "Unassigned"
-                         ? "text-[#F44336] bg-[#F443362E]"
-                         : "text-[#4F46E5] bg-[#EDEDFC]"
-                   }`}
+                        className="inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px]
+                           text-secondary bg-secondary_bg text-sm font-500 cursor-pointer"
+                        //  ${
+                        //    row.status === "Unassign"
+                        //      ? "text-secondary bg-secondary_bg"
+                        //      : row.status === "Unassigned"
+                        //        ? "text-[#F44336] bg-[#F443362E]"
+                        //        : "text-[#4F46E5] bg-[#EDEDFC]"
+                        //  }`}
                       >
-                        {row.status ? row.status : "Unassign"}
+                        Unassign
                       </span>
                     </TableCell>
                   </TableRow>
