@@ -106,6 +106,21 @@ export const RefreshToken = createAsyncThunk(
     };
   }
 );
+export const dashboardCount = createAsyncThunk(
+  "get-dashboard-count",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: "get-dashboard-count",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 export const UpdateSuccess = createAsyncThunk(
   "agent/complete-profile",
@@ -238,9 +253,11 @@ export const authSlice = createSlice({
 
       .addCase(logIn.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
-        if (payload?.status) {
+        console.log("===payload", payload);
+        if (payload?.status == 1) {
           toast.success(payload?.message);
         } else {
+          console.log("==inside ");
           // toast.error(payload?.message);
           state.error = payload?.message;
         }

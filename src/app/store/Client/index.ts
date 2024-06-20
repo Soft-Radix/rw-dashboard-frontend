@@ -111,9 +111,8 @@ export const GetCountry = createAsyncThunk(
   "country-list",
   async (payload: any) => {
     const response = await ApiHelperFunction({
-      url: `country-list`,
+      url: `country-list?start=0&limit=-1`,
       method: "get",
-      data: payload,
     });
 
     // Return only the data you need to keep it serializable
@@ -126,11 +125,9 @@ export const GetCountry = createAsyncThunk(
 export const getAllState = createAsyncThunk(
   "state-list",
   async (payload: any) => {
-    console.log("====payload==", payload?.data?.country_name);
     const response = await ApiHelperFunction({
-      url: `state-list/${payload?.data?.country_name}`,
+      url: `state-list/${payload?.data?.country_name}?start=0&limit=-1`,
       method: "get",
-      data: payload?.data,
     });
 
     // Return only the data you need to keep it serializable

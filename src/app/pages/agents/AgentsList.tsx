@@ -229,10 +229,14 @@ export default function AgentsList() {
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                   ${
                     row.status == "Active"
-                      ? "text-[#4CAF50] bg-[#4CAF502E]"
-                      : row.status == "Completed"
-                        ? "Expired"
-                        : "Pending"
+                      ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                      : row.status == "Pending"
+                      ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                      : row.status == "Inactive"
+                      ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                      : row.status == "Cancelled"
+                      ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                      : ""
                   }`}
                     >
                       {row.status || "Pending"}
