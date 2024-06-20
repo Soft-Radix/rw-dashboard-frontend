@@ -13,21 +13,24 @@ import { dashboardCount } from "app/store/Auth";
 import { useEffect, useState } from "react";
 import { useAppDispatch } from "app/store/store";
 import ActivityChart from "src/app/components/dashboard/ActivityChart";
+import BarCharts from "src/app/components/dashboard/BarCharts";
 
 export default function AdminDashboard() {
   const initialState = {
     total_active_clients: 0,
     total_active_agents: 0,
     total_active_manager: 0,
+    new_clients: [],
+    new_sales: [],
   };
   const [count, setCount] = useState(initialState);
   const dispatch = useAppDispatch();
-  const fetchData = async () => {
+  const fetchData = async (type = 0, start_date = "", end_date: "") => {
     try {
       const payload = {
-        type: 0,
-        start_date: "",
-        end_date: "",
+        type: type,
+        start_date: start_date,
+        end_date: end_date,
       };
       //@ts-ignore
       const res = await dispatch(dashboardCount(payload));
@@ -39,7 +42,7 @@ export default function AdminDashboard() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData(0, "", "");
   }, []);
 
   return (
@@ -95,10 +98,13 @@ export default function AdminDashboard() {
       <div className="relative flex items-center py-10 px-28 w-full">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
           <div className="w-full">
-            <ActivityChart />
+            <ActivityChart
+              graphdata={count?.new_clients}
+              fetchData={fetchData}
+            />
           </div>
           <div className="w-full">
-            <ActivityChart />
+            <BarCharts graphdata={count?.new_sales} fetchData={fetchData} />
           </div>
         </div>
       </div>

@@ -360,7 +360,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
               "& .radioIcon": { display: "none" },
             }}
           >
-            {allCountries.length > 0 ? (
+            {allCountries?.length > 0 ? (
               allCountries?.map((item) => (
                 <StyledMenuItem key={item.iso_code} value={item.name}>
                   {item.name}

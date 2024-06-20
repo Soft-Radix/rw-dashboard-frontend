@@ -446,6 +446,22 @@ export const deleteAgentList = createAsyncThunk(
 );
 export const getAssignAccMangerInfo: any = createAsyncThunk(
   "client/assign-account-manager-list",
+  async (payload: ClientInfo & { loading?: boolean }) => {
+    delete payload.loading;
+    const response = await ApiHelperFunction({
+      url: "client/assign-account-manager-list",
+      method: "post",
+      data: payload,
+    });
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const getAssignAccMangerInfonew: any = createAsyncThunk(
+  "client/assign-account-manager-list",
   async (payload: ClientInfo) => {
     const response = await ApiHelperFunction({
       url: "client/assign-account-manager-list",
@@ -504,20 +520,22 @@ export const defaultAccManagerList = createAsyncThunk(
       method: "post",
       data: payload,
     });
-    // dispatch(
-    //   getAssignAccMangerInfo({
-    //     client_id: payload.client_id,
-    //     start: 0,
-    //     limit: 10,
-    //     search: "",
-    //   })
-    // );
+    dispatch(
+      getAssignAccMangerInfo({
+        client_id: payload.client_id,
+        start: 0,
+        limit: 10,
+        search: "",
+        loading: false,
+      })
+    );
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
     };
   }
 );
+
 /**
  * The auth slice.
  */
@@ -786,10 +804,14 @@ export const clientSlice = createSlice({
         toast.error(error?.message);
         state.actionStatus = false;
       })
-      .addCase(getAssignAccMangerInfo.pending, (state) => {
+      .addCase(getAssignAccMangerInfo.pending, (state, action) => {
+        const { loading } = action.meta?.arg;
+        console.log("====kkj", loading);
         state.actionStatus = true;
-        state.fetchStatus = "loading";
+        state.fetchStatus =
+          loading === undefined ? "loading" : !loading ? "idle" : "loading";
       })
+
       .addCase(getAssignAccMangerInfo.fulfilled, (state, action) => {
         state.actionStatus = false;
         // console.log(action, "action");
@@ -803,6 +825,10 @@ export const clientSlice = createSlice({
           10
         );
       })
+      // .addCase(getAssignAccMangerInfonew.pending, (state) => {
+      //   state.actionStatus = true;
+      //   state.fetchStatus = "idle";
+      // })
       .addCase(getAssignAccMangerInfo.rejected, (state) => {
         state.actionStatus = false;
         state.fetchStatus = "idle";

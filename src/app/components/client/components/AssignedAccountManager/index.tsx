@@ -7,7 +7,12 @@ import {
   Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
-import { defaultAccManagerList, deleteAccManagerList } from "app/store/Client";
+import {
+  defaultAccManagerList,
+  deleteAccManagerList,
+  getAssignAccMangerInfo,
+  getAssignAccMangerInfonew,
+} from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useEffect, useState } from "react";
@@ -37,7 +42,7 @@ export default function AssignedAccountManager({
   const theme: Theme = useTheme();
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [defaultAccManagerId, setDefaultAccManagerId] = useState(null);
-
+  const currentUrl = window.location.href;
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const unassignAccManager = async (id: any) => {
     try {
@@ -74,19 +79,36 @@ export default function AssignedAccountManager({
     );
   };
 
+  function getUrlParameter(url, param) {
+    let params = new URL(url).searchParams;
+    return params.get(param);
+  }
+
+  let type = getUrlParameter(currentUrl, "type");
+
   useEffect(() => {
     if (assignAccManagerDetail.length > 0) {
       // Find the element with is_default = 1
       const defaultManager = assignAccManagerDetail.find(
         (manager) => manager.is_default == 1
       );
-
+      //
       if (defaultManager) {
         // Set the account_manager_id of the found element as the default checked
         setDefaultAccManagerId(defaultManager.account_manager_id);
       }
     }
   }, [assignAccManagerDetail]);
+  // useEffect(() => {
+  //   dispatch(
+  //     getAssignAccMangerInfo({
+  //       client_id: client_id,
+  //       start: 0,
+  //       limit: 10,
+  //       search: "",
+  //     })
+  //   );
+  // }, []);
 
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
@@ -183,7 +205,7 @@ export default function AssignedAccountManager({
                         control={
                           <Radio
                             checked={
-                              defaultAccManagerId === row.account_manager_id
+                              defaultAccManagerId == row.account_manager_id
                             }
                             // checked={
                             //   index === 0 ||

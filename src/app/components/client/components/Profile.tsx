@@ -98,43 +98,51 @@ export default function Profile({
                   <span className="text-[24px] text-[#111827] font-semibold inline-block">
                     {clientDetail?.first_name + " " + clientDetail?.last_name}
                   </span>
-                  <Button
-                    variant="outlined"
-                    className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
-                      selectedItem === "Active"
-                        ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                        : "text-[#F44336] bg-[#F443362E]"
-                    }`}
-                    endIcon={
-                      <DownGreenIcon
-                        color={selectedItem == "Active" ? "#4CAF50" : "#F44336"}
-                      />
-                    }
-                    onClick={handleClick}
-                  >
-                    {/* {agentDetail?.status || "N/A"} */}
-                    {selectedItem}
-                  </Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose}
-                    // Close the menu when clicking outside or selecting an item
-                  >
-                    {/* Define menu items */}
-                    <MenuItem
-                      onClick={() => handleMenuItemClick("Active")}
-                      selected={selectedItem == "Active"}
+                  <div className="flex items-center gap-10 ">
+                    <span className="text-[16px] text-[#757982]  inline-block">
+                      Account Status :
+                    </span>
+
+                    <Button
+                      variant="outlined"
+                      className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
+                        selectedItem === "Active"
+                          ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
+                          : "text-[#F44336] bg-[#F443362E]"
+                      }`}
+                      endIcon={
+                        <DownGreenIcon
+                          color={
+                            selectedItem == "Active" ? "#4CAF50" : "#F44336"
+                          }
+                        />
+                      }
+                      onClick={handleClick}
                     >
-                      Active
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => handleMenuItemClick("InActive")}
-                      selected={selectedItem == "Inactive"}
+                      {/* {agentDetail?.status || "N/A"} */}
+                      {selectedItem}
+                    </Button>
+                    <Menu
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={handleClose}
+                      // Close the menu when clicking outside or selecting an item
                     >
-                      Inactive
-                    </MenuItem>
-                  </Menu>
+                      {/* Define menu items */}
+                      <MenuItem
+                        onClick={() => handleMenuItemClick("Active")}
+                        selected={selectedItem == "Active"}
+                      >
+                        Active
+                      </MenuItem>
+                      <MenuItem
+                        onClick={() => handleMenuItemClick("InActive")}
+                        selected={selectedItem == "Inactive"}
+                      >
+                        Inactive
+                      </MenuItem>
+                    </Menu>
+                  </div>
                 </div>
                 <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-10px ">
                   <div className="flex">
@@ -161,7 +169,7 @@ export default function Profile({
                 <div className="flex items-baseline justify-between w-full py-20 gap-31 flex-col sm:flex-row">
                   <div className="flex flex-col pr-10 gap-7 ">
                     <span className="text-[20px] text-title font-500 w-max">
-                      Status
+                      Subscription Status
                     </span>
                     <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
                       <img src="../assets/icons/circle.svg" className="mr-4" />
