@@ -182,23 +182,28 @@ const DashboaredAgenda = () => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md flex items-start sm:items-center justify-between px-20 border-0 border-none flex-col sm:flex-row ">
+            <div className="shadow-md flex  sm:items-center justify-between px-20 border-0 border-none flex-col  sm:flex-row ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
                 aria-label="basic tabs example"
-                className="min-h-0 pb-14 pt-20  sm:px-20  border-none bg-none sm:overflow-x-auto overflow-x-visible"
+                className="min-h-0 pb-14 pt-20  sm:px-20  border-none bg-none w-3/4 "
                 sx={{
                   "& .MuiTabs-flexContainer": {
+                    overflowX: "scroll",
                     gap: "50px", // Default gap for large screens
-                    "@media (max-width: 425px)": {
-                      gap: "6px", // Change gap to 6px on small screens
-                    },
+                    // "@media (max-width: 425px)": {
+                    //   gap: "6px", // Change gap to 6px on small screens
+                    // },
                   },
                   "& .MuiTab-root.Mui-selected": {
                     color: theme.palette.secondary.main,
+                    borderBottomWidth: "2px",
+                    borderBottomColor: theme.palette.secondary.main,
+                    borderBottom: "solid",
                   },
                   "& .MuiTabs-indicator": {
+                    visibility: "hidden",
                     backgroundColor: theme.palette.secondary.main,
                   },
                 }}
@@ -206,8 +211,14 @@ const DashboaredAgenda = () => {
                 <Tab label="To Do" {...a11yProps(0)} />
                 <Tab label="In Progress" {...a11yProps(1)} />
                 <Tab label="Done" {...a11yProps(2)} />
+                <Tab label="Done" {...a11yProps(3)} />
+                <Tab label="Done" {...a11yProps(4)} />
+                <Tab label="Done" {...a11yProps(5)} />
+                <Tab label="Done" {...a11yProps(6)} />
+                <Tab label="Done" {...a11yProps(7)} />
               </Tabs>
-              <div className=" -mr-[6px] ">
+
+              <div className=" -mr-[6px] text-right flex justify-end items-center">
                 <DropdownMenu
                   button={
                     <div

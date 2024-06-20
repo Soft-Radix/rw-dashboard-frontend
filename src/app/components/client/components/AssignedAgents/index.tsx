@@ -4,7 +4,7 @@ import { deleteAgentList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
@@ -105,7 +105,7 @@ export default function AssignedAgents({
             </div>
           ) : (
             <CommonTable
-              headings={["Agents", "Agents Id", "Assigned Date", ""]}
+              headings={["Agents", "Agendsddts Id", "Assigned Date", ""]}
             >
               <>
                 {assignedAgentDetail?.map((row, index) => (
