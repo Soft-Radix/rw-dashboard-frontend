@@ -324,6 +324,7 @@ function AddAccountManagerModel({
     };
     try {
       const { payload } = await dispatch(GetCountry({ data }));
+
       setAllCountries(payload?.data?.data?.list);
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -348,12 +349,12 @@ function AddAccountManagerModel({
   }, []);
 
   useEffect(() => {
-    if (statecode) {
+    if (statecode == "United States") {
       getState();
+      formik.setFieldValue("state", "");
     }
   }, [statecode]);
   // console.log("🚀 ~ isOpen:", isOpen);
-
   return (
     <CommonModal
       open={isOpen}
@@ -477,26 +478,34 @@ function AddAccountManagerModel({
               label="City"
               placeholder="Enter City"
             />
-
-            <SelectField
-              formik={formik}
-              name="state"
-              label="state"
-              placeholder="Select State"
-              sx={{
-                "& .radioIcon": { display: "none" },
-              }}
-            >
-              {allState?.length > 0 ? (
-                allState?.map((item) => (
-                  <StyledMenuItem key={item.name} value={item.name}>
-                    {item.name}
-                  </StyledMenuItem>
-                ))
-              ) : (
-                <StyledMenuItem>No Data</StyledMenuItem>
-              )}
-            </SelectField>
+            {statecode == "United States" ? (
+              <SelectField
+                formik={formik}
+                name="state"
+                label="state"
+                placeholder="Select State"
+                sx={{
+                  "& .radioIcon": { display: "none" },
+                }}
+              >
+                {allState?.length > 0 ? (
+                  allState?.map((item) => (
+                    <StyledMenuItem key={item.name} value={item.name}>
+                      {item.name}
+                    </StyledMenuItem>
+                  ))
+                ) : (
+                  <StyledMenuItem>No Data</StyledMenuItem>
+                )}
+              </SelectField>
+            ) : (
+              <InputField
+                formik={formik}
+                name="state"
+                label="state"
+                placeholder="Enter State"
+              />
+            )}
           </div>
 
           <div className="flex gap-20">
@@ -515,7 +524,7 @@ function AddAccountManagerModel({
                 "& .radioIcon": { display: "none" },
               }}
             >
-              {allCountries.length > 0 ? (
+              {allCountries?.length > 0 ? (
                 allCountries?.map((item) => (
                   <StyledMenuItem key={item.iso_code} value={item.name}>
                     {item.name}
