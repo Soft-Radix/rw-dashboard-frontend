@@ -22,6 +22,7 @@ import {
 import { useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import CommonTable from "src/app/components/commonTable";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const rows = [
   {
@@ -115,9 +116,19 @@ const DashboaredAgenda = () => {
                 <Typography className="text-[16px] font-600 sm:pt-28 px-20 sm:pb-10 ">
                   Agenda
                 </Typography>
-                <div className="flex items-center sm:px-20 sm:gap-8 sm:pb-20 ">
+                <div className="flex items-center sm:gap-8 sm:pb-20 ">
                   <span>
-                    <CalendarLineIcon />
+                    <DatePicker
+                      sx={{
+                        " & .MuiInputBase-input": {
+                          display: "none",
+                        },
+                        "& .MuiOutlinedInput-notchedOutline": {
+                          display: "none",
+                        },
+                      }}
+                    />
+                    {/* <CalendarLineIcon /> */}
                   </span>
                   <span className="sm:text-[16px] text-[#757982]">
                     Feb 27, Mon
@@ -132,17 +143,6 @@ const DashboaredAgenda = () => {
                   </div>
                 </div>
               </div>
-              <Button
-                variant="outlined"
-                color="secondary"
-                className="h-[40px] text-[16px] flex gap-8 leading-none sm:leading-5 ml-16 sm:w-[80%] w-[200px]"
-                aria-label=" Add calendar In Integration"
-                size="large"
-                startIcon={<PlusIcon color={theme.palette.secondary.main} />}
-                onClick={() => setIsOpenAddModal(true)}
-              >
-                Add Calendar In Integration
-              </Button>
             </div>
             <CommonTable headings={["Tasks"]}>
               <>
