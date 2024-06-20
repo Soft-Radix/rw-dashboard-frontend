@@ -176,10 +176,18 @@ function AddTaskModal({
   };
 
   useEffect(() => {
-    if (isOpen && initialRender) {
-      dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
-        setAgentMenuData(res?.payload?.data?.data?.list);
-      });
+    if (!Edit) {
+      if (isOpen && initialRender) {
+        dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
+          setAgentMenuData(res?.payload?.data?.data?.list);
+        });
+      }
+    } else {
+      if (isOpen) {
+        dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
+          setAgentMenuData(res?.payload?.data?.data?.list);
+        });
+      }
     }
   }, [filterMenu.search, initialRender]);
 
@@ -794,7 +802,7 @@ function AddTaskModal({
                     />
                     <span>Select All</span>
                   </div> */}
-                  {agentMenuData.map((item: any) => (
+                  {agentMenuData?.map((item: any) => (
                     <div
                       className="flex items-center gap-10 px-20 w-full"
                       key={item.id}
@@ -804,9 +812,9 @@ function AddTaskModal({
                         <Checkbox
                           className="d-none"
                           checked={selectedAgents?.includes(item.id)}
-                          onChange={() => handleAgentSelect(item.id)}
+                          onChange={() => handleAgentSelect(item.agent_id)}
                         />
-                        <span>{item.first_name}</span>
+                        <span>{item?.userName}</span>
                       </label>
                     </div>
                   ))}

@@ -630,3 +630,24 @@ header {
 cometchat-callscreen-wrapper {
   z-index: 99999 !important;
 }
+.rdrDefinedRangesWrapper {
+  display: none !important;
+}
+span.rdrEndEdge,
+span.rdrStartEdge,
+.rdrInRange {
+  background: #4f46e5 !important;
+  color: blue !important;
+}
+span.rdrEndEdge,
+span.rdrStartEdge {
+  background: #4f46e5 !important;
+  color: blue !important;
+}
+.rdrDay.rdrDayHovered {
+  border-color: #4f46e5 !important;
+}
+
+.rdrDay.rdrDayHovered:hover {
+  border-color: #4f46e5 !important;
+}

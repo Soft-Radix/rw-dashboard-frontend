@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import {
-  AreaChart,
-  Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
@@ -13,8 +13,9 @@ import { DownArrowBlank } from "public/assets/icons/dashboardIcons";
 import { UpArrowBlank } from "public/assets/icons/clienIcon";
 import CommonModal from "../CommonModal";
 import DatePopup from "../DatePopup";
-import { DateRangePicker } from "react-date-range";
-// import { addDays } from "date-fns";
+import { DatePicker } from "@mui/lab";
+
+// import { DatePicker } from "material-ui";
 
 const sevenDayData = [
   { name: "M", hour: 60, type: 0 },
@@ -46,7 +47,7 @@ interface DataPoint {
 
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: { value: number }[];
+  payload?: { value: number; payload?: any }[];
 }
 
 const CustomYAxisTick = (props: any) => {
@@ -61,27 +62,23 @@ const CustomYAxisTick = (props: any) => {
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-[#ffffff] h-40 w-80 flex items-center justify-center">
-        <p className="label font-500">{` ${payload[0].value} `}</p>
+      <div className="custom-tooltip bg-[#ffffff] h-40 w-max flex items-centerp-6 justify-center flex-col">
+        <p className="label font-400">{`Total Subscription: ${payload[0].value} `}</p>
+
+        <p className="label font-400">{`Amount: ${payload[0]?.payload?.total_price} `}</p>
       </div>
     );
   }
   return null;
 };
 
-const ActivityChart = ({ graphdata, fetchData }) => {
+const BarCharts = ({ graphdata, fetchData }) => {
   const [data, setData] = useState<DataPoint[]>(sevenDayData);
   const [selectedOption, setSelectedOption] = useState<string>("7days");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [state, setState] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -106,7 +103,7 @@ const ActivityChart = ({ graphdata, fetchData }) => {
     // Here you can fetch or calculate the custom data based on the selected dates
     // For now, we'll just use customData as a placeholder
     setIsModalOpen(false);
-    fetchData(1, startDate, endDate);
+    fetchData(2, startDate, endDate);
   };
 
   useEffect(() => {
@@ -118,56 +115,65 @@ const ActivityChart = ({ graphdata, fetchData }) => {
       handleApplyCustomDates();
     }
   }, [startDate, endDate]);
-
   return (
     <div className="pt-20 sm:px-20 bg-[#FFFFFF] rounded-6">
-      <div className="flex justify-between mb-4 ">
-        <p className="text-[#0A0F18] text-[20px] font-600">New Client   </p>
-        <Button
-          onClick={handleClick}
-          variant="contained"
-          className="bg-[#EDEDFC]  min-h-[45px] rounded-[8px] flex items-center justify-between font-400 text-[#4F46E5]"
-          sx={{ border: Boolean(anchorEl) ? "1px solid #4F46E5" : "none" }}
-        >
-          {selectedOption}
-          <span>{!anchorEl ? <DownArrowBlank /> : <UpArrowBlank />}</span>
-        </Button>
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          MenuListProps={{
-            sx: {
-              width: "100%",
-              marginTop: 2,
-              marginRight: 2,
-              "& ul": {
-                padding: 1, // Example: Remove padding from the ul element inside Paper
-                listStyle: "none", // Example: Remove default list styles
-                overflowY: "auto",
+      <div className="relative">
+        <div className="flex justify-between mb-4 ">
+          <p className="text-[#0A0F18] text-[20px] font-600">Sales  </p>
+          <Button
+            onClick={handleClick}
+            variant="contained"
+            className="bg-[#EDEDFC]  min-h-[45px] rounded-[8px] flex items-center justify-between font-400 text-[#4F46E5]"
+            sx={{ border: Boolean(anchorEl) ? "1px solid #4F46E5" : "none" }}
+          >
+            {selectedOption}
+            <span>{!anchorEl ? <DownArrowBlank /> : <UpArrowBlank />}</span>
+          </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            MenuListProps={{
+              sx: {
+                width: "100%",
+                marginTop: 2,
+                marginRight: 2,
+                "& ul": {
+                  padding: 1, // Example: Remove padding from the ul element inside Paper
+                  listStyle: "none", // Example: Remove default list styles
+                  overflowY: "auto",
+                },
               },
-            },
-          }}
-        >
-          <MenuItem onClick={() => handleMenuItemClick("7days")}>
-            <ListItemText primary="Past 7 Days" />
-          </MenuItem>
-          <MenuItem onClick={() => handleMenuItemClick("custom")}>
-            <ListItemText primary="Custom" />
-          </MenuItem>
-        </Menu>
+            }}
+          >
+            <MenuItem onClick={() => handleMenuItemClick("7days")}>
+              <ListItemText primary="Past 7 Days" />
+            </MenuItem>
+            <MenuItem onClick={() => handleMenuItemClick("custom")}>
+              <ListItemText primary="Custom" />
+            </MenuItem>
+          </Menu>
+        </div>
+        <Suspense>
+          <DatePopup
+            open={isModalOpen}
+            handleToggle={() => setIsModalOpen(false)}
+            modalTitle={"Add Custom Date"}
+            maxWidth="733"
+            btnTitle={"Apply"}
+            closeTitle="Cancel"
+            onSubmit={handleApplyCustomDates}
+            // disabled={!startDate || !endDate}
+            setStartDate={setStartDate}
+            setEndDate={setEndDate}
+          ></DatePopup>
+        </Suspense>
       </div>
       <ResponsiveContainer width="100%" height={300}>
-        <AreaChart
+        <BarChart
           data={data}
           margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
         >
-          <defs>
-            <linearGradient id="colorHour" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-              <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-            </linearGradient>
-          </defs>
           <XAxis
             dataKey="name"
             axisLine={{ stroke: "#4F46E5", strokeWidth: 0 }}
@@ -184,41 +190,16 @@ const ActivityChart = ({ graphdata, fetchData }) => {
             tickMargin={20}
           />
           <Tooltip content={<CustomTooltip />} />
-          <Area
-            type="monotone"
+          <Bar
             dataKey="total"
-            strokeWidth="2"
-            stroke="#4E47E5"
-            fill="url(#colorHour)"
-            opacity={1}
-            activeDot={{ fill: "#4E47E5", r: 8 }}
+            fill="#4E47E5"
+            barSize={20}
+            radius={[10, 10, 0, 0]}
           />
-        </AreaChart>
+        </BarChart>
       </ResponsiveContainer>
-      {/* <DateRangePicker
-        onChange={(item) => setState([item.selection])}
-        showSelectionPreview={true}
-        moveRangeOnFirstSelection={false}
-        months={2}
-      
-        ranges={state}
-        direction="horizontal"
-      /> */}
-      <Suspense>
-        <DatePopup
-          open={isModalOpen}
-          handleToggle={() => setIsModalOpen(false)}
-          modalTitle={"Add Custom Date"}
-          maxWidth="733"
-          btnTitle={"Apply"}
-          closeTitle="Cancel"
-          onSubmit={handleApplyCustomDates}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        ></DatePopup>
-      </Suspense>
     </div>
   );
 };
 
-export default ActivityChart;
+export default BarCharts;
