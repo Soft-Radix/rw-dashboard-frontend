@@ -9,6 +9,9 @@ const maxLengthLastMessage =
   "Last name should be less than or equal to 20 characters.";
 const maxLengthGroupMessage =
   "It should be less than or equal to 30 characters.";
+const maxLengthFirstMessage1 =
+  "It should be less than or equal to 50 characters.";
+
 const noInitialSpace = (value) => !value?.startsWith(" ");
 
 const emailField = {
@@ -122,14 +125,17 @@ const editClientSchema = Yup.object({
   address: Yup.string()
     .required("Address is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   address2: Yup.string()
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   city: Yup.string()
     .required("City is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "City should not start with a space"),
+    .matches(/^[^\s].*$/, "City should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   state: Yup.string().required("State is required"),
 
   zipcode: Yup.string()
@@ -174,15 +180,18 @@ const editAgentSchema = Yup.object({
   address: Yup.string()
     .required("Address is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
 
   address2: Yup.string()
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   city: Yup.string()
     .required("City is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "City should not start with a space"),
+    .matches(/^[^\s].*$/, "City should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   state: Yup.string()
     .required("State is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
@@ -236,14 +245,17 @@ const accManagerSchema = Yup.object({
   }), // ,
   address: Yup.string()
     .required("Address is required")
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   address2: Yup.string()
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "Address should not start with a space"),
+    .matches(/^[^\s].*$/, "Address should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   city: Yup.string()
     .required("City is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
-    .matches(/^[^\s].*$/, "City should not start with a space"),
+    .matches(/^[^\s].*$/, "City should not start with a space")
+    .max(50, maxLengthFirstMessage1),
   state: Yup.string()
     .required("State is required")
     .test("no-initial-space", noSpaceMessage, noInitialSpace)
