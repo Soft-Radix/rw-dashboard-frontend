@@ -8,68 +8,20 @@ import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
 
 const rows = [
   {
-    user: [
-      {
-        image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Penelope",
-      },
-    ],
-    taskCompleted: "Logo Design",
-    punch: "In",
-    updates: [
-      {
-        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
-        text: "Recent Task Updates",
-      },
-    ],
+    name: "amanda",
+    description: "Amanda has successfully completed the logo design task.",
   },
   {
-    user: [
-      {
-        image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Penelope",
-      },
-    ],
-    taskCompleted: "Logo Design",
-    punch: "Out",
-    updates: [
-      {
-        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
-        text: "Recent Task Updates",
-      },
-    ],
+    name: "Alexandra",
+    description: "Alexandra has successfully completed the logo design task.",
   },
   {
-    user: [
-      {
-        image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Penelope",
-      },
-    ],
-    taskCompleted: "Logo Design",
-    punch: "In",
-    updates: [
-      {
-        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
-        text: "Recent Task Updates",
-      },
-    ],
+    name: "Bernadette",
+    description: "Bernadette has successfully completed the logo design task.",
   },
   {
-    user: [
-      {
-        image: "../assets/images/pages/dashBoared/recentTableImg.png",
-        text: "Pene",
-      },
-    ],
-    taskCompleted: "Logo Design",
-    punch: "Out",
-    updates: [
-      {
-        arrow: "../assets/images/pages/dashBoared/arrowUpDown.png",
-        text: "Recent Task Updates",
-      },
-    ],
+    name: "Elizabeth",
+    description: "Elizabeth has successfully completed the logo design task.",
   },
   // {
   //   user: [
@@ -111,12 +63,40 @@ export default function DashboardRecentActivity() {
   };
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem] ">
-      <Grid item xs={12} lg={6}>
-        <div className="shadow-sm bg-white rounded-lg relative h-[426px] overflow-y-scroll">
+      <Grid item xs={12} lg={12}>
+        <div className="shadow-sm bg-white rounded-lg relative py-10">
           <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
-          <CommonTable
+          {rows.map((item) => {
+            return (
+              <>
+                <div className="flex items-center justify-between gap-20 px-20 border-y-1 py-10 ">
+                  <div>
+                    <img
+                      src="../assets/images/logo/images.jpeg"
+                      alt="images"
+                      className="h-[40px] w-[40px] rounded-full"
+                    />
+                  </div>
+                  <div className="flex w-full gap-10 justify-between sm:flex-row flex-col">
+                    <div>
+                      <p className="font-500 text-[16px] text-[#151D48]">
+                        {item.name}
+                      </p>
+                      <p className="text-[14px] text-[#737791]">
+                        {item.description}
+                      </p>
+                    </div>
+                    <Typography className="text-[14px] text-[#757982]  ">
+                      Feb 12,2024
+                    </Typography>
+                  </div>
+                </div>
+              </>
+            );
+          })}
+          {/* <CommonTable
             headings={["User", "Task Completed", "Punch In/Out", ""]}
           >
             <>
@@ -164,10 +144,10 @@ export default function DashboardRecentActivity() {
                 </TableRow>
               ))}
             </>
-          </CommonTable>
+          </CommonTable> */}
         </div>
       </Grid>
-      <Grid item xs={12} lg={6}>
+      {/* <Grid item xs={12} lg={6}>
         {userDetails.role == "client" && (
           <div className="shadow-sm bg-white rounded-lg">
             <div className="flex items-center justify-between px-20 py-28 border-b border-solid border-[#EDF2F6]">
@@ -190,7 +170,7 @@ export default function DashboardRecentActivity() {
             </div>
           </div>
         )}
-      </Grid>
+      </Grid> */}
     </Grid>
   );
 }
