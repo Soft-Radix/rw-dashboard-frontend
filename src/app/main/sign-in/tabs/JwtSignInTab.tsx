@@ -32,6 +32,7 @@ function jwtSignInTab() {
   const [check, setCheck] = useState(false);
   let [emailErrorMsg, setEmailErrorMsg] = useState<string | null>(null);
   let [passErrorMsg, setPassErrorMsg] = useState<string | null>(null);
+  let [ErrorMsg, setErrorMsg] = useState<string | null>(null);
   const { loginWithRedirect } = useAuth0();
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -119,16 +120,26 @@ function jwtSignInTab() {
   };
 
   useEffect(() => {
-    if (error && error.includes("email")) {
+    if (error && (error.includes("email") || error.includes("Email"))) {
       setEmailErrorMsg(error);
     } else {
       setEmailErrorMsg(null);
     }
 
-    if (error && error.includes("Password")) {
+    if (error && (error.includes("Password") || error.includes("password"))) {
       setPassErrorMsg(error);
     } else {
       setPassErrorMsg(null);
+    }
+
+    if (
+      error &&
+      !(error.includes("Password") || error.includes("password")) &&
+      !(error.includes("email") || error.includes("Email"))
+    ) {
+      setErrorMsg(error);
+    } else {
+      setErrorMsg(null);
     }
   }, [error, check]);
 
@@ -145,6 +156,7 @@ function jwtSignInTab() {
 
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
+      <span className=" text-red pt-[1px]  block ">{ErrorMsg}</span>
       <form onSubmit={handleSubmit}>
         <InputField
           formik={formik}

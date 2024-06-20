@@ -92,13 +92,24 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
-      {/* <GraphChart /> */}
-      <div className="relative flex items-center py-10 px-28">
-        <div className="grid grid-cols-1 sm:grid-cols-12 lg:grid-cols-3 gap-6">
-          <ActivityChart />
-          <ActivityChart />
+      <div className="relative flex items-center py-10 px-28 w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+          <div className="w-full">
+            <ActivityChart />
+          </div>
+          <div className="w-full">
+            <ActivityChart />
+          </div>
         </div>
       </div>
+
+      {/* <GraphChart /> */}
+      {/* <div className="relative flex items-center py-10 px-28">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"> */}
+      {/* <ActivityChart />
+      <ActivityChart /> */}
+      {/* </div>
+      </div> */}
     </div>
   );
 }

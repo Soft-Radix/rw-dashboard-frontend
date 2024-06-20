@@ -118,6 +118,7 @@ function AddTaskModal({
   const [screenSharingStream, setScreenSharingStream] = useState(null);
   const [statusMenuData, setStatusMenuData] = useState([]);
   const [selectedStatusId, setSelectedStatusId] = useState("0");
+  const [initialRender, setInitialRender] = useState(false);
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -175,12 +176,12 @@ function AddTaskModal({
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && initialRender) {
       dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
         setAgentMenuData(res?.payload?.data?.data?.list);
       });
     }
-  }, [filterMenu.search, isOpen]);
+  }, [filterMenu.search, initialRender]);
 
   useEffect(() => {
     if (project_id) {
@@ -689,6 +690,7 @@ function AddTaskModal({
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     debouncedSearch(value);
+    setInitialRender(true);
   };
 
   const handleCheckboxChange = (id) => {
@@ -739,7 +741,10 @@ function AddTaskModal({
         <div className="flex gap-10">
           <DropdownMenu
             anchorEl={AgentMenu}
-            handleClose={() => setAgentMenu(null)}
+            handleClose={() => {
+              setAgentMenu(null);
+              setInitialRender(false);
+            }}
             button={
               <CommonChip
                 onClick={(event) => setAgentMenu(event.currentTarget)}
@@ -790,27 +795,19 @@ function AddTaskModal({
                     <span>Select All</span>
                   </div> */}
                   {agentMenuData.map((item: any) => (
-                    // <div
-                    //   className="flex items-center gap-10 px-20 w-full"
-                    //   key={item.id}
-                    //   onChange={() => handleAgentSelect(item.id)}
-                    // >
-                    //   <label className="flex items-center gap-10 w-full cursor-pointer">
-                    //     <Checkbox
-                    //       className="d-none"
-                    //       checked={selectedAgents?.includes(item.id)}
-                    //       onChange={() => handleAgentSelect(item.id)}
-                    //     />
-                    //     <span>{item.first_name}</span>
-                    //   </label>
-                    // </div>
                     <div
-                      className="flex items-center gap-10 px-20 w-full py-[9px]"
+                      className="flex items-center gap-10 px-20 w-full"
                       key={item.id}
-                      onClick={() => handleAgentSelect(item.id)}
-                      style={{ cursor: "pointer" }}
+                      onChange={() => handleAgentSelect(item.id)}
                     >
-                      <span>{item.first_name}</span>
+                      <label className="flex items-center gap-10 w-full cursor-pointer">
+                        <Checkbox
+                          className="d-none"
+                          checked={selectedAgents?.includes(item.id)}
+                          onChange={() => handleAgentSelect(item.id)}
+                        />
+                        <span>{item.first_name}</span>
+                      </label>
                     </div>
                   ))}
                 </div>
