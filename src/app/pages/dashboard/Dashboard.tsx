@@ -314,7 +314,9 @@ export default function Dashboard() {
                         paddingTop: "12px",
                         paddingBottom: "12px",
                         // color: theme?.palette?.primary.main,
-                        color: "blue",
+                        color: " #111827",
+                        fontSize: "14px",
+                        fontWeight: 500,
                       },
                     }}
                   >
