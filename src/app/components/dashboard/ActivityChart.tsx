@@ -14,9 +14,9 @@ import { UpArrowBlank } from "public/assets/icons/clienIcon";
 import CommonModal from "../CommonModal";
 
 const sevenDayData = [
-  { name: "M", hour: 60 },
-  { name: "T", hour: 80 },
-  { name: "W", hour: 60 },
+  { name: "M", hour: 60, type: 0 },
+  { name: "T", hour: 80, type: 0 },
+  { name: "W", hour: 60, type: 0 },
   { name: "T", hour: 80 },
   { name: "F", hour: 50 },
   { name: "S", hour: 40 },
