@@ -225,9 +225,9 @@ export default function ClientDetail() {
   };
 
   useEffect(() => {
-    if (initialRender) {
-      callAgentApi();
-    }
+    // if (initialRender) {
+    callAgentApi();
+    // }
   }, [agentfilterMenu]);
 
   useEffect(() => {
