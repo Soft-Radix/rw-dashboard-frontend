@@ -44,6 +44,7 @@ import InputField from "../InputField";
 import CommonChip from "../chip";
 import DeleteClient from "../client/DeleteClient";
 import CustomButton from "../custom_button";
+import { GetAssignAgentsInfo } from "app/store/Client";
 
 interface IProps {
   isOpen: boolean;
@@ -175,7 +176,7 @@ function AddTaskModal({
 
   useEffect(() => {
     if (isOpen) {
-      dispatch(getAgentList(filterMenu)).then((res) => {
+      dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
         setAgentMenuData(res?.payload?.data?.data?.list);
       });
     }
@@ -778,7 +779,7 @@ function AddTaskModal({
                   onChange={handleSearchChange}
                 />
                 <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-                  <div
+                  {/* <div
                     className="flex items-center gap-10 px-20 w-full"
                     onClick={handleSelectAllAgents}
                   >
@@ -787,19 +788,29 @@ function AddTaskModal({
                       onChange={handleSelectAllAgents}
                     />
                     <span>Select All</span>
-                  </div>
+                  </div> */}
                   {agentMenuData.map((item: any) => (
+                    // <div
+                    //   className="flex items-center gap-10 px-20 w-full"
+                    //   key={item.id}
+                    //   onChange={() => handleAgentSelect(item.id)}
+                    // >
+                    //   <label className="flex items-center gap-10 w-full cursor-pointer">
+                    //     <Checkbox
+                    //       className="d-none"
+                    //       checked={selectedAgents?.includes(item.id)}
+                    //       onChange={() => handleAgentSelect(item.id)}
+                    //     />
+                    //     <span>{item.first_name}</span>
+                    //   </label>
+                    // </div>
                     <div
-                      className="flex items-center gap-10 px-20 w-full"
+                      className="flex items-center gap-10 px-20 w-full py-[9px]"
                       key={item.id}
+                      onClick={() => handleAgentSelect(item.id)}
+                      style={{ cursor: "pointer" }}
                     >
-                      <label className="flex items-center gap-10 w-full cursor-pointer">
-                        <Checkbox
-                          checked={selectedAgents?.includes(item.id)}
-                          onChange={() => handleAgentSelect(item.id)}
-                        />
-                        <span>{item.first_name}</span>
-                      </label>
+                      <span>{item.first_name}</span>
                     </div>
                   ))}
                 </div>

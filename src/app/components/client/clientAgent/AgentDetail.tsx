@@ -15,6 +15,8 @@ import { ClientRootState } from "app/store/Client/Interface";
 import { Console } from "console";
 import { AgentRootState } from "app/store/Agent/Interafce";
 import moment from "moment";
+import { UpdateStatus } from "app/store/Client";
+import toast from "react-hot-toast";
 
 const AgentDetail = () => {
   const dispatch = useAppDispatch();
@@ -29,12 +31,23 @@ const AgentDetail = () => {
   };
   const { agents_id } = useParams();
 
-  const handleMenuItemClick = (status) => {
-    console.log(`Selected status: ${status}`);
+  // Menu item click handler
+  const handleMenuItemClick = async (status) => {
     setSelectedItem(status);
-
+    const res = await dispatch(
+      UpdateStatus({
+        user_id: agents_id,
+        status: status == "InActive" ? 2 : 1,
+      })
+    );
+    // setList(res?.payload?.data?.data?.list);
+    toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
+  useEffect(() => {
+    setSelectedItem(agentDetail?.status);
+  }, [agentDetail]);
+
   useEffect(() => {
     dispatch(getAgentInfo({ agent_id: agents_id }));
   }, []);
@@ -63,54 +76,64 @@ const AgentDetail = () => {
                   <span className="text-[24px] text-[#111827] font-semibold inline-block">
                     {agentDetail?.first_name + " " + agentDetail?.last_name}
                   </span>
-                  <Button
-                    variant="outlined"
-                    className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
-                      selectedItem === "Active"
-                        ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
-                        : selectedItem === "Cancelled"
-                          ? "text-[#F44336] bg-[#F443362E]"
-                          : selectedItem == "Pending"
-                            ? "text-[#FF5F15] bg-[#ffe2d5]"
-                            : "text-[#F0B402]  bg-[#FFEEBB]"
-                    }`}
-                    endIcon={
-                      <DownGreenIcon
-                        color={
+                  {agentDetail?.status == "Pending" ? (
+                    <Button
+                      variant="outlined"
+                      className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
+                        selectedItem === "Active"
+                          ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
+                          : "text-[#F44336] bg-[#F443362E]"
+                      }`}
+                      endIcon={
+                        <DownGreenIcon
+                          color={
+                            selectedItem === "Active" ? "#4CAF50" : "#F44336"
+                          }
+                        />
+                      }
+                      onClick={handleClick}
+                    >
+                      {/* {agentDetail?.status || "N/A"} */}
+                      {selectedItem}
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        variant="outlined"
+                        className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
                           selectedItem === "Active"
-                            ? "#4CAF50"
-                            : selectedItem === "Cancelled"
-                              ? "#F44336"
-                              : selectedItem == "Pending"
-                                ? "#FF5F15"
-                                : "#F0B402"
+                            ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
+                            : "text-[#F44336] bg-[#F443362E]"
+                        }`}
+                        endIcon={
+                          <DownGreenIcon
+                            color={
+                              selectedItem === "Active" ? "#4CAF50" : "#F44336"
+                            }
+                          />
                         }
-                      />
-                    }
-                    onClick={handleClick}
-                  >
-                    {/* {agentDetail?.status || "N/A"} */}
-                    {selectedItem}
-                  </Button>
-                  <Menu
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={handleClose} // Close the menu when clicking outside or selecting an item
-                  >
-                    {/* Define menu items */}
-                    <MenuItem onClick={() => handleMenuItemClick("Active")}>
-                      Active
-                    </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Suspended")}>
-                      Suspended
-                    </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Pending")}>
-                      Pending
-                    </MenuItem>
-                    <MenuItem onClick={() => handleMenuItemClick("Cancelled")}>
-                      Cancelled
-                    </MenuItem>
-                  </Menu>
+                        onClick={handleClick}
+                      >
+                        {/* {agentDetail?.status || "N/A"} */}
+                        {selectedItem}
+                      </Button>
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose} // Close the menu when clicking outside or selecting an item
+                      >
+                        {/* Define menu items */}
+                        <MenuItem onClick={() => handleMenuItemClick("Active")}>
+                          Active
+                        </MenuItem>
+                        <MenuItem
+                          onClick={() => handleMenuItemClick("InActive")}
+                        >
+                          Inactive
+                        </MenuItem>
+                      </Menu>
+                    </>
+                  )}
                 </div>
 
                 <div className="flex text-[2rem] text-para_light my-10 ">
