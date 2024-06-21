@@ -184,7 +184,7 @@ export default function AssignedAccountManager({
                       align="center"
                       className="whitespace-nowrap font-500 "
                     >
-                      {row.id}
+                      {row.account_manager_id}
                     </TableCell>
 
                     <TableCell

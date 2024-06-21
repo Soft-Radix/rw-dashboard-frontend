@@ -92,9 +92,9 @@ const BarCharts = ({ graphdata, fetchData }) => {
   const handleMenuItemClick = (option: string) => {
     setSelectedOption(option);
     handleClose();
-    if (option === "7days") {
+    if (option === "Past 7 Days") {
       fetchData(0, "", "");
-    } else if (option === "custom") {
+    } else if (option === "Custom") {
       setIsModalOpen(true);
     }
   };
@@ -146,10 +146,10 @@ const BarCharts = ({ graphdata, fetchData }) => {
               },
             }}
           >
-            <MenuItem onClick={() => handleMenuItemClick("7days")}>
+            <MenuItem onClick={() => handleMenuItemClick("Past 7 Days")}>
               <ListItemText primary="Past 7 Days" />
             </MenuItem>
-            <MenuItem onClick={() => handleMenuItemClick("custom")}>
+            <MenuItem onClick={() => handleMenuItemClick("Custom")}>
               <ListItemText primary="Custom" />
             </MenuItem>
           </Menu>

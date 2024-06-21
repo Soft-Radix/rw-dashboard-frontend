@@ -276,7 +276,7 @@ function LineModal({ isOpen, setIsOpen, handleList, id, setId }: IProps) {
       onSubmit={handleSave}
       disabled={disable}
     >
-      <div className="flex flex-col gap-20 mb-20">
+      <div className="flex flex-col gap-20 mb-20 h-[500px] overflow-y-scroll ">
         <InputField
           formik={formik}
           name="name"

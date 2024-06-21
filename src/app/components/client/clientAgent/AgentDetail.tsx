@@ -33,6 +33,7 @@ const AgentDetail = () => {
 
   // Menu item click handler
   const handleMenuItemClick = async (status) => {
+    console.log(status,"staujkshfjds")
     setSelectedItem(status);
     const res = await dispatch(
       UpdateStatus({
@@ -41,6 +42,7 @@ const AgentDetail = () => {
       })
     );
     // setList(res?.payload?.data?.data?.list);
+
     toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };

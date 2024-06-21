@@ -43,13 +43,14 @@ const ClientStatus = ({ rowstatus, id }) => {
   const handleConfirm = async (confirmed) => {
     if (confirmed && pendingStatus) {
       setIsDisable(true);
-      setSelectedItem(pendingStatus);
+
       const res = await dispatch(
         UpdateStatus({
           user_id: id,
           status: pendingStatus === "Inactive" ? 2 : 1,
         })
       );
+      setSelectedItem(pendingStatus);
       setIsDisable(false);
       toast.success(res?.payload?.data?.message);
     }

@@ -207,7 +207,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
     <CommonModal
       open={isOpen}
       handleToggle={() => {
-        setIsOpen((prev) => !prev), setSelectedImage(null);
+        setIsOpen((prev) => !prev), setSelectedImage(null), formik.resetForm();
       }}
       modalTitle="Edit Profile"
       maxWidth="733"
@@ -216,7 +216,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
       disabled={loading}
       onSubmit={formik.handleSubmit}
     >
-      <div className="h-[100px] w-[100px] mb-[2.4rem] relative">
+      <div className="h-[100px] w-[100px] mb-[2.4rem] relative ">
         <img
           src={previewUrl || "../assets/images/logo/images.jpeg"}
           alt="profile_picture"
