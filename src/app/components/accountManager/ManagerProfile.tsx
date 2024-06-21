@@ -155,9 +155,8 @@ const ManagerProfile = () => {
   };
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -423,7 +422,7 @@ const ManagerProfile = () => {
             <Grid
               item
               lg={12}
-              className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-3/4"
+              className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-full"
             >
               <div className="flex-1">
                 <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
@@ -579,12 +578,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -601,8 +600,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                            ? "Expired"
-                            : "Pending"
+                              ? "Expired"
+                              : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}
