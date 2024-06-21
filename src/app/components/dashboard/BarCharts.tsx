@@ -188,7 +188,10 @@ const BarCharts = ({ graphdata, fetchData }) => {
             fontSize={10}
             tickMargin={20}
           />
-          <Tooltip content={<CustomTooltip />} />
+          <Tooltip
+            content={<CustomTooltip />}
+            cursor={{ fill: "transparent" }}
+          />
           <Bar
             dataKey="total"
             fill="#4E47E5"
