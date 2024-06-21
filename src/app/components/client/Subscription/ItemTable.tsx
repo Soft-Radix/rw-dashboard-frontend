@@ -1,46 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import CommonTable from "../../commonTable";
 
-import {
-  TableCell,
-  TableRow,
-  Tooltip,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import { TableCell, TableRow, useTheme } from "@mui/material";
 import { useFormik } from "formik";
 import { getLabelByValue } from "src/utils";
 import moment from "moment";
-
-export const TruncateText = ({ text, maxWidth }) => {
-  const [isTruncated, setIsTruncated] = useState(false);
-  const textRef = useRef(null);
-
-  useEffect(() => {
-    if (textRef.current) {
-      const textWidth = textRef.current.scrollWidth;
-      setIsTruncated(textWidth > maxWidth);
-    }
-  }, [text, maxWidth]);
-
-  return (
-    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
-      <Typography
-        ref={textRef}
-        noWrap
-        style={{
-          maxWidth: `${maxWidth}px`,
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          display: "inline-block",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {text}
-      </Typography>
-    </Tooltip>
-  );
-};
 
 const ItemTable = ({ rows }) => {
   const theme = useTheme();
@@ -89,7 +53,7 @@ const ItemTable = ({ rows }) => {
       >
         <>
           {data?.map((row, index) => {
-            // console.log(row, "rweyrwigfwfgeuf");
+            console.log(row,"rweyrwigfwfgeuf");
             return (
               <TableRow
                 key={index}
@@ -103,15 +67,15 @@ const ItemTable = ({ rows }) => {
                   },
                 }}
               >
-                {row?.product_name ? row?.product_name : "---"}
-              </TableCell>
-              <TableCell align="center" className="font-500">
-                {row?.description ? (
-                  <TruncateText text={row?.description} maxWidth={200} />
-                ) : (
-                  "---"
-                )}
-              </TableCell>
+                <TableCell
+                  scope="row"
+                  className="items-center gap-8 font-500 flex-col sm:flex-row"
+                >
+                  {row?.product_name ? row?.product_name : "---"}
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  {row?.description ? row?.description : "---"}
+                </TableCell>
 
                 <TableCell align="center" className="font-500">
                   {getLabelByValue(row.billing_frequency)}
@@ -138,21 +102,31 @@ const ItemTable = ({ rows }) => {
                   ${row?.net_price ? row?.net_price : "---"}
                 </TableCell>
 
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.quantity ? row?.quantity : "---"}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {rows?.billing_terms == 1
-                  ? "Fixed Number"
-                  : "Automatically" || "N/A"}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {rows?.subscription_start_date
-                  ? moment(rows?.subscription_start_date).format("DD/MM/yyyy")
-                  : "N/A"}
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.quantity ? row?.quantity : "---"}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.billing_frequency == 1
+                    ? "Fixed Number"
+                    : "Automatically" || "Automatically"}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.createdAt
+                    ? moment(row?.createdAt).format("DD/MM/yyyy")
+                    : "N/A"}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </>
       </CommonTable>
       <div className="bg-[#F7F9FB] mt-[44px] mx-[16px] px-[22px] py-[18px] rounded-8">
