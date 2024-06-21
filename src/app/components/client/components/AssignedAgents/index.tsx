@@ -1,22 +1,21 @@
 import { TableCell, TableRow, Theme, Typography } from "@mui/material";
 import { useTheme } from "@mui/styles";
+// import { addAgentInagentGroup } from "app/store/Agent group";
+import { filterType } from "app/store/Agent group/Interface";
+import { filterAgentType } from "app/store/Agent/Interafce";
 import { deleteAgentList } from "app/store/Client";
 import { ClientRootState } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import { useEffect, useState } from "react";
+import { NoDataFound } from "public/assets/icons/common";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import UnassignedAgent from "./UnassignedAgent";
-import { getAgentList } from "app/store/Agent";
-import { filterAgentType } from "app/store/Agent/Interafce";
-import { NoDataFound } from "public/assets/icons/common";
-import { addAgentInagentGroup } from "app/store/Agent group";
-import { filterType } from "app/store/Agent group/Interface";
-import { Link } from "react-router-dom";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
@@ -65,7 +64,7 @@ export default function AssignedAgents({
           ...prevFilters,
           start: assignedAgentDetail.length - 1 == 0 ? 0 : prevFilters.start,
         }));
-        dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
+        // dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
         setIsOpenUnassignedModal(false);
       }
     } catch (error) {

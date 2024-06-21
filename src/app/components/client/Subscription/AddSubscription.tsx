@@ -845,7 +845,7 @@ export default function AddSubscription() {
         quantity: item.quantity || 1,
         billing_frequency: item.billing_frequency || "2",
         billing_terms: item.billing_terms || 2,
-        no_of_payments: item.no_of_payments || 1,
+        no_of_payments: item.no_of_payments == 0 ? 0 : 1 || 1,
         is_delay_in_billing: item.is_delay_in_billing || 0,
         billing_start_date: item.billing_start_date || "",
       }));
@@ -996,6 +996,7 @@ export default function AddSubscription() {
       document.removeEventListener("wheel", handleWheel);
     };
   }, [list]);
+  console.log("varsha==", uniqueList);
   return (
     <>
       <TitleBar title="Add Subscriptions" />
