@@ -36,6 +36,7 @@ import {
   ArrowRightCircleIcon,
   DownGreenIcon,
   EditIcon,
+  NoDataFound,
 } from "public/assets/icons/common";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -123,9 +124,8 @@ export default function AgentDetails() {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
   const [deleteId, setIsDeleteId] = useState<number>(null);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
   const [pendingStatus, setPendingStatus] = useState(null);
@@ -172,6 +172,7 @@ export default function AgentDetails() {
   // };
 
   const handleMenuItemClick = async (status) => {
+    console.log(status, "statussdfgdfg");
     setPendingStatus(status);
     setIsConfirmOpen(true); // Open confirmation dialog
   };
@@ -180,7 +181,7 @@ export default function AgentDetails() {
   const handleConfirm = async (confirmed) => {
     if (confirmed && pendingStatus) {
       setIsDisable(true);
-      setSelectedItem(pendingStatus);
+
       const res = await dispatch(
         UpdateStatus({
           user_id: agent_id,
@@ -192,6 +193,7 @@ export default function AgentDetails() {
     }
     setIsConfirmOpen(false);
     setPendingStatus(null);
+    setSelectedItem(pendingStatus);
     handleClose(); // Close the menu after handling the click
   };
 
@@ -802,6 +804,30 @@ export default function AgentDetails() {
               "",
             ]}
           >
+            {agentDetail?.assigned_agent_client?.length === 0 && (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            )}
             {agentDetail?.assigned_agent_client?.map((row, index) => {
               // console.log(row, "roewww");
               return (
@@ -842,12 +868,12 @@ export default function AgentDetails() {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                     >
                       {row.subcription_status || "N/A"}
@@ -864,8 +890,8 @@ export default function AgentDetails() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.status == "Completed"
-                      ? "Expired"
-                      : "Pending"
+                        ? "Expired"
+                        : "Pending"
                   }`}
                     >
                       {row.status || "Pending"}

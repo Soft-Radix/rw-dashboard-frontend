@@ -197,7 +197,7 @@ export default function SubscriptionList() {
                       ${StatusMapping(row.status)}`}
                     >
                       {`${
-                        row?.status == 0 || row?.status == 1 ? "In " : ""
+                        row?.status == 0 || row?.status == 1 ? "" : ""
                       }${StatusMapping(row?.status)}`}
                     </span>
                   </TableCell>

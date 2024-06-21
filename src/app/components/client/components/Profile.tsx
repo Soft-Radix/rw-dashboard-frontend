@@ -69,7 +69,7 @@ export default function Profile({
   const handleConfirm = async (confirmed) => {
     if (confirmed && pendingStatus) {
       setIsDisable(true);
-      setSelectedItem(pendingStatus);
+      // setSelectedItem(pendingStatus);
       const res = await dispatch(
         UpdateStatus({
           user_id: client_id,
@@ -79,6 +79,7 @@ export default function Profile({
       setIsDisable(false);
       toast.success(res?.payload?.data?.message);
     }
+    setSelectedItem(pendingStatus);
     setIsConfirmOpen(false);
     setPendingStatus(null);
     handleClose(); // Close the menu after handling the click

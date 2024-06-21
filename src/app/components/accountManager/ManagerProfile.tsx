@@ -19,6 +19,7 @@ import {
   ArrowRightCircleIcon,
   DownGreenIcon,
   EditIcon,
+  NoDataFound,
 } from "public/assets/icons/common";
 import { useEffect, useState } from "react";
 import TitleBar from "../TitleBar";
@@ -139,13 +140,14 @@ const ManagerProfile = () => {
   const handleConfirm = async (confirmed) => {
     if (confirmed && pendingStatus) {
       setIsDisable(true);
-      setSelectedItem(pendingStatus);
+
       const res = await dispatch(
         UpdateStatus({
           user_id: accountManager_id,
           status: pendingStatus === "Inactive" ? 2 : 1,
         })
       );
+      setSelectedItem(pendingStatus);
       setIsDisable(false);
       toast.success(res?.payload?.data?.message);
     }
@@ -155,9 +157,8 @@ const ManagerProfile = () => {
   };
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -537,6 +538,31 @@ const ManagerProfile = () => {
                 "",
               ]}
             >
+              {accManagerDetail?.assigned_account_manager_client?.length ===
+                0 && (
+                <TableRow
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell colSpan={7} align="center">
+                    <div
+                      className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                      style={{ alignItems: "center" }}
+                    >
+                      <NoDataFound />
+                      <Typography className="text-[24px] text-center font-600 leading-normal">
+                        No data found !
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
               {accManagerDetail?.assigned_account_manager_client?.map(
                 (row, index) => {
                   // console.log(row, "roewww");
@@ -578,12 +604,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -600,8 +626,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                            ? "Expired"
-                            : "Pending"
+                              ? "Expired"
+                              : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}
