@@ -202,6 +202,7 @@ export default function ClientDetail() {
   }, [filterMenu]);
   useEffect(() => {
     dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
+    
     fetchManagerList();
   }, [dispatch, filterMenu]);
 
