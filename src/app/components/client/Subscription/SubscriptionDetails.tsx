@@ -110,7 +110,7 @@ export default function SubscriptionDetails() {
   );
 
   const renderAddress = (row) => {
-    console.log(row, "rowssss");
+    // console.log(row, "rowssss");
     const addressComponents = [
       row?.address,
       row?.address2,
