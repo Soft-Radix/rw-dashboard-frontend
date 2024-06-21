@@ -62,7 +62,7 @@ const CustomYAxisTick = (props: any) => {
 const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-[#ffffff] h-40 w-[auto] flex items-center justify-center">
+      <div className="custom-tooltip bg-[#ffffff] h-40 w-[auto] flex items-center justify-center p-10 rounded-6 shadow-lg">
         <p className="label font-400">{`Total Clients: ${payload[0].value} `}</p>
       </div>
     );
