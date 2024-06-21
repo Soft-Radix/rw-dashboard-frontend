@@ -54,7 +54,7 @@ export default function DatePopup({
   handleToggle,
   btnTitle,
   closeTitle,
-  maxWidth = "387",
+  maxWidth = "733",
   setStartDate,
   setEndDate,
 }) {
