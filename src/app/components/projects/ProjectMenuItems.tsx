@@ -78,10 +78,9 @@ export default function ProjectMenuItems(props) {
     handleClick(event, index); // Handle the click event
     handleClose(); // Close the menu
     setTableSelectedItemDesign(label);
-    
   };
   // console.log(anchorEl, "kkk");
-  console.log(label, "label");
+  // console.log(label, "label");
   const groupMenuData = [
     { label: "None" },
     { label: "Status" },

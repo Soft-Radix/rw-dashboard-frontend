@@ -58,8 +58,8 @@ const Root = styled(List)<ListComponentProps>(({ theme, ...props }) => ({
 }));
 
 function needsToBeOpened(location: Location, item: FuseNavItemType) {
-  console.log(item.children, "gdjhdgagashd");
-  console.log(location, "locationsss");
+  // console.log(item.children, "gdjhdgagashd");
+  // console.log(location, "locationsss");
   return location && isUrlInChildren(item, location.pathname);
 }
 

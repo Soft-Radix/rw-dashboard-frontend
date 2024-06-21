@@ -49,7 +49,7 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
         localStorage.setItem("userDetail", JSON.stringify(localData));
         setDisabled(false);
         window.location.reload();
-        setIsOpen(false);
+        // setIsOpen(false);
       }
     } catch (error) {
       setDisabled(false);
@@ -78,14 +78,14 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
     formik.handleSubmit();
   };
 
-  const handleToggle = (e: React.MouseEvent) => {
+  const handleClose = (e: React.MouseEvent) => {
     formik.resetForm(); // Reset form values when closing the modal
-    setIsOpen((prev) => !prev);
+    setIsOpen(false);
   };
   return (
     <CommonModal
       open={isOpen}
-      handleToggle={handleToggle}
+      handleToggle={handleClose}
       modalTitle="Add Project"
       maxWidth="314"
       btnTitle="Save"

@@ -92,9 +92,8 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
     (store: ProjectRootState) => store?.project
   );
   // console.log(projectInfo.list, "projectInfo");
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState<
-    object
-  >();
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
+    useState<object>();
 
   const navigate = useNavigate();
   const getTabIndexFromSubtype = (subtype) => {
@@ -253,7 +252,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   if (fetchStatusNew == "loading") {
     return <ListLoading />;
   }
-  console.log(columnList, "updatedList");
+  // console.log(columnList, "updatedList");
 
   const handleCompleteTask = async (id, ColumnId) => {
     if (id) {

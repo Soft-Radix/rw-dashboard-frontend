@@ -137,8 +137,8 @@ export default function CommonModal({
             disabled ? "btn-disable-light" : ""
           } w-[156px] h-[48px] text-[18px] ml-14`}
           onClick={(e) => {
-            e.stopPropagation();
             handleToggle(e);
+            // e.stopPropagation();
           }}
         >
           {closeTitle}
