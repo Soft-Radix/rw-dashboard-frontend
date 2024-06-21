@@ -155,8 +155,9 @@ const ManagerProfile = () => {
   };
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -291,23 +292,22 @@ const ManagerProfile = () => {
                       {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
                       <DialogContent>
                         <DialogContentText className="text-[#000]">
-                          Are you sure you want to change the user status to{" "}
-                          {pendingStatus}?
+                          Are you sure you want to {pendingStatus} this user?
                         </DialogContentText>
                       </DialogContent>
-                      <DialogActions className="pb-10">
+                      <DialogActions className="pb-10 justify-center">
                         <Button
                           variant="contained"
                           color="secondary"
                           disabled={disable}
                           className={`${disable ? "btn-disable" : ""}
-          
-              text-[18px]`}
+                      
+                          text-[18px]`}
                           onClick={(e) => {
                             handleConfirm(true);
                           }}
                         >
-                          Confirm
+                          Yes
                         </Button>
                         <Button
                           variant="outlined"
@@ -320,7 +320,7 @@ const ManagerProfile = () => {
                             handleConfirm(false);
                           }}
                         >
-                          Cancel
+                          No
                         </Button>
                       </DialogActions>
                     </Dialog>
@@ -578,12 +578,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subcription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subcription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subcription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subcription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -600,8 +600,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                              ? "Expired"
-                              : "Pending"
+                            ? "Expired"
+                            : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}
