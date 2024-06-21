@@ -122,7 +122,7 @@ export default function SubscriptionDetails() {
 
     return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
   };
-
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   console.log("======tytyty===", rows);
   return (
     <>
@@ -152,7 +152,11 @@ export default function SubscriptionDetails() {
                   <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative ">
                     <div className="h-[100px] w-[100px] sm:h-[100px] sm:w-[126px] rounded-full overflow-hidden">
                       <img
-                        src="/assets/images/avatars/male-21.jpg"
+                        src={
+                          rows?.user_image
+                            ? urlForImage + rows.user_image
+                            : "../assets/images/logo/images.jpeg"
+                        }
                         alt=""
                         className="h-[100px] w-[100px] rounded-full"
                       />
@@ -279,8 +283,8 @@ export default function SubscriptionDetails() {
                               rows?.card == "visa"
                                 ? "visa.svg"
                                 : rows?.card == "mastercard"
-                                  ? "mastercard.svg"
-                                  : "card.svg"
+                                ? "mastercard.svg"
+                                : "card.svg"
                             }`}
                             className="max-w-[64px]"
                             alt={rows?.card}

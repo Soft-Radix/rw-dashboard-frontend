@@ -501,7 +501,6 @@ function AddTaskModal({
       console.error("Error fetching data:", error);
     }
   };
-  console.log("======selectedDate==", selectedDate);
   const handleUploadFile = (event) => {
     const files = event.target.files;
     const filesArray = Array.from(files);
@@ -762,8 +761,9 @@ function AddTaskModal({
                     ? selectedAgents
                         ?.map(
                           (agentId) =>
-                            agentMenuData?.find((item) => item.id === agentId)
-                              ?.first_name
+                            agentMenuData?.find(
+                              (item) => item.agent_id === agentId
+                            )?.first_name
                         )
                         .join(", ")
                     : selectedAgent
@@ -806,12 +806,12 @@ function AddTaskModal({
                     <div
                       className="flex items-center gap-10 px-20 w-full"
                       key={item.id}
-                      onChange={() => handleAgentSelect(item.id)}
+                      onChange={() => handleAgentSelect(item.agent_id)}
                     >
                       <label className="flex items-center gap-10 w-full cursor-pointer">
                         <Checkbox
                           className="d-none"
-                          checked={selectedAgents?.includes(item.id)}
+                          checked={selectedAgents?.includes(item.agent_id)}
                           onChange={() => handleAgentSelect(item.agent_id)}
                         />
                         <span>{item?.userName}</span>

@@ -188,11 +188,10 @@ export default function Profile({
                       {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
                       <DialogContent>
                         <DialogContentText className="text-[#000]">
-                          Are you sure you want to change the user status to{" "}
-                          {pendingStatus}?
+                          Are you sure you want to {pendingStatus} this user?
                         </DialogContentText>
                       </DialogContent>
-                      <DialogActions className="pb-10">
+                      <DialogActions className="pb-10 justify-center">
                         <Button
                           variant="contained"
                           color="secondary"
@@ -204,7 +203,7 @@ export default function Profile({
                             handleConfirm(true);
                           }}
                         >
-                          Confirm
+                          Yes
                         </Button>
                         <Button
                           variant="outlined"
@@ -217,7 +216,7 @@ export default function Profile({
                             handleConfirm(false);
                           }}
                         >
-                          Cancel
+                          No
                         </Button>
                       </DialogActions>
                     </Dialog>

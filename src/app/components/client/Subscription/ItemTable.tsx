@@ -1,10 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import CommonTable from "../../commonTable";
 
-import { TableCell, TableRow, useTheme } from "@mui/material";
+import {
+  TableCell,
+  TableRow,
+  Tooltip,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { useFormik } from "formik";
 import { getLabelByValue } from "src/utils";
 import moment from "moment";
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
 
 const ItemTable = ({ rows }) => {
   const theme = useTheme();
@@ -72,7 +108,11 @@ const ItemTable = ({ rows }) => {
                 {row?.product_name ? row?.product_name : "---"}
               </TableCell>
               <TableCell align="center" className="font-500">
-                {row?.description ? row?.description : "---"}
+                {row?.description ? (
+                  <TruncateText text={row?.description} maxWidth={200} />
+                ) : (
+                  "---"
+                )}
               </TableCell>
 
               <TableCell align="center" className="font-500">
@@ -101,13 +141,13 @@ const ItemTable = ({ rows }) => {
                 {row?.quantity ? row?.quantity : "---"}
               </TableCell>
               <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.billing_frequency == 1
+                {rows?.billing_terms == 1
                   ? "Fixed Number"
-                  : "Automatically" || "Automatically"}
+                  : "Automatically" || "N/A"}
               </TableCell>
               <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.createdAt
-                  ? moment(row?.createdAt).format("DD/MM/yyyy")
+                {rows?.subscription_start_date
+                  ? moment(rows?.subscription_start_date).format("DD/MM/yyyy")
                   : "N/A"}
               </TableCell>
             </TableRow>
