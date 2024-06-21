@@ -2,6 +2,8 @@ import { Button, Checkbox, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 
 import ListLoading from "@fuse/core/ListLoading";
+import { getAccManagerList } from "app/store/AccountManager";
+import { AccManagerRootState } from "app/store/AccountManager/Interface";
 import { addAgentInagentGroup } from "app/store/Agent group";
 import { AgentGroupRootState } from "app/store/Agent group/Interface";
 import {
@@ -38,9 +40,6 @@ import AssignedAccountManager from "./components/AssignedAccountManager";
 import AssignedAgents from "./components/AssignedAgents";
 import Profile from "./components/Profile";
 import SubscriptionList from "./components/SubscriptionList";
-import { getAccManagerList } from "app/store/AccountManager";
-import { AccManagerRootState } from "app/store/AccountManager/Interface";
-import { getAgentList } from "app/store/Agent";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -121,6 +120,7 @@ export default function ClientDetail() {
 
   // Get a specific query parameter
   const paramValue = queryParams.get("type");
+  console.log(paramValue, "paramValue");
   //custom dropdown
   const [anchorEl3, setAnchorEl3] = useState<HTMLElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -198,13 +198,16 @@ export default function ClientDetail() {
     setSearch("");
   };
   const fetchManagerList = useCallback(() => {
-    dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
+    if (paramValue == "assigned-account") {
+      dispatch(getAccManagerList({ ...filterMenu, client_id: client_id }));
+    }
   }, [filterMenu]);
   useEffect(() => {
-    dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
-    
+    if (paramValue == "assigned-agents") {
+      dispatch(addAgentInagentGroup({ ...filterMenu, client_id: client_id }));
+    }
     fetchManagerList();
-  }, [dispatch, filterMenu]);
+  }, [dispatch, filterMenu, paramValue, client_id]);
 
   // console.log(agentfilterMenu, "filterMenu");
   const managerCallApi = () => {
@@ -217,25 +220,27 @@ export default function ClientDetail() {
   };
 
   const callAgentApi = () => {
+    // if (paramValue == "assigned-agents") {
     dispatch(
       GetAssignAgentsInfo({
         ...agentfilterMenu,
         client_id,
       })
     );
+    // }
   };
 
   useEffect(() => {
-    // if (initialRender) {
+    // if (paramValue == "assigned-agents") {
     callAgentApi();
     // }
   }, [agentfilterMenu]);
 
   useEffect(() => {
-    // if (initialRender) {
-    managerCallApi();
-    // }
-  }, [managerfilterMenu]);
+    if (paramValue == "assigned-account") {
+      managerCallApi();
+    }
+  }, [managerfilterMenu, paramValue]);
   const CustomDropDown = (): JSX.Element => {
     return (
       <DropdownMenu

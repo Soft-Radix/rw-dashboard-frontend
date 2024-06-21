@@ -337,9 +337,9 @@ const TaskDetails = () => {
                     Due Date :{" "}
                     <span className="font-500 text-[#111827] text-[14px]">
                       {taskDetailInfo?.due_date_time
-                        ? moment(taskDetailInfo?.due_date_time).format(
-                            "MMMM Do, YYYY , h:mm A"
-                          )
+                        ? moment
+                            .utc(taskDetailInfo?.due_date_time)
+                            .format("MMMM Do, YYYY , h:mm A")
                         : "N/A"}
                     </span>{" "}
                   </div>
@@ -437,9 +437,9 @@ const TaskDetails = () => {
                     <div className="flex items-center w-1/4">
                       <span className=" mt-10 text-[14px] font-500 whitespace-nowrap">
                         {taskDetailInfo?.reminders
-                          ? moment(taskDetailInfo?.reminders).format(
-                              " MMMM Do, YYYY , h:mm A"
-                            )
+                          ? moment
+                              .utc(taskDetailInfo?.reminders)
+                              .format(" MMMM Do, YYYY , h:mm A")
                           : "N/A"}
                       </span>
                     </div>

@@ -74,7 +74,7 @@ const CustomTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
 
 const BarCharts = ({ graphdata, fetchData }) => {
   const [data, setData] = useState<DataPoint[]>(sevenDayData);
-  const [selectedOption, setSelectedOption] = useState<string>("7days");
+  const [selectedOption, setSelectedOption] = useState<string>("Past 7 Days");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");

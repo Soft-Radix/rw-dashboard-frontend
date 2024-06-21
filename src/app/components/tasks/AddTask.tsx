@@ -472,8 +472,8 @@ function AddTaskModal({
       calculatedDate
         ? calculatedDate
         : selectedDate == "Due Date & Time"
-        ? ""
-        : formatDate(selectedDate)
+          ? ""
+          : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append(
@@ -647,8 +647,8 @@ function AddTaskModal({
       calculatedDate
         ? calculatedDate
         : selectedDate == "Due Date & Time"
-        ? ""
-        : formatDate(selectedDate)
+          ? ""
+          : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append("delete_agent_ids", "");
@@ -956,6 +956,7 @@ function AddTaskModal({
                     setCalenderOpen(false);
                     setDateTimeMenu(null);
                   }}
+                  closeOnSelect={false}
                   value={customDate}
                   onChange={handleDateChange}
                 />

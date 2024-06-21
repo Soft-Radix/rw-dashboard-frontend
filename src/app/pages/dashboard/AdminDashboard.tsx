@@ -56,16 +56,16 @@ export default function AdminDashboard() {
       </div>
       <div className="relative flex items-center justify-between py-10 px-28 ">
         <div className="w-full mx-auto p-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[1.6rem]">
             <div
               className="bg-[#C7C4F6] rounded-lg p-[20px] relative overflow-hidden"
               onClick={() => navigate("/admin/client")}
             >
               <Arrow1 color="#4F46E5" />
-              <div className="text-gray-900 text-base font-medium font-['Inter'] mt-[23px]">
+              <div className="text-gray-900 text-[16px] font-medium font-['Inter'] mt-[23px]">
                 Total Active Clients
               </div>
-              <div className="text-indigo-600 text-3xl font-bold font-['Inter'] mt-[8px]">
+              <div className="text-indigo-600 text-[30px] font-bold font-['Inter'] mt-[8px]">
                 {count?.total_active_clients}
               </div>
               <div className="absolute top-[-26px] right-[-30px]">
@@ -77,10 +77,10 @@ export default function AdminDashboard() {
               onClick={() => navigate("/admin/agents/list")}
             >
               <Arrow1 color="#2BA7DB" />
-              <div className="text-gray-900 text-base font-medium font-['Inter'] mt-[23px]">
+              <div className="text-gray-900 text-[16px] font-medium font-['Inter'] mt-[23px]">
                 Total Active Agents
               </div>
-              <div className="text-[#2BA7DB] text-3xl font-bold font-['Inter'] mt-[8px]">
+              <div className="text-[#2BA7DB] text-[30px] font-bold font-['Inter'] mt-[8px]">
                 {count?.total_active_agents}
               </div>
               <div className="absolute top-[-26px] right-[-30px]">
@@ -93,10 +93,10 @@ export default function AdminDashboard() {
               onClick={() => navigate("/admin/acc-manager")}
             >
               <Arrow1 color="#A54BBB" />
-              <div className="text-gray-900 text-base font-medium font-['Inter'] mt-[23px]">
+              <div className="text-gray-900 text-[16px] font-medium font-['Inter'] mt-[23px]">
                 Total Active Managers
               </div>
-              <div className="text-[#A54BBB] text-3xl font-bold font-['Inter'] mt-[8px]">
+              <div className="text-[#A54BBB] text-[30px] font-bold font-['Inter'] mt-[8px]">
                 {count?.total_active_manager}
               </div>
               <div className="absolute top-[-26px] right-[-30px]">
