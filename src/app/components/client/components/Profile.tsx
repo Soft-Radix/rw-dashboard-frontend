@@ -1,4 +1,14 @@
-import { Button, Grid, Menu, MenuItem, Typography } from "@mui/material";
+import {
+  Button,
+  Grid,
+  Menu,
+  MenuItem,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+} from "@mui/material";
 import { UpdateStatus, resetPassword } from "app/store/Client";
 import { ClientType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
@@ -25,6 +35,9 @@ export default function Profile({
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
+  const [disable, setIsDisable] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
+  const [pendingStatus, setPendingStatus] = useState(null);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -35,18 +48,42 @@ export default function Profile({
   // console.log(client_id, "client");
 
   // Menu item click handler
+  // const handleMenuItemClick = async (status) => {
+  //   console.log(`Selected status: ${status}`);
+  //   setSelectedItem(status);
+
+  //   const res = await dispatch(
+  //     UpdateStatus({ user_id: client_id, status: status == "InActive" ? 2 : 1 })
+  //   );
+  //   // setList(res?.payload?.data?.data?.list);
+  //   toast.success(res?.payload?.data?.message);
+
+  //   handleClose(); // Close the menu after handling the click
+  // };
   const handleMenuItemClick = async (status) => {
-    console.log(`Selected status: ${status}`);
-    setSelectedItem(status);
+    setPendingStatus(status);
+    setIsConfirmOpen(true); // Open confirmation dialog
+  };
 
-    const res = await dispatch(
-      UpdateStatus({ user_id: client_id, status: status == "InActive" ? 2 : 1 })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
-
+  // Confirm status update handler
+  const handleConfirm = async (confirmed) => {
+    if (confirmed && pendingStatus) {
+      setIsDisable(true);
+      setSelectedItem(pendingStatus);
+      const res = await dispatch(
+        UpdateStatus({
+          user_id: client_id,
+          status: pendingStatus === "Inactive" ? 2 : 1,
+        })
+      );
+      setIsDisable(false);
+      toast.success(res?.payload?.data?.message);
+    }
+    setIsConfirmOpen(false);
+    setPendingStatus(null);
     handleClose(); // Close the menu after handling the click
   };
+
   const handleResetPassword = async () => {
     await dispatch(resetPassword({ client_id: client_id }));
   };
@@ -131,17 +168,59 @@ export default function Profile({
                       {/* Define menu items */}
                       <MenuItem
                         onClick={() => handleMenuItemClick("Active")}
-                        selected={selectedItem == "Active"}
+                        disabled={selectedItem == "Active"}
                       >
                         Active
                       </MenuItem>
                       <MenuItem
-                        onClick={() => handleMenuItemClick("InActive")}
-                        selected={selectedItem == "Inactive"}
+                        onClick={() => handleMenuItemClick("Inactive")}
+                        disabled={selectedItem == "Inactive"}
                       >
                         Inactive
                       </MenuItem>
                     </Menu>
+
+                    <Dialog
+                      open={isConfirmOpen}
+                      onClose={() => setIsConfirmOpen(false)}
+                      className="p-10"
+                    >
+                      {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
+                      <DialogContent>
+                        <DialogContentText className="text-[#000]">
+                          Are you sure you want to change the user status to{" "}
+                          {pendingStatus}?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions className="pb-10">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          disabled={disable}
+                          className={`${disable ? "btn-disable" : ""}
+                      
+                          text-[18px]`}
+                          onClick={(e) => {
+                            handleConfirm(true);
+                          }}
+                        >
+                          Confirm
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          disabled={disable}
+                          className={`${disable ? "btn-disable-light" : ""}
+       
+           text-[18px] ml-14`}
+                          onClick={(e) => {
+                            handleConfirm(false);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                 </div>
                 <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-10px ">

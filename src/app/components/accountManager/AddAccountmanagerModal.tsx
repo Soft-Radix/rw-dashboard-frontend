@@ -482,7 +482,7 @@ function AddAccountManagerModel({
               <SelectField
                 formik={formik}
                 name="state"
-                label="state"
+                label="State"
                 placeholder="Select State"
                 sx={{
                   "& .radioIcon": { display: "none" },
@@ -502,7 +502,7 @@ function AddAccountManagerModel({
               <InputField
                 formik={formik}
                 name="state"
-                label="state"
+                label="State"
                 placeholder="Enter State"
               />
             )}

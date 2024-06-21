@@ -318,7 +318,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
             <SelectField
               formik={formik}
               name="state"
-              label="state"
+              label="State"
               placeholder="Select State"
               sx={{
                 "& .radioIcon": { display: "none" },
@@ -338,7 +338,7 @@ function EditProfile({ isOpen, setIsOpen, loading, clientDetail }: IProps) {
             <InputField
               formik={formik}
               name="state"
-              label="state"
+              label="State"
               placeholder="Enter State"
             />
           )}
