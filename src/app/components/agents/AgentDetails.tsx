@@ -9,6 +9,10 @@ import {
   TableRow,
   Theme,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -123,6 +127,9 @@ export default function AgentDetails() {
     false
   );
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
+  const [pendingStatus, setPendingStatus] = useState(null);
+  const [disable, setIsDisable] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [expandedImage, setExpandedImage] = useState(null);
   const { role } = useSelector((store: any) => store?.user);
@@ -151,16 +158,40 @@ export default function AgentDetails() {
     setAnchorEl(null); // Reset anchor element to hide the menu
   };
 
+  // const handleMenuItemClick = async (status) => {
+  //   setSelectedItem(status);
+  //   const res = await dispatch(
+  //     UpdateStatus({
+  //       user_id: agent_id,
+  //       status: status == "InActive" ? 2 : 1,
+  //     })
+  //   );
+  //   // setList(res?.payload?.data?.data?.list);
+  //   toast.success(res?.payload?.data?.message);
+  //   handleClose(); // Close the menu after handling the click
+  // };
+
   const handleMenuItemClick = async (status) => {
-    setSelectedItem(status);
-    const res = await dispatch(
-      UpdateStatus({
-        user_id: agent_id,
-        status: status == "InActive" ? 2 : 1,
-      })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
+    setPendingStatus(status);
+    setIsConfirmOpen(true); // Open confirmation dialog
+  };
+
+  // Confirm status update handler
+  const handleConfirm = async (confirmed) => {
+    if (confirmed && pendingStatus) {
+      setIsDisable(true);
+      setSelectedItem(pendingStatus);
+      const res = await dispatch(
+        UpdateStatus({
+          user_id: agent_id,
+          status: pendingStatus === "Inactive" ? 2 : 1,
+        })
+      );
+      setIsDisable(false);
+      toast.success(res?.payload?.data?.message);
+    }
+    setIsConfirmOpen(false);
+    setPendingStatus(null);
     handleClose(); // Close the menu after handling the click
   };
 
@@ -322,17 +353,65 @@ export default function AgentDetails() {
                                     onClick={() =>
                                       handleMenuItemClick("Active")
                                     }
+                                    disabled={selectedItem == "Active"}
                                   >
                                     Active
                                   </MenuItem>
                                   <MenuItem
                                     onClick={() =>
-                                      handleMenuItemClick("InActive")
+                                      handleMenuItemClick("Inactive")
                                     }
+                                    disabled={selectedItem == "Inactive"}
                                   >
                                     Inactive
                                   </MenuItem>
                                 </Menu>
+
+                                <Dialog
+                                  open={isConfirmOpen}
+                                  onClose={() => setIsConfirmOpen(false)}
+                                  className="p-10"
+                                >
+                                  {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
+                                  <DialogContent>
+                                    <DialogContentText className="text-[#000]">
+                                      Are you sure you want to {pendingStatus}{" "}
+                                      this user?
+                                    </DialogContentText>
+                                  </DialogContent>
+                                  <DialogActions className="pb-10 justify-center">
+                                    <Button
+                                      variant="contained"
+                                      color="secondary"
+                                      disabled={disable}
+                                      className={`${
+                                        disable ? "btn-disable" : ""
+                                      }
+                      
+                          text-[18px]`}
+                                      onClick={(e) => {
+                                        handleConfirm(true);
+                                      }}
+                                    >
+                                      Yes
+                                    </Button>
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      disabled={disable}
+                                      className={`${
+                                        disable ? "btn-disable-light" : ""
+                                      }
+       
+           text-[18px] ml-14`}
+                                      onClick={(e) => {
+                                        handleConfirm(false);
+                                      }}
+                                    >
+                                      No
+                                    </Button>
+                                  </DialogActions>
+                                </Dialog>
                               </>
                             )}
                           </div>

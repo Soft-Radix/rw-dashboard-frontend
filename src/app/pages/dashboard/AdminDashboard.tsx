@@ -55,7 +55,7 @@ export default function AdminDashboard() {
         </Typography>
       </div>
       <div className="relative flex items-center justify-between py-10 px-28 ">
-        <div className="container mx-auto p-4">
+        <div className="w-full mx-auto p-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <div
               className="bg-[#C7C4F6] rounded-lg p-[20px] relative overflow-hidden"

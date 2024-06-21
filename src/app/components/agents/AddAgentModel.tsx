@@ -405,7 +405,7 @@ function AddAgentModel({
               <SelectField
                 formik={formik}
                 name="state"
-                label="state"
+                label="State"
                 placeholder="Select State"
                 sx={{
                   "& .radioIcon": { display: "none" },
@@ -425,7 +425,7 @@ function AddAgentModel({
               <InputField
                 formik={formik}
                 name="state"
-                label="state"
+                label="State"
                 placeholder="Enter State"
               />
             )}
@@ -447,7 +447,7 @@ function AddAgentModel({
                 "& .radioIcon": { display: "none" },
               }}
             >
-              {allCountries.length > 0 ? (
+              {allCountries?.length > 0 ? (
                 allCountries?.map((item) => (
                   <StyledMenuItem key={item.iso_code} value={item.name}>
                     {item.name}

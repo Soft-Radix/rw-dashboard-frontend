@@ -92,12 +92,35 @@ export default function DatePopup({
         },
       }}
     >
-      <div
+      {/* <div
         className={`p-16 flex justify-between w-full items-center bg-[#fff] `}
       >
         <Typography
           className={`text-[16px] font-semibold
             text-black`}
+        >
+          {modalTitle}
+        </Typography>
+        <IconButton>
+          <CrossIcon
+            className="cursor-pointer"
+            color="#fff"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleToggle(e);
+            }}
+          />
+        </IconButton>
+      </div> */}
+      <div
+        className={`p-16 flex justify-between w-full items-center 
+       bg-[#2C334C]
+        `}
+      >
+        <Typography
+          className={`text-[16px] font-semibold" 
+          text-[#fff]
+          `}
         >
           {modalTitle}
         </Typography>

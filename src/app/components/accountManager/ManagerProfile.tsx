@@ -9,6 +9,10 @@ import {
   TableRow,
   Theme,
   Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import {
@@ -99,6 +103,9 @@ const ManagerProfile = () => {
 
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
+  const [pendingStatus, setPendingStatus] = useState(null);
+  const [disable, setIsDisable] = useState(false);
   // Open menu handler
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
@@ -110,22 +117,47 @@ const ManagerProfile = () => {
   };
 
   // Menu item click handler
+  // const handleMenuItemClick = async (status) => {
+  //   setSelectedItem(status);
+  //   const res = await dispatch(
+  //     UpdateStatus({
+  //       user_id: accountManager_id,
+  //       status: status == "InActive" ? 2 : 1,
+  //     })
+  //   );
+  //   // setList(res?.payload?.data?.data?.list);
+  //   toast.success(res?.payload?.data?.message);
+  //   handleClose(); // Close the menu after handling the click
+  // };
+
   const handleMenuItemClick = async (status) => {
-    setSelectedItem(status);
-    const res = await dispatch(
-      UpdateStatus({
-        user_id: accountManager_id,
-        status: status == "InActive" ? 2 : 1,
-      })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
+    setPendingStatus(status);
+    setIsConfirmOpen(true); // Open confirmation dialog
+  };
+
+  // Confirm status update handler
+  const handleConfirm = async (confirmed) => {
+    if (confirmed && pendingStatus) {
+      setIsDisable(true);
+      setSelectedItem(pendingStatus);
+      const res = await dispatch(
+        UpdateStatus({
+          user_id: accountManager_id,
+          status: pendingStatus === "Inactive" ? 2 : 1,
+        })
+      );
+      setIsDisable(false);
+      toast.success(res?.payload?.data?.message);
+    }
+    setIsConfirmOpen(false);
+    setPendingStatus(null);
     handleClose(); // Close the menu after handling the click
   };
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] =
-    useState<boolean>(false);
+  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
+    false
+  );
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -238,13 +270,60 @@ const ManagerProfile = () => {
                       onClose={handleClose} // Close the menu when clicking outside or selecting an item
                     >
                       {/* Define menu items */}
-                      <MenuItem onClick={() => handleMenuItemClick("Active")}>
+                      <MenuItem
+                        onClick={() => handleMenuItemClick("Active")}
+                        disabled={selectedItem == "Active"}
+                      >
                         Active
                       </MenuItem>
-                      <MenuItem onClick={() => handleMenuItemClick("InActive")}>
+                      <MenuItem
+                        onClick={() => handleMenuItemClick("Inactive")}
+                        disabled={selectedItem == "Inactive"}
+                      >
                         Inactive
                       </MenuItem>
                     </Menu>
+
+                    <Dialog
+                      open={isConfirmOpen}
+                      onClose={() => setIsConfirmOpen(false)}
+                      className="p-10"
+                    >
+                      {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
+                      <DialogContent>
+                        <DialogContentText className="text-[#000]">
+                          Are you sure you want to {pendingStatus} this user?
+                        </DialogContentText>
+                      </DialogContent>
+                      <DialogActions className="pb-10 justify-center">
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          disabled={disable}
+                          className={`${disable ? "btn-disable" : ""}
+                      
+                          text-[18px]`}
+                          onClick={(e) => {
+                            handleConfirm(true);
+                          }}
+                        >
+                          Yes
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          disabled={disable}
+                          className={`${disable ? "btn-disable-light" : ""}
+       
+           text-[18px] ml-14`}
+                          onClick={(e) => {
+                            handleConfirm(false);
+                          }}
+                        >
+                          No
+                        </Button>
+                      </DialogActions>
+                    </Dialog>
                   </div>
                   <div className="flex text-[2rem] text-para_light flex-col sm:flex-row gap-[20px]">
                     <div className="flex">
@@ -499,12 +578,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                              : row.subcription_status == "Suspended"
-                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                                : row.subcription_status == "Cancelled"
-                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                                  : ""
+                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                            : row.subcription_status == "Suspended"
+                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                            : row.subcription_status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -521,8 +600,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                              ? "Expired"
-                              : "Pending"
+                            ? "Expired"
+                            : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}

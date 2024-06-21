@@ -2,11 +2,13 @@ import { DownGreenIcon } from "public/assets/icons/common";
 import React, { useEffect, useState } from "react";
 import {
   Button,
-  Checkbox,
   Menu,
-  TableCell,
-  TableRow,
   MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   Typography,
 } from "@mui/material";
 import toast from "react-hot-toast";
@@ -16,7 +18,11 @@ import { UpdateStatus } from "app/store/Client";
 const ClientStatus = ({ rowstatus, id }) => {
   const [anchorEl, setAnchorEl] = useState(null); // State to manage anchor element for menu
   const [selectedItem, setSelectedItem] = useState("Active");
+  const [disable, setIsDisable] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
+  const [pendingStatus, setPendingStatus] = useState(null); // State to manage the status to be updated
   const dispatch = useAppDispatch();
+
   // Open menu handler
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
@@ -27,28 +33,41 @@ const ClientStatus = ({ rowstatus, id }) => {
     setAnchorEl(null); // Reset anchor element to hide the menu
   };
 
-  // Menu item click handler
+  // Open confirmation dialog handler
   const handleMenuItemClick = async (status) => {
-    setSelectedItem(status);
-    const res = await dispatch(
-      UpdateStatus({
-        user_id: id,
-        status: status == "InActive" ? 2 : 1,
-      })
-    );
-    // setList(res?.payload?.data?.data?.list);
-    toast.success(res?.payload?.data?.message);
+    setPendingStatus(status);
+    setIsConfirmOpen(true); // Open confirmation dialog
+  };
+
+  // Confirm status update handler
+  const handleConfirm = async (confirmed) => {
+    if (confirmed && pendingStatus) {
+      setIsDisable(true);
+      setSelectedItem(pendingStatus);
+      const res = await dispatch(
+        UpdateStatus({
+          user_id: id,
+          status: pendingStatus === "Inactive" ? 2 : 1,
+        })
+      );
+      setIsDisable(false);
+      toast.success(res?.payload?.data?.message);
+    }
+    setIsConfirmOpen(false);
+    setPendingStatus(null);
     handleClose(); // Close the menu after handling the click
   };
+
   useEffect(() => {
     setSelectedItem(rowstatus);
   }, [rowstatus]);
+
   return (
     <>
       <Button
         variant="outlined"
         className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none ${
-          selectedItem == "Active"
+          selectedItem === "Active"
             ? "text-[#4CAF50] bg-[#4CAF502E]" // Green for 'Active'
             : "text-[#F44336] bg-[#F443362E]"
         }`}
@@ -66,13 +85,59 @@ const ClientStatus = ({ rowstatus, id }) => {
         open={Boolean(anchorEl)}
         onClose={handleClose} // Close the menu when clicking outside or selecting an item
       >
-        <MenuItem onClick={() => handleMenuItemClick("Active")}>
+        <MenuItem
+          onClick={() => handleMenuItemClick("Active")}
+          disabled={selectedItem == "Active"}
+        >
           Active
         </MenuItem>
-        <MenuItem onClick={() => handleMenuItemClick("InActive")}>
+        <MenuItem
+          onClick={() => handleMenuItemClick("Inactive")}
+          disabled={selectedItem == "Inactive"}
+        >
           Inactive
         </MenuItem>
       </Menu>
+      <Dialog
+        open={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        className="p-10"
+      >
+        {/* <DialogTitle>Confirm Status Change</DialogTitle> */}
+        <DialogContent>
+          <DialogContentText className="text-[#000]">
+            Are you sure you want to {pendingStatus} this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions className="pb-10 justify-center">
+          <Button
+            variant="contained"
+            color="secondary"
+            disabled={disable}
+            className={`${disable ? "btn-disable" : ""}
+                      
+                          text-[18px]`}
+            onClick={(e) => {
+              handleConfirm(true);
+            }}
+          >
+            Yes
+          </Button>
+          <Button
+            variant="outlined"
+            color="secondary"
+            disabled={disable}
+            className={`${disable ? "btn-disable-light" : ""}
+       
+           text-[18px] ml-14`}
+            onClick={(e) => {
+              handleConfirm(false);
+            }}
+          >
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
