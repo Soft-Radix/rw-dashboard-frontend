@@ -14,7 +14,14 @@ import TitleBar from "src/app/components/TitleBar";
 import AddTaskModal from "src/app/components/tasks/AddTask";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
 import RecentData from "../../components/client/clientAgent/RecentData";
-import { Clock, DownGreenIcon, Token } from "public/assets/icons/common";
+import {
+  Clock,
+  DeleteGrey,
+  DeleteIcon,
+  DownGreenIcon,
+  EditIcon,
+  Token,
+} from "public/assets/icons/common";
 import { useNavigate, useParams } from "react-router";
 import { getAgentInfo, getStatusList } from "app/store/Agent";
 import { useAppDispatch } from "app/store/store";
@@ -71,7 +78,7 @@ const TaskDetails = () => {
     (store: ProjectRootState) => store.project
   );
 
-  console.log(" TaskDetail", taskDetailInfo);
+  // console.log(" TaskDetail", taskDetailInfo);
   const formatTime = (time: any) => {
     const minutes = Math.floor(time / 60);
     const seconds = time % 60;
@@ -194,10 +201,10 @@ const TaskDetails = () => {
     console.error(error);
   }, [error]);
 
-  console.log(
-    urlForImage + taskDetailInfo?.voice_record_file,
-    "urlForImage + taskDetailInfo?.voice_record_file454545"
-  );
+  // console.log(
+  //   urlForImage + taskDetailInfo?.voice_record_file,
+  //   "urlForImage + taskDetailInfo?.voice_record_file454545"
+  // );
 
   const fetchAudioBlob = async () => {
     try {
@@ -238,7 +245,7 @@ const TaskDetails = () => {
   //   <ListLoading />;
   // }
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
-  console.log(taskDetailInfo, "taskDetailInfo");
+  // console.log(taskDetailInfo, "taskDetailInfo");
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -247,12 +254,12 @@ const TaskDetails = () => {
           <div className="shadow-md bg-white rounded-lg">
             <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative">
               <div className="w-full">
-                <div className="flex items-center justify-between gap-40 mb-10">
-                  <span className="text-[20px] text-[#111827] font-600 inline-block">
+                <div className="flex justify-between gap-40 mb-10  ">
+                  <div className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden truncate ">
                     {taskDetailInfo?.title}
-                  </span>
-                  <div className="flex items-center gap-20">
-                    <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20">
+                  </div>
+                  <div className="flex items-center  justify-end gap-20 w-full bg-red-20 ">
+                    <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20 justify-end items-end">
                       {/* {agentDetail?.status || "N/A"} */}
                       <ImportantTaskIcon />
                       {taskDetailInfo?.labels}
@@ -293,7 +300,14 @@ const TaskDetails = () => {
                               toggleEditModal();
                             }}
                           >
-                            Edit Task
+                            <div className="flex gap-20 w-full justify-between ">
+                              <p className="text-[16px] text-[#000000] font-500">
+                                Edit Task
+                              </p>
+                              <span className="">
+                                <EditIcon fill="#757982" />
+                              </span>
+                            </div>
                           </MenuItem>
                           <MenuItem
                             onClick={() => {
@@ -301,7 +315,15 @@ const TaskDetails = () => {
                               toggleDeleteModal();
                             }}
                           >
-                            Delete Task
+                            <div className="flex gap-20  w-full justify-between">
+                              <p className="text-[16px] text-[#000000] font-500">
+                                {" "}
+                                Delete Task
+                              </p>
+                              <span className="">
+                                <DeleteGrey fill="#757982" />
+                              </span>
+                            </div>
                           </MenuItem>
                         </Menu>
                       </div>
@@ -311,12 +333,12 @@ const TaskDetails = () => {
 
                 <div className="flex text-[14px] text-para_light my-10 font-400 ">
                   <div className="flex">
-                    {/*  <span>{agentDetail?.id || "N/A"}</span> */}
-                    Due Date:{" "}
+                    {/* <span>{agentDetail?.id || "N/A"}</span> */}
+                    Due Date :{" "}
                     <span className="font-500 text-[#111827] text-[14px]">
                       {taskDetailInfo?.due_date_time
                         ? moment(taskDetailInfo?.due_date_time).format(
-                            "MMMM Do, YYYY"
+                            "MMMM Do, YYYY , h:mm A"
                           )
                         : "N/A"}
                     </span>{" "}
@@ -416,7 +438,7 @@ const TaskDetails = () => {
                       <span className=" mt-10 text-[14px] font-500 whitespace-nowrap">
                         {taskDetailInfo?.reminders
                           ? moment(taskDetailInfo?.reminders).format(
-                              "MMMM Do, YYYY"
+                              " MMMM Do, YYYY , h:mm A"
                             )
                           : "N/A"}
                       </span>
@@ -464,36 +486,81 @@ const TaskDetails = () => {
 
                 <div className="flex gap-20 my-20 w-full">
                   <div className="relative w-1/2">
-                    <Typography className="mb-10">Files</Typography>
+                    <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
+                      Files
+                    </Typography>
                     <div className="flex gap-10  flex-wrap">
                       {taskDetailInfo?.task_files?.map((item) => {
                         // console.log(item, "itemmmm");
                         return (
-                          <div className="relative w-max  ">
-                            <img
-                              src={urlForImage + item.file}
-                              alt="Black Attachment"
-                              className="w-[200px] rounded-md sm:h-[130px]"
-                            />
-                            <div
-                              className="absolute top-7 left-7"
-                              onClick={() =>
-                                handleImageClick(urlForImage + item.file)
-                              }
-                            >
-                              <AttachmentIcon />
-                            </div>
-                            <div className="absolute top-7 right-7">
-                              {userDetails?.role != "agent" && (
-                                <AttachmentDeleteIcon
-                                  onClick={() => {
-                                    setIsOpenDeletedModal(true);
-                                    setType(3);
-                                    setIsDeleteId(item.id);
-                                  }}
+                          <div className="relative cursor-pointer ">
+                            {item.file.includes(".png") ||
+                            item.file.includes(".jpg") ||
+                            item.file.includes(".jpeg") ? (
+                              <>
+                                <img
+                                  src={urlForImage + item.file}
+                                  alt="Black Attachment"
+                                  className="w-[200px] rounded-md sm:h-[130px]"
                                 />
-                              )}
-                            </div>
+                                <div
+                                  className="absolute top-7 left-7"
+                                  onClick={() =>
+                                    handleImageClick(urlForImage + item.file)
+                                  }
+                                >
+                                  <AttachmentIcon />
+                                </div>
+                                <div
+                                  className="absolute top-7 right-7"
+                                  // onClick={() => handleDeleteAttachment(item.id)}
+                                >
+                                  <AttachmentDeleteIcon
+                                    onClick={() => {
+                                      setIsOpenDeletedModal(true);
+                                      setType(3);
+                                      setIsDeleteId(item.id);
+                                    }}
+                                  />
+                                </div>
+                              </>
+                            ) : (
+                              <div className="w-[200px] rounded-md sm:h-[130px] flex items-center justify-center border-1 border-[#4F46E5]">
+                                <a
+                                  href={urlForImage + item.file}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <img
+                                    src="../assets/images/logo/pdfIcon.png"
+                                    alt="Black Attachment"
+                                    className="h-[50px] w-[50px]"
+                                  />
+                                </a>
+
+                                {/* <a href="/">check</a> */}
+                                <div
+                                  className="absolute top-7 left-7"
+                                  onClick={() =>
+                                    handleImageClick(urlForImage + item.file)
+                                  }
+                                >
+                                  <AttachmentIcon />
+                                </div>
+                                <div
+                                  className="absolute top-7 right-7"
+                                  // onClick={() => handleDeleteAttachment(item.id)}
+                                >
+                                  <AttachmentDeleteIcon
+                                    onClick={() => {
+                                      setIsOpenDeletedModal(true);
+                                      setType(3);
+                                      setIsDeleteId(item.id);
+                                    }}
+                                  />
+                                </div>
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -515,7 +582,7 @@ const TaskDetails = () => {
                   </div>
                   <div className="w-1/2">
                     <div className="relative">
-                      <Typography className="mb-10">
+                      <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
                         Screen Recording
                       </Typography>
                       {taskDetailInfo?.screen_record_file && (
@@ -527,7 +594,7 @@ const TaskDetails = () => {
                             // alt="screen recorder"
                             className="block w-full h-[200px]"
                           />
-                          <div className="absolute top-0 right-0 mt-4 mr-4">
+                          <div className="absolute top-[28px] right-0 mt-4 mr-4">
                             <AttachmentDeleteIcon
                               onClick={() => {
                                 setIsOpenDeletedModal(true);
@@ -543,7 +610,9 @@ const TaskDetails = () => {
                 </div>
 
                 <div>
-                  <Typography className="mb-10">Voice Memo</Typography>
+                  <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
+                    Voice Memo
+                  </Typography>
                   {/* <div className="my-10 flex flex-col gap-[10px] audio-container "> */}
                   {/* <div
                       className="my-10 flex  gap-[10px] "

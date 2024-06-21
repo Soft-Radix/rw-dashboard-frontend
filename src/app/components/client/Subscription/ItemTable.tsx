@@ -52,66 +52,81 @@ const ItemTable = ({ rows }) => {
         }}
       >
         <>
-          {data?.map((row, index) => (
-            <TableRow
-              key={index}
-              sx={{
-                "&:last-child td, &:last-child th": { border: 0 },
-                "& td": {
-                  borderBottom: "1px solid #EDF2F6",
-                  paddingTop: "12px",
-                  paddingBottom: "12px",
-                  color: theme.palette.primary.main,
-                },
-              }}
-            >
-              <TableCell
-                scope="row"
-                className="items-center gap-8 font-500 flex-col sm:flex-row"
+          {data?.map((row, index) => {
+            // console.log(row, "rweyrwigfwfgeuf");
+            return (
+              <TableRow
+                key={index}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
               >
-                {row?.product_name ? row?.product_name : "---"}
-              </TableCell>
-              <TableCell align="center" className="font-500">
-                {row?.description ? row?.description : "---"}
-              </TableCell>
+                <TableCell
+                  scope="row"
+                  className="items-center gap-8 font-500 flex-col sm:flex-row"
+                >
+                  {row?.product_name ? row?.product_name : "---"}
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  {row?.description ? row?.description : "---"}
+                </TableCell>
 
-              <TableCell align="center" className="font-500">
-                {getLabelByValue(row.billing_frequency)}
-              </TableCell>
+                <TableCell align="center" className="font-500">
+                  {getLabelByValue(row.billing_frequency)}
+                </TableCell>
 
-              <TableCell align="center" className="font-500">
-                {rows?.no_of_payments ? rows?.no_of_payments : ""}
-              </TableCell>
-              <TableCell align="center" className="font-500">
-                {/* {row?.unit_discount ? row?.unit_discount : "N/A"} */}
-                {row?.unit_discount
-                  ? `${row?.unit_discount_type == 2 ? "$" : ""}${
-                      row.unit_discount
-                    }${row?.unit_discount_type == 1 ? "%" : ""}`
-                  : "N/A"}
-              </TableCell>
-              <TableCell align="center" className="font-500">
-                ${row?.unit_price ? row?.unit_price : "---"}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                ${row?.net_price ? row?.net_price : "---"}
-              </TableCell>
+                <TableCell align="center" className="font-500">
+                  {rows?.no_of_payments ? rows?.no_of_payments : ""}
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  {/* {row?.unit_discount ? row?.unit_discount : "N/A"} */}
+                  {row?.unit_discount
+                    ? `${row?.unit_discount_type == 2 ? "$" : ""}${
+                        row.unit_discount
+                      }${row?.unit_discount_type == 1 ? "%" : ""}`
+                    : "N/A"}
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  ${row?.unit_price ? row?.unit_price : "---"}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  ${row?.net_price ? row?.net_price : "---"}
+                </TableCell>
 
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.quantity ? row?.quantity : "---"}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.billing_frequency == 1
-                  ? "Fixed Number"
-                  : "Automatically" || "Automatically"}
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {row?.createdAt
-                  ? moment(row?.createdAt).format("DD/MM/yyyy")
-                  : "N/A"}
-              </TableCell>
-            </TableRow>
-          ))}
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.quantity ? row?.quantity : "---"}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.billing_frequency == 1
+                    ? "Fixed Number"
+                    : "Automatically" || "Automatically"}
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row?.createdAt
+                    ? moment(row?.createdAt).format("DD/MM/yyyy")
+                    : "N/A"}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </>
       </CommonTable>
       <div className="bg-[#F7F9FB] mt-[44px] mx-[16px] px-[22px] py-[18px] rounded-8">
