@@ -72,7 +72,6 @@ function ThemePageTable(props) {
   // const extraAgentsCount = agent.length - maxVisibleImages;
   const extraAgents = columnList?.assigned_task_users?.length - 3;
   // setIsOpenDeletedModal(false);
-  console.log(columnList, "visibleAgents");
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -200,8 +199,8 @@ function ThemePageTable(props) {
                     row.priority === "Low"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.priority === "Medium"
-                      ? "text-[#FF5F15] bg-[#FF5F152E]"
-                      : "text-[#F44336] bg-[#F443362E]"
+                        ? "text-[#FF5F15] bg-[#FF5F152E]"
+                        : "text-[#F44336] bg-[#F443362E]"
                   }`}
                     >
                       {row.priority}
