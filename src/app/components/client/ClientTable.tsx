@@ -208,7 +208,7 @@ function ClientTable({
                       {moment(row.created_at).format("ll")}
                     </TableCell>
                   )}
-                  {status && renderCell("Subscription Status") && (
+                  {renderCell("Subscription Status") && (
                     <TableCell
                       align="left"
                       className="whitespace-nowrap font-500"
@@ -224,6 +224,8 @@ function ClientTable({
                             ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
                             : row.subscription_status == "Cancelled"
                             ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : row.subscription_status == "Inactive"
+                            ? "text-[#FF0000] bg-[#FFD1D1]"
                             : ""
                         }`}
                       >
@@ -232,7 +234,7 @@ function ClientTable({
                     </TableCell>
                   )}
 
-                  {status && renderCell("Account Status") && (
+                  {renderCell("Account Status") && (
                     <TableCell
                       align="left"
                       className="whitespace-nowrap font-500"

@@ -117,7 +117,7 @@ export default function Myagents() {
           <div className="p-[2rem]">
             <SearchInput
               name="search"
-              placeholder="Search Agent2s"
+              placeholder="Search Agents"
               onChange={handleSearchChange}
               handleInputClear={handleInputClear}
               inputValue={inputValue}
@@ -215,11 +215,15 @@ export default function Myagents() {
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
                   ${
-                    row.status === "Completed"
-                      ? "text-[#4CAF50] bg-[#4CAF502E]"
-                      : row.status === "In Progress"
-                        ? "text-[#F44336] bg-[#F443362E]"
-                        : "text-[#4CAF50] bg-[#4CAF502E]"
+                    row?.status == "Active"
+                      ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
+                      : row.status == "Pending"
+                      ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                      : row.status == "Inactive"
+                      ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                      : row.status == "Cancelled"
+                      ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                      : ""
                   }`}
                     >
                       {row.status || "Active"}
