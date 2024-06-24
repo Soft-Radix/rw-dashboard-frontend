@@ -204,7 +204,7 @@ export default function ProjectTabPanel() {
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
-              className={`min-h-0 pb-14 pt-20 px-20 gap-[50px] ${client_id?.role_id !== ROLES.AGENT ? "w-[calc(100%-170px)]" : "w-full"} overflow-y-auto`}
+              className={`min-h-0 pb-14 pt-20 px-20 gap-[50px] ${client_id?.role_id !== ROLES.AGENT ? "w-[calc(100%-720px)]" : "w-full"} overflow-y-auto`}
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
@@ -260,7 +260,7 @@ export default function ProjectTabPanel() {
                 }
               />
               <Tab
-                label="Calender"
+                label="Calendar"
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={

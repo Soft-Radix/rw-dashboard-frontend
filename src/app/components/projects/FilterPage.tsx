@@ -56,15 +56,15 @@ const FilterPage = (props: FilterDesign) => {
     <div className="px-4 ">
       <div
         className="relative bg-[#ffff] py-5
-      sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl overflow-hidden"
+      sm:py-10 px-5 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-10 rounded-xl overflow-hidden leading-[14px] text-[14px]"
       >
         <div>
           <SearchInput
             name="search"
             placeholder="Search Task"
             onChange={handleSearchChange}
-            // handleInputClear={handleInputClear}
             inputValue={inputValue}
+            // Apply the inline styles
           />
         </div>
         <div className="w-full sm:w-auto flex  flex-row sm:items-center justify-between gap-3 sm:gap-40 cursor-pointer">

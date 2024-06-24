@@ -39,7 +39,7 @@ function UserMenu() {
   return (
     <>
       <Button
-        className="flex gap-5 p-0 min-h-40 min-w-40 md:px-16 md:py-6"
+        className="flex gap-5 p-0 min-h-40 min-w-40  md:py-6 "
         onClick={userMenuClick}
         color="inherit"
       >
