@@ -342,7 +342,7 @@ export default function MainCard({
                         <Button
                           variant="contained"
                           color="secondary"
-                          className="w-full h-[48px] text-[18px] flex gap-8"
+                          className="h-[40px] text-[16px] flex gap-8 w-full"
                           aria-label="Log In"
                           size="large"
                           onClick={() => setIsOpenAddModal(true)}

@@ -12,6 +12,7 @@ import {
   setSessionRedirectUrl,
 } from "@fuse/core/FuseAuthorization/sessionRedirectUrl";
 import FuseLoading from "@fuse/core/FuseLoading";
+import FuseSplashScreen from "../FuseSplashScreen";
 
 type FuseAuthorizationProps = {
   children: ReactNode;
@@ -157,7 +158,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     const { accessGranted } = this.state;
     const { children } = this.props;
 
-    return accessGranted ? children : <FuseLoading />;
+    return accessGranted ? children : <FuseSplashScreen />;
   }
 }
 

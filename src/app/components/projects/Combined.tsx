@@ -67,7 +67,6 @@ const CombinedDragDrop = ({ moveColumns, callListApi, listData }) => {
       setTasks(items);
     }
   };
-
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="columns" type="COLUMN">
