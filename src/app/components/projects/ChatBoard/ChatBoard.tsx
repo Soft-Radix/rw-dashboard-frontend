@@ -8,7 +8,12 @@ import {
   CometChatMessages,
   CometChatConversations,
 } from "@cometchat/chat-uikit-react";
-import { TabAlignment, CometChatTabItem } from "@cometchat/uikit-resources";
+import {
+  TabAlignment,
+  CometChatTabItem,
+  CometChatConversationEvents,
+  CometChatGroupEvents,
+} from "@cometchat/uikit-resources";
 import {
   AddMembersConfiguration,
   DetailsConfiguration,
@@ -39,6 +44,45 @@ function ChatBoard() {
   const { id } = useParams<{ id: string }>();
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newGroupDetails = groupDetails;
+    const newChatDetails = chatDetails;
+    const ccConvDelete =
+      CometChatConversationEvents.ccConversationDeleted.subscribe(
+        (conversation) => {
+          if (
+            conversation.getConversationId() === newChatDetails.conversationId
+          ) {
+            setChatDetails({});
+          }
+
+          if (
+            conversation.getConversationId() ===
+            conversationDetails.conversationId
+          ) {
+            setConversationDetails({});
+          }
+        }
+      );
+
+    const ccGroupDelete = CometChatGroupEvents.ccGroupDeleted.subscribe(
+      (group) => {
+        if (group.getGuid() === newGroupDetails.guid) {
+          setGroupDetails({});
+        }
+
+        if (group.getGuid() === newChatDetails.conversationWith.guid) {
+          setChatDetails({});
+        }
+      }
+    );
+
+    return () => {
+      ccConvDelete.unsubscribe();
+      ccGroupDelete.unsubscribe();
+    };
+  }, [groupDetails, chatDetails]);
 
   useEffect(() => {
     if (id && client_id?.id) {
@@ -116,6 +160,9 @@ function ChatBoard() {
         }, 500);
       }
     });
+    return () => {
+      window.removeEventListener("click", () => {});
+    };
   }, []);
 
   const chatsTab = new CometChatTabItem({
@@ -130,6 +177,7 @@ function ChatBoard() {
         <div className="w-[279px]">
           <CometChatConversations
             onItemClick={(group) => setChatDetails(group)}
+            avatarStyle={{ borderRadius: "50%" }}
           />
         </div>
 
@@ -183,6 +231,7 @@ function ChatBoard() {
                   .setUIDs([...users]),
                 onItemClick: (conversation) =>
                   setConversationDetails(conversation),
+                avatarStyle: { borderRadius: "50%" },
               })
             }
             messagesConfiguration={
@@ -241,6 +290,7 @@ function ChatBoard() {
               .joinedOnly(true)
               .setLimit(100)}
             onItemClick={(group) => setGroupDetails(group)}
+            avatarStyle={{borderRadius: "50%"}}
           />
         </div>
 
