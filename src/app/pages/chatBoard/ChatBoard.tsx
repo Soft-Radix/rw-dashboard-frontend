@@ -9,7 +9,12 @@ import {
   CometChatMessages,
   CometChatConversations,
 } from "@cometchat/chat-uikit-react";
-import { TabAlignment, CometChatTabItem } from "@cometchat/uikit-resources";
+import {
+  TabAlignment,
+  CometChatTabItem,
+  CometChatConversationEvents,
+  CometChatGroupEvents,
+} from "@cometchat/uikit-resources";
 import {
   AddMembersConfiguration,
   DetailsConfiguration,
@@ -26,7 +31,6 @@ import { ROLES } from "src/app/constants/constants";
 import { ProjectPlusIcon } from "public/assets/icons/projectsIcon";
 import { CreateGroupWrapper } from "src/app/components/chatBoard/CreateGroup";
 import { getUserIdInfo } from "app/store/Common";
-import { Typography } from "@mui/material";
 import EmptyChat from "src/app/components/chatBoard/EmptyChat";
 
 function ChatBoard() {
@@ -38,6 +42,45 @@ function ChatBoard() {
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newGroupDetails = groupDetails;
+    const newChatDetails = chatDetails;
+    const ccConvDelete =
+      CometChatConversationEvents.ccConversationDeleted.subscribe(
+        (conversation) => {
+          if (
+            conversation.getConversationId() === newChatDetails.conversationId
+          ) {
+            setChatDetails({});
+          }
+
+          if (
+            conversation.getConversationId() ===
+            conversationDetails.conversationId
+          ) {
+            setConversationDetails({});
+          }
+        }
+      );
+
+    const ccGroupDelete = CometChatGroupEvents.ccGroupDeleted.subscribe(
+      (group) => {
+        if (group.getGuid() === newGroupDetails.guid) {
+          setGroupDetails({});
+        }
+
+        if (group.getGuid() === newChatDetails.conversationWith.guid) {
+          setChatDetails({});
+        }
+      }
+    );
+
+    return () => {
+      ccConvDelete.unsubscribe();
+      ccGroupDelete.unsubscribe();
+    };
+  }, [groupDetails, chatDetails]);
 
   useEffect(() => {
     if (client_id?.id && client_id?.role_id !== ROLES.ADMIN) {
@@ -78,6 +121,7 @@ function ChatBoard() {
         <div className="w-[279px]">
           <CometChatConversations
             onItemClick={(group) => setChatDetails(group)}
+            avatarStyle={{ borderRadius: "50%" }}
           />
         </div>
 
@@ -138,10 +182,12 @@ function ChatBoard() {
                         .setUIDs([...users]),
                       onItemClick: (conversation) =>
                         setConversationDetails(conversation),
+                      avatarStyle: { borderRadius: "50%" },
                     }
                   : {
                       onItemClick: (conversation) =>
                         setConversationDetails(conversation),
+                      avatarStyle: { borderRadius: "50%" },
                     }
               )
             }
@@ -201,6 +247,7 @@ function ChatBoard() {
               .joinedOnly(true)
               .setLimit(100)}
             onItemClick={(group) => setGroupDetails(group)}
+            avatarStyle={{borderRadius: "50%"}}
           />
         </div>
 
