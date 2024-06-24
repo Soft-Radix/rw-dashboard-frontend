@@ -24,6 +24,7 @@ export interface AgentType {
   state?: string;
   zipcode?: number | string;
   country?: string;
+  last_login?: string;
 }
 
 export interface filterAgentType {

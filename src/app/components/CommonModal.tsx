@@ -70,11 +70,12 @@ export default function CommonModal({
       sx={{
         ".MuiPaper-root": {
           maxWidth: `${maxWidth}px`,
-        },
-
-        ".muiltr-5gnc0a-MuiPaper-root-MuiDialog-paper": {
           backgroundColor: bgColor || "white",
         },
+
+        // "& .MuiPaper-root-MuiDialog-paper": {
+
+        // },
       }}
     >
       {!DeleteModal ? (

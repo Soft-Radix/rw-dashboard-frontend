@@ -162,6 +162,8 @@ export default function ProjectTabPanel() {
 
   useEffect(() => {
     fetchMenuData();
+    const type = params.get("type") || "kanban";
+    setSelectedTab(getTabIndexFromType(type));
   }, [location.search, id]);
 
   const fetchMenuData = async () => {
@@ -169,8 +171,8 @@ export default function ProjectTabPanel() {
       const res = await dispatch(projectGetMenu(id));
       if (res?.payload?.data) {
         if (res.payload.data.data) {
-          const data = res.payload.data.data.map((menuData)=>menuData.menu);
-          console.log(data);
+          const data = res.payload.data.data.map((menuData) => menuData.menu);
+          // console.log(data);
           setBoardList({
             whiteBoard: data.includes(3),
             doc: data.includes(2),
@@ -191,7 +193,7 @@ export default function ProjectTabPanel() {
 
   const showWhiteBoard = () => {
     setShowViewWindow(!showViewWindow);
-    console.log(showViewWindow, "find");
+    // console.log(showViewWindow, "find");
   };
   return (
     <div>

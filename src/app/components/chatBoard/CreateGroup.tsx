@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef } from "react";
 import { CometChatThemeContext } from "@cometchat/chat-uikit-react";
 import { useNavigate } from "react-router-dom";
 import { CometChat } from "@cometchat/chat-sdk-javascript";
+import { height } from "@mui/system";
 
 type CreateGroupWrapperProps = {
   isMobileView: boolean;
@@ -21,6 +22,8 @@ export function CreateGroupWrapper({
 
   const { theme } = useContext(CometChatThemeContext);
 
+  theme.palette.setPrimary({ light: "#4f46e5", dark: "#4f46e5" });
+
   useEffect(() => {
     const createGroupElement = createGroupRef.current;
     if (!createGroupElement) {
@@ -29,12 +32,16 @@ export function CreateGroupWrapper({
 
     const closeClickedEventName = "cc-creategroup-close-clicked";
     const handleCreateGroup = (e: any) => {
-      CometChat.createGroup({
+      const createGroup = {
         name: e.name,
         type: e.type,
         guid: e.guid,
-        tags: [client_id.id.toString()]
-      }).then((res) => {
+        tags: [client_id.id.toString()],
+      };
+      if(e.password) {
+        createGroup["password"] = e.password;
+      }
+      CometChat.createGroup(createGroup).then((res) => {
         onClose();
       });
     };
@@ -58,7 +65,10 @@ export function CreateGroupWrapper({
       <cometchat-create-group
         ref={createGroupRef}
         type={["PRIVATE"]}
-        createGroupStyle={JSON.stringify(createGroupStyle(isMobileView, theme))}
+        createGroupStyle={JSON.stringify({
+          ...createGroupStyle(isMobileView, theme),
+          height: "300px",
+        })}
       />
     </div>
   );

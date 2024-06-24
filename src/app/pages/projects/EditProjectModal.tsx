@@ -85,11 +85,12 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
       maxWidth="314"
       btnTitle="Save"
       closeTitle="Cancel"
-      headerBgColor="white"
-      bgColor="white"
+      headerBgColor="#ffff"
+      bgColor="#ffff  "
       titleColor="black"
       onSubmit={handleSave}
       disabled={disable}
+      
     >
       <InputField
         formik={formik}

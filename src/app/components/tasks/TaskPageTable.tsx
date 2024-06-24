@@ -28,6 +28,7 @@ import ListLoading from "@fuse/core/ListLoading";
 import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import toast from "react-hot-toast";
+import moment from "moment";
 
 function ThemePageTable(props) {
   const {
@@ -181,7 +182,7 @@ function ThemePageTable(props) {
                           />
                         );
                       })}
-                      {row.assigned_task_users?.length > 0 && (
+                      {row.assigned_task_users?.length > 3 && (
                         <span
                           className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
@@ -191,7 +192,15 @@ function ThemePageTable(props) {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell align="center">Feb 12,2024</TableCell>
+                  <TableCell align="center">
+                    <span>
+                      {row?.due_date_time
+                        ? moment
+                            .utc(row?.due_date_time)
+                            .format(" MMMM Do, YYYY ")
+                        : "N/A"}
+                    </span>
+                  </TableCell>
                   <TableCell align="center">
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500
