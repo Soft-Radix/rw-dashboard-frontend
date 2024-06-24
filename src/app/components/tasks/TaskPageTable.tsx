@@ -70,7 +70,7 @@ function ThemePageTable(props) {
   };
 
   // const extraAgentsCount = agent.length - maxVisibleImages;
-  const extraAgents = columnList?.assigned_task_users?.length - 3;
+
   // setIsOpenDeletedModal(false);
   return (
     <>
@@ -191,7 +191,7 @@ function ThemePageTable(props) {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell align="center">Feb 12,2024</TableCell>
+                  <TableCell align="center">{}</TableCell>
                   <TableCell align="center">
                     <span
                       className={`inline-flex items-center justify-center rounded-full w-[70px] min-h-[25px] text-sm font-500

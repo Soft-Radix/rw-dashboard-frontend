@@ -334,7 +334,7 @@ const TaskDetails = () => {
                 <div className="flex text-[14px] text-para_light my-10 font-400 ">
                   <div className="flex">
                     {/* <span>{agentDetail?.id || "N/A"}</span> */}
-                    Due Date :{" "}
+                    Due Date :&nbsp;
                     <span className="font-500 text-[#111827] text-[14px]">
                       {taskDetailInfo?.due_date_time
                         ? moment
@@ -472,7 +472,7 @@ const TaskDetails = () => {
                             />
                           );
                         })}
-                      {taskDetailInfo?.assigned_task_users?.length > 0 && (
+                      {taskDetailInfo?.assigned_task_users?.length > 3 && (
                         <span
                           className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
@@ -591,7 +591,7 @@ const TaskDetails = () => {
                             src={
                               urlForImage + taskDetailInfo?.screen_record_file
                             }
-                            // alt="screen recorder"
+                            controls
                             className="block w-full h-[200px]"
                           />
                           <div className="absolute top-[28px] right-0 mt-4 mr-4">

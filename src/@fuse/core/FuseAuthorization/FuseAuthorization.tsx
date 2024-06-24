@@ -42,16 +42,24 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
     };
   }
 
-  componentDidMount() {
-    console.log(
-      "Component Did Mount - Access Granted:",
-      this.state.accessGranted
-    );
-    if (!this.state.accessGranted) {
-      this.redirectRoute();
-    }
-  }
+  // componentDidMount() {
+  //   console.log(
+  //     "Component Did Mount - Access Granted:",
+  //     this.state.accessGranted
+  //   );
+  //   if (!this.state.accessGranted) {
+  //     this.redirectRoute();
+  //   }
+  // }
 
+  componentDidMount() {
+    const { accessGranted } = this.state;
+    this.timer = setTimeout(() => {
+      if (!accessGranted) {
+        this.redirectRoute();
+      }
+    }, 3000);
+  }
   componentWillUnmount() {
     if (this.timer) {
       clearTimeout(this.timer);
