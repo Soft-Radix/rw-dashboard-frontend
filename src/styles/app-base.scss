@@ -542,7 +542,7 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
   background-color: #fff !important;
 }
 .rbc-month-header {
-  background-color: #e7e8e9;
+  background-color: #E7E8E9!important;
 }
 .rbc-month-row,
 .rbc-row-content {
@@ -652,6 +652,9 @@ span.rdrStartEdge {
   border-color: #4f46e5 !important;
 }
 
+#projectModel{
+  background-color: red !important ;
+}
 .cc-groups, .cc-users, .cc-conversations {
   border: 1px solid #eeeeee !important;
 }

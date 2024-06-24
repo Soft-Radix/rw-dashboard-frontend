@@ -180,8 +180,8 @@ export default function Item({
                 //@ts-ignore
                 isDragging={snapshot.isDragging}
               >
-                <div className="table-body px-[6px]">
-                  <div key={index} className="flex">
+                <div className="table-body  ">
+                  <div key={index} className="flex  border-[green-200] ">
                     {/* <div className="table-cell">
                       <span className="flex items-center gap-10">
                         <Checkbox
@@ -194,11 +194,13 @@ export default function Item({
                         />
                       </span>
                     </div> */}
-                    <div className="table-cell">
-                      <span className="flex items-center gap-10">{title}</span>
+                    <div className="table-cell border-1 border-[#D1D7DB]">
+                      <span className="flex items-center gap-10 text-[14px] font-500 text-[#111827]">
+                        {title}
+                      </span>
                     </div>
 
-                    <div className="table-cell">
+                    <div className="table-cell border-1 border-[#D1D7DB]">
                       <div className="flex ">
                         {/* {agent?.map((item) => (
                         <img
@@ -243,32 +245,32 @@ export default function Item({
                       </div>
                     </div>
 
-                    <div className="table-cell">
+                    <div className="table-cell border-1 border-[#D1D7DB]">
                       {!date ? "N/A" : moment(date).format("ll")}
                     </div>
 
-                    <div className="table-cell">
+                    <div className="table-cell border-1 border-[#D1D7DB]">
                       <span
                         style={{ width: "fit-content" }}
                         className={`${
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                            ? "bg-red/[.18]"
-                            : "bg-green/[.18]"
+                              ? "bg-red/[.18]"
+                              : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center  font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                            ? "text-red"
-                            : "text-green"
+                              ? "text-red"
+                              : "text-green"
                         }`}
                       >
                         {priority}
                       </span>
                     </div>
 
-                    <div className="table-cell action-cell">
+                    <div className="table-cell action-cell border-1 border-[#D1D7DB]">
                       <div className="flex gap-20 px-10">
                         {userDetails?.role != "agent" && (
                           <span

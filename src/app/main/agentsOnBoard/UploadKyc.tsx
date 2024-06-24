@@ -130,37 +130,52 @@ export default function UploadKyc() {
               </p>
             </Typography>
             <div className="flex items-center justify-center gap-20 sm:flex-row flex-col py-32 ">
-              <div className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60  gap-14 w-[266px] h-[206px]">
+              <label
+                className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 
+                 items-center py-60 gap-14 w-[236px] h-[192px] cursor-pointer"
+                onClick={handleFrontIDChange}
+              >
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleFrontIDChange}
+                />
                 <button
-                  onClick={handleWebcamFrontCapture}
-                  className="  text-white px-4 py-2 "
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleWebcamFrontCapture();
+                  }}
+                  className="text-white px-4 py-2"
                 >
                   <Camera />
                 </button>
 
-                <label className=" cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleFrontIDChange}
+                {frontID ? (
+                  <img
+                    src={frontID}
+                    alt="Front ID"
+                    className="w-full max-w-xs max-h-[50px]"
                   />
-                  {frontID ? (
-                    <img
-                      src={frontID}
-                      alt="Front ID"
-                      className="w-full max-w-xs max-h-[50px] "
-                    />
-                  ) : (
-                    <div className="w-full max-w-xs h-40  flex justify-center items-center">
-                      <Typography className="text-[16px] font-500 text-[#111827]">
-                        Upload Front ID Pic
-                      </Typography>
-                    </div>
-                  )}
-                </label>
-              </div>
+                ) : (
+                  <div className="w-full max-w-xs h-40 flex justify-center items-center">
+                    <span className="text-[16px] font-500 text-[#111827]">
+                      Upload Front ID Pic
+                    </span>
+                  </div>
+                )}
+              </label>
 
-              <div className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 w-[266px] h-[206px] gap-14">
+              <label
+                className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 w-[236px] h-[192px]
+               gap-14"
+                onClick={handleBackIDChange}
+              >
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={handleBackIDChange}
+                />
+
                 <button
                   onClick={handleWebcamBackCapture}
                   className="  text-white px-4 py-2 "
@@ -169,11 +184,6 @@ export default function UploadKyc() {
                 </button>
 
                 <label className=" cursor-pointer">
-                  <input
-                    type="file"
-                    className="hidden"
-                    onChange={handleBackIDChange}
-                  />
                   {backID ? (
                     <img
                       src={backID}
@@ -188,7 +198,7 @@ export default function UploadKyc() {
                     </div>
                   )}
                 </label>
-              </div>
+              </label>
             </div>
           </div>
         </div>

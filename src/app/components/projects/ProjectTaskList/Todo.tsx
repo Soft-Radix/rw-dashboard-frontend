@@ -247,18 +247,18 @@ export default function Todo({
                         <>
                           <div>
                             <div className="custom-table">
-                              <div className="table-header px-[6px]">
+                              <div className="table-header pr-[5px] ">
                                 {headings.map((heading, index) => (
                                   <div
                                     key={index}
-                                    className="table-cell header-cell"
+                                    className="table-cell header-cell border-1 border-solid "
                                   >
                                     {heading}
                                   </div>
                                 ))}
                               </div>
                               <div
-                                className="table-body max-h-[100px] overflow-auto"
+                                className="table-body max-h-[120px] overflow-auto"
                                 ref={scrollRef}
                               >
                                 {tasks.map((item, index) => (
