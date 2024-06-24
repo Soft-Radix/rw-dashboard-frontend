@@ -153,7 +153,7 @@ const FilterPage = (props: FilterDesign) => {
 
           <div className="flex items-center bg-[#F6F6F6] justify-between px-5  sm:px-20 py-10 sm:py-10 rounded-md sm:w-[200px] w-full">
             <Typography className="text-[14px] sm:text-[16px] text-[#9DA0A6]">
-              Sort By
+              Sort by
             </Typography>
             <SortIcon className="shrink-0" />
           </div>

@@ -31,6 +31,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
   minWidth: "250px",
 }));
+
 const CalenderDesign = ({ events }) => {
   const dispatch = useAppDispatch();
   const { id } = useParams();
@@ -54,6 +55,7 @@ const CalenderDesign = ({ events }) => {
     openEvent: false,
     clickedEvent: null,
   });
+
   useEffect(() => {
     dispatch(getStatusList({ id: id })).then((res) => {
       setStatusMenuData(res?.payload?.data?.data?.list);
@@ -363,12 +365,13 @@ const CalenderDesign = ({ events }) => {
           PaperProps={{
             style: {
               minWidth: "20vw",
-              padding: "2rem",
+              paddingTop: "2rem",
+              paddingBottom: "2rem",
             },
           }}
         >
           <>
-            <div className="flex items-center justify-between mb-20">
+            <div className="flex items-center justify-between mb-20 border-b-1 border-b-solid border-b-[#EDF2F6] px-20 pb-10">
               <Typography className="text-[16px] font-500">
                 Create Task
               </Typography>
@@ -381,7 +384,7 @@ const CalenderDesign = ({ events }) => {
                 </Typography>
               )}
             </div>
-            <div className="mb-20">
+            <div className="mb-20 px-20">
               <InputField
                 name="title"
                 label="Title"
@@ -395,7 +398,7 @@ const CalenderDesign = ({ events }) => {
                 }
               />
             </div>
-            <div className="mb-20">
+            <div className="mb-20 px-20">
               {statusMenuData?.length != 0 ? (
                 <>
                   <Typography className="block text-[16px] font-medium text-[#111827] mb-5">
@@ -422,7 +425,7 @@ const CalenderDesign = ({ events }) => {
                     popoverProps={{
                       open: !!statusMenu,
                       classes: {
-                        paper: "pt-10 pb-20",
+                        paper: "pt-10 pb-20 ",
                       },
                     }}
                   >
@@ -440,7 +443,7 @@ const CalenderDesign = ({ events }) => {
                 </>
               ) : (
                 <>
-                  <div className="flex gap-4" style={{ alignItems: "center" }}>
+                  <div className="flex gap-4 " style={{ alignItems: "center" }}>
                     <InputField
                       className="!w-[200px]"
                       formik={formik}
@@ -468,7 +471,7 @@ const CalenderDesign = ({ events }) => {
                 </>
               )}
             </div>
-            <div className="flex">
+            <div className="flex px-20">
               <Button
                 variant="contained"
                 color="secondary"

@@ -33,7 +33,7 @@ const AgentDetail = () => {
 
   // Menu item click handler
   const handleMenuItemClick = async (status) => {
-    console.log(status,"staujkshfjds")
+    console.log(status, "staujkshfjds");
     setSelectedItem(status);
     const res = await dispatch(
       UpdateStatus({
@@ -56,7 +56,7 @@ const AgentDetail = () => {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   return (
     <div>
-      <TitleBar title="Task List"></TitleBar>
+      <TitleBar title="Agents Details"></TitleBar>
 
       <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">

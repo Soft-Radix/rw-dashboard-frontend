@@ -85,9 +85,8 @@ const ProjectTaskList = (props: TaskList) => {
   const theme: Theme = useTheme();
   const { customSelectedTab } = props;
   const [columnList, setColumnList] = useState<any[]>([]);
-  const [tableSelectedItemDesign, setTableSelectedItemDesign] = useState(
-    "Priority"
-  );
+  const [tableSelectedItemDesign, setTableSelectedItemDesign] =
+    useState("Priority");
   const [showData, setShowData] = useState(true);
   const { fetchStatusNew } = useSelector(
     (store: ProjectRootState) => store?.project
