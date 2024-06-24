@@ -142,6 +142,7 @@ export default function MainCard({
   };
 
   useEffect(() => {
+    console.log(title, "titldade");
     formik.setFieldValue("name", title);
   }, [title]);
 

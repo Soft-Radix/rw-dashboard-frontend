@@ -209,8 +209,8 @@ const Kanban = (props: IProps): JSX.Element => {
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div>
-      <div className="px-20 mb-20">
-        <FilterPage filterDesign={true} />
+      <div className="px-20 mb-20 ">
+        <FilterPage />
       </div>
 
       <div
