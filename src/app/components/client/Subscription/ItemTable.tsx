@@ -120,7 +120,7 @@ const ItemTable = ({ rows }) => {
               </TableCell>
 
               <TableCell align="center" className="font-500">
-                {rows?.no_of_payments ? rows?.no_of_payments : ""}
+                {rows?.no_of_payments ? rows?.no_of_payments : "0"}
               </TableCell>
               <TableCell align="center" className="font-500">
                 {/* {row?.unit_discount ? row?.unit_discount : "N/A"} */}

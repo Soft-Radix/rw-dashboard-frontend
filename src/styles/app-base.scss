@@ -542,7 +542,7 @@ td.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignCenter.MuiTableCell-siz
   background-color: #fff !important;
 }
 .rbc-month-header {
-  background-color: #E7E8E9!important;
+  background-color: #e7e8e9 !important;
 }
 .rbc-month-row,
 .rbc-row-content {
@@ -651,15 +651,27 @@ span.rdrStartEdge {
 .rdrDay.rdrDayHovered:hover {
   border-color: #4f46e5 !important;
 }
+.muiltr-c1i6fn-MuiButtonBase-root-MuiMenuItem-root-MuiMultiSectionDigitalClockSection-item.Mui-selected:hover {
+  background-color: #4f46e5 !important;
+}
+.muiltr-hs29jq-MuiButtonBase-root-MuiPickersDay-root.Mui-selected:hover {
+  background-color: #4f46e5 !important;
+}
+.muiltr-7g9680-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  background-color: #4f46e5 !important;
+}
 
-#projectModel{
+#projectModel {
   background-color: red !important ;
 }
-.cc-groups, .cc-users, .cc-conversations {
+.cc-groups,
+.cc-users,
+.cc-conversations {
   border: 1px solid #eeeeee !important;
 }
 
-.cc-users-with-messages__wrapper, .cc-users-with-messages__sidebar {
+.cc-users-with-messages__wrapper,
+.cc-users-with-messages__sidebar {
   border: none !important;
 }
 
