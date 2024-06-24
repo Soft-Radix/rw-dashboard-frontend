@@ -68,6 +68,40 @@ export const getStatusList = createAsyncThunk(
   }
 );
 
+export const getLabelList = createAsyncThunk(
+  "/project/task-label/list",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/task-label/list`,
+      method: "post",
+      data: payload,
+    });
+    // console.log(response.data, "response.data");
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
+export const AddLabellList = createAsyncThunk(
+  "/project//task-label/add",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/task-label/add`,
+      method: "post",
+      data: payload,
+    });
+    // console.log(response.data, "response.data");
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const getAgentInfo = createAsyncThunk(
   "agent/information",
   async (payload: agentIDType) => {

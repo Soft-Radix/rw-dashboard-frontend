@@ -6,11 +6,17 @@ import {
   Grid,
   MenuItem,
   Popover,
+  Tooltip,
   Typography,
   styled,
 } from "@mui/material";
 import { DateTimePicker } from "@mui/x-date-pickers";
-import { getAgentList, getStatusList } from "app/store/Agent";
+import {
+  AddLabellList,
+  getAgentList,
+  getLabelList,
+  getStatusList,
+} from "app/store/Agent";
 import { filterType } from "app/store/Client/Interface";
 import {
   EditTaskAdd,
@@ -22,13 +28,14 @@ import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import { debounce } from "lodash";
 import moment from "moment";
-import { CrossGreyIcon, PreviewIcon } from "public/assets/icons/common";
+import { CrossGreyIcon, PreviewIcon, Reload } from "public/assets/icons/common";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
 } from "public/assets/icons/supportIcons";
 import {
   AssignIcon,
+  AssignIconNew,
   MicIcon,
   PriorityIcon,
   ReminderIcon,
@@ -58,6 +65,34 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
   minWidth: "250px",
 }));
+
+export const TruncateText = ({ text, maxWidth }) => {
+  const [isTruncated, setIsTruncated] = useState(false);
+  const textRef = useRef(null);
+  useEffect(() => {
+    if (textRef.current) {
+      const textWidth = textRef.current.scrollWidth;
+      setIsTruncated(textWidth > maxWidth);
+    }
+  }, [text, maxWidth]);
+  return (
+    <Tooltip title={text} enterDelay={500} disableHoverListener={!isTruncated}>
+      <Typography
+        ref={textRef}
+        noWrap
+        style={{
+          maxWidth: `${maxWidth}px`,
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          // display: "inline-block",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {text}
+      </Typography>
+    </Tooltip>
+  );
+};
 
 function AddTaskModal({
   isOpen,
@@ -115,8 +150,11 @@ function AddTaskModal({
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const dispatch = useAppDispatch();
   const userId = JSON.parse(localStorage.getItem("userDetail"));
+  const [disable, setDisable] = useState(false);
   const [screenSharingStream, setScreenSharingStream] = useState(null);
   const [statusMenuData, setStatusMenuData] = useState([]);
+  const [labelsMenuData, setLabelsMenuData] = useState([]);
+  const [deleteid, setDeleteId] = useState([]);
   const [selectedStatusId, setSelectedStatusId] = useState("0");
   const [initialRender, setInitialRender] = useState(false);
   const [filterMenu, setFilterMenu] = useState<filterType>({
@@ -165,31 +203,23 @@ function AddTaskModal({
   //   { label: "In Review" },
   //   { label: "Completed" },
   // ];
-  const labelsMenuData = [
-    { label: "Important Task" },
-    { label: "High Priority" },
-    { label: "Medium Priority" },
-    { label: "Responsive" },
-  ];
+  // const labelsMenuData = [
+  //   { label: "Important Task" },
+  //   { label: "High Priority" },
+  //   { label: "Medium Priority" },
+  //   { label: "Responsive" },
+  // ];
   const handleAddLabel = () => {
     setShowLabelForm(true);
   };
 
   useEffect(() => {
-    if (!Edit) {
-      if (isOpen && initialRender) {
-        dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
-          setAgentMenuData(res?.payload?.data?.data?.list);
-        });
-      }
-    } else {
-      if (isOpen) {
-        dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
-          setAgentMenuData(res?.payload?.data?.data?.list);
-        });
-      }
+    if (isOpen) {
+      dispatch(GetAssignAgentsInfo(filterMenu)).then((res) => {
+        setAgentMenuData(res?.payload?.data?.data?.list);
+      });
     }
-  }, [filterMenu.search, initialRender]);
+  }, [filterMenu.search]);
 
   useEffect(() => {
     if (project_id) {
@@ -198,12 +228,26 @@ function AddTaskModal({
       });
     }
   }, [project_id, isOpen]);
+  const fetchLabel = async () => {
+    await dispatch(
+      getLabelList({ project_id: project_id, start: 0, limit: 10 })
+    ).then((res) => {
+      setLabelsMenuData(res?.payload?.data?.data?.list);
+    });
+  };
+
+  useEffect(() => {
+    if (project_id) {
+      fetchLabel();
+    }
+  }, [project_id, isOpen]);
 
   useEffect(() => {
     if (labelsMenu) {
       setShowLabelForm(false);
     }
   }, [labelsMenu]);
+
   const handleStatusMenuClick = (event) => {
     setStatusMenu(event.currentTarget);
   };
@@ -232,6 +276,7 @@ function AddTaskModal({
     }
   };
   const videoRef = useRef(null);
+  const audioRef = useRef(null);
 
   const handleRecordClick = async () => {
     let stream;
@@ -303,6 +348,7 @@ function AddTaskModal({
       console.error("Error accessing screen:", error);
     }
   };
+
   useEffect(() => {
     // Cleanup function to clear the interval when the component unmounts
     return () => clearInterval(timerId);
@@ -397,6 +443,7 @@ function AddTaskModal({
     if (recordingAudio) {
       handleAudioRecord();
     }
+    setRecordingTime(0);
     setSavedAudioURL(audioURL);
     setAudioURL("");
     setVisible(false);
@@ -410,8 +457,9 @@ function AddTaskModal({
 
     setVisible(false);
     setAudioURL("");
-    setSavedAudioURL("");
+    // setSavedAudioURL("");
   };
+
   const handleRemoveFile = (file: File) => {
     const filteredFiles = uploadedFiles.filter((f) => f !== file);
     setUploadedFiles(filteredFiles);
@@ -433,8 +481,8 @@ function AddTaskModal({
     setAgentID(null);
     setUploadedFiles([]);
     setCustomDate(null);
-
     setSelectedAgents([]);
+    setDeleteId([]);
   };
 
   const handleCross = () => {
@@ -443,17 +491,28 @@ function AddTaskModal({
     setRecordingTime(0);
     setVisible(false);
   };
+
   function formatDate(dateString) {
+    console.log("dateString", dateString);
     // Parse the date string using moment
     const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
 
     // Format the date to yyyy-mm-dd hh:mm
-    const formattedDate = date.format("YYYY-MM-DD HH:mm");
-
+    // const formattedDate = date.format("YYYY-MM-DD HH:mm");
+    const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
     return formattedDate;
   }
+
   const onSubmit = async () => {
     formik.handleSubmit();
+
+    if (Object.keys(formik.errors).length > 0 || formik?.values?.title == "") {
+      // If there are validation errors, do not proceed further
+      return;
+    }
+    // Check if formik has any validation errors
+    // If there are validation errors, do not proceed further
+    setDisable(true);
     const screenRecordFile = videoRef?.current?.src || "";
     const formData = new FormData();
     formData.append("project_id", project_id);
@@ -465,15 +524,15 @@ function AddTaskModal({
     // formData.append("status", ColumnId);
     formData.append("status", selectedStatusId || "0");
     formData.append("agent_ids", selectedAgents as any);
-    formData.append("voice_record_file", audioRecorder);
+    formData.append("voice_record_file", audioRecorder || "");
     formData.append("screen_record_file", screenRecorder);
     formData.append(
       "due_date_time",
       calculatedDate
-        ? calculatedDate
+        ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-          ? ""
-          : formatDate(selectedDate)
+        ? ""
+        : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append(
@@ -491,20 +550,27 @@ function AddTaskModal({
     uploadedFiles.forEach((file) => {
       formData.append("files", file); // Note the use of "files[]" to indicate an array of files
     });
+
     try {
       const res = await dispatch(TaskAdd(formData));
+
       callListApi();
       setIsOpen(false);
+      setDisable(false);
       formik.resetForm();
       handleReset();
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
+
   const handleUploadFile = (event) => {
     const files = event.target.files;
     const filesArray = Array.from(files);
     setUploadedFiles((prevFiles) => [...prevFiles, ...filesArray]);
+    //@ts-ignore
+    document.getElementById("fileattachment").value = "";
   };
 
   const handleAudioUploadFile = (event) => {
@@ -542,12 +608,14 @@ function AddTaskModal({
         addedDays++;
       }
     }
+    setSelectedDate(moment(date).format("DD/MM/YYYY ,  HH:mm:ss"));
     return moment(date).format("YYYY-MM-DD HH:mm");
   };
 
   const handleDateChange = (newDate) => {
     setCustomDate(newDate);
     setSelectedDate(newDate.toLocaleString());
+    setCalculatedDate(newDate.toLocaleString());
   };
   const open = Boolean(anchorEl);
   const today = new Date();
@@ -584,7 +652,14 @@ function AddTaskModal({
       videoRef.current.src =
         data?.screen_record_file && urlForImage + data?.screen_record_file;
       setSelectedDate(
-        !data?.business_due_date ? "Due Date & Time" : data?.business_due_date
+        !data?.due_date_time
+          ? "Due Date & Time"
+          : moment(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
+      );
+      setCalculatedDate(
+        !data?.due_date_time
+          ? ""
+          : moment(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
       );
       setSelectedlabel(!data?.labels ? "Labels" : data?.labels);
       setSelectedPriority(!data?.priority ? "" : data?.priority);
@@ -601,6 +676,7 @@ function AddTaskModal({
       setSelectedAgents(userId);
     });
   };
+
   useEffect(() => {
     if (Edit) {
       EditDetails();
@@ -631,6 +707,11 @@ function AddTaskModal({
 
   const onSubmitEdit = async () => {
     formik.handleSubmit();
+    if (Object.keys(formik.errors).length > 0) {
+      // If there are validation errors, do not proceed further
+      return;
+    }
+    setDisable(true);
     const screenRecordFile = videoRef?.current?.src || "";
     const formData = new FormData();
     formData.append("task_id", ColumnId);
@@ -645,14 +726,14 @@ function AddTaskModal({
     formData.append(
       "due_date_time",
       calculatedDate
-        ? calculatedDate
+        ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-          ? ""
-          : formatDate(selectedDate)
+        ? ""
+        : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append("delete_agent_ids", "");
-    formData.append("delete_file_ids", "");
+    formData.append("delete_file_ids", deleteid as any);
     formData.append(
       "reminders",
       formik?.values?.date && formik?.values?.time
@@ -668,13 +749,16 @@ function AddTaskModal({
     try {
       const res = await dispatch(EditTaskAdd(formData));
       callListApi();
+      setDisable(false);
       setIsOpen(false);
       formik.resetForm();
       handleReset();
     } catch (error) {
+      setDisable(false);
       console.error("Error fetching data:", error);
     }
   };
+
   const handleAgentSelect = (agentId) => {
     if (selectedAgents.includes(agentId)) {
       setSelectedAgents(selectedAgents.filter((id) => id != agentId));
@@ -686,6 +770,7 @@ function AddTaskModal({
       setSelectedAgents([...selectedAgents, agentId]);
     }
   };
+
   const debouncedSearch = debounce((searchValue) => {
     // Update the search filter here
     setFilterMenu((prevFilters) => ({
@@ -697,7 +782,6 @@ function AddTaskModal({
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     debouncedSearch(value);
-    setInitialRender(true);
   };
 
   const handleCheckboxChange = (id) => {
@@ -720,9 +804,44 @@ function AddTaskModal({
     }
   };
 
+  const handleAudioPlay = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  const handleVideoPlay = () => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  };
+
+  const handleLabelSave = () => {
+    if (formik?.values?.newLabel) {
+      dispatch(
+        AddLabellList({
+          project_id: project_id,
+          label: formik?.values?.newLabel,
+        })
+      ).then((res) => {
+        setLabelsMenu(null);
+        fetchLabel();
+        setSelectedlabel(formik?.values?.newLabel);
+        setShowLabelForm(false);
+      });
+    }
+  };
+
+  const handleAudioReload = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime = 0; // Reset audio to start from beginning
+      audioRef.current.play(); // Play the audio
+    }
+  };
   return (
     <CommonModal
       open={isOpen}
+      disabled={disable}
       handleToggle={() => handleReset()}
       modalTitle={Edit ? "Edit Task" : "Add Task"}
       maxWidth="910"
@@ -749,27 +868,41 @@ function AddTaskModal({
           <DropdownMenu
             anchorEl={AgentMenu}
             handleClose={() => {
+              setFilterMenu((prevFilters) => ({
+                ...prevFilters,
+                search: "",
+              }));
               setAgentMenu(null);
-              setInitialRender(false);
             }}
             button={
-              <CommonChip
-                onClick={(event) => setAgentMenu(event.currentTarget)}
-                style={{ maxWidth: "200px" }}
-                label={
-                  selectedAgents?.length > 0
-                    ? selectedAgents
-                        ?.map(
-                          (agentId) =>
-                            agentMenuData?.find(
-                              (item) => item.agent_id === agentId
-                            )?.first_name
-                        )
-                        .join(", ")
-                    : selectedAgent
-                }
-                icon={<AssignIcon />}
-              />
+              <div
+                className={`relative
+      `}
+              >
+                <CommonChip
+                  onClick={(event) => setAgentMenu(event.currentTarget)}
+                  style={{ maxWidth: "200px", paddingRight: "27px" }}
+                  className={`${
+                    AgentMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                  }`}
+                  label={
+                    selectedAgents?.length > 0
+                      ? selectedAgents
+                          ?.map(
+                            (agentId) =>
+                              agentMenuData?.find(
+                                (item) => item.agent_id === agentId
+                              )?.first_name
+                          )
+                          .join(", ")
+                      : selectedAgent
+                  }
+                  // icon={<AssignIcon />}
+                />
+                <div className="absolute top-[13px] right-3">
+                  <AssignIconNew />
+                </div>
+              </div>
             }
             popoverProps={{
               open: !!AgentMenu,
@@ -784,7 +917,7 @@ function AddTaskModal({
               <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
                 <InputField
                   name={"agent"}
-                  placeholder={"Enter Agent Name"}
+                  placeholder={"Search Assignee"}
                   className="common-inputField "
                   inputProps={{
                     className: "ps-[2rem] w-full sm:w-full",
@@ -896,6 +1029,9 @@ function AddTaskModal({
               <CommonChip
                 onClick={(event) => setDateTimeMenu(event.currentTarget)}
                 label={selectedDate}
+                className={`${
+                  dateTimeMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                }`}
                 icon={
                   <FuseSvgIcon size={20}>
                     material-outline:calendar_today
@@ -916,7 +1052,7 @@ function AddTaskModal({
                 onClick={() => {
                   const futureDate = calculateFutureDate(item.days, item.label);
                   setCalculatedDate(futureDate.toLocaleString()); // Store the calculated date
-                  setSelectedDate(item.label); // Display the label
+                  // setSelectedDate(item.label); // Display the label
                   setDateTimeMenu(null);
                 }}
               >
@@ -970,6 +1106,9 @@ function AddTaskModal({
               <CommonChip
                 onClick={(event) => setPriorityMenu(event.currentTarget)}
                 label={selectedPriority}
+                className={`${
+                  priorityMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                }`}
                 icon={<PriorityIcon />}
               />
             }
@@ -994,7 +1133,12 @@ function AddTaskModal({
             button={
               <CommonChip
                 onClick={(event) => setLabelsMenu(event.currentTarget)}
-                label={selectedlabel}
+                style={{ maxWidth: "200px" }}
+                // label={selectedlabel}
+                className={`${
+                  labelsMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                }`}
+                label={<TruncateText text={selectedlabel} maxWidth={170} />}
                 icon={
                   <FuseSvgIcon size={20}>heroicons-outline:tag</FuseSvgIcon>
                 }
@@ -1009,7 +1153,7 @@ function AddTaskModal({
           >
             {!showLabelForm ? (
               <>
-                {labelsMenuData.map((item) => (
+                {labelsMenuData?.map((item) => (
                   <StyledMenuItem
                     onClick={() => {
                       setSelectedlabel(item.label), setLabelsMenu(null);
@@ -1042,17 +1186,15 @@ function AddTaskModal({
                   name="newLabel"
                   id="group_names"
                   label="New Label"
-                  placeholder="Enter Group Name"
+                  placeholder="Enter New Label"
                 />
                 <div className="mt-20">
                   <Button
                     variant="contained"
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px]"
-                    onClick={() => {
-                      setSelectedlabel(formik?.values?.newLabel);
-                      setShowLabelForm(false);
-                    }}
+                    disabled={formik?.values?.newLabel == ""}
+                    onClick={() => handleLabelSave()}
                   >
                     Save
                   </Button>
@@ -1062,6 +1204,7 @@ function AddTaskModal({
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px] ml-14"
                     onClick={() => {
+                      setLabelsMenu(null);
                       formik.setFieldValue("newLabel", "");
                       setShowLabelForm(false);
                     }}
@@ -1080,8 +1223,18 @@ function AddTaskModal({
             button={
               <CommonChip
                 onClick={(event) => setShowReminder(event.currentTarget)}
-                label="Reminder"
+                // label="Reminder"
+                label={`${
+                  formik?.values?.date != "" && formik?.values?.time != ""
+                    ? moment(
+                        formik?.values?.date + " " + formik?.values?.time
+                      ).format("MM/DD/YYYY , HH:mm")
+                    : "Reminder"
+                }`}
                 icon={<ReminderIcon />}
+                className={`${
+                  showReminder ? "border-1 border-solid border-[#9DA0A6] " : ""
+                }`}
               />
             }
             popoverProps={{
@@ -1144,6 +1297,9 @@ function AddTaskModal({
               <CommonChip
                 onClick={handleStatusMenuClick}
                 // label={selectedStatus}
+                className={`${
+                  statusMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                }`}
                 label={
                   selectedStatusId != "0" && selectedStatusId
                     ? statusMenuData?.find(
@@ -1179,11 +1335,11 @@ function AddTaskModal({
             <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 ">
               Voice Memo
             </FormLabel>
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
               <Grid item md={6}>
                 <CommonChip
                   colorSecondary
-                  className="w-full"
+                  // className="w-full"
                   label="Record voice memo"
                   icon={<MicIcon />}
                   onClick={handleAudioRecord}
@@ -1192,9 +1348,31 @@ function AddTaskModal({
                 />
                 {savedAudioURL && (
                   <div className="audio-container relative">
-                    <audio controls src={savedAudioURL} />
+                    {/* <audio
+                      controls
+                      ref={audioRef}
+                      src={savedAudioURL}
+                      onPlay={handleAudioPlay}
+                    /> */}
 
-                    <div className="audio-controls ml-[15px]"></div>
+                    <div className=" flex " style={{ alignItems: "center" }}>
+                      <div className="audio-controls ">
+                        <div
+                          className="cursor-pointer ml-2 mb-10"
+                          onClick={handleAudioReload}
+                        >
+                          <Reload />
+                        </div>
+                      </div>
+                      <audio
+                        controls
+                        ref={audioRef}
+                        src={savedAudioURL}
+                        onPlay={handleAudioPlay}
+                      />
+                    </div>
+
+                    <div className="audio-controls ml-[8px]"></div>
                     {Edit ? (
                       <div
                         className="absolute top-7 right-7"
@@ -1235,6 +1413,7 @@ function AddTaskModal({
                         <img
                           src="../assets/images/logo/pause.svg"
                           alt="pause"
+                          width="28px"
                           onClick={handleAudioRecord}
                         ></img>
                       )}
@@ -1258,7 +1437,10 @@ function AddTaskModal({
                     <div>
                       <button
                         onClick={handleSave}
-                        className="text-[#4F46E5] text-[16px] font-500 underline mr-10"
+                        disabled={recordingAudio}
+                        className={`${
+                          recordingAudio ? "text-[#757982]" : "text-[#4F46E5]"
+                        } text-[16px] font-500 underline mr-10`}
                       >
                         Save
                       </button>
@@ -1287,7 +1469,7 @@ function AddTaskModal({
                 <label
                   htmlFor="attachment"
                   className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
-               justify-between cursor-pointer"
+               justify-between cursor-pointer hover:bg-[#0000001f]"
                   // onClick={() => handleUploadFile()}
                 >
                   <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
@@ -1317,7 +1499,7 @@ function AddTaskModal({
               htmlFor="fileattachment"
               className="bg-[#EDEDFC] px-20  border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] 
               flex items-center 
-             justify-between cursor-pointer mb-10"
+             justify-between cursor-pointer mb-10 hover:bg-[#0000001f]"
               // onClick={() => handleUploadFile()}
             >
               <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
@@ -1335,7 +1517,7 @@ function AddTaskModal({
                 <img src={"../assets/images/logo/upload.png"} />
               </span>
             </label>
-            <div className="flex flex-wrap gap-2 items-center justify-center absolute">
+            <div className="flex flex-wrap gap-2 items-center justify-start absolute">
               {uploadedFiles?.map((file, index) => (
                 <div
                   key={index}
@@ -1345,7 +1527,7 @@ function AddTaskModal({
                     <span className="mr-4">
                       <PreviewIcon />
                     </span>
-                    <span className="text-[16px] text-[#4F46E5] py-5 mr-3">
+                    <span className="text-[16px] text-[#4F46E5] py-5 mr-8">
                       {file.name}
                     </span>
                     <span onClick={() => handleRemoveFile(file)}>
@@ -1404,6 +1586,7 @@ function AddTaskModal({
                             setIsOpenDeletedModal(true);
                             setType(3);
                             setIsDeleteId(item.id);
+                            setDeleteId([...deleteid, item.id]);
                           }}
                         />
                       </div>
@@ -1474,7 +1657,7 @@ function AddTaskModal({
                 colorSecondary
                 className="w-full"
                 label={
-                  showVideo ? "Record you Screen Again" : "Record you Screen"
+                  showVideo ? "Record your Screen Again" : "Record your Screen"
                 }
                 onClick={handleRecordClick}
                 icon={
@@ -1498,6 +1681,7 @@ function AddTaskModal({
                   width="450px"
                   ref={videoRef}
                   controls
+                  onPlay={handleVideoPlay}
                 />
                 {Edit ? (
                   <div

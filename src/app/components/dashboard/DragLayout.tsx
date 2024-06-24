@@ -156,10 +156,10 @@ const DragLayout = ({ columnList, callListApi, id }) => {
         [end.id]: endTaskColumn,
       },
     });
-    console.log("new starter", starter);
 
     console.log(destination, source, draggableId);
   };
+  console.log("new starter", starter);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -171,17 +171,19 @@ const DragLayout = ({ columnList, callListApi, id }) => {
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
-            {starter.columnOrder.map((columnId, index) => {
+            {starter?.columnOrder?.map((columnId, index) => {
               const column = starter.columns[columnId];
 
               const tasks = column?.taskIds.map(
                 (taskId) => starter?.tasks[taskId]
               );
+              const title = column?.title;
               const firstTaskId = Object.keys(starter.tasks)[0];
               const project_id = starter?.tasks[firstTaskId]?.project_id;
 
               return (
                 <MainCard
+                  title={title}
                   index={index}
                   key={column?.id}
                   column={column}

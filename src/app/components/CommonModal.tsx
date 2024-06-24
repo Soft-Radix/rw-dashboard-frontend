@@ -3,10 +3,10 @@ import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
-import { CrossIcon } from "public/assets/icons/common";
 import { ReactNode } from "react";
 import CustomButton from "./custom_button";
 import { red } from "@mui/material/colors";
+import { CrossIcon } from "public/assets/icons/common";
 
 const StylesDialog = styled(Dialog)(({ theme }) => ({
   "& .MuiPaper-root": {
