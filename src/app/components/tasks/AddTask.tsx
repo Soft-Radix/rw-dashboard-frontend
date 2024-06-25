@@ -492,33 +492,40 @@ function AddTaskModal({
     setVisible(false);
   };
 
-  // function formatDate(dateString) {
-  //   console.log("dateString", dateString);
-  //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
-  //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
-
-  //   console.log("======formattedDate==", formattedDate);
-  //   return formattedDate;
-  // }
-
   function formatDate(dateString) {
     console.log("dateString", dateString);
-
-    // Use strict parsing by passing 'true' as the third parameter
-    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss", true);
-
-    // Check if date is valid
-    if (!date.isValid()) {
-      console.error("Invalid date format");
-      return null;
-    }
-
-    // Format the date
-    const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+    const date = moment(dateString, "MM/DD/YYYY, HH:mm:ss");
+    console.log("======date==", date);
+    const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
 
     console.log("======formattedDate==", formattedDate);
     return formattedDate;
   }
+
+  // function formatDate(dateString) {
+  //   console.log("Original dateString:", dateString);
+
+  //   // Ensure correct locale is used (set it explicitly if needed)
+  //   moment.locale("en"); // Change 'en' to the specific locale if necessary
+
+  //   // Use strict parsing with a detailed format string
+  //   const date = moment(dateString, "DD/MM/YYYY, hh:mm:ss", true);
+  //   console.log("======date==", date);
+
+  //   // Check if date is valid
+  //   if (!date.isValid()) {
+  //     console.error(
+  //       "Invalid date format. Please ensure the date string is in 'DD/MM/YYYY, HH:mm:ss' format."
+  //     );
+  //     return null;
+  //   }
+
+  //   // Format the date to the desired format
+  //   const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+
+  //   console.log("Formatted Date:", formattedDate);
+  //   return formattedDate;
+  // }
 
   // Test the function
 
