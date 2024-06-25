@@ -15,7 +15,7 @@ import { useCountdownTimer } from "./UseCountdownTimer";
 export default function OtpVerification() {
   // const initialTime = 60;
   const [otp, setOtp] = useState<string>("");
-  console.log(otp, "asdasjdhasjdfsa");
+
   // State to track loading
 
   const dispatch = useAppDispatch();
@@ -71,13 +71,13 @@ export default function OtpVerification() {
 
           <div className="w-full mt-40 max-w-[417px] flex gap-16 flex-col">
             <OTPInput
-              inputType="number"
+              inputType="tel"
               value={otp}
               onChange={setOtp}
               numInputs={4}
               renderSeparator={<span className="w-[20px]" />}
               inputStyle="h-[55px] !w-[62px] bg-[#F6F6F6] rounded-[7px] text-[16px] border focus:border-[#4F46E5]"
-              renderInput={(props) => <input {...props} />}
+              renderInput={(props) => <input {...props} pattern="[0-9]*" />}
             />
             <Button
               variant="contained"
@@ -92,7 +92,7 @@ export default function OtpVerification() {
             </Button>
             <div className="flex items-center justify-center cursor-pointer mt-28">
               <Typography
-                color="secondary.main"
+                color={timer == 0 ? "secondary.main" : "text.secondary"}
                 className="font-medium"
                 onClick={resendOtp}
               >
