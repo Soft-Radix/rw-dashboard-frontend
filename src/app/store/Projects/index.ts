@@ -412,14 +412,13 @@ export const projectGetMenu: any = createAsyncThunk(
   }
 );
 
-
-
 /**
  * The initial state of the auth slice.
  */
 export const initialState: initialStateProps = {
   status: "idle",
   fetchStatus: "loading",
+  fetchStatusTask: "loading",
   actionStatus: false,
   successMsg: "",
   errorMsg: "",
@@ -450,15 +449,18 @@ export const projectSlice = createSlice({
     builder
       .addCase(TaskDetails.pending, (state) => {
         state.fetchStatus = "loading";
+        state.fetchStatusTask = "loading";
       })
       .addCase(TaskDetails.fulfilled, (state, action) => {
         console.log(state, "statet");
         const { data } = action.payload?.data;
         state.fetchStatus = "idle";
+        state.fetchStatusTask = "idle";
         state.taskDetailInfo = data;
       })
       .addCase(TaskDetails.rejected, (state) => {
         state.fetchStatus = "idle";
+        state.fetchStatusTask = "idle";
       })
       .addCase(projectColumnList.pending, (state, action) => {
         const { project_column_id } = action.meta.arg;
