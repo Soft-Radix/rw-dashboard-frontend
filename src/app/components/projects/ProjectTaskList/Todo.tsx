@@ -251,7 +251,7 @@ export default function Todo({
                                 {headings.map((heading, index) => (
                                   <div
                                     key={index}
-                                    className="table-cell header-cell border-1 border-solid "
+                                    className="table-cell header-cell border-1 border-solid text-[#757982] font-500 text-12 "
                                   >
                                     {heading}
                                   </div>
