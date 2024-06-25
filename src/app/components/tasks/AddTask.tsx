@@ -494,33 +494,47 @@ function AddTaskModal({
 
   // function formatDate(dateString) {
   //   console.log("dateString", dateString);
+  //   // Parse the date string using moment
   //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
+  //   console.log("====", date);
+  //   // Format the date to yyyy-mm-dd hh:mm
+  //   // const formattedDate = date.format("YYYY-MM-DD HH:mm");
   //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
-
-  //   console.log("======formattedDate==", formattedDate);
   //   return formattedDate;
   // }
-
   function formatDate(dateString) {
-    console.log("dateString", dateString);
+    console.log("Original dateString:", dateString);
 
-    // Use strict parsing by passing 'true' as the third parameter
-    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss", true);
+    // Define possible input formats
+    const inputFormats = [
+      "YYYY-MM-DD HH:mm",
+      "DD/MM/YYYY, HH:mm:ss",
+      "DD/MM/YYYY , HH:mm:ss",
+    ];
 
-    // Check if date is valid
-    if (!date.isValid()) {
-      console.error("Invalid date format");
+    // Try to parse the date with each format
+    let date = null;
+    for (const format of inputFormats) {
+      date = moment(dateString, format, true);
+      if (date.isValid()) {
+        break;
+      }
+    }
+
+    // Check if date is valid after attempting all formats
+    if (!date || !date.isValid()) {
+      console.error(
+        "Invalid date format. Please ensure the date string matches one of the expected formats."
+      );
       return null;
     }
 
-    // Format the date
+    // Format the date to the desired output format
     const formattedDate = date.format("YYYY-MM-DD, HH:mm");
 
-    console.log("======formattedDate==", formattedDate);
+    console.log("Formatted Date:", formattedDate);
     return formattedDate;
   }
-
-  // Test the function
 
   const onSubmit = async () => {
     formik.handleSubmit();
@@ -1078,7 +1092,7 @@ function AddTaskModal({
                 {item.label}
               </StyledMenuItem>
             ))}
-            <div className="px-20 addTask">
+            <div className="px-20">
               <CustomButton
                 fullWidth
                 variant="contained"

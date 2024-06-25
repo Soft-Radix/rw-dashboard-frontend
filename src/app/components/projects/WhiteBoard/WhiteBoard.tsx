@@ -131,7 +131,7 @@ function WhiteBoard() {
         {!loading && !show && (
           <div className="p-5 w-full h-full flex justify-center items-center">
             {imgData ? (
-              <img src={imgData} />
+              <img src={imgData} className="w-full h-full object-contain" />
             ) : (
               <div className="flex gap-5 flex-col justify-center items-center">
                 <NoDataFound />
@@ -145,7 +145,9 @@ function WhiteBoard() {
 
         {!loading && show && (
           <div
-            className={`w-full h-full bg-white rounded-lg shadow-sm ${loadingDrawIo ? "opacity-0" : "opacity-100"}`}
+            className={`w-full h-full bg-white rounded-lg shadow-sm ${
+              loadingDrawIo ? "opacity-0" : "opacity-100"
+            }`}
           >
             <DrawIoEmbed
               xml={data}
