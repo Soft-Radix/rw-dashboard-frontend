@@ -194,13 +194,13 @@ export default function Item({
                         />
                       </span>
                     </div> */}
-                    <div className="table-cell border-1 border-[#D1D7DB]">
-                      <span className="flex items-center gap-10 text-[14px] font-500 text-[#111827]">
-                        {title}
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
+                      <span className="flex items-center gap-10 text-[14px] font-500 text-[#111827] w-[163px]">
+                        <TruncateText text={title} maxWidth={123} />
                       </span>
                     </div>
 
-                    <div className="table-cell border-1 border-[#D1D7DB]">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
                       <div className="flex ">
                         {/* {agent?.map((item) => (
                         <img
@@ -245,32 +245,32 @@ export default function Item({
                       </div>
                     </div>
 
-                    <div className="table-cell border-1 border-[#D1D7DB]">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
                       {!date ? "N/A" : moment(date).format("ll")}
                     </div>
 
-                    <div className="table-cell border-1 border-[#D1D7DB]">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
                       <span
                         style={{ width: "fit-content" }}
                         className={`${
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                              ? "bg-red/[.18]"
-                              : "bg-green/[.18]"
+                            ? "bg-red/[.18]"
+                            : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center  font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                              ? "text-red"
-                              : "text-green"
+                            ? "text-red"
+                            : "text-green"
                         }`}
                       >
                         {priority}
                       </span>
                     </div>
 
-                    <div className="table-cell action-cell border-1 border-[#D1D7DB]">
+                    <div className="table-cell action-cell border-1 border-[#D1D7DB] w-[163px]">
                       <div className="flex gap-20 px-10">
                         {userDetails?.role != "agent" && (
                           <span
