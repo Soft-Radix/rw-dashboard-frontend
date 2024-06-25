@@ -42,7 +42,11 @@ const forgotPasswordSchema = Yup.object({
 const resetPassSchema = Yup.object({
   password: Yup.string()
     .required("Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long"), // Minimum 6 characters
+    .min(8, "Password must be at least 8 characters long") // Minimum 6 characters
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Must Contain 8 Characters, Uppercase, Lowercase, Number and Special Character"
+    ),
 
   cnfPassword: Yup.string()
     .required("Confirm password is required") // Field is required
@@ -52,8 +56,11 @@ const resetPassSchema = Yup.object({
 const changePasswordByAdmin = Yup.object({
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long")
-    .matches(/^\S+$/, noSpaceMessage), // Minimum 6 characters
+    .min(8, "Password must be at least 8 characters long")
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Must Contain 8 Characters, Uppercase, Lowercase, Number and Special Character"
+    ), // Minimum 6 characters
 
   cnfPassword: Yup.string()
     .required("Confirm Password is required") // Field is required
@@ -64,12 +71,18 @@ const changePasswordByAdmin = Yup.object({
 const changePasswordByClient = Yup.object({
   old_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
-    .matches(/^\S+$/, noSpaceMessage),
+    .min(8, "Password must be at least 8 characters long") // Minimum 6 characters
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Must Contain 8 Characters, Uppercase, Lowercase, Number and Special Character"
+    ),
   new_password: Yup.string()
     .required("New Password is required") // Field is required
-    .min(6, "Password must be at least 6 characters long") // Minimum 6 characters
-    .matches(/^\S+$/, noSpaceMessage),
+    .min(8, "Password must be at least 8 characters long") // Minimum 6 characters
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Must Contain 8 Characters, Uppercase, Lowercase, Number and Special Character"
+    ),
   cnfPassword: Yup.string()
     .required("Confirm password is required") // Field is required
     .oneOf([Yup.ref("new_password"), null], "Passwords must match") // Must match the password field

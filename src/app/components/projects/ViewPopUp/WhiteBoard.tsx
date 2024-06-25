@@ -47,8 +47,8 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Add More List"
       maxWidth="910"
-      btnTitle={"Save"}
-      closeTitle={"Cancel"}
+      btnTitle={"Add List"}
+      closeTitle={"Close"}
       onSubmit={() => {
         setBoardList({ ...boardDetails });
         setIsOpen((prev) => !prev);
@@ -58,16 +58,8 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
       <div className="flex gap-12">
         <CommonChip
           label="Whiteboard"
-          icon={
-            <WhiteBoardIcon color={boardDetails?.whiteBoard ? "#fff" : ""} />
-          }
-          className={`cursor-pointer ${
-            boardDetails?.whiteBoard ? "bg-color-[#4f46e5]" : ""
-          }`}
-          style={{
-            backgroundColor: boardDetails?.whiteBoard ? "#4f46e5" : "",
-            color: boardDetails?.whiteBoard ? "#fff" : "",
-          }}
+          icon={<WhiteBoardIcon />}
+          className={`cursor-pointer ${boardDetails?.whiteBoard ? " border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("whiteboard");
 
@@ -83,13 +75,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Doc"
           icon={<DocIcon />}
-          className={`cursor-pointer ${
-            boardDetails?.doc ? "bg-[#4f46e5]" : ""
-          }`}
-          style={{
-            backgroundColor: boardDetails?.doc ? "#4f46e5" : "",
-            color: boardDetails?.doc ? "#fff" : "",
-          }}
+          className={`cursor-pointer ${boardDetails?.doc ? "border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("doc");
             setBoardDetails((values) => {
@@ -103,13 +89,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Chat"
           icon={<ChatIcon />}
-          className={`cursor-pointer ${
-            boardDetails?.chat ? "bg-[#4f46e5]" : ""
-          }`}
-          style={{
-            backgroundColor: boardDetails?.chat ? "#4f46e5" : "",
-            color: boardDetails?.chat ? "#fff" : "",
-          }}
+          className={`cursor-pointer ${boardDetails?.chat ? " border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("chat");
 

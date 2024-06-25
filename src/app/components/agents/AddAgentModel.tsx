@@ -95,6 +95,7 @@ function AddAgentModel({
   isEditing,
 }: IProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const [selectedItems, setSelectedItems] = useState([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
   const [allCountries, setAllCountries] = useState([]);
@@ -153,7 +154,7 @@ function AddAgentModel({
             formData.append("files", file);
           });
         }
-
+        formData.append("is_welcome_email", isChecked ? 1 : 0);
         const resultAction = await dispatch(addAgent({ formData }));
 
         // Access the response data if needed
@@ -241,6 +242,9 @@ function AddAgentModel({
       getCountries();
     }
   }, []);
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
 
   useEffect(() => {
     if (statecode == "United States") {
@@ -502,6 +506,19 @@ function AddAgentModel({
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {!isEditing && (
+          <div className="flex  items-center">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              className="h-16 w-16"
+            />
+            <span className="ml-10 text-[16px] font-500 text-[#111827]">
+              Do you want to send the welcome email
+            </span>
           </div>
         )}
       </div>
