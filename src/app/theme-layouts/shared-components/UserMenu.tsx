@@ -15,6 +15,7 @@ import { useAuth } from "src/app/auth/AuthRouteProvider";
 import { selectUser } from "src/app/auth/user/store/userSlice";
 import { getLocalStorage } from "src/utils";
 import { logoutCometChat } from "app/configs/cometChatConfig";
+import SignOutModal from "src/app/auth/SignOutModal";
 
 /**
  * The user menu.
@@ -23,6 +24,7 @@ function UserMenu() {
   const user = getLocalStorage("userDetail");
   const { signOut } = useAuth();
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
+  const [isSignOut, setIsSignOut] = useState<boolean>(false);
 
   const userMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setUserMenu(event.currentTarget);
@@ -35,7 +37,11 @@ function UserMenu() {
   if (!user) {
     return null;
   }
-
+  const handleLogout = async () => {
+    signOut();
+    await logoutCometChat();
+    localStorage.clear();
+  };
   return (
     <>
       <Button
@@ -122,10 +128,11 @@ function UserMenu() {
               <ListItemText primary="My profile" />
             </MenuItem>
             <MenuItem
-              onClick={async () => {
-                signOut();
-                await logoutCometChat();
-                localStorage.clear();
+              onClick={() => {
+                setIsSignOut(true);
+                // signOut();
+                // await logoutCometChat();
+                // localStorage.clear();
               }}
             >
               <ListItemIcon className="min-w-40">
@@ -136,6 +143,11 @@ function UserMenu() {
           </>
         )}
       </Popover>
+      <SignOutModal
+        isOpen={isSignOut}
+        setIsOpen={setIsSignOut}
+        onDelete={handleLogout}
+      />
     </>
   );
 }

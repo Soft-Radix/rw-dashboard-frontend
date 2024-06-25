@@ -26,6 +26,7 @@ export interface AccManagerType {
   country?: string;
   two_factor_authentication?: number | string;
   assigned_account_manager_client?: any[];
+  is_welcome_email?: number;
 }
 
 export interface filterType {
@@ -50,6 +51,7 @@ export type initialStateProps = {
   actionStatus: boolean;
   total_records: number;
   fetchList?: boolean;
+  is_welcome_email?: number;
 };
 
 export interface AccManagerRootState {

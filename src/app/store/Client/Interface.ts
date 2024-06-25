@@ -24,6 +24,7 @@ export interface ClientType {
   country?: string;
   zipcode?: number | string;
   state?: string;
+  is_welcome_email?: number;
 }
 
 export interface filterType {
@@ -62,6 +63,7 @@ export type initialStateProps = {
   managertotal_records?: number;
   actionStatusDisabled?: boolean;
   actionStatusClient?: boolean;
+  is_welcome_email?: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed

@@ -120,6 +120,7 @@ function AddAccountManagerModel({
 }: IProps) {
   const dispatch = useAppDispatch();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isChecked, setIsChecked] = useState<boolean>(true);
   const [selectedItems, setSelectedItems] = useState<any>([]);
   // console.log([selectedItems], "items");
   const [selectAll, setSelectAll] = useState<boolean>(false);
@@ -189,12 +190,14 @@ function AddAccountManagerModel({
       formData.append("state", values.state);
       formData.append("zipcode", values.zipcode.toString());
       formData.append("country", values.country);
+      formData.append("is_welcome_email", (isChecked ? 1 : 0).toString());
       if (selectedImage) {
         formData.append("files", selectedImage);
       }
       // uploadedFiles.forEach((file, index) => {
       //   formData.append(`files`, file);
       // });
+
       await dispatch(addAccManager({ formData }));
     }
     // console.log(payload, "payload");
@@ -273,7 +276,9 @@ function AddAccountManagerModel({
     const filteredFiles = uploadedFiles.filter((f) => f !== file);
     setUploadedFiles(filteredFiles);
   };
-
+  const handleCheckboxChange = () => {
+    setIsChecked(!isChecked);
+  };
   const handleUploadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files: FileList | null = e.target.files;
     if (files) {
@@ -536,6 +541,19 @@ function AddAccountManagerModel({
             </SelectField>
           </div>
         </>
+        {!isEditing && (
+          <div className="flex  items-center">
+            <input
+              type="checkbox"
+              checked={isChecked}
+              onChange={handleCheckboxChange}
+              className="h-16 w-16"
+            />
+            <span className="ml-10 text-[16px] font-500 text-[#111827]">
+              Do you want to send the welcome email
+            </span>
+          </div>
+        )}
       </div>
     </CommonModal>
   );

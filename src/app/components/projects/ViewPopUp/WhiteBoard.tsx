@@ -46,16 +46,19 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
       handleToggle={() => setIsOpen((prev) => !prev)}
       modalTitle="Add More List"
       maxWidth="910"
-      btnTitle={"Save"}
-      closeTitle={"Cancel"}
-      onSubmit={() => {setBoardList({ ...boardDetails }); setIsOpen((prev) => !prev)}}
+      btnTitle={"Add List"}
+      closeTitle={"Close"}
+      onSubmit={() => {
+        setBoardList({ ...boardDetails });
+        setIsOpen((prev) => !prev);
+      }}
       // customButton={true}
     >
       <div className="flex gap-12">
         <CommonChip
           label="Whiteboard"
           icon={<WhiteBoardIcon />}
-          className={`cursor-pointer ${boardDetails?.whiteBoard ? "bg-red-300" : ""}`}
+          className={`cursor-pointer ${boardDetails?.whiteBoard ? " border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("whiteboard");
 
@@ -71,7 +74,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Doc"
           icon={<DocIcon />}
-          className={`cursor-pointer ${boardDetails?.doc ? "bg-red-300" : ""}`}
+          className={`cursor-pointer ${boardDetails?.doc ? "border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("doc");
             setBoardDetails((values) => {
@@ -85,7 +88,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Chat"
           icon={<ChatIcon />}
-          className={`cursor-pointer ${boardDetails?.chat ? "bg-red-300" : ""}`}
+          className={`cursor-pointer ${boardDetails?.chat ? " border-1 border-solid border-[#393F4C]" : ""}`}
           onClick={() => {
             handleChipClick("chat");
 
