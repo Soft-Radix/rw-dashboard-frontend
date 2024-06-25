@@ -21,6 +21,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(
     null
   );
+
   const [boardDetails, setBoardDetails] = useState({
     whiteBoard: false,
     doc: false,
@@ -48,14 +49,25 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
       maxWidth="910"
       btnTitle={"Save"}
       closeTitle={"Cancel"}
-      onSubmit={() => {setBoardList({ ...boardDetails }); setIsOpen((prev) => !prev)}}
+      onSubmit={() => {
+        setBoardList({ ...boardDetails });
+        setIsOpen((prev) => !prev);
+      }}
       // customButton={true}
     >
       <div className="flex gap-12">
         <CommonChip
           label="Whiteboard"
-          icon={<WhiteBoardIcon />}
-          className={`cursor-pointer ${boardDetails?.whiteBoard ? "bg-red-300" : ""}`}
+          icon={
+            <WhiteBoardIcon color={boardDetails?.whiteBoard ? "#fff" : ""} />
+          }
+          className={`cursor-pointer ${
+            boardDetails?.whiteBoard ? "bg-color-[#4f46e5]" : ""
+          }`}
+          style={{
+            backgroundColor: boardDetails?.whiteBoard ? "#4f46e5" : "",
+            color: boardDetails?.whiteBoard ? "#fff" : "",
+          }}
           onClick={() => {
             handleChipClick("whiteboard");
 
@@ -71,7 +83,13 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Doc"
           icon={<DocIcon />}
-          className={`cursor-pointer ${boardDetails?.doc ? "bg-red-300" : ""}`}
+          className={`cursor-pointer ${
+            boardDetails?.doc ? "bg-[#4f46e5]" : ""
+          }`}
+          style={{
+            backgroundColor: boardDetails?.doc ? "#4f46e5" : "",
+            color: boardDetails?.doc ? "#fff" : "",
+          }}
           onClick={() => {
             handleChipClick("doc");
             setBoardDetails((values) => {
@@ -85,7 +103,13 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Chat"
           icon={<ChatIcon />}
-          className={`cursor-pointer ${boardDetails?.chat ? "bg-red-300" : ""}`}
+          className={`cursor-pointer ${
+            boardDetails?.chat ? "bg-[#4f46e5]" : ""
+          }`}
+          style={{
+            backgroundColor: boardDetails?.chat ? "#4f46e5" : "",
+            color: boardDetails?.chat ? "#fff" : "",
+          }}
           onClick={() => {
             handleChipClick("chat");
 

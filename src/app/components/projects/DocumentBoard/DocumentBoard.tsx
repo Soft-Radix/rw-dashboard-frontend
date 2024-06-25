@@ -131,14 +131,16 @@ function DocumentBoard() {
               onChange={setValue}
               readOnly={show}
             />
-            <div className="flex items-center justify-end h-[50px] mx-10">
-              <button
-                className="btn bg-[#4F46E5] text-white px-[10px] py-[5px] text-[16px] font-500 mr-10 rounded-lg"
-                onClick={saveData}
-              >
-                Save
-              </button>
-            </div>
+            {!show && (
+              <div className="flex items-center justify-end h-[50px] mx-10">
+                <button
+                  className="btn bg-[#4F46E5] text-white px-[10px] py-[5px] text-[16px] font-500 mr-10 rounded-lg"
+                  onClick={saveData}
+                >
+                  Save
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>
