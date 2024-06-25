@@ -15,6 +15,7 @@ import { useCountdownTimer } from "./UseCountdownTimer";
 export default function OtpVerification() {
   // const initialTime = 60;
   const [otp, setOtp] = useState<string>("");
+  console.log(otp, "asdasjdhasjdfsa");
   // State to track loading
 
   const dispatch = useAppDispatch();
@@ -64,12 +65,13 @@ export default function OtpVerification() {
           <div className="flex items-baseline mt-2 font-medium">
             <Typography className="text-[18px] text-[#757982] mt-8 max-w-[480px]">
               Please enter one time password (OTP) that is sent to
-              <span className="font-semibold"> info456@gmail.com</span>
+              <span className="font-semibold"> {store.auth?.email}</span>
             </Typography>
           </div>
 
           <div className="w-full mt-40 max-w-[417px] flex gap-16 flex-col">
             <OTPInput
+              inputType="number"
               value={otp}
               onChange={setOtp}
               numInputs={4}
@@ -84,13 +86,13 @@ export default function OtpVerification() {
               aria-label="Log In"
               size="large"
               onClick={onSubmit}
-              disabled={!otp || isLoading}
+              disabled={otp.length !== 4 || isLoading}
             >
               Submit
             </Button>
             <div className="flex items-center justify-center cursor-pointer mt-28">
               <Typography
-                color="text.secondary"
+                color="secondary.main"
                 className="font-medium"
                 onClick={resendOtp}
               >
