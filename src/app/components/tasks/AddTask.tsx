@@ -492,42 +492,49 @@ function AddTaskModal({
     setVisible(false);
   };
 
-  function formatDate(dateString) {
-    console.log("dateString", dateString);
-    const date = moment(dateString, "MM/DD/YYYY, HH:mm:ss");
-    console.log("======date==", date);
-    const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
-
-    console.log("======formattedDate==", formattedDate);
-    return formattedDate;
-  }
-
   // function formatDate(dateString) {
-  //   console.log("Original dateString:", dateString);
-
-  //   // Ensure correct locale is used (set it explicitly if needed)
-  //   moment.locale("en"); // Change 'en' to the specific locale if necessary
-
-  //   // Use strict parsing with a detailed format string
-  //   const date = moment(dateString, "DD/MM/YYYY, hh:mm:ss", true);
-  //   console.log("======date==", date);
-
-  //   // Check if date is valid
-  //   if (!date.isValid()) {
-  //     console.error(
-  //       "Invalid date format. Please ensure the date string is in 'DD/MM/YYYY, HH:mm:ss' format."
-  //     );
-  //     return null;
-  //   }
-
-  //   // Format the date to the desired format
-  //   const formattedDate = date.format("YYYY-MM-DD, HH:mm");
-
-  //   console.log("Formatted Date:", formattedDate);
+  //   console.log("dateString", dateString);
+  //   // Parse the date string using moment
+  //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
+  //   console.log("====", date);
+  //   // Format the date to yyyy-mm-dd hh:mm
+  //   // const formattedDate = date.format("YYYY-MM-DD HH:mm");
+  //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
   //   return formattedDate;
   // }
+  function formatDate(dateString) {
+    console.log("Original dateString:", dateString);
 
-  // Test the function
+    // Define possible input formats
+    const inputFormats = [
+      "YYYY-MM-DD HH:mm",
+      "DD/MM/YYYY, HH:mm:ss",
+      "DD/MM/YYYY , HH:mm:ss",
+    ];
+
+    // Try to parse the date with each format
+    let date = null;
+    for (const format of inputFormats) {
+      date = moment(dateString, format, true);
+      if (date.isValid()) {
+        break;
+      }
+    }
+
+    // Check if date is valid after attempting all formats
+    if (!date || !date.isValid()) {
+      console.error(
+        "Invalid date format. Please ensure the date string matches one of the expected formats."
+      );
+      return null;
+    }
+
+    // Format the date to the desired output format
+    const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+
+    console.log("Formatted Date:", formattedDate);
+    return formattedDate;
+  }
 
   const onSubmit = async () => {
     formik.handleSubmit();
@@ -1085,7 +1092,7 @@ function AddTaskModal({
                 {item.label}
               </StyledMenuItem>
             ))}
-            <div className="px-20 addTask">
+            <div className="px-20">
               <CustomButton
                 fullWidth
                 variant="contained"
