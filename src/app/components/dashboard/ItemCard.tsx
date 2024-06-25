@@ -148,47 +148,62 @@ export default function ItemCard({
 
   return (
     <>
-      <div style={{ position: "relative" }}>
-        {userDetails?.role != "agent" && (
-          <div style={{ position: "absolute", right: 12, top: 19 }}>
-            <span
-              id="basic-button"
-              aria-controls={open ? "basic-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <ThreeDotsIcon className="cursor-pointer" />
-            </span>
-            <Menu
-              id="basic-menu"
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleClose}
-              MenuListProps={{
-                "aria-labelledby": "basic-button",
-              }}
-              transformOrigin={{ horizontal: "right", vertical: "top" }}
-              anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-            >
-              <MenuItem
-                onClick={(e) => {
-                  handleClose();
-                  toggleEditModal();
-                }}
-              >
-                Edit Task
-              </MenuItem>
-              <MenuItem
-                onClick={(e) => {
-                  handleClose();
-                  toggleDeleteModal();
-                  e.stopPropagation();
-                }}
-              >
-                Delete Task
-              </MenuItem>
-              {/* <MenuItem
+      <Draggable
+        draggableId={id.toString()}
+        index={index}
+        //@ts-ignore
+        type="task"
+      >
+        {(provided, snapshot) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.dragHandleProps}
+            //@ts-ignore
+            {...provided.draggableProps}
+            //@ts-ignore
+            isDragging={snapshot.isDragging}
+          >
+            <div style={{ position: "relative" }}>
+              {userDetails?.role != "agent" && (
+                <div style={{ position: "absolute", right: 12, top: 19 }}>
+                  <span
+                    id="basic-button"
+                    aria-controls={open ? "basic-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                  >
+                    <ThreeDotsIcon className="cursor-pointer" />
+                  </span>
+                  <Menu
+                    id="basic-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleClose}
+                    MenuListProps={{
+                      "aria-labelledby": "basic-button",
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose();
+                        toggleEditModal();
+                      }}
+                    >
+                      Edit Task
+                    </MenuItem>
+                    <MenuItem
+                      onClick={(e) => {
+                        handleClose();
+                        toggleDeleteModal();
+                        e.stopPropagation();
+                      }}
+                    >
+                      Delete Task
+                    </MenuItem>
+                    {/* <MenuItem
                 onClick={(e) => {
                   handleClose();
                   e.stopPropagation();
@@ -197,51 +212,36 @@ export default function ItemCard({
               >
                 View
               </MenuItem> */}
-            </Menu>
-          </div>
-        )}
-        <ActionModal
-          modalTitle="Delete Task"
-          modalSubTitle="Are you sure you want to delete this task?"
-          open={openDeleteModal}
-          handleToggle={toggleDeleteModal}
-          type="delete"
-          onDelete={handleDelete}
-          disabled={disable}
-        />
-        {isOpenAddModal && (
-          <AddTaskModal
-            isOpen={isOpenAddModal}
-            project_id={project_id}
-            setIsOpen={setIsOpenAddModal}
-            ColumnId={id}
-            callListApi={callListApi}
-            Edit
-          />
-        )}
-        <div
-          // to={}
-          style={{ textDecoration: "none" }}
-          onClick={(e) => {
-            event.preventDefault();
-            e.stopPropagation();
-            navigate(`/${project_id}/tasks/detail/${id}`);
-          }}
-        >
-          <Draggable
-            draggableId={id.toString()}
-            index={index}
-            //@ts-ignore
-            type="task"
-          >
-            {(provided, snapshot) => (
+                  </Menu>
+                </div>
+              )}
+              <ActionModal
+                modalTitle="Delete Task"
+                modalSubTitle="Are you sure you want to delete this task?"
+                open={openDeleteModal}
+                handleToggle={toggleDeleteModal}
+                type="delete"
+                onDelete={handleDelete}
+                disabled={disable}
+              />
+              {isOpenAddModal && (
+                <AddTaskModal
+                  isOpen={isOpenAddModal}
+                  project_id={project_id}
+                  setIsOpen={setIsOpenAddModal}
+                  ColumnId={id}
+                  callListApi={callListApi}
+                  Edit
+                />
+              )}
               <div
-                ref={provided.innerRef}
-                {...provided.dragHandleProps}
-                //@ts-ignore
-                {...provided.draggableProps}
-                //@ts-ignore
-                isDragging={snapshot.isDragging}
+                // to={}
+                style={{ textDecoration: "none" }}
+                onClick={(e) => {
+                  event.preventDefault();
+                  e.stopPropagation();
+                  navigate(`/${project_id}/tasks/detail/${id}`);
+                }}
               >
                 <div className="bg-[#F7F9FB] p-14 rounded-md border my-4">
                   <div className="flex justify-between gap-10 items-center">
@@ -266,14 +266,14 @@ export default function ItemCard({
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                              ? "bg-red/[.18]"
-                              : "bg-green/[.18]"
+                            ? "bg-red/[.18]"
+                            : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                              ? "text-red"
-                              : "text-green"
+                            ? "text-red"
+                            : "text-green"
                         }`}
                       >
                         {priority}
@@ -356,10 +356,10 @@ export default function ItemCard({
                   </div>
                 </div>
               </div>
-            )}
-          </Draggable>
-        </div>
-      </div>
+            </div>
+          </div>
+        )}
+      </Draggable>
     </>
   );
 }

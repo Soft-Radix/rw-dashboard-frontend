@@ -21,6 +21,7 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
   const [selectedComponent, setSelectedComponent] = useState<string | null>(
     null
   );
+
   const [boardDetails, setBoardDetails] = useState({
     whiteBoard: false,
     doc: false,

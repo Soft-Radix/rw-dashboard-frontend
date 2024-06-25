@@ -492,14 +492,43 @@ function AddTaskModal({
     setVisible(false);
   };
 
+  // function formatDate(dateString) {
+  //   console.log("dateString", dateString);
+  //   // Parse the date string using moment
+  //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
+  //   console.log("====", date);
+  //   // Format the date to yyyy-mm-dd hh:mm
+  //   // const formattedDate = date.format("YYYY-MM-DD HH:mm");
+  //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
+  //   return formattedDate;
+  // }
   function formatDate(dateString) {
-    console.log("dateString", dateString);
-    // Parse the date string using moment
-    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
+    // Define possible input formats
+    const inputFormats = [
+      "YYYY-MM-DD HH:mm",
+      "DD/MM/YYYY, HH:mm:ss",
+      "DD/MM/YYYY , HH:mm:ss",
+    ];
 
-    // Format the date to yyyy-mm-dd hh:mm
-    // const formattedDate = date.format("YYYY-MM-DD HH:mm");
-    const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
+    // Try to parse the date with each format
+    let date = null;
+    for (const format of inputFormats) {
+      date = moment(dateString, format, true);
+      if (date.isValid()) {
+        break;
+      }
+    }
+    // Check if date is valid after attempting all formats
+    if (!date || !date.isValid()) {
+      console.error(
+        "Invalid date format. Please ensure the date string matches one of the expected formats."
+      );
+      return moment(dateString, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+    }
+
+    // Format the date to the desired output format
+    const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+
     return formattedDate;
   }
 
@@ -614,9 +643,16 @@ function AddTaskModal({
 
   const handleDateChange = (newDate) => {
     setCustomDate(newDate);
-    setSelectedDate(newDate.toLocaleString());
-    setCalculatedDate(newDate.toLocaleString());
+    // setSelectedDate(newDate.toLocaleString());
+    // setCalculatedDate(newDate.toLocaleString());
+
+    const formattedDate = moment(newDate).format("DD/MM/YYYY HH:mm");
+
+    // Set the formatted date to the state variables
+    setSelectedDate(formattedDate);
+    setCalculatedDate(formattedDate);
   };
+
   const open = Boolean(anchorEl);
   const today = new Date();
 
@@ -707,7 +743,7 @@ function AddTaskModal({
 
   const onSubmitEdit = async () => {
     formik.handleSubmit();
-    if (Object.keys(formik.errors).length > 0) {
+    if (Object.keys(formik.errors).length > 0 || formik?.values?.title == "") {
       // If there are validation errors, do not proceed further
       return;
     }
@@ -1592,7 +1628,7 @@ function AddTaskModal({
                       </div>
                     </>
                   ) : (
-                    <div className="w-[200px] rounded-md sm:h-[130px] flex items-center justify-center border-1 border-[#4F46E5]">
+                    <div className="w-[100px] rounded-md sm:h-[60px] flex items-center justify-center border-1 border-[#4F46E5]">
                       <a
                         href={urlForImage + item.file}
                         target="_blank"
@@ -1621,7 +1657,9 @@ function AddTaskModal({
                         <AttachmentDeleteIcon
                           onClick={() => {
                             setIsOpenDeletedModal(true);
+                            setType(3);
                             setIsDeleteId(item.id);
+                            setDeleteId([...deleteid, item.id]);
                           }}
                         />
                       </div>
