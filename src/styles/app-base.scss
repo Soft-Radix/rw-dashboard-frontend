@@ -557,9 +557,11 @@ header {
   position: relative !important;
   height: 100%;
 }
+
 .active-slot {
   position: relative;
 }
+
 .active-slot:after {
   content: "+";
   position: absolute;
@@ -581,12 +583,15 @@ header {
   z-index: 10;
   cursor: pointer;
 }
+
 .rbc-event {
   background-color: #f6f6f6 !important;
 }
+
 .rbc-show-more {
   color: #4f46e5 !important;
 }
+
 .client .rbc-date-cell:hover:after {
   content: "+";
   position: absolute;
@@ -608,6 +613,7 @@ header {
   z-index: 10;
   cursor: pointer;
 }
+
 .geBigButton {
   background-color: red !important;
 }
@@ -633,17 +639,20 @@ cometchat-callscreen-wrapper {
 .rdrDefinedRangesWrapper {
   display: none !important;
 }
+
 span.rdrEndEdge,
 span.rdrStartEdge,
 .rdrInRange {
   background: #4f46e5 !important;
   color: blue !important;
 }
+
 span.rdrEndEdge,
 span.rdrStartEdge {
   background: #4f46e5 !important;
   color: blue !important;
 }
+
 .rdrDay.rdrDayHovered {
   border-color: #4f46e5 !important;
 }
@@ -651,13 +660,24 @@ span.rdrStartEdge {
 .rdrDay.rdrDayHovered:hover {
   border-color: #4f46e5 !important;
 }
+
 .muiltr-c1i6fn-MuiButtonBase-root-MuiMenuItem-root-MuiMultiSectionDigitalClockSection-item.Mui-selected:hover {
   background-color: #4f46e5 !important;
 }
+
 .muiltr-hs29jq-MuiButtonBase-root-MuiPickersDay-root.Mui-selected:hover {
   background-color: #4f46e5 !important;
 }
+
 .muiltr-7g9680-MuiButtonBase-root-MuiPickersDay-root.Mui-selected {
+  background-color: #4f46e5 !important;
+}
+
+.addTask .Mui-selected:hover {
+  background-color: #4f46e5 !important;
+}
+
+.addTask .Mui-selected:hover {
   background-color: #4f46e5 !important;
 }
 

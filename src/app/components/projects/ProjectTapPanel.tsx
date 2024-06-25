@@ -204,7 +204,11 @@ export default function ProjectTabPanel() {
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
-              className={`min-h-0 pb-14 pt-20 px-20 gap-[50px] ${client_id?.role_id !== ROLES.AGENT ? "w-[calc(100%-720px)]" : "w-full"} overflow-y-auto`}
+              className={`min-h-0 pb-14 pt-20 px-20 gap-[50px] ${
+                client_id?.role_id !== ROLES.AGENT
+                  ? "w-[calc(100%-120px)]"
+                  : "w-full"
+              } overflow-y-auto`}
               sx={{
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
@@ -279,7 +283,11 @@ export default function ProjectTabPanel() {
                     <WhiteBoardIcon />
                   )
                 }
-                className={`${boardList.whiteBoard ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+                className={`${
+                  boardList.whiteBoard
+                    ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root"
+                    : "hidden"
+                }`}
               />
 
               <Tab
@@ -287,7 +295,11 @@ export default function ProjectTabPanel() {
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={selectedTab == 5 ? <DocIconActive /> : <DocIcon />}
-                className={`${boardList.doc ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+                className={`${
+                  boardList.doc
+                    ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root"
+                    : "hidden"
+                }`}
               />
 
               <Tab
@@ -295,11 +307,17 @@ export default function ProjectTabPanel() {
                 {...a11yProps(selectedTab)}
                 iconPosition="start"
                 icon={selectedTab == 6 ? <ChatIconActive /> : <ChatIcon />}
-                className={`${boardList.chat ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root" : "hidden"}`}
+                className={`${
+                  boardList.chat
+                    ? "MuiButtonBase-root MuiTab-root MuiTab-labelIcon MuiTab-textColorPrimary px-4 py-6 min-w-0 min-h-0 text-[1.8rem] font-400 text-[#757982] muiltr-vcwyal-MuiButtonBase-root-MuiTab-root"
+                    : "hidden"
+                }`}
               />
             </Tabs>
             <span
-              className={`border-l-1 ${client_id?.role_id !== ROLES.AGENT ? "" : "hidden"}`}
+              className={`border-l-1 ${
+                client_id?.role_id !== ROLES.AGENT ? "" : "hidden"
+              }`}
             >
               <Button
                 onClick={showWhiteBoard}

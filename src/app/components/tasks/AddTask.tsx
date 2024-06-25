@@ -492,16 +492,35 @@ function AddTaskModal({
     setVisible(false);
   };
 
+  // function formatDate(dateString) {
+  //   console.log("dateString", dateString);
+  //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
+  //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
+
+  //   console.log("======formattedDate==", formattedDate);
+  //   return formattedDate;
+  // }
+
   function formatDate(dateString) {
     console.log("dateString", dateString);
-    // Parse the date string using moment
-    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
 
-    // Format the date to yyyy-mm-dd hh:mm
-    // const formattedDate = date.format("YYYY-MM-DD HH:mm");
-    const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
+    // Use strict parsing by passing 'true' as the third parameter
+    const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss", true);
+
+    // Check if date is valid
+    if (!date.isValid()) {
+      console.error("Invalid date format");
+      return null;
+    }
+
+    // Format the date
+    const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+
+    console.log("======formattedDate==", formattedDate);
     return formattedDate;
   }
+
+  // Test the function
 
   const onSubmit = async () => {
     formik.handleSubmit();
@@ -1059,7 +1078,7 @@ function AddTaskModal({
                 {item.label}
               </StyledMenuItem>
             ))}
-            <div className="px-20">
+            <div className="px-20 addTask">
               <CustomButton
                 fullWidth
                 variant="contained"
