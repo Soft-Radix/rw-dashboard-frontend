@@ -10,6 +10,7 @@ import {
   Typography,
   styled,
 } from "@mui/material";
+
 import { DateTimePicker } from "@mui/x-date-pickers";
 import {
   AddLabellList,
@@ -28,7 +29,13 @@ import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
 import { debounce } from "lodash";
 import moment from "moment";
-import { CrossGreyIcon, PreviewIcon, Reload } from "public/assets/icons/common";
+import {
+  CrossGreyIcon,
+  Pause,
+  Play,
+  PreviewIcon,
+  Reload,
+} from "public/assets/icons/common";
 import {
   AttachmentDeleteIcon,
   AttachmentIcon,
@@ -52,6 +59,10 @@ import CommonChip from "../chip";
 import DeleteClient from "../client/DeleteClient";
 import CustomButton from "../custom_button";
 import { GetAssignAgentsInfo } from "app/store/Client";
+import { useSelector } from "react-redux";
+import { ProjectRootState } from "app/store/Projects/Interface";
+import ListLoading from "@fuse/core/ListLoading";
+import React, { lazy } from "react";
 
 interface IProps {
   isOpen: boolean;
@@ -157,6 +168,9 @@ function AddTaskModal({
   const [deleteid, setDeleteId] = useState([]);
   const [selectedStatusId, setSelectedStatusId] = useState("0");
   const [initialRender, setInitialRender] = useState(false);
+  const { fetchStatusTask } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
   const [filterMenu, setFilterMenu] = useState<filterType>({
     start: 0,
     limit: -1,
@@ -166,7 +180,7 @@ function AddTaskModal({
   const validationSchema = Yup.object({
     title: Yup.string()
       .required("Title is required")
-      .matches(/^(?!\s*$).+/, "Title cannot be empty or contain only spaces"),
+      .matches(/^(?!\s*$).+/, "Please enter the title"),
     description: Yup.string(),
   });
 
@@ -197,18 +211,7 @@ function AddTaskModal({
     { label: "High" },
     { label: "Low" },
   ];
-  // const statusMenuData = [
-  //   { label: "To Do" },
-  //   { label: "In Progress" },
-  //   { label: "In Review" },
-  //   { label: "Completed" },
-  // ];
-  // const labelsMenuData = [
-  //   { label: "Important Task" },
-  //   { label: "High Priority" },
-  //   { label: "Medium Priority" },
-  //   { label: "Responsive" },
-  // ];
+
   const handleAddLabel = () => {
     setShowLabelForm(true);
   };
@@ -228,6 +231,7 @@ function AddTaskModal({
       });
     }
   }, [project_id, isOpen]);
+
   const fetchLabel = async () => {
     await dispatch(
       getLabelList({ project_id: project_id, start: 0, limit: 10 })
@@ -257,16 +261,12 @@ function AddTaskModal({
     setSelectedStatusId(status.id);
     setStatusMenu(null); // Close the dropdown menu after selection
   };
+
   const handlePriorityMenuClick = (data) => {
     setSelectedPriority(data);
     setPriorityMenu(null); // Close the dropdown priority menu after selection
   };
 
-  // const handleAgentMenuClick = (data) => {
-  //   setSelectedAgent(data.first_name);
-  //   setAgentID(data.id);
-  //   setAgentMenu(null); // Close the dropdown priority menu after selection
-  // };
   const handleAgentMenuClick = (item) => {
     const agentId = item.id;
     if (selectedAgents?.includes(agentId)) {
@@ -384,65 +384,158 @@ function AddTaskModal({
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const handleAudioRecord = () => {
-    if (recordingAudio) {
-      setVisible(true);
-      console.log("Stopping the recorder...");
-      mediaRecorderRef.current.stop();
-      mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
-      setRecordingAudio(false);
-      clearInterval(timerRef.current); // Stop the timer
-    } else {
-      setVisible(true);
-      console.log("Starting the recorder...");
-      navigator.mediaDevices
-        .getUserMedia({ audio: true })
-        .then((stream) => {
-          mediaStreamRef.current = stream; // Store the stream
-          const mediaRecorder = new MediaRecorder(stream);
-          mediaRecorderRef.current = mediaRecorder;
-          audioChunksRef.current = [];
+  // const handleAudioRecord = () => {
+  //   if (recordingAudio) {
+  //     setVisible(true);
+  //     console.log("Stopping the recorder...");
+  //     mediaRecorderRef.current.stop();
+  //     mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
+  //     setRecordingAudio(false);
+  //     clearInterval(timerRef.current); // Stop the timer
+  //   } else {
+  //     setVisible(true);
+  //     console.log("Starting the recorder...");
+  //     navigator.mediaDevices
+  //       .getUserMedia({ audio: true })
+  //       .then((stream) => {
+  //         mediaStreamRef.current = stream; // Store the stream
+  //         const mediaRecorder = new MediaRecorder(stream);
+  //         mediaRecorderRef.current = mediaRecorder;
+  //         audioChunksRef.current = [];
 
-          mediaRecorder.ondataavailable = (event) => {
-            console.log("Data available:", event.data);
-            audioChunksRef.current.push(event.data);
-          };
+  //         mediaRecorder.ondataavailable = (event) => {
+  //           console.log("Data available:", event.data);
+  //           audioChunksRef.current.push(event.data);
+  //         };
 
-          mediaRecorder.onstop = () => {
-            console.log("Recorder stopped");
-            const audioBlob = new Blob(audioChunksRef.current, {
-              type: "audio/wav",
-            });
-            const audioFile = new File([audioBlob], "recorded_audio.wav", {
-              type: "audio/wav",
-            });
-            // console.log("=====audioFile===", audioFile);
-            setAudioRecorder(audioFile);
-            const audioUrl = URL.createObjectURL(audioBlob);
-            setAudioURL(audioUrl);
+  //         mediaRecorder.onstop = () => {
+  //           console.log("Recorder stopped");
+  //           const audioBlob = new Blob(audioChunksRef.current, {
+  //             type: "audio/wav",
+  //           });
+  //           const audioFile = new File([audioBlob], "recorded_audio.wav", {
+  //             type: "audio/wav",
+  //           });
+  //           console.log("=====audioFile===", audioFile);
+  //           setAudioRecorder(audioFile);
+  //           const audioUrls = URL.createObjectURL(audioBlob);
+  //           console.log("=========audioUrl==========", audioUrls);
+  //           setAudioURL(audioUrls);
 
-            setBlob(audioBlob);
-            // setRecordingTime(0);
-          };
+  //           setBlob(audioBlob);
+  //           // setRecordingTime(0);
+  //         };
 
-          mediaRecorder.start();
-          console.log("Recorder started");
-          setRecordingAudio(true);
-          setMediaRecorder1(mediaRecorder);
-          timerRef.current = setInterval(() => {
-            setRecordingTime((prevTime) => prevTime + 1);
-          }, 1000);
-        })
-        .catch((error) => {
-          console.error("Error accessing microphone", error);
-        });
-    }
+  //         mediaRecorder.start();
+  //         console.log("Recorder started");
+  //         setRecordingAudio(true);
+  //         setMediaRecorder1(mediaRecorder);
+  //         timerRef.current = setInterval(() => {
+  //           setRecordingTime((prevTime) => prevTime + 1);
+  //         }, 1000);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error accessing microphone", error);
+  //       });
+  //   }
+  // };
+
+  const handleAudioRecord = (save) => {
+    let audioUrls = "";
+    return new Promise((resolve, reject) => {
+      if (recordingAudio) {
+        setVisible(true);
+        console.log("Stopping the recorder...");
+        mediaRecorderRef.current.stop();
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
+        setRecordingAudio(false);
+        clearInterval(timerRef.current); // Stop the timer
+
+        // Resolve the promise when the mediaRecorder stops
+        mediaRecorderRef.current.onstop = () => {
+          console.log("Recorder stopped");
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/wav",
+          });
+          const audioFile = new File([audioBlob], "recorded_audio.wav", {
+            type: "audio/wav",
+          });
+          setAudioRecorder(audioFile);
+          audioUrls = URL.createObjectURL(audioBlob);
+          console.log("=======lll==", audioUrls);
+          setAudioURL(audioUrls); // Ensure this line sets the audio URL
+          setBlob(audioBlob);
+          resolve(audioUrls);
+          if (save) {
+            setRecordingTime(0);
+            setSavedAudioURL(audioUrls);
+            setAudioURL("");
+            setVisible(false);
+          }
+        };
+      } else {
+        console.log("=========else=======");
+        if (save) {
+          console.log("=========else=save======");
+
+          console.log("Recorder stopped");
+          const audioBlob = new Blob(audioChunksRef.current, {
+            type: "audio/wav",
+          });
+          const audioFile = new File([audioBlob], "recorded_audio.wav", {
+            type: "audio/wav",
+          });
+          setAudioRecorder(audioFile);
+          audioUrls = URL.createObjectURL(audioBlob);
+          console.log("=======lll=ww=", audioUrls);
+          setAudioURL(audioUrls); // Ensure this line sets the audio URL
+          setBlob(audioBlob);
+          resolve(audioUrls);
+
+          setRecordingTime(0);
+          setSavedAudioURL(audioUrls);
+          setAudioURL("");
+          setVisible(false);
+
+          return;
+        }
+        setVisible(true);
+        console.log("Starting the recorder...");
+        navigator.mediaDevices
+          .getUserMedia({ audio: true })
+          .then((stream) => {
+            mediaStreamRef.current = stream; // Store the stream
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorderRef.current = mediaRecorder;
+            audioChunksRef.current = [];
+
+            mediaRecorder.ondataavailable = (event) => {
+              console.log("Data available:", event.data);
+              audioChunksRef.current.push(event.data);
+            };
+
+            mediaRecorder.start();
+            console.log("Recorder started");
+            setRecordingAudio(true);
+            setMediaRecorder1(mediaRecorder);
+            timerRef.current = setInterval(() => {
+              setRecordingTime((prevTime) => prevTime + 1);
+            }, 1000);
+          })
+          .catch((error) => {
+            console.error("Error accessing microphone", error);
+            reject(error);
+          });
+      }
+    });
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (recordingAudio) {
-      handleAudioRecord();
+      // await handleAudioRecord();
     }
+
+    console.log("=====audiouuuuuuuURL==", audioURL);
     setRecordingTime(0);
     setSavedAudioURL(audioURL);
     setAudioURL("");
@@ -451,7 +544,7 @@ function AddTaskModal({
 
   const handleCancel = () => {
     if (recordingAudio) {
-      handleAudioRecord();
+      handleAudioRecord(false);
     }
     setRecordingTime(0);
 
@@ -492,16 +585,6 @@ function AddTaskModal({
     setVisible(false);
   };
 
-  // function formatDate(dateString) {
-  //   console.log("dateString", dateString);
-  //   // Parse the date string using moment
-  //   const date = moment(dateString, "DD/MM/YYYY, HH:mm:ss");
-  //   console.log("====", date);
-  //   // Format the date to yyyy-mm-dd hh:mm
-  //   // const formattedDate = date.format("YYYY-MM-DD HH:mm");
-  //   const formattedDate = moment(date).format("yyyy-MM-DD, hh:mm");
-  //   return formattedDate;
-  // }
   function formatDate(dateString) {
     // Define possible input formats
     const inputFormats = [
@@ -643,8 +726,6 @@ function AddTaskModal({
 
   const handleDateChange = (newDate) => {
     setCustomDate(newDate);
-    // setSelectedDate(newDate.toLocaleString());
-    // setCalculatedDate(newDate.toLocaleString());
 
     const formattedDate = moment(newDate).format("DD/MM/YYYY HH:mm");
 
@@ -720,17 +801,10 @@ function AddTaskModal({
   }, [isOpen]);
 
   const handleDeleteAttachment = async (id: number) => {
-    const { payload } = await dispatch(
-      TaskDeleteAttachment({ type: type, file_id: id })
-    );
-    // console.log(payload, "kklkkkl");
-    if (payload?.data?.status) {
-      EditDetails();
-    }
+    const filteredFiles = uploadedFilesNew.filter((f) => f.id !== id);
+    setUploadedFilesNew(filteredFiles);
     setIsOpenDeletedModal(false);
-    if (type == 1) {
-      handleCross();
-    }
+    setDeleteId([...deleteid, id]);
   };
 
   const handleImageClick = (imageUrl) => {
@@ -743,7 +817,8 @@ function AddTaskModal({
 
   const onSubmitEdit = async () => {
     formik.handleSubmit();
-    if (Object.keys(formik.errors).length > 0 || formik?.values?.title == "") {
+
+    if (formik?.values?.title.trim() == "") {
       // If there are validation errors, do not proceed further
       return;
     }
@@ -863,6 +938,7 @@ function AddTaskModal({
         setLabelsMenu(null);
         fetchLabel();
         setSelectedlabel(formik?.values?.newLabel);
+        formik.setFieldValue("newLabel", "");
         setShowLabelForm(false);
       });
     }
@@ -874,6 +950,7 @@ function AddTaskModal({
       audioRef.current.play(); // Play the audio
     }
   };
+
   return (
     <CommonModal
       open={isOpen}
@@ -881,87 +958,92 @@ function AddTaskModal({
       handleToggle={() => handleReset()}
       modalTitle={Edit ? "Edit Task" : "Add Task"}
       maxWidth="910"
-      btnTitle={Edit ? "Save Edit" : "Save"}
+      btnTitle={Edit ? "Save" : "Save"}
       closeTitle="Close"
       onSubmit={Edit ? onSubmitEdit : onSubmit}
     >
-      <div className="flex flex-col gap-20">
-        <InputField
-          formik={formik}
-          name="title"
-          label="Title"
-          placeholder="Enter Title"
-        />
-        <InputField
-          formik={formik}
-          name="description"
-          label="Description"
-          placeholder="Enter Description"
-          multiline
-          rows={4}
-        />
-        <div className="flex gap-10">
-          <DropdownMenu
-            anchorEl={AgentMenu}
-            handleClose={() => {
-              setFilterMenu((prevFilters) => ({
-                ...prevFilters,
-                search: "",
-              }));
-              setAgentMenu(null);
-            }}
-            button={
-              <div
-                className={`relative
+      {fetchStatusTask == "loading" && Edit ? (
+        <div className="h-[80vh]">
+          <ListLoading />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-20">
+          <InputField
+            formik={formik}
+            name="title"
+            label="Title"
+            placeholder="Enter Title"
+          />
+          <InputField
+            formik={formik}
+            name="description"
+            label="Description"
+            placeholder="Enter Description"
+            multiline
+            rows={4}
+          />
+          <div className="flex gap-10">
+            <DropdownMenu
+              anchorEl={AgentMenu}
+              handleClose={() => {
+                setFilterMenu((prevFilters) => ({
+                  ...prevFilters,
+                  search: "",
+                }));
+                setAgentMenu(null);
+              }}
+              button={
+                <div
+                  className={`relative
       `}
-              >
-                <CommonChip
-                  onClick={(event) => setAgentMenu(event.currentTarget)}
-                  style={{ maxWidth: "200px", paddingRight: "27px" }}
-                  className={`${
-                    AgentMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
-                  }`}
-                  label={
-                    selectedAgents?.length > 0
-                      ? selectedAgents
-                          ?.map(
-                            (agentId) =>
-                              agentMenuData?.find(
-                                (item) => item.agent_id === agentId
-                              )?.first_name
-                          )
-                          .join(", ")
-                      : selectedAgent
-                  }
-                  // icon={<AssignIcon />}
-                />
-                <div className="absolute top-[13px] right-3">
-                  <AssignIconNew />
+                >
+                  <CommonChip
+                    onClick={(event) => setAgentMenu(event.currentTarget)}
+                    style={{ maxWidth: "200px", paddingRight: "27px" }}
+                    className={`${
+                      AgentMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                    }`}
+                    label={
+                      selectedAgents?.length > 0
+                        ? selectedAgents
+                            ?.map(
+                              (agentId) =>
+                                agentMenuData?.find(
+                                  (item) => item.agent_id === agentId
+                                )?.first_name
+                            )
+                            .join(", ")
+                        : selectedAgent
+                    }
+                    // icon={<AssignIcon />}
+                  />
+                  <div className="absolute top-[13px] right-3">
+                    <AssignIconNew />
+                  </div>
                 </div>
-              </div>
-            }
-            popoverProps={{
-              open: !!AgentMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            <div className="w-[375px] p-20">
-              <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
+              }
+              popoverProps={{
+                open: !!AgentMenu,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
+              <div className="w-[375px] p-20">
+                <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
 
-              <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
-                <InputField
-                  name={"agent"}
-                  placeholder={"Search Assignee"}
-                  className="common-inputField "
-                  inputProps={{
-                    className: "ps-[2rem] w-full sm:w-full",
-                  }}
-                  onChange={handleSearchChange}
-                />
-                <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-                  {/* <div
+                <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
+                  <InputField
+                    name={"agent"}
+                    placeholder={"Search Assignee"}
+                    className="common-inputField "
+                    inputProps={{
+                      className: "ps-[2rem] w-full sm:w-full",
+                    }}
+                    onChange={handleSearchChange}
+                  />
+                  <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
+                    {/* <div
                     className="flex items-center gap-10 px-20 w-full"
                     onClick={handleSelectAllAgents}
                   >
@@ -971,266 +1053,288 @@ function AddTaskModal({
                     />
                     <span>Select All</span>
                   </div> */}
-                  {agentMenuData?.map((item: any) => (
-                    <div
-                      className="flex items-center gap-10 px-20 w-full"
-                      key={item.id}
-                      onChange={() => handleAgentSelect(item.agent_id)}
-                    >
-                      <label className="flex items-center gap-10 w-full cursor-pointer">
-                        <Checkbox
-                          className="d-none"
-                          checked={selectedAgents?.includes(item.agent_id)}
-                          onChange={() => handleAgentSelect(item.agent_id)}
-                        />
-                        <span>{item?.userName}</span>
-                      </label>
-                    </div>
-                  ))}
+                    {agentMenuData?.map((item: any) => (
+                      <div
+                        className="flex items-center gap-10 px-20 w-full"
+                        key={item.id}
+                        onChange={() => handleAgentSelect(item.agent_id)}
+                      >
+                        <label className="flex items-center gap-10 w-full cursor-pointer">
+                          <Checkbox
+                            className="d-none"
+                            checked={selectedAgents?.includes(item.agent_id)}
+                            onChange={() => handleAgentSelect(item.agent_id)}
+                          />
+                          <span>{item?.userName}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </DropdownMenu>
+            </DropdownMenu>
 
-          {/* 
-          <DropdownMenu
-            anchorEl={AgentMenu}
-            handleClose={() => setAgentMenu(null)}
-            button={
-              <CommonChip
-                onClick={(event) => setAgentMenu(event.currentTarget)}
-                label={
-                  selectedAgents?.length > 0
-                    ? selectedAgents
-                        ?.map(
-                          (agentId) =>
-                            agentMenuData.find((item) => item.id == agentId)
-                              ?.first_name
-                        )
-                        .join(", ")
-                    : selectedAgent
-                }
-                icon={<AssignIcon />}
-              />
-            }selectedStatusId
-            popoverProps={{
-              open: !!AgentMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            <div className="w-[375px] p-20">
-              <p className="text-title font-600 text-[1.6rem]">Agent Name</p>
-
-              <div className="relative w-full mt-10 mb-3 sm:mb-0 ">
-                <InputField
-                  name={"agent"}
-                  placeholder={"Enter Agent Name"}
-                  className="common-inputField "
-                  inputProps={{
-                    className: "ps-[2rem] w-full sm:w-full",
-                  }}
-                  onChange={handleSearchChange}
+            <DropdownMenu
+              handleClose={() => {
+                setDateTimeMenu(null);
+                setCalenderOpen(false);
+              }}
+              anchorEl={dateTimeMenu}
+              button={
+                <CommonChip
+                  onClick={(event) => setDateTimeMenu(event.currentTarget)}
+                  label={selectedDate}
+                  className={`${
+                    dateTimeMenu
+                      ? "border-1 border-solid border-[#9DA0A6] "
+                      : ""
+                  }`}
+                  icon={
+                    <FuseSvgIcon size={20}>
+                      material-outline:calendar_today
+                    </FuseSvgIcon>
+                  }
                 />
-                <div className="max-h-[200px] w-full overflow-y-auto shadow-sm cursor-pointer">
-                  {agentMenuData.map((item: any) => (
-                    <div
-                      className="flex items-center gap-10 px-20 w-full"
-                      key={item.id}
-                    >
-                      <label className="flex items-center gap-10 w-full cursor-pointer">
-                        <Checkbox
-                          // checked={checkedItems.includes(item.id)}
-                          // onChange={() => handleCheckboxChange(item.id)}
-                          checked={selectedAgents.includes(item.id)}
-                          onChange={() => handleAgentSelect(item.id)}
-                        />
-                        <span>{item.first_name}</span>
-                      </label>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </DropdownMenu> */}
-
-          <DropdownMenu
-            handleClose={() => {
-              setDateTimeMenu(null);
-              setCalenderOpen(false);
-            }}
-            anchorEl={dateTimeMenu}
-            button={
-              <CommonChip
-                onClick={(event) => setDateTimeMenu(event.currentTarget)}
-                label={selectedDate}
-                className={`${
-                  dateTimeMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
-                }`}
-                icon={
-                  <FuseSvgIcon size={20}>
-                    material-outline:calendar_today
-                  </FuseSvgIcon>
-                }
-              />
-            }
-            popoverProps={{
-              open: !!dateTimeMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            {dateTimeMenuData.map((item) => (
-              <StyledMenuItem
-                key={item.label}
-                onClick={() => {
-                  const futureDate = calculateFutureDate(item.days, item.label);
-                  setCalculatedDate(futureDate.toLocaleString()); // Store the calculated date
-                  // setSelectedDate(item.label); // Display the label
-                  setDateTimeMenu(null);
-                }}
-              >
-                {item.label}
-              </StyledMenuItem>
-            ))}
-            <div className="px-20">
-              <CustomButton
-                fullWidth
-                variant="contained"
-                color="secondary"
-                startIcon={
-                  <FuseSvgIcon>material-outline:add_circle_outline</FuseSvgIcon>
-                }
-                className="min-w-[224px] mt-10"
-                onClick={handleClick}
-              >
-                Custom Date
-              </CustomButton>
-              <Popover
-                open={calenderOpen}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-              >
-                <DateTimePicker
-                  open={calenderOpen}
-                  // onOpen={() => setOpen(true)} // Ensure open state is true when the calendar opens
-                  onClose={() => {
-                    setCalenderOpen(false);
+              }
+              popoverProps={{
+                open: !!dateTimeMenu,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
+              {dateTimeMenuData.map((item) => (
+                <StyledMenuItem
+                  key={item.label}
+                  onClick={() => {
+                    const futureDate = calculateFutureDate(
+                      item.days,
+                      item.label
+                    );
+                    setCalculatedDate(futureDate.toLocaleString()); // Store the calculated date
+                    // setSelectedDate(item.label); // Display the label
                     setDateTimeMenu(null);
                   }}
-                  closeOnSelect={false}
-                  value={customDate}
-                  onChange={handleDateChange}
-                />
-              </Popover>
-            </div>
-          </DropdownMenu>
-          <DropdownMenu
-            anchorEl={priorityMenu}
-            handleClose={() => setPriorityMenu(null)}
-            button={
-              <CommonChip
-                onClick={(event) => setPriorityMenu(event.currentTarget)}
-                label={selectedPriority}
-                className={`${
-                  priorityMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
-                }`}
-                icon={<PriorityIcon />}
-              />
-            }
-            popoverProps={{
-              open: !!priorityMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            {priorityMenuData.map((item) => (
-              <StyledMenuItem
-                onClick={() => handlePriorityMenuClick(item.label)}
-              >
-                {item.label}
-              </StyledMenuItem>
-            ))}
-          </DropdownMenu>
-          <DropdownMenu
-            anchorEl={labelsMenu}
-            handleClose={() => setLabelsMenu(null)}
-            button={
-              <CommonChip
-                onClick={(event) => setLabelsMenu(event.currentTarget)}
-                style={{ maxWidth: "200px" }}
-                // label={selectedlabel}
-                className={`${
-                  labelsMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
-                }`}
-                label={<TruncateText text={selectedlabel} maxWidth={170} />}
-                icon={
-                  <FuseSvgIcon size={20}>heroicons-outline:tag</FuseSvgIcon>
-                }
-              />
-            }
-            popoverProps={{
-              open: !!labelsMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            {!showLabelForm ? (
-              <>
-                {labelsMenuData?.map((item) => (
-                  <StyledMenuItem
-                    onClick={() => {
-                      setSelectedlabel(item.label), setLabelsMenu(null);
+                >
+                  {item.label}
+                </StyledMenuItem>
+              ))}
+              <div className="px-20">
+                <CustomButton
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  startIcon={
+                    <FuseSvgIcon>
+                      material-outline:add_circle_outline
+                    </FuseSvgIcon>
+                  }
+                  className="min-w-[224px] mt-10"
+                  onClick={handleClick}
+                >
+                  Custom Date
+                </CustomButton>
+                <Popover
+                  open={calenderOpen}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "left",
+                  }}
+                >
+                  <DateTimePicker
+                    open={calenderOpen}
+                    // onOpen={() => setOpen(true)} // Ensure open state is true when the calendar opens
+                    onClose={() => {
+                      setCalenderOpen(false);
+                      setDateTimeMenu(null);
                     }}
-                  >
-                    {item.label}
-                  </StyledMenuItem>
-                ))}
-                <div className="px-20">
-                  <CustomButton
-                    fullWidth
-                    variant="contained"
-                    color="secondary"
-                    startIcon={
-                      <FuseSvgIcon>
-                        material-outline:add_circle_outline
-                      </FuseSvgIcon>
-                    }
-                    className="min-w-[224px] mt-10"
-                    onClick={handleAddLabel}
-                  >
-                    Create New Label
-                  </CustomButton>
+                    closeOnSelect={false}
+                    value={customDate}
+                    onChange={handleDateChange}
+                  />
+                </Popover>
+              </div>
+            </DropdownMenu>
+            <DropdownMenu
+              anchorEl={priorityMenu}
+              handleClose={() => setPriorityMenu(null)}
+              button={
+                <CommonChip
+                  onClick={(event) => setPriorityMenu(event.currentTarget)}
+                  label={selectedPriority}
+                  className={`${
+                    priorityMenu
+                      ? "border-1 border-solid border-[#9DA0A6] "
+                      : ""
+                  }`}
+                  icon={<PriorityIcon />}
+                />
+              }
+              popoverProps={{
+                open: !!priorityMenu,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
+              {priorityMenuData.map((item) => (
+                <StyledMenuItem
+                  onClick={() => handlePriorityMenuClick(item.label)}
+                >
+                  {item.label}
+                </StyledMenuItem>
+              ))}
+            </DropdownMenu>
+            <DropdownMenu
+              anchorEl={labelsMenu}
+              handleClose={() => setLabelsMenu(null)}
+              button={
+                <CommonChip
+                  onClick={(event) => setLabelsMenu(event.currentTarget)}
+                  style={{ maxWidth: "200px" }}
+                  // label={selectedlabel}
+                  className={`${
+                    labelsMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                  }`}
+                  label={<TruncateText text={selectedlabel} maxWidth={170} />}
+                  icon={
+                    <FuseSvgIcon size={20}>heroicons-outline:tag</FuseSvgIcon>
+                  }
+                />
+              }
+              popoverProps={{
+                open: !!labelsMenu,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
+              {!showLabelForm ? (
+                <>
+                  {labelsMenuData?.map((item) => (
+                    <StyledMenuItem
+                      onClick={() => {
+                        setSelectedlabel(item.label), setLabelsMenu(null);
+                      }}
+                    >
+                      {item.label}
+                    </StyledMenuItem>
+                  ))}
+                  <div className="px-20">
+                    <CustomButton
+                      fullWidth
+                      variant="contained"
+                      color="secondary"
+                      startIcon={
+                        <FuseSvgIcon>
+                          material-outline:add_circle_outline
+                        </FuseSvgIcon>
+                      }
+                      className="min-w-[224px] mt-10"
+                      onClick={handleAddLabel}
+                    >
+                      Create New Label
+                    </CustomButton>
+                  </div>
+                </>
+              ) : (
+                <div className="px-20  py-20">
+                  <InputField
+                    formik={formik}
+                    name="newLabel"
+                    id="group_names"
+                    label="New Label"
+                    placeholder="Enter New Label"
+                  />
+                  <div className="mt-20">
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      className="w-[156px] h-[48px] text-[18px]"
+                      disabled={formik?.values?.newLabel == ""}
+                      onClick={() => handleLabelSave()}
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      // disabled={disabled}
+                      color="secondary"
+                      className="w-[156px] h-[48px] text-[18px] ml-14"
+                      onClick={() => {
+                        setLabelsMenu(null);
+                        formik.setFieldValue("newLabel", "");
+                        setShowLabelForm(false);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
                 </div>
-              </>
-            ) : (
+              )}
+            </DropdownMenu>
+          </div>
+          <div className="flex gap-20">
+            <DropdownMenu
+              anchorEl={showReminder}
+              handleClose={() => setShowReminder(null)}
+              button={
+                <CommonChip
+                  onClick={(event) => setShowReminder(event.currentTarget)}
+                  // label="Reminder"
+                  label={`${
+                    formik?.values?.date != "" && formik?.values?.time != ""
+                      ? moment(
+                          formik?.values?.date + " " + formik?.values?.time
+                        ).format("MM/DD/YYYY , HH:mm")
+                      : "Reminder"
+                  }`}
+                  icon={<ReminderIcon />}
+                  className={`${
+                    showReminder
+                      ? "border-1 border-solid border-[#9DA0A6] "
+                      : ""
+                  }`}
+                />
+              }
+              popoverProps={{
+                open: !!showReminder,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
               <div className="px-20  py-20">
                 <InputField
                   formik={formik}
-                  name="newLabel"
-                  id="group_names"
-                  label="New Label"
-                  placeholder="Enter New Label"
+                  name="date"
+                  id="date"
+                  label="Date"
+                  placeholder="Enter Date"
+                  type="date"
+                />
+
+                <InputField
+                  formik={formik}
+                  name="time"
+                  id="time"
+                  label="Time"
+                  type="time"
+                  placeholder="Enter Time"
                 />
                 <div className="mt-20">
                   <Button
                     variant="contained"
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px]"
-                    disabled={formik?.values?.newLabel == ""}
-                    onClick={() => handleLabelSave()}
+                    // onClick={onSubmit}
+                    onClick={() => setShowReminder(null)}
                   >
                     Save
                   </Button>
@@ -1240,256 +1344,180 @@ function AddTaskModal({
                     color="secondary"
                     className="w-[156px] h-[48px] text-[18px] ml-14"
                     onClick={() => {
-                      setLabelsMenu(null);
-                      formik.setFieldValue("newLabel", "");
                       setShowLabelForm(false);
+                      setShowReminder(null);
+                      formik.setFieldValue("time", "");
+                      formik.setFieldValue("date", "");
                     }}
                   >
                     Cancel
                   </Button>
                 </div>
               </div>
-            )}
-          </DropdownMenu>
-        </div>
-        <div className="flex gap-20">
-          <DropdownMenu
-            anchorEl={showReminder}
-            handleClose={() => setShowReminder(null)}
-            button={
-              <CommonChip
-                onClick={(event) => setShowReminder(event.currentTarget)}
-                // label="Reminder"
-                label={`${
-                  formik?.values?.date != "" && formik?.values?.time != ""
-                    ? moment(
-                        formik?.values?.date + " " + formik?.values?.time
-                      ).format("MM/DD/YYYY , HH:mm")
-                    : "Reminder"
-                }`}
-                icon={<ReminderIcon />}
-                className={`${
-                  showReminder ? "border-1 border-solid border-[#9DA0A6] " : ""
-                }`}
-              />
-            }
-            popoverProps={{
-              open: !!showReminder,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            <div className="px-20  py-20">
-              <InputField
-                formik={formik}
-                name="date"
-                id="date"
-                label="Date"
-                placeholder="Enter Date"
-                type="date"
-              />
-
-              <InputField
-                formik={formik}
-                name="time"
-                id="time"
-                label="Time"
-                type="time"
-                placeholder="Enter Time"
-              />
-              <div className="mt-20">
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  className="w-[156px] h-[48px] text-[18px]"
-                  // onClick={onSubmit}
-                  onClick={() => setShowReminder(null)}
-                >
-                  Save
-                </Button>
-                <Button
-                  variant="outlined"
-                  // disabled={disabled}
-                  color="secondary"
-                  className="w-[156px] h-[48px] text-[18px] ml-14"
-                  onClick={() => {
-                    setShowLabelForm(false);
-                    setShowReminder(null);
-                    formik.setFieldValue("time", "");
-                    formik.setFieldValue("date", "");
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </div>
-          </DropdownMenu>
-          {/* <CommonChip label="Reminder" icon={<ReminderIcon />} /> */}
-          <DropdownMenu
-            anchorEl={statusMenu}
-            handleClose={() => setStatusMenu(null)}
-            button={
-              <CommonChip
-                onClick={handleStatusMenuClick}
-                // label={selectedStatus}
-                className={`${
-                  statusMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
-                }`}
-                label={
-                  selectedStatusId != "0" && selectedStatusId
-                    ? statusMenuData?.find(
-                        (item) => item.id == selectedStatusId
-                      )?.name
-                    : selectedStatus || "Status"
-                }
-                icon={<StatusIcon />}
-              />
-            }
-            popoverProps={{
-              open: !!statusMenu,
-              classes: {
-                paper: "pt-10 pb-20",
-              },
-            }}
-          >
-            {statusMenuData?.map((item) => {
-              return (
-                <StyledMenuItem
-                  key={item.id}
-                  onClick={() => handleStatusMenuItemClick(item)}
-                >
-                  {item.name}
-                </StyledMenuItem>
-              );
-              // console.log(item, "itezcfm");
-            })}
-          </DropdownMenu>
-        </div>
-        <Grid container spacing={2}>
-          <Grid item md={6}>
-            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 ">
-              Voice Memo
-            </FormLabel>
-            <Grid container spacing={1}>
-              <Grid item md={6}>
+            </DropdownMenu>
+            {/* <CommonChip label="Reminder" icon={<ReminderIcon />} /> */}
+            <DropdownMenu
+              anchorEl={statusMenu}
+              handleClose={() => setStatusMenu(null)}
+              button={
                 <CommonChip
-                  colorSecondary
-                  // className="w-full"
-                  label="Record voice memo"
-                  icon={<MicIcon />}
-                  onClick={handleAudioRecord}
-                  // variant="outlined"
-                  style={{ border: "0.5px solid #4F46E5" }}
+                  onClick={handleStatusMenuClick}
+                  // label={selectedStatus}
+                  className={`${
+                    statusMenu ? "border-1 border-solid border-[#9DA0A6] " : ""
+                  }`}
+                  label={
+                    selectedStatusId != "0" && selectedStatusId
+                      ? statusMenuData?.find(
+                          (item) => item.id == selectedStatusId
+                        )?.name
+                      : selectedStatus || "Status"
+                  }
+                  icon={<StatusIcon />}
                 />
-                {savedAudioURL && (
-                  <div className="audio-container relative">
-                    {/* <audio
+              }
+              popoverProps={{
+                open: !!statusMenu,
+                classes: {
+                  paper: "pt-10 pb-20",
+                },
+              }}
+            >
+              {statusMenuData?.map((item) => {
+                return (
+                  <StyledMenuItem
+                    key={item.id}
+                    onClick={() => handleStatusMenuItemClick(item)}
+                  >
+                    {item.name}
+                  </StyledMenuItem>
+                );
+                // console.log(item, "itezcfm");
+              })}
+            </DropdownMenu>
+          </div>
+          <Grid container spacing={2}>
+            <Grid item md={6}>
+              <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 ">
+                Voice Memo
+              </FormLabel>
+              <Grid container spacing={1}>
+                <Grid item md={6}>
+                  <CommonChip
+                    colorSecondary
+                    // className="w-full"
+                    label="Record voice memo"
+                    icon={<MicIcon />}
+                    onClick={() => handleAudioRecord(false)}
+                    // variant="outlined"
+                    style={{ border: "0.5px solid #4F46E5" }}
+                  />
+                  {savedAudioURL && (
+                    <div className="audio-container relative">
+                      {/* <audio
                       controls
                       ref={audioRef}
                       src={savedAudioURL}
                       onPlay={handleAudioPlay}
                     /> */}
 
-                    <div className=" flex " style={{ alignItems: "center" }}>
-                      <div className="audio-controls ">
-                        <div
-                          className="cursor-pointer ml-2 mb-10"
-                          onClick={handleAudioReload}
-                        >
-                          <Reload />
+                      <div className=" flex " style={{ alignItems: "center" }}>
+                        <div className="audio-controls ">
+                          <div
+                            className="cursor-pointer ml-2 mb-10"
+                            onClick={handleAudioReload}
+                          >
+                            <Reload />
+                          </div>
                         </div>
+                        <audio
+                          controls
+                          ref={audioRef}
+                          src={savedAudioURL}
+                          onPlay={handleAudioPlay}
+                        />
                       </div>
-                      <audio
-                        controls
-                        ref={audioRef}
-                        src={savedAudioURL}
-                        onPlay={handleAudioPlay}
-                      />
-                    </div>
 
-                    <div className="audio-controls ml-[8px]"></div>
-                    {Edit ? (
-                      <div
-                        className="absolute top-7 right-7"
-                        // onClick={() => handleDeleteAttachment(item.id)}
-                      >
-                        <AttachmentDeleteIcon
-                          onClick={() => {
-                            setIsOpenDeletedModal(true);
-                            setType(1);
-                            setIsDeleteId(ColumnId);
-                          }}
-                        />
-                      </div>
-                    ) : (
-                      <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
-                        <CrossGreyIcon
-                          className="h-20 w-20 p-4"
-                          fill="#757982"
-                          onClick={() => handleCross()}
-                        />
-                      </div>
-                    )}
-                  </div>
-                )}
-                {visible && (
-                  <div className="my-10 flex flex-col gap-[10px] audio-container ">
-                    <div
-                      className="my-10 flex  gap-[10px] "
-                      style={{ alignItems: "center" }}
-                    >
-                      {recordingAudio ? (
-                        <img
-                          src="../assets/images/logo/play2.svg"
-                          alt="play"
-                          onClick={handleAudioRecord}
-                        ></img>
+                      <div className="audio-controls ml-[8px]"></div>
+                      {Edit ? (
+                        <div
+                          className="absolute top-7 right-7"
+                          // onClick={() => handleDeleteAttachment(item.id)}
+                        >
+                          <AttachmentDeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setType(1);
+                              setIsDeleteId(ColumnId);
+                            }}
+                          />
+                        </div>
                       ) : (
-                        <img
-                          src="../assets/images/logo/pause.svg"
-                          alt="pause"
-                          width="28px"
-                          onClick={handleAudioRecord}
-                        ></img>
+                        <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                          <CrossGreyIcon
+                            className="h-20 w-20 p-4"
+                            fill="#757982"
+                            onClick={() => handleCross()}
+                          />
+                        </div>
                       )}
-                      <p className="text-[#9DA0A6]">
-                        {" "}
-                        {formatTime(recordingTime)}
-                      </p>
+                    </div>
+                  )}
+                  {visible && (
+                    <div className="my-10 flex flex-col gap-[10px] audio-container ">
+                      <div
+                        className="my-10 flex  gap-[10px] "
+                        style={{ alignItems: "center" }}
+                      >
+                        {recordingAudio ? (
+                          <span onClick={() => handleAudioRecord(false)}>
+                            <Play />
+                          </span>
+                        ) : (
+                          <span onClick={() => handleAudioRecord(false)}>
+                            <Pause />
+                          </span>
+                        )}
+                        <p className="text-[#9DA0A6]">
+                          {" "}
+                          {formatTime(recordingTime)}
+                        </p>
 
-                      <LiveAudioVisualizer
-                        mediaRecorder={
-                          recordingAudio ? mediaRecorderRef?.current : ""
-                        }
-                        width={300}
-                        height={35}
-                        barWidth={1}
-                        gap={1}
-                        barColor={"#4F46E5"}
-                        smoothingTimeConstant={0.4}
-                      />
+                        <LiveAudioVisualizer
+                          mediaRecorder={
+                            recordingAudio ? mediaRecorderRef?.current : ""
+                          }
+                          width={300}
+                          height={35}
+                          barWidth={1}
+                          gap={1}
+                          barColor={"#4F46E5"}
+                          smoothingTimeConstant={0.4}
+                        />
+                      </div>
+                      <div>
+                        <button
+                          // onClick={handleSave}
+                          onClick={() => {
+                            handleAudioRecord(true);
+                          }}
+                          // disabled={recordingAudio}
+                          className={`
+                             text-[#4F46E5]
+                          text-[16px] font-500 underline mr-10`}
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={handleCancel}
+                          className="text-[#757982] text-[16px] font-500 ml-10"
+                        >
+                          Cancel
+                        </button>
+                      </div>
                     </div>
-                    <div>
-                      <button
-                        onClick={handleSave}
-                        disabled={recordingAudio}
-                        className={`${
-                          recordingAudio ? "text-[#757982]" : "text-[#4F46E5]"
-                        } text-[16px] font-500 underline mr-10`}
-                      >
-                        Save
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="text-[#757982] text-[16px] font-500 ml-10"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-                {/* {blob && (
+                  )}
+                  {/* {blob && (
                   <AudioVisualizer
                     ref={visualizerRef}
                     blob={blob}
@@ -1500,80 +1528,80 @@ function AddTaskModal({
                     barColor={"#4F46E5"}
                   />
                 )} */}
-              </Grid>
-              <Grid item md={6}>
-                <label
-                  htmlFor="attachment"
-                  className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
+                </Grid>
+                <Grid item md={6}>
+                  <label
+                    htmlFor="attachment"
+                    className="bg-[#EDEDFC] px-20 mb-0 border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] flex items-center 
                justify-between cursor-pointer hover:bg-[#0000001f]"
-                  // onClick={() => handleUploadFile()}
-                >
-                  <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
-                    Upload File
-                    <input
-                      type="file"
-                      style={{ display: "none" }}
-                      multiple={true}
-                      id="attachment"
-                      accept="audio/*"
-                      // accept=".pdf,.png,.jpg,.jpeg"
-                      onChange={handleAudioUploadFile}
-                    />
+                    // onClick={() => handleUploadFile()}
+                  >
+                    <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
+                      Upload File
+                      <input
+                        type="file"
+                        style={{ display: "none" }}
+                        multiple={true}
+                        id="attachment"
+                        accept="audio/*"
+                        // accept=".pdf,.png,.jpg,.jpeg"
+                        onChange={handleAudioUploadFile}
+                      />
+                    </label>
+                    <span>
+                      <img src={"../assets/images/logo/upload.png"} />
+                    </span>
                   </label>
-                  <span>
-                    <img src={"../assets/images/logo/upload.png"} />
-                  </span>
-                </label>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-          <Grid item md={6} className="relative">
-            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 border-solid border-[#4F46E5]">
-              File
-            </FormLabel>
-            <label
-              htmlFor="fileattachment"
-              className="bg-[#EDEDFC] px-20  border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] 
+            <Grid item md={6} className="relative">
+              <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5 border-solid border-[#4F46E5]">
+                File
+              </FormLabel>
+              <label
+                htmlFor="fileattachment"
+                className="bg-[#EDEDFC] px-20  border-[0.5px] border-solid border-[#4F46E5] rounded-6 min-h-[48px] 
               flex items-center 
              justify-between cursor-pointer mb-10 hover:bg-[#0000001f]"
-              // onClick={() => handleUploadFile()}
-            >
-              <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
-                Upload File
-                <input
-                  type="file"
-                  style={{ display: "none" }}
-                  multiple={true}
-                  id="fileattachment"
-                  accept=".pdf,.png,.jpg,.jpeg"
-                  onChange={handleUploadFile}
-                />
+                // onClick={() => handleUploadFile()}
+              >
+                <label className="text-[16px] text-[#4F46E5] flex items-center cursor-pointer">
+                  Upload File
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    multiple={true}
+                    id="fileattachment"
+                    accept=".pdf,.png,.jpg,.jpeg"
+                    onChange={handleUploadFile}
+                  />
+                </label>
+                <span>
+                  <img src={"../assets/images/logo/upload.png"} />
+                </span>
               </label>
-              <span>
-                <img src={"../assets/images/logo/upload.png"} />
-              </span>
-            </label>
-            <div className="flex flex-wrap gap-2 items-center justify-start absolute">
-              {uploadedFiles?.map((file, index) => (
-                <div
-                  key={index}
-                  className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
-                >
-                  <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer w-full">
-                    <span className="mr-4">
-                      <PreviewIcon />
-                    </span>
-                    <span className="text-[16px] text-[#4F46E5] py-5 mr-8">
-                      {file.name}
-                    </span>
-                    <span onClick={() => handleRemoveFile(file)}>
-                      <CrossGreyIcon />
-                    </span>
+              <div className="flex flex-wrap gap-2 items-center justify-start absolute">
+                {uploadedFiles?.map((file, index) => (
+                  <div
+                    key={index}
+                    className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
+                  >
+                    <div className="bg-F6F6F6 mb-10  rounded-6 min-h-48 flex items-center justify-between cursor-pointer w-full">
+                      <span className="mr-4">
+                        <PreviewIcon />
+                      </span>
+                      <span className="text-[16px] text-[#4F46E5] py-5 mr-8">
+                        {file.name}
+                      </span>
+                      <span onClick={() => handleRemoveFile(file)}>
+                        <CrossGreyIcon />
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {/* {uploadedFilesNew?.map((file, index) => (
+                {/* {uploadedFilesNew?.map((file, index) => (
                 <div
                   key={index}
                   className="bg-[#F6F6F6] mb-10 px-10 rounded-6 min-h-[48px] gap-3 flex items-center justify-between cursor-pointer"
@@ -1594,185 +1622,191 @@ function AddTaskModal({
                 </div>
               ))} */}
 
-              {uploadedFilesNew?.map((item: any) => (
-                <div className="relative cursor-pointer ">
-                  {item.file.includes(".png") ||
-                  item.file.includes(".jpg") ||
-                  item.file.includes(".jpeg") ? (
-                    <>
-                      <img
-                        src={urlForImage + item.file}
-                        alt="Black Attachment"
-                        className="w-[100px] rounded-md "
-                      />
-                      <div
-                        className="absolute top-7 left-7"
-                        onClick={() =>
-                          handleImageClick(urlForImage + item.file)
-                        }
-                      >
-                        <AttachmentIcon />
-                      </div>
-                      <div
-                        className="absolute top-7 right-7"
-                        // onClick={() => handleDeleteAttachment(item.id)}
-                      >
-                        <AttachmentDeleteIcon
-                          onClick={() => {
-                            setIsOpenDeletedModal(true);
-                            setType(3);
-                            setIsDeleteId(item.id);
-                            setDeleteId([...deleteid, item.id]);
-                          }}
-                        />
-                      </div>
-                    </>
-                  ) : (
-                    <div className="w-[100px] rounded-md sm:h-[60px] flex items-center justify-center border-1 border-[#4F46E5]">
-                      <a
-                        href={urlForImage + item.file}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
+                {uploadedFilesNew?.map((item: any) => (
+                  <div className="relative cursor-pointer ">
+                    {item.file.includes(".png") ||
+                    item.file.includes(".jpg") ||
+                    item.file.includes(".jpeg") ? (
+                      <>
                         <img
-                          src="../assets/images/logo/pdfIcon.png"
+                          src={urlForImage + item.file}
                           alt="Black Attachment"
-                          className="h-[50px] w-[50px]"
+                          className="w-[100px] rounded-md "
                         />
-                      </a>
+                        <div
+                          className="absolute top-7 left-7"
+                          onClick={() =>
+                            handleImageClick(urlForImage + item.file)
+                          }
+                        >
+                          <AttachmentIcon />
+                        </div>
+                        <div
+                          className="absolute top-7 right-7"
+                          // onClick={() => handleDeleteAttachment(item.id)}
+                        >
+                          <AttachmentDeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setType(3);
+                              setIsDeleteId(item.id);
+                              // setDeleteId([...deleteid, item.id]);
+                            }}
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div className="w-[100px] rounded-md sm:h-[60px] flex items-center justify-center border-1 border-[#4F46E5]">
+                        <a
+                          href={urlForImage + item.file}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            src="../assets/images/logo/pdfIcon.png"
+                            alt="Black Attachment"
+                            className="h-[50px] w-[50px]"
+                          />
+                        </a>
 
-                      {/* <a href="/">check</a> */}
-                      <div
-                        className="absolute top-7 left-7"
-                        onClick={() =>
-                          handleImageClick(urlForImage + item.file)
-                        }
-                      >
-                        <AttachmentIcon />
+                        {/* <a href="/">check</a> */}
+                        <div
+                          className="absolute top-7 left-7"
+                          onClick={() =>
+                            handleImageClick(urlForImage + item.file)
+                          }
+                        >
+                          <AttachmentIcon />
+                        </div>
+                        <div
+                          className="absolute top-7 right-7"
+                          // onClick={() => handleDeleteAttachment(item.id)}
+                        >
+                          <AttachmentDeleteIcon
+                            onClick={() => {
+                              setIsOpenDeletedModal(true);
+                              setType(3);
+                              setIsDeleteId(item.id);
+                              // setDeleteId([...deleteid, item.id]);
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div
-                        className="absolute top-7 right-7"
-                        // onClick={() => handleDeleteAttachment(item.id)}
-                      >
-                        <AttachmentDeleteIcon
-                          onClick={() => {
-                            setIsOpenDeletedModal(true);
-                            setType(3);
-                            setIsDeleteId(item.id);
-                            setDeleteId([...deleteid, item.id]);
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-                </div>
-              ))}
-
-              {expandedImage && (
-                <div
-                  className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
-                  onClick={() => setExpandedImage(null)}
-                >
-                  <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <img
-                      src={expandedImage}
-                      alt="Expanded Image"
-                      className="max-w-full max-h-full"
-                    />
+                    )}
                   </div>
-                </div>
-              )}
-            </div>
-          </Grid>
-        </Grid>
-        <Grid container spacing={2}>
-          <Grid item md={6}>
-            <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
-              {showVideo ? "Record Your Screen Again" : "Screen Recording"}
-            </FormLabel>
-            {!isRecording && (
-              <CommonChip
-                colorSecondary
-                className="w-full"
-                label={
-                  showVideo ? "Record your Screen Again" : "Record your Screen"
-                }
-                onClick={handleRecordClick}
-                icon={
-                  <ScreenRecordingIcon
-                    className="record-btn"
-                    // onClick={handleRecordClick}
-                  />
-                }
-                style={{ border: "0.5px solid #4F46E5" }}
-              />
-            )}
-            <>
-              {/* {showVideo && !isRecording && ( */}
-              <div
-                className={`rounded-[7px] border-1 border-solid border-[#9DA0A6] mt-10 relative  block ${
-                  showVideo && !isRecording ? "" : "hidden"
-                }`}
-              >
-                <video
-                  className="rounded-[7px] p-5 h-[120px] "
-                  width="450px"
-                  ref={videoRef}
-                  controls
-                  onPlay={handleVideoPlay}
-                />
-                {Edit ? (
+                ))}
+
+                {expandedImage && (
                   <div
-                    className="absolute top-7 right-7"
-                    // onClick={() => handleDeleteAttachment(item.id)}
+                    className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
+                    onClick={() => setExpandedImage(null)}
                   >
-                    <AttachmentDeleteIcon
-                      onClick={() => {
-                        setIsOpenDeletedModal(true);
-                        setType(2);
-                        setIsDeleteId(ColumnId);
-                      }}
-                    />
-                  </div>
-                ) : (
-                  <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
-                    <CrossGreyIcon
-                      className="h-20 w-20 p-4"
-                      fill="#757982"
-                      onClick={() => setShowVideo(false)}
-                    />
+                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                      <img
+                        src={expandedImage}
+                        alt="Expanded Image"
+                        className="max-w-full max-h-full"
+                      />
+                    </div>
                   </div>
                 )}
               </div>
-              {/* )} */}
-              {isRecording && (
-                <>
-                  <div className="bg-[#FEECEB] border-[0.5px] border-[#F44336] my-10 rounded-[7px] flex items-center justify-between px-16 py-10">
-                    <Typography className="text-[#F44336] text-[16px] ">
-                      Stop Recording
-                    </Typography>
-                    <div className="flex items-center gap-10">
-                      <span id="timer" className="text-[#F44336] text-[16px]">
-                        {formatTime(elapsedTime)}
-                      </span>
-                      <img
-                        src="../assets/images/logo/play.svg"
-                        alt="play"
-                        onClick={toggleRecording}
-                      ></img>
-                      {/* <img
+            </Grid>
+          </Grid>
+          <Grid container spacing={2}>
+            <Grid item md={6}>
+              <FormLabel className="block text-[16px] font-medium text-[#111827] mb-5">
+                {showVideo ? "Record Your Screen Again" : "Screen Recording"}
+              </FormLabel>
+              {!isRecording && (
+                <CommonChip
+                  colorSecondary
+                  className="w-full"
+                  label={
+                    showVideo
+                      ? "Record Your Screen Again"
+                      : "Record Your Screen"
+                  }
+                  onClick={handleRecordClick}
+                  icon={
+                    <ScreenRecordingIcon
+                      className="record-btn"
+                      // onClick={handleRecordClick}
+                    />
+                  }
+                  style={{ border: "0.5px solid #4F46E5" }}
+                />
+              )}
+              <>
+                {/* {showVideo && !isRecording && ( */}
+                <div
+                  className={`rounded-[7px] border-1 border-solid border-[#9DA0A6] mt-10 relative  block ${
+                    showVideo && !isRecording ? "" : "hidden"
+                  }`}
+                >
+                  <video
+                    className="rounded-[7px] p-5 h-[120px] "
+                    width="450px"
+                    ref={videoRef}
+                    controls
+                    onPlay={handleVideoPlay}
+                  />
+                  {/* <ReactPlayer url="https://www.youtube.com/watch?v=LXb3EKWsInQ" /> */}
+
+                  {Edit ? (
+                    <div
+                      className="absolute top-7 right-7"
+                      // onClick={() => handleDeleteAttachment(item.id)}
+                    >
+                      <AttachmentDeleteIcon
+                        onClick={() => {
+                          setIsOpenDeletedModal(true);
+                          setType(2);
+                          setIsDeleteId(ColumnId);
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="border-1 border-solid rounded-full  absolute right-[-2px] top-[-2px] flex items-center justify-center border-[#E7E8E9]">
+                      <CrossGreyIcon
+                        className="h-20 w-20 p-4"
+                        fill="#757982"
+                        onClick={() => setShowVideo(false)}
+                      />
+                    </div>
+                  )}
+                </div>
+                {/* )} */}
+                {isRecording && (
+                  <>
+                    <div className="bg-[#FEECEB] border-[0.5px] border-[#F44336] my-10 rounded-[7px] flex items-center justify-between px-16 py-10">
+                      <Typography className="text-[#F44336] text-[16px] ">
+                        Stop Recording
+                      </Typography>
+                      <div className="flex items-center gap-10">
+                        <span id="timer" className="text-[#F44336] text-[16px]">
+                          {formatTime(elapsedTime)}
+                        </span>
+                        <img
+                          src="../assets/images/logo/play.svg"
+                          alt="play"
+                          onClick={toggleRecording}
+                        ></img>
+                        {/* <img
                         src="../assets/images/logo/pause.svg"
                         alt="pause"
                         onClick={PlayRecording}
                       ></img> */}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
-            </>
+                  </>
+                )}
+              </>
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
+        </div>
+      )}
+
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}

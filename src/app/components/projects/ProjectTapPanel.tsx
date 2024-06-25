@@ -37,6 +37,7 @@ import {
   projectUpdateMenu,
 } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
+import { RefreshToken } from "app/store/Auth";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -195,6 +196,23 @@ export default function ProjectTabPanel() {
     setShowViewWindow(!showViewWindow);
     // console.log(showViewWindow, "find");
   };
+  const token = localStorage.getItem("jwt_access_token");
+  const fetchData = async () => {
+    try {
+      const payload = {
+        token,
+      };
+      //@ts-ignore
+
+      const res = await dispatch(RefreshToken(payload));
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   return (
     <div>
       <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20  w-full">
