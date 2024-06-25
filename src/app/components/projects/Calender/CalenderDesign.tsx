@@ -380,7 +380,7 @@ const CalenderDesign = ({ events }) => {
                   variant="subtitle1"
                   className="text-[14px] text-[#757982]"
                 >
-                  {moment(calendarState.start).format("MMMM Do YYYY")}
+                  {moment(calendarState.start).format("MMMM DD, YYYY")}
                 </Typography>
               )}
             </div>

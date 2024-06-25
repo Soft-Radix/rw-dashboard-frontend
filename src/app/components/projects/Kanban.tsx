@@ -26,6 +26,7 @@ import DragLayout from "../dashboard/DragLayout";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import { useSelector } from "react-redux";
 import ListLoading from "@fuse/core/ListLoading";
+import { RefreshToken } from "app/store/Auth";
 
 interface IProps {
   isOpen?: boolean;
@@ -202,6 +203,22 @@ const Kanban = (props: IProps): JSX.Element => {
       listData(20);
     }
   }, [id]);
+  const token = localStorage.getItem("jwt_access_token");
+  useEffect(() => {
+    const fetchData = async () => {
+      const payload = {
+        token,
+      };
+      try {
+        //@ts-ignore
+        const res = await dispatch(RefreshToken(payload));
+        // toast.success(res?.payload?.data?.message);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   if (fetchStatusNew == "loading") {
     return <ListLoading />;

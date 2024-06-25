@@ -68,6 +68,7 @@ export type initialStateProps = {
   errorMsg: string;
   fetchStatus?: string;
   fetchStatusNew?: string;
+  fetchStatusTask?: string;
   clientDetail?: object;
   list: ClientType[];
   total_records: number;
