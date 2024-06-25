@@ -255,7 +255,7 @@ const TaskDetails = () => {
             <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative">
               <div className="w-full">
                 <div className="flex justify-between gap-40 mb-10  ">
-                  <div className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden truncate ">
+                  <div className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden break-words ">
                     {taskDetailInfo?.title}
                   </div>
                   <div className="flex items-center  justify-end gap-20 w-full bg-red-20 ">
@@ -302,7 +302,7 @@ const TaskDetails = () => {
                           >
                             <div className="flex gap-20 w-full justify-between ">
                               <p className="text-[16px] text-[#000000] font-500">
-                                Edit Task
+                                Edit
                               </p>
                               <span className="">
                                 <EditIcon fill="#757982" />
@@ -318,7 +318,7 @@ const TaskDetails = () => {
                             <div className="flex gap-20  w-full justify-between">
                               <p className="text-[16px] text-[#000000] font-500">
                                 {" "}
-                                Delete Task
+                                Delete
                               </p>
                               <span className="">
                                 <DeleteGrey fill="#757982" />
@@ -345,7 +345,7 @@ const TaskDetails = () => {
                   </div>
                 </div>
 
-                <div className="flex text-[2rem] text-para_light mt-4 gap-10 justify-between ">
+                <div className="flex text-[2rem] text-para_light mt-4 gap-10 justify-between break-words ">
                   <Typography className="text-[#757982] font-400 text-[14px] w-4/5">
                     {taskDetailInfo?.description || "N/A"}
                   </Typography>
