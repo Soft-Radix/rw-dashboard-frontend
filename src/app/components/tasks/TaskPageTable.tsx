@@ -70,9 +70,6 @@ function ThemePageTable(props) {
     setIsOpenDeletedModal(false);
   };
 
-  // const extraAgentsCount = agent.length - maxVisibleImages;
-  const extraAgents = columnList?.assigned_task_users?.length - 3;
-  // setIsOpenDeletedModal(false);
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
@@ -187,7 +184,7 @@ function ThemePageTable(props) {
                           className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
                         >
-                          +{row.assigned_task_users?.length}
+                          +{row.assigned_task_users?.length - 3}
                         </span>
                       )}
                     </div>

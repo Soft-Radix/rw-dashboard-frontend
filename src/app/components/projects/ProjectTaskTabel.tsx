@@ -115,8 +115,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const subtype = params.get("subtype") || "to-do";
-    setSelectedTab(getTabIndexFromSubtype(subtype));
-  }, [location.search]);
+    let selectedItemIndex = getTabIndexFromSubtype(subtype);
+    setSelectedTab(selectedItemIndex);
+  }, [location.search, params]);
 
   const handleChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -199,10 +200,10 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
 
   useEffect(() => {
     if (projectInfo?.list?.length > 0) {
-      listData(20, projectInfo?.list[0]?.id);
-      setcolumnId(projectInfo?.list[0]?.id);
+      listData(20, projectInfo?.list[selectedTab]?.id);
+      setcolumnId(projectInfo?.list[selectedTab]?.id);
     }
-  }, [projectInfo?.list]);
+  }, [projectInfo?.list, selectedTab]);
 
   const handleScroll = useCallback(
     debounce(() => {
@@ -248,7 +249,8 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
 
     // if (!columnId) return "";
     dispatch(projectColumnList(payload));
-  }, [dispatch, id]);
+  }, [id]);
+
   if (fetchStatusNew == "loading") {
     return <ListLoading />;
   }
