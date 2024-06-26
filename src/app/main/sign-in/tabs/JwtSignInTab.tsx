@@ -19,6 +19,7 @@ import jwt_decode from "jwt-decode";
 import FacebookLogin from "react-facebook-login";
 import { Console } from "console";
 import { useSelector } from "react-redux";
+import FuseLoading from "@fuse/core/FuseLoading";
 
 type FormType = {
   email: string;
@@ -153,7 +154,10 @@ function jwtSignInTab() {
   //   }
   //   // Handle other form changes if needed
   // };
-
+  if (jwtService?.isLoading == true) {
+    // return <FuseLoading />;
+    <h1>hkhhkkkkk</h1>;
+  }
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
       <span className=" text-red pt-[1px]  block ">{ErrorMsg}</span>

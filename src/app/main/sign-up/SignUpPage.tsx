@@ -3,6 +3,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import AuthBox from "src/app/components/AuthBox";
 import JwtSignUpTab from "./tabs/JwSignUpTab";
+import { useAuth } from "src/app/auth/AuthRouteProvider";
 
 /**
  * The sign up page.
