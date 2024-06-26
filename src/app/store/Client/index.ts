@@ -783,12 +783,13 @@ export const clientSlice = createSlice({
       .addCase(GetAssignAgentsInfo.fulfilled, (state, action) => {
         const { data } = action.payload?.data;
         // console.log(data, "ggggg");
-        state.fetchStatus = "idle";
+
         state.assignedAgentDetail = data.list;
         state.totalAgent = data.total_logged_in_agent;
         // console.log(data?.total_records, "data?.total_records47474");
 
         state.agentTotal_records = calculatePageNumber(data?.total_records, 10);
+        state.fetchStatus = "idle";
 
         // if (data.list.length === 0) {
         //   state.agentTotal_records = restAll();
