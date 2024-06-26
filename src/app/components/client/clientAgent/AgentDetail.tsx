@@ -54,6 +54,20 @@ const AgentDetail = () => {
     dispatch(getAgentInfo({ agent_id: agents_id }));
   }, []);
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+
+  const renderAddress = (row) => {
+    // console.log(row, "rowssss");
+    const addressComponents = [
+      row?.address,
+      row?.address2,
+      row?.city,
+      row?.state,
+      row?.country,
+      row?.zipcode,
+    ].filter(Boolean); // Filter out any falsy values (null, undefined, empty string)
+
+    return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
+  };
   return (
     <div>
       <TitleBar title="Agents Details"></TitleBar>
@@ -136,7 +150,7 @@ const AgentDetail = () => {
                   <div className="flex">
                     <Token />
                     {/* <span>{agentDetail?.email}</span> */}
-                    #2367055342
+                    {agentDetail?.id ? agentDetail?.id : "N/A"}
                   </div>
                   <div className="flex items-center px-20">
                     <span>
@@ -192,7 +206,9 @@ const AgentDetail = () => {
                         src="../assets/icons/loaction.svg"
                         className="mr-4"
                       />
-                      {agentDetail?.address || "N/A"}
+                      <p style={{ wordBreak: "break-all" }}>
+                        {renderAddress(agentDetail)}
+                      </p>
                     </span>
                   </div>
                 </div>

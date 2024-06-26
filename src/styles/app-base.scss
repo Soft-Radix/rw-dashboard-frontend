@@ -257,6 +257,10 @@ input:-webkit-autofill:active {
   background-color: #f0f0f0; /* Example background color */
   position: relative;
 }
+// rbc-header .
+.rbc-header.today-cell:after {
+  display: none;
+}
 .today-cell:after {
   content: "Today";
   position: absolute;
@@ -712,3 +716,19 @@ span.rdrStartEdge {
 .rbc-month-header {
   background-color: #f7f9fb !important;
 }
+.rbc-time-view .rbc-row {
+  min-height: 37px !important;
+}
+
+.rbc-day-slot .rbc-event-label {
+  display: none !important;
+}
+.rbc-day-slot .rbc-event {
+  width: auto !important;
+  border: none !important;
+  min-height: 30px !important;
+  // min-height: 30px !important;
+}
+// .rbc-event {
+//   background-color: transparent !important;
+// }
