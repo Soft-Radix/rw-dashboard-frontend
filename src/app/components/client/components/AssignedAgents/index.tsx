@@ -16,6 +16,7 @@ import AddAgentModel from "src/app/components/agents/AddAgentModel";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import UnassignedAgent from "./UnassignedAgent";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AssignedAgents({
   setAgentFilterMenu,
@@ -37,7 +38,7 @@ export default function AssignedAgents({
     search: "",
   });
 
-  const { assignedAgentDetail, agentTotal_records } = useSelector(
+  const { assignedAgentDetail, agentTotal_records, actionStatus } = useSelector(
     (store: ClientRootState) => store.client
   );
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -92,20 +93,37 @@ export default function AssignedAgents({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          {assignedAgentDetail?.length === 0 ? (
-            <div
-              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
-              style={{ alignItems: "center" }}
-            >
-              <NoDataFound />
-              <Typography className="text-[24px] text-center font-600 leading-normal">
-                No data found !
-              </Typography>
-            </div>
-          ) : (
-            <CommonTable
-              headings={["Agents", "Agents Id", "Assigned Date", ""]}
-            >
+          <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
+            {assignedAgentDetail?.length === 0 && actionStatus == false ? (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : actionStatus === true ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render your loader component here */}
+                </TableCell>
+              </TableRow>
+            ) : (
               <>
                 {assignedAgentDetail?.map((row, index) => (
                   <TableRow
@@ -175,16 +193,19 @@ export default function AssignedAgents({
                   </TableRow>
                 ))}
               </>
-            </CommonTable>
-          )}
+            )}
+          </CommonTable>
+
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* {assignedAgentDetail?.length >= 0 && ( */}
-            <CommonPagination
-              count={agentTotal_records}
-              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
-              page={agentfilterMenu.start + 1}
-            />
-            {/* )} */}
+            {agentTotal_records > 1 && (
+              <CommonPagination
+                count={agentTotal_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={agentfilterMenu.start + 1}
+              />
+            )}
           </div>
         </div>
       </div>

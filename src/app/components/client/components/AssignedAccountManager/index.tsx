@@ -26,14 +26,14 @@ import { start } from "repl";
 import { getAccManagerList } from "app/store/AccountManager";
 import { NoDataFound } from "public/assets/icons/common";
 import { Link } from "react-router-dom";
+import ListLoading from "@fuse/core/ListLoading";
 
 export default function AssignedAccountManager({
   setManagerFilterMenu,
   managerfilterMenu,
 }) {
-  const { assignAccManagerDetail, managertotal_records } = useSelector(
-    (store: ClientRootState) => store?.client
-  );
+  const { assignAccManagerDetail, managertotal_records, actionStatus } =
+    useSelector((store: ClientRootState) => store?.client);
   const [isOpenUnssignedModal, setIsOpenUnassignedModal] = useState(false);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const { client_id } = useParams();
@@ -127,26 +127,45 @@ export default function AssignedAccountManager({
     <>
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
-          {assignAccManagerDetail?.length === 0 ? (
-            <div
-              className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
-              style={{ alignItems: "center" }}
-            >
-              <NoDataFound />
-              <Typography className="text-[24px] text-center font-600 leading-normal">
-                No data found !
-              </Typography>
-            </div>
-          ) : (
-            <CommonTable
-              headings={[
-                "Account Manager",
-                "Account Manager Id",
-                "Assigned date",
-                "",
-                "",
-              ]}
-            >
+          <CommonTable
+            headings={[
+              "Account Manager",
+              "Account Manager Id",
+              "Assigned date",
+              "",
+              "",
+            ]}
+          >
+            {assignAccManagerDetail?.length === 0 && actionStatus == false ? (
+              <TableRow
+                sx={{
+                  "& td": {
+                    borderBottom: "1px solid #EDF2F6",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    color: theme.palette.primary.main,
+                  },
+                }}
+              >
+                <TableCell colSpan={7} align="center">
+                  <div
+                    className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                    style={{ alignItems: "center" }}
+                  >
+                    <NoDataFound />
+                    <Typography className="text-[24px] text-center font-600 leading-normal">
+                      No data found !
+                    </Typography>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : actionStatus === true ? (
+              <TableRow>
+                <TableCell colSpan={7} align="center">
+                  <ListLoading /> {/* Render your loader component here */}
+                </TableCell>
+              </TableRow>
+            ) : (
               <>
                 {assignAccManagerDetail.map((row, index) => (
                   <TableRow
@@ -240,16 +259,19 @@ export default function AssignedAccountManager({
                   </TableRow>
                 ))}
               </>
-            </CommonTable>
-          )}
+            )}
+          </CommonTable>
+
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* {assignAccManagerDetail?.length > 0 && ( */}
-            <CommonPagination
-              count={managertotal_records}
-              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
-              page={managerfilterMenu.start + 1}
-            />
-            {/* )} */}
+            {managertotal_records > 1 && (
+              <CommonPagination
+                count={managertotal_records}
+                onChange={(e, PageNumber: number) =>
+                  checkPageNum(e, PageNumber)
+                }
+                page={managerfilterMenu.start + 1}
+              />
+            )}
           </div>
         </div>
       </div>

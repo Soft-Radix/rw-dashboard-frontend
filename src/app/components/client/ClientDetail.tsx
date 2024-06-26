@@ -498,7 +498,7 @@ export default function ClientDetail() {
         )}
       </TitleBar>
       <div className="px-28 mb-[3rem]">
-        <div className="bg-white rounded-lg shadow-sm">
+        <div className="bg-white rounded-lg shadow-sm ">
           <CommonTab tabs={tabs} />
           {/* <div className="h-24" /> */}
         </div>
