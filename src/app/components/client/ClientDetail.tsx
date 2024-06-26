@@ -446,7 +446,6 @@ export default function ClientDetail() {
         />
       ),
       actionBtn: CustomDropDown,
-      agentfilterMenu,
     },
     {
       id: "assigned-account",
@@ -475,9 +474,9 @@ export default function ClientDetail() {
     };
   }, []);
 
-  if (fetchStatus === "loading") {
-    return <ListLoading />;
-  }
+  // // if (fetchStatus === "loading") {
+  //   return <ListLoading />;
+  // }
   return (
     <>
       <TitleBar title="Client" minHeight="min-h-[80px]">

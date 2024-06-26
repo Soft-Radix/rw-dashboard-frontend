@@ -38,7 +38,7 @@ export default function AssignedAgents({
     search: "",
   });
 
-  const { assignedAgentDetail, agentTotal_records, actionStatus } = useSelector(
+  const { assignedAgentDetail, agentTotal_records, fetchStatus } = useSelector(
     (store: ClientRootState) => store.client
   );
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
@@ -94,7 +94,7 @@ export default function AssignedAgents({
       <div className="mb-[3rem]">
         <div className="bg-white rounded-lg shadow-sm">
           <CommonTable headings={["Agents", "Agents Id", "Assigned Date", ""]}>
-            {assignedAgentDetail?.length === 0 && actionStatus == false ? (
+            {assignedAgentDetail?.length === 0 && fetchStatus !== "loading" ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -117,7 +117,7 @@ export default function AssignedAgents({
                   </div>
                 </TableCell>
               </TableRow>
-            ) : actionStatus === true ? (
+            ) : fetchStatus === "loading" ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   <ListLoading /> {/* Render your loader component here */}

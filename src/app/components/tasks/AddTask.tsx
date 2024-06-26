@@ -51,7 +51,7 @@ import {
 } from "public/assets/icons/task-icons";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { LiveAudioVisualizer } from "react-audio-visualize";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 import CommonModal from "../CommonModal";
 import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
