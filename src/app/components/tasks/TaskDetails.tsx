@@ -250,15 +250,18 @@ const TaskDetails = () => {
     <div>
       <TitleBar title="Task Details"></TitleBar>
       <div className="px-28 flex gap-20 flex-wrap lg:flex-nowrap pb-20">
-        <div className="basis-full lg:basis-auto lg:grow">
-          <div className="shadow-md bg-white rounded-lg">
+        <div className="basis-full lg:basis-auto lg:grow w-[80%] ">
+          <div className="shadow-md bg-white rounded-lg ">
             <div className="border border-[#E7E8E9] rounded-lg flex  justify-left gap-[30px] items-start p-[2rem] flex-col sm:flex-row relative">
               <div className="w-full">
                 <div className="flex justify-between gap-40 mb-10  ">
-                  <div className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden break-words ">
+                  <div
+                    className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden w-[80%]"
+                    style={{ wordBreak: "break-all" }}
+                  >
                     {taskDetailInfo?.title}
                   </div>
-                  <div className="flex items-center  justify-end gap-20 w-full bg-red-20 ">
+                  <div className="flex items-center  justify-end gap-20 w-[20%] bg-red-20 ">
                     <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20 justify-end items-end">
                       {/* {agentDetail?.status || "N/A"} */}
                       <ImportantTaskIcon />
@@ -697,7 +700,7 @@ const TaskDetails = () => {
             <SubTaskTable />
           </div>
         </div>
-        <div className="basis-[320px]">
+        <div className="basis-[320px] ">
           <TaskDetailData />
         </div>
         <AddSubTaskModal
