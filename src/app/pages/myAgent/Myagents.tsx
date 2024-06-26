@@ -38,7 +38,7 @@ import { ClientRootState } from "app/store/Client/Interface";
 export default function Myagents() {
   const agentState = useSelector((store: ClientRootState) => store.client);
   // console.log(agentState, "as");
-  console.log("======agentState==,", agentState?.assignedAgentDetail);
+  // console.log("======agentState==,", agentState?.assignedAgentDetail);
   const dispatch = useAppDispatch();
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const [filters, setfilters] = useState<filterType>({

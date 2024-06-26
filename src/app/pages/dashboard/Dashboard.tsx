@@ -15,13 +15,20 @@ import {
   UpArrowBlank,
   UpArrowIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import ImagesOverlap from "src/app/components/ImagesOverlap";
 import CommonTable from "src/app/components/commonTable";
 import CommonPagination from "src/app/components/pagination";
 import DashboardRecentActivity from "../../components/dashboard/DashboardRecentActivity";
 import DashboaredAgenda from "../../components/dashboard/DashboaredAgenda";
+import { ClientRootState, filterType } from "app/store/Client/Interface";
+import { useAppDispatch } from "app/store/store";
+import { GetAssignAgentsInfo } from "app/store/Client";
+import { useSelector } from "react-redux";
+import moment from "moment";
+import { NoDataFound } from "public/assets/icons/common";
+import ListLoading from "@fuse/core/ListLoading";
 
 const rows = [
   {
@@ -86,6 +93,7 @@ interface CheckboxState {
   logged: boolean;
 }
 export default function Dashboard() {
+  const dispatch = useAppDispatch();
   const theme: Theme = useTheme();
   const [isChecked, setIsChecked] = useState<CheckboxState>({
     agents: true,
@@ -93,7 +101,20 @@ export default function Dashboard() {
     logged: true,
   });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const [selectedTab, setSelectedTab] = useState(0);
+  const client_id = JSON.parse(localStorage.getItem("userDetail"));
+  // console.log(client_id.id, "clientididid");
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 10,
+    search: "",
+  });
+  const { assignedAgentDetail, agentTotal_records, status } = useSelector(
+    (store: ClientRootState) => store.client
+  );
+  // console.log(assignedAgentDetail, "fjidjfijfijfi");
+
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
@@ -118,6 +139,18 @@ export default function Dashboard() {
     setAnchorEl(null);
     setAnchorEl1(null);
   };
+  const checkPageNum = (e: any, pageNumber: number) => {
+    // console.log(pageNumber, "rr");
+    setfilters((prevFilters) => {
+      if (pageNumber !== prevFilters.start + 1) {
+        return {
+          ...prevFilters,
+          start: pageNumber - 1,
+        };
+      }
+      return prevFilters; // Return the unchanged filters if the condition is not met
+    });
+  };
   // console.log(anchorEl1, "anchor");
   const checkHandler = (key: string) => {
     setIsChecked((prevState) => ({
@@ -125,6 +158,12 @@ export default function Dashboard() {
       [key]: !prevState[key],
     }));
   };
+  const fetchAgentList = useCallback(() => {
+    dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
+  }, [filters]);
+  useEffect(() => {
+    fetchAgentList();
+  }, [filters.limit, filters.client_id, filters.search, filters.start]);
   return (
     <div>
       <div className="relative flex items-center justify-between py-10 px-28 ">
@@ -253,24 +292,6 @@ export default function Dashboard() {
             </div>
           </div>
         </DropdownMenu>
-        {/* <DropdownMenu
-          button={null} // No button needed as it's nested
-          anchorEl={anchorEl1}
-          handleClose={handleClose}
-        >
-          <div className="w-[375px] px-20 rounded-none shadow-none">
-            <MenuItem>
-              <Checkbox />
-              Project 1
-            </MenuItem>
-            <MenuItem>
-              <Checkbox /> Project 2
-            </MenuItem>
-            <MenuItem>
-              <Checkbox /> Project 3
-            </MenuItem>
-          </div>
-        </DropdownMenu> */}
       </div>
 
       {isChecked.agents && (
@@ -293,69 +314,91 @@ export default function Dashboard() {
             </div>
 
             <CommonTable
-              headings={[
-                "ID",
-                "First Name",
-                "Last Name",
-                "Start Date",
-                "Last Login",
-                "Assigned Client",
-                "Status",
-                ,
-              ]}
+              headings={["Name", "Agent Id", "Start Date", "Last Login"]}
             >
-              <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        // color: theme?.palette?.primary.main,
-                        color: " #111827",
-                        fontSize: "14px",
-                        fontWeight: 500,
-                      },
-                    }}
-                  >
-                    <TableCell scope="row">{row.id}</TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.fname}
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.lname}
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.startdate}
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      {row.lastlogin}
-                    </TableCell>
-                    <TableCell align="center">
-                      <ImagesOverlap images={row.assignedImg} />
-                    </TableCell>
-                    <TableCell align="center" className="whitespace-nowrap">
-                      <span
-                        className={`inline-flex items-center justify-center rounded-full w-[95px] min-h-[25px] text-sm font-500
-                      ${
-                        row.status === "Completed"
-                          ? "text-[#4CAF50] bg-[#4CAF502E]"
-                          : row.status === "In Progress"
-                            ? "text-[#F44336] bg-[#F443362E]"
-                            : "text-[#F0B402] bg-[#FFEEBB]"
-                      }`}
+              {assignedAgentDetail?.length === 0 && status == "loading" ? (
+                <TableRow
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell colSpan={7} align="center">
+                    <div
+                      className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                      style={{ alignItems: "center" }}
+                    >
+                      <NoDataFound />
+                      <Typography className="text-[24px] text-center font-600 leading-normal">
+                        No data found !
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                  {assignedAgentDetail.map((row, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          // color: theme?.palette?.primary.main,
+                          color: " #111827",
+                          fontSize: "14px",
+                          fontWeight: 500,
+                        },
+                      }}
+                    >
+                      <TableCell
+                        scope="row"
+                        className="flex items-center gap-8 font-500"
                       >
-                        {row.status}
-                      </span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
+                        <img
+                          className="h-40 w-40 rounded-full"
+                          src={
+                            row.user_image
+                              ? urlForImage + row.user_image
+                              : "../assets/images/logo/images.jpeg"
+                          }
+                        ></img>
+                        <span>{row.first_name + " " + row.last_name}</span>
+                      </TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.agent_id}
+                      </TableCell>
+
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.created_at
+                          ? moment(row.created_at).format("MMMM Do, YYYY")
+                          : "N/A"}
+                      </TableCell>
+                      <TableCell align="center" className="whitespace-nowrap">
+                        {row.last_login
+                          ? moment(row.last_login).format("MMMM Do, YYYY")
+                          : "N/A"}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
             </CommonTable>
             <div className="flex justify-end py-14 px-[3rem]">
-              <CommonPagination count={10} />
+              {assignedAgentDetail?.length > 0 && (
+                <CommonPagination
+                  count={agentTotal_records}
+                  onChange={(e, PageNumber: number) =>
+                    checkPageNum(e, PageNumber)
+                  }
+                  page={filters.start + 1}
+                />
+              )}
             </div>
           </div>
         </div>
