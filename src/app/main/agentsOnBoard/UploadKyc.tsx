@@ -110,7 +110,7 @@ export default function UploadKyc() {
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, []);
 
   return (
@@ -138,11 +138,13 @@ export default function UploadKyc() {
                 <input
                   type="file"
                   className="hidden"
-                  onChange={handleFrontIDChange}
+                  onClick={handleFrontIDChange}
+                  // onChange={handleFrontIDChange}
                 />
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
+
                     handleWebcamFrontCapture();
                   }}
                   className="text-white px-4 py-2"
@@ -167,7 +169,7 @@ export default function UploadKyc() {
 
               <label
                 className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 w-[236px] h-[192px]
-               gap-14"
+               gap-14 cursor-pointer"
                 onClick={handleBackIDChange}
               >
                 <input
@@ -177,7 +179,8 @@ export default function UploadKyc() {
                 />
 
                 <button
-                  onClick={handleWebcamBackCapture}
+                  // onClick={handleWebcamBackCapture}
+                  onClick={handleBackIDChange}
                   className="  text-white px-4 py-2 "
                 >
                   <Camera />
