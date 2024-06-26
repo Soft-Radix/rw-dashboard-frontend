@@ -120,7 +120,7 @@ export default function ClientDetail() {
 
   // Get a specific query parameter
   const paramValue = queryParams.get("type");
-  console.log(paramValue, "paramValue");
+  // console.log(paramValue, "paramValue");
   //custom dropdown
   const [anchorEl3, setAnchorEl3] = useState<HTMLElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -498,7 +498,7 @@ export default function ClientDetail() {
         )}
       </TitleBar>
       <div className="px-28 mb-[3rem]">
-        <div className="bg-white rounded-lg shadow-sm ">
+        <div className="bg-white rounded-lg shadow-sm h-71">
           <CommonTab tabs={tabs} />
           {/* <div className="h-24" /> */}
         </div>
