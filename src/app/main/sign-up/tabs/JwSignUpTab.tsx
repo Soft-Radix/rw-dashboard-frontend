@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import InputField from "src/app/components/InputField";
 import { z } from "zod";
 import { SignUpPayload, useAuth } from "../../../auth/AuthRouteProvider";
+import FuseLoading from "@fuse/core/FuseLoading";
 
 /**
  * Form Validation Schema
