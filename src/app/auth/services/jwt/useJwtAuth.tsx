@@ -78,8 +78,14 @@ export type JwtAuth<User, SignUpPayload> = {
 const useJwtAuth = <User, SignUpPayload>(
   props: JwtAuthProps<User>
 ): JwtAuth<User, SignUpPayload> => {
-  const { config, onSignedIn, onSignedOut, onSignedUp, onError, onUpdateUser } =
-    props;
+  const {
+    config,
+    onSignedIn,
+    onSignedOut,
+    onSignedUp,
+    onError,
+    onUpdateUser,
+  } = props;
   const dispatch = useAppDispatch();
   // Merge default config with the one from the props
   const authConfig = _.defaults(config, defaultAuthConfig);
@@ -237,15 +243,12 @@ const useJwtAuth = <User, SignUpPayload>(
       const accessToken = response?.payload.data?.access_token;
       const signin = response?.payload.data?.user?.is_signed;
       const link = response?.payload.data?.user?.subscription_and_docusign;
-      console.log(
-        response?.payload.data?.data?.access_token?.user.projects,
-        "response?.payload.data"
-      );
 
       localStorage.setItem(
         "userData",
         JSON.stringify(userData.subscription_and_docusign)
       );
+
       if (response?.payload.data?.user?.role == "admin") {
         handleSignInSuccess(userData, accessToken);
         window.location.reload();
@@ -261,6 +264,7 @@ const useJwtAuth = <User, SignUpPayload>(
           window.location.reload();
         }
       } else if (response?.payload.data?.user?.role == "agent") {
+        setIsLoading(true);
         if (response?.payload.data?.user?.two_factor_authentication == 1) {
           localStorage.setItem(
             "email",
@@ -270,18 +274,23 @@ const useJwtAuth = <User, SignUpPayload>(
         } else if (response?.payload.data?.user?.is_complete_profile == 1) {
           // window.location.href = response?.payload.data?.user?.docusign_link;
           const docusignLink = response?.payload.data?.user?.docusign_link;
+          setIsLoading(false);
           if (docusignLink) {
             window.location.href = docusignLink;
           } else {
             console.log("Docusign link is not valid.");
           }
         } else if (response?.payload.data?.user?.is_complete_profile == 2) {
+          setIsLoading(false);
           window.location.href = `/kyc-doc/${accessToken}`;
         } else if (response?.payload.data?.user?.is_complete_profile == 3) {
+          setIsLoading(false);
           window.location.href = `/photo-id/${accessToken}`;
         } else if (response?.payload.data?.user?.is_complete_profile == 4) {
+          setIsLoading(false);
           window.location.href = `/upload-doc/${accessToken}`;
         } else {
+          setIsLoading(false);
           handleSignInSuccess(userData, accessToken);
           window.location.reload();
         }
@@ -381,34 +390,39 @@ const useJwtAuth = <User, SignUpPayload>(
     const accessToken = response?.access_token;
     const userData = response?.user;
     dispatch(setInitialState(userData));
-
+    setIsLoading(true);
     const currentUrl = window.location.href;
     if (response?.user?.is_complete_profile == 1) {
       const docusignLink = response?.user?.docusign_link;
       if (docusignLink && response?.user?.is_complete_profile == 1) {
+        setIsLoading(false);
         window.location.href = docusignLink;
       } else {
         console.log("Docusign link is not valid.");
       }
     } else if (response?.user?.is_complete_profile == 2) {
+      setIsLoading(false);
       if (!currentUrl.includes("/kyc-doc/")) {
         window.location.href = `/kyc-doc/${accessToken}`;
       } else {
         console.log("Already on /kyc-doc/ page, not redirecting.");
       }
     } else if (response?.user?.is_complete_profile == 3) {
+      setIsLoading(false);
       if (!currentUrl.includes("/photo-id/")) {
         window.location.href = `/photo-id/${accessToken}`;
       } else {
         console.log("Already on /photo-id/ page, not redirecting.");
       }
     } else if (response?.user?.is_complete_profile == 4) {
+      setIsLoading(false);
       if (!currentUrl.includes("/upload-doc/")) {
         window.location.href = `/upload-doc/${accessToken}`;
       } else {
         console.log("Already on /photo-id/ page, not redirecting.");
       }
     } else {
+      setIsLoading(false);
       handleSignInSuccess(userData, accessToken);
       window.location.reload();
     }

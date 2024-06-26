@@ -59,7 +59,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
       if (!accessGranted) {
         this.redirectRoute();
       }
-    }, 3000);
+    }, 500);
   }
   componentWillUnmount() {
     if (this.timer) {
@@ -91,7 +91,7 @@ class FuseAuthorization extends Component<FuseAuthorizationProps, State> {
         if (!accessGranted) {
           this.redirectRoute();
         }
-      }, 3000);
+      }, 500);
     }
   }
 
