@@ -6,7 +6,7 @@ import { RefreshToken, setPassword } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import AuthBox from "src/app/components/AuthBox";
@@ -67,7 +67,8 @@ export default function UploadKyc() {
   }, [webcamRef]);
 
   const store = useSelector((store: AuthRootState) => store.auth);
-
+  const fileInputRef = useRef(null);
+  const fileBackInputRef = useRef(null);
   //* initialise useformik hook
 
   const handleButtonClick = async () => {
@@ -110,8 +111,17 @@ export default function UploadKyc() {
   };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, []);
+
+  const handleClickCamera = (e) => {
+    e.stopPropagation();
+    fileInputRef.current.click(); // Trigger file input click
+  };
+  const handleClickBackCamera = (e) => {
+    e.stopPropagation();
+    fileBackInputRef.current.click(); // Trigger file input click
+  };
 
   return (
     <>
@@ -131,76 +141,69 @@ export default function UploadKyc() {
             </Typography>
             <div className="flex items-center justify-center gap-20 sm:flex-row flex-col py-32 ">
               <label
-                className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 
-                 items-center py-60 gap-14 w-[236px] h-[192px] cursor-pointer"
+                className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 gap-14 w-[236px] h-[192px] cursor-pointer"
                 onClick={handleFrontIDChange}
               >
                 <input
                   type="file"
                   className="hidden"
-                  onClick={handleFrontIDChange}
-                  // onChange={handleFrontIDChange}
+                  accept=".png, .jpg, .jpeg"
+                  onChange={handleFrontIDChange}
+                  ref={fileInputRef}
                 />
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-
-                    handleWebcamFrontCapture();
-                  }}
-                  className="text-white px-4 py-2"
-                >
-                  <Camera />
-                </button>
 
                 {frontID ? (
                   <img
                     src={frontID}
                     alt="Front ID"
-                    className="w-full max-w-xs max-h-[50px]"
+                    className="w-full max-w-xs max-h-[50px] "
                   />
                 ) : (
-                  <div className="w-full max-w-xs h-40 flex justify-center items-center">
-                    <span className="text-[16px] font-500 text-[#111827]">
-                      Upload Front ID Pic
-                    </span>
-                  </div>
+                  <>
+                    <button
+                      onClick={handleClickCamera}
+                      className="text-white px-4 py-2"
+                    >
+                      <Camera />
+                    </button>
+                    <div className="w-full max-w-xs h-40 flex justify-center items-center">
+                      <span className="text-[16px] font-500 text-[#111827]">
+                        Upload Front ID Pic
+                      </span>
+                    </div>
+                  </>
                 )}
               </label>
 
-              <label
-                className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 w-[236px] h-[192px]
-               gap-14 cursor-pointer"
-                onClick={handleBackIDChange}
-              >
+              <label className="bg-[#EDEDFC] border-1 border-dashed border-[#4F46E5] flex flex-col rounded-6 items-center py-60 gap-14 w-[236px] h-[192px] cursor-pointer">
                 <input
                   type="file"
                   className="hidden"
+                  accept=".png, .jpg, .jpeg"
                   onChange={handleBackIDChange}
+                  ref={fileBackInputRef}
                 />
-
-                <button
-                  // onClick={handleWebcamBackCapture}
-                  onClick={handleBackIDChange}
-                  className="  text-white px-4 py-2 "
-                >
-                  <Camera />
-                </button>
-
-                <label className=" cursor-pointer">
-                  {backID ? (
-                    <img
-                      src={backID}
-                      alt="Front ID"
-                      className="w-full max-w-xs max-h-[50px] "
-                    />
-                  ) : (
-                    <div className="w-full max-w-xs h-40  flex justify-center items-center">
+                {backID ? (
+                  <img
+                    src={backID}
+                    alt="Back ID"
+                    className="w-full max-w-xs max-h-[50px]"
+                  />
+                ) : (
+                  <>
+                    <button
+                      onClick={handleClickBackCamera}
+                      className="text-white px-4 py-2"
+                    >
+                      <Camera />
+                    </button>
+                    <div className="w-full max-w-xs h-40 flex justify-center items-center">
                       <Typography className="text-[16px] font-500 text-[#111827]">
                         Upload Back ID Pic
                       </Typography>
                     </div>
-                  )}
-                </label>
+                  </>
+                )}
               </label>
             </div>
           </div>
