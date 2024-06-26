@@ -58,8 +58,111 @@ const DragLayout = ({ columnList, callListApi, id }) => {
     }
   };
 
+  // const onDragEnd = async ({ destination, source, draggableId, type }) => {
+  //   if (!destination) return;
+  //   if (
+  //     destination.droppableId === source.droppableId &&
+  //     destination.index === source.index
+  //   ) {
+  //     return;
+  //   }
+
+  //   const start = starter.columns[source.droppableId];
+  //   const end = starter.columns[destination.droppableId];
+
+  //   if (type === "column") {
+  //     console.log(destination, source, draggableId);
+  //     const newOrder = [...starter.columnOrder];
+  //     newOrder.splice(source.index, 1);
+  //     newOrder.splice(destination.index, 0, draggableId);
+  //     const numberArray = newOrder.map(Number);
+  //     setStarter({
+  //       ...starter,
+  //       columnOrder: newOrder,
+  //     });
+  //     const payload = {
+  //       project_id: id,
+  //       column_ids: numberArray,
+  //     };
+
+  //     try {
+  //       await moveColumns(payload);
+  //     } catch (error) {
+  //       console.error("Error moving column:", error);
+  //     }
+  //     return;
+  //   }
+
+  //   if (start == end) {
+  //     const column = starter.columns[source.droppableId];
+  //     const taskIds = [...column.taskIds];
+  //     taskIds.splice(source.index, 1);
+  //     taskIds.splice(destination.index, 0, draggableId);
+  //     const newColumn = {
+  //       ...column,
+  //       taskIds,
+  //     };
+  //     setStarter({
+  //       ...starter,
+  //       columns: {
+  //         ...starter.columns,
+  //         [column.id]: newColumn,
+  //       },
+  //     });
+  //     const numberArray = taskIds.map(Number);
+  //     const newId = Number(column?.id);
+  //     const payload = {
+  //       project_column_id: newId,
+  //       task_ids: numberArray,
+  //     };
+
+  //     try {
+  //       await moveRow(payload);
+  //     } catch (error) {
+  //       console.error("Error moving column:", error);
+  //     }
+  //     return;
+  //   }
+
+  //   const startTaskIds = [...start.taskIds];
+  //   const endTaskIds = [...end.taskIds];
+
+  //   startTaskIds.splice(source.index, 1);
+  //   endTaskIds.splice(destination.index, 0, draggableId);
+
+  //   const newStartColumn = {
+  //     ...start,
+  //     taskIds: startTaskIds,
+  //   };
+  //   const endTaskColumn = {
+  //     ...end,
+  //     taskIds: endTaskIds,
+  //   };
+  //   const payload = {
+  //     project_column_id: Number(endTaskColumn?.id),
+  //     task_id: draggableId,
+  //   };
+
+  //   try {
+  //     await moveinColumn(payload); // Call the moveColumns function with the correct payload
+  //   } catch (error) {
+  //     console.error("Error moving column:", error);
+  //   }
+  //   setStarter({
+  //     ...starter,
+  //     columns: {
+  //       ...starter.columns,
+  //       [start.id]: newStartColumn,
+  //       [end.id]: endTaskColumn,
+  //     },
+  //   });
+
+  //   console.log(destination, source, draggableId);
+  // };
+
   const onDragEnd = async ({ destination, source, draggableId, type }) => {
     if (!destination) return;
+
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -71,15 +174,17 @@ const DragLayout = ({ columnList, callListApi, id }) => {
     const end = starter.columns[destination.droppableId];
 
     if (type === "column") {
-      console.log(destination, source, draggableId);
-      const newOrder = [...starter.columnOrder];
+      const newOrder = Array.from(starter.columnOrder);
       newOrder.splice(source.index, 1);
       newOrder.splice(destination.index, 0, draggableId);
+
       const numberArray = newOrder.map(Number);
-      setStarter({
-        ...starter,
+
+      setStarter((prevStarter) => ({
+        ...prevStarter,
         columnOrder: newOrder,
-      });
+      }));
+
       const payload = {
         project_id: id,
         column_ids: numberArray,
@@ -93,24 +198,26 @@ const DragLayout = ({ columnList, callListApi, id }) => {
       return;
     }
 
-    if (start == end) {
-      const column = starter.columns[source.droppableId];
-      const taskIds = [...column.taskIds];
+    if (start === end) {
+      const taskIds = Array.from(start.taskIds);
       taskIds.splice(source.index, 1);
       taskIds.splice(destination.index, 0, draggableId);
+
       const newColumn = {
-        ...column,
+        ...start,
         taskIds,
       };
-      setStarter({
-        ...starter,
+
+      setStarter((prevStarter) => ({
+        ...prevStarter,
         columns: {
-          ...starter.columns,
-          [column.id]: newColumn,
+          ...prevStarter.columns,
+          [newColumn.id]: newColumn,
         },
-      });
+      }));
+
       const numberArray = taskIds.map(Number);
-      const newId = Number(column?.id);
+      const newId = Number(start.id);
       const payload = {
         project_column_id: newId,
         task_ids: numberArray,
@@ -119,13 +226,13 @@ const DragLayout = ({ columnList, callListApi, id }) => {
       try {
         await moveRow(payload);
       } catch (error) {
-        console.error("Error moving column:", error);
+        console.error("Error moving task:", error);
       }
       return;
     }
 
-    const startTaskIds = [...start.taskIds];
-    const endTaskIds = [...end.taskIds];
+    const startTaskIds = Array.from(start.taskIds);
+    const endTaskIds = Array.from(end.taskIds);
 
     startTaskIds.splice(source.index, 1);
     endTaskIds.splice(destination.index, 0, draggableId);
@@ -134,31 +241,32 @@ const DragLayout = ({ columnList, callListApi, id }) => {
       ...start,
       taskIds: startTaskIds,
     };
-    const endTaskColumn = {
+    const newEndColumn = {
       ...end,
       taskIds: endTaskIds,
     };
+
+    setStarter((prevStarter) => ({
+      ...prevStarter,
+      columns: {
+        ...prevStarter.columns,
+        [newStartColumn.id]: newStartColumn,
+        [newEndColumn.id]: newEndColumn,
+      },
+    }));
+
     const payload = {
-      project_column_id: Number(endTaskColumn?.id),
+      project_column_id: Number(newEndColumn.id),
       task_id: draggableId,
     };
 
     try {
-      await moveinColumn(payload); // Call the moveColumns function with the correct payload
+      await moveinColumn(payload);
     } catch (error) {
-      console.error("Error moving column:", error);
+      console.error("Error moving task:", error);
     }
-    setStarter({
-      ...starter,
-      columns: {
-        ...starter.columns,
-        [start.id]: newStartColumn,
-        [end.id]: endTaskColumn,
-      },
-    });
-
-    console.log(destination, source, draggableId);
   };
+
   console.log("new starter", starter);
 
   return (

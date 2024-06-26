@@ -343,7 +343,7 @@ const CalenderDesign = ({ events }) => {
           events={calendarState.events}
           startAccessor="start"
           endAccessor="end"
-          // defaultView="month"
+          defaultView="month"
           popup={true}
           components={{
             toolbar: (props) => (
