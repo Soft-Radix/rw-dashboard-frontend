@@ -235,12 +235,12 @@ export default function AgentsList() {
                     row.status == "Active"
                       ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                       : row.status == "Pending"
-                      ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                      : row.status == "Inactive"
-                      ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                      : row.status == "Cancelled"
-                      ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                      : ""
+                        ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                        : row.status == "Inactive"
+                          ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                          : row.status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                   }`}
                     >
                       {row.status || "Pending"}
@@ -261,7 +261,7 @@ export default function AgentsList() {
           </CommonTable>
 
           <div className="flex justify-end py-14 px-[3rem]">
-            {agentState?.list.length > 0 && (
+            {agentState?.total_records > 1 && (
               <CommonPagination
                 count={agentState?.total_records}
                 onChange={(e, PageNumber: number) =>

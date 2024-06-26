@@ -248,8 +248,8 @@ export default function AccountManager() {
                         row.status == "Active"
                           ? "text-[#4CAF50] bg-[#4CAF502E]"
                           : row.status == "Inactive"
-                          ? "Expired"
-                          : "Pending"
+                            ? "Expired"
+                            : "Pending"
                       }`}
                         >
                           {row.status || "Active"}
@@ -278,11 +278,15 @@ export default function AccountManager() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            <CommonPagination
-              count={accManagerState?.total_records}
-              page={filters.start + 1}
-              onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
-            />
+            {accManagerState?.total_records > 1 && (
+              <CommonPagination
+                count={accManagerState?.total_records}
+                page={filters.start + 1}
+                onChange={(event, pageNumber) =>
+                  checkPageNum(event, pageNumber)
+                }
+              />
+            )}
           </div>
         </div>
       </div>

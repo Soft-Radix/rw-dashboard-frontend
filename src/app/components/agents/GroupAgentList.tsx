@@ -283,7 +283,7 @@ export default function GroupAgentsList() {
             </CommonTable>
           </>
           <div className="flex justify-end py-14 px-[3rem]">
-            {agentGroupListMember.list?.length > 0 && (
+            {total_groupDetail > 1 && (
               <CommonPagination
                 count={total_groupDetail}
                 onChange={(e, PageNumber: number) =>

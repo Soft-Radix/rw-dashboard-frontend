@@ -561,7 +561,7 @@ export const clientSlice = createSlice({
     restAll: (state) => {
       state.successMsg = "";
       state.errorMsg = "";
-      // state.selectedColumn = [];
+      state.selectedColumn = [];
     },
     changeFetchStatus: (state) => {
       state.fetchStatus = "loading";
@@ -822,10 +822,11 @@ export const clientSlice = createSlice({
       })
       .addCase(getAssignAccMangerInfo.pending, (state, action) => {
         const { loading } = action.meta?.arg;
-        console.log("====kkj", loading);
+        // console.log("====kkj", loading);
         state.actionStatus = true;
-        state.fetchStatus =
-          loading === undefined ? "loading" : !loading ? "idle" : "loading";
+        // state.fetchStatus =
+        //   loading === undefined ? "loading" : !loading ? "idle" : "loading";
+        state.fetchStatus = loading;
       })
 
       .addCase(getAssignAccMangerInfo.fulfilled, (state, action) => {
