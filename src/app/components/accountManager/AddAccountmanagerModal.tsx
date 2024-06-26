@@ -515,6 +515,7 @@ function AddAccountManagerModel({
 
           <div className="flex gap-20">
             <InputField
+              type="number"
               formik={formik}
               name="zipcode"
               label="Zipcode"

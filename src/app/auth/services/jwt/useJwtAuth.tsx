@@ -461,7 +461,8 @@ const useJwtAuth = <User, SignUpPayload>(
         "Name",
         "Company Name",
         "Joining Date",
-        "Status",
+        "Subscription Status",
+        "Account Status",
         "",
       ])
     );

@@ -16,6 +16,8 @@ import { selectUser } from "src/app/auth/user/store/userSlice";
 import { getLocalStorage } from "src/utils";
 import { logoutCometChat } from "app/configs/cometChatConfig";
 import SignOutModal from "src/app/auth/SignOutModal";
+import { restAll } from "app/store/Client";
+import { useAppDispatch } from "app/store/store";
 
 /**
  * The user menu.
@@ -23,6 +25,7 @@ import SignOutModal from "src/app/auth/SignOutModal";
 function UserMenu() {
   const user = getLocalStorage("userDetail");
   const { signOut } = useAuth();
+  const dispatch = useAppDispatch();
   const [userMenu, setUserMenu] = useState<HTMLElement | null>(null);
   const [isSignOut, setIsSignOut] = useState<boolean>(false);
 
@@ -38,6 +41,7 @@ function UserMenu() {
     return null;
   }
   const handleLogout = async () => {
+    dispatch(restAll());
     signOut();
     await logoutCometChat();
     localStorage.clear();

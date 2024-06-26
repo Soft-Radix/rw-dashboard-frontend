@@ -101,6 +101,8 @@ function ClientTable({
     toast.success(res?.payload?.data?.message);
     handleClose(); // Close the menu after handling the click
   };
+  console.log(clientState?.selectedColumn, "clientState?.selectedColumn");
+
   return (
     <>
       <div className="bg-white rounded-lg shadow-sm">
@@ -109,17 +111,17 @@ function ClientTable({
             clientState?.selectedColumn?.length > 0
               ? clientState?.selectedColumn
               : status
-              ? [
-                  "ID",
-                  "Name",
-                  "Company Name",
-                  "Joining Date",
-                  "Subscription Status",
-                  "Account Status",
+                ? [
+                    "ID",
+                    "Name",
+                    "Company Name",
+                    "Joining Date",
+                    "Subscription Status",
+                    "Account Status",
 
-                  "",
-                ]
-              : ["ID", "Name", "Company Name", "Joining Date", ""]
+                    "",
+                  ]
+                : ["ID", "Name", "Company Name", "Joining Date", ""]
           }
           sortColumn={sortBy}
           isSorting={true}
@@ -219,14 +221,14 @@ function ClientTable({
                           row.subscription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subscription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subscription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subscription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : row.subscription_status == "Inactive"
-                            ? "text-[#FF0000] bg-[#FFD1D1]"
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subscription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subscription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : row.subscription_status == "Inactive"
+                                    ? "text-[#FF0000] bg-[#FFD1D1]"
+                                    : ""
                         }`}
                       >
                         {row.subscription_status || "N/A"}
@@ -265,7 +267,7 @@ function ClientTable({
           )}
         </CommonTable>
         <div className="flex justify-end py-14 px-[3rem]">
-          {clientState?.list.length > 0 && (
+          {clientState?.total_records > 1 && (
             <CommonPagination
               count={clientState?.total_records}
               page={filters.start + 1}

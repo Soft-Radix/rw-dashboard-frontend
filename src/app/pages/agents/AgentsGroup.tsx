@@ -243,13 +243,15 @@ export default function AgentsGroup() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {/* {agentGroupState?.list.length > 0 && ( */}
-            <CommonPagination
-              count={agentGroupState?.total_records}
-              page={filters.start + 1}
-              onChange={(event, pageNumber) => checkPageNum(event, pageNumber)}
-            />
-            {/* )} */}
+            {agentGroupState?.total_records > 1 && (
+              <CommonPagination
+                count={agentGroupState?.total_records}
+                page={filters.start + 1}
+                onChange={(event, pageNumber) =>
+                  checkPageNum(event, pageNumber)
+                }
+              />
+            )}
           </div>
         </div>
       </div>
