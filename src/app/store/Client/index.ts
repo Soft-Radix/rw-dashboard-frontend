@@ -535,6 +535,21 @@ export const defaultAccManagerList = createAsyncThunk(
     };
   }
 );
+export const GetRecentActivityData = createAsyncThunk(
+  "client/recent-activity",
+  async (payload) => {
+    const response = await ApiHelperFunction({
+      url: "client/recent-activity",
+      method: "get",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 
 /**
  * The auth slice.
@@ -766,14 +781,15 @@ export const clientSlice = createSlice({
         state.fetchStatus = "loading";
       })
       .addCase(GetAssignAgentsInfo.fulfilled, (state, action) => {
-        // console.log(action, "action");
         const { data } = action.payload?.data;
         // console.log(data, "ggggg");
         state.fetchStatus = "idle";
         state.assignedAgentDetail = data.list;
+        state.totalAgent = data.total_logged_in_agent;
         // console.log(data?.total_records, "data?.total_records47474");
 
         state.agentTotal_records = calculatePageNumber(data?.total_records, 10);
+
         // if (data.list.length === 0) {
         //   state.agentTotal_records = restAll();
         // }
@@ -890,6 +906,20 @@ export const clientSlice = createSlice({
         toast.error(error?.message);
         state.actionStatusDisabled = false;
       });
+    // .addCase(GetRecentActivityData.pending, (state) => {
+    //   state.fetchStatus = "loading";
+    // })
+    // .addCase(GetRecentActivityData.fulfilled, (state, action) => {
+    //   // console.log(action.payload?.data, "find");
+    //   const { data } = action.payload?.data;
+    //   // const { message } = action.payload?.data;
+    //   // console.log(message, "checkrrr");
+    //   state.fetchStatus = "idle";
+    //   // state.agentGroupDetail = data;
+    // })
+    // .addCase(GetRecentActivityData.rejected, (state) => {
+    //   state.fetchStatus = "idle";
+    // });
   },
 });
 
