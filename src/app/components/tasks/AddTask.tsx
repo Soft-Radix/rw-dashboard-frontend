@@ -52,7 +52,7 @@ import {
 } from "public/assets/icons/task-icons";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { LiveAudioVisualizer } from "react-audio-visualize";
-// import * as Yup from "yup";
+import * as Yup from "yup";
 import CommonModal from "../CommonModal";
 import DropdownMenu from "../Dropdown";
 import InputField from "../InputField";
@@ -661,8 +661,8 @@ function AddTaskModal({
       calculatedDate
         ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-        ? ""
-        : formatDate(selectedDate)
+          ? ""
+          : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append(
@@ -874,8 +874,8 @@ function AddTaskModal({
       calculatedDate
         ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-        ? ""
-        : formatDate(selectedDate)
+          ? ""
+          : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append("delete_agent_ids", "");
