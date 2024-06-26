@@ -611,7 +611,7 @@ function AddTaskModal({
     // Try to parse the date with each format
     let date = null;
     for (const format of inputFormats) {
-      date = moment(dateString, format, true);
+      date = moment.utc(dateString, format, true);
       if (date.isValid()) {
         break;
       }
@@ -621,11 +621,13 @@ function AddTaskModal({
       console.error(
         "Invalid date format. Please ensure the date string matches one of the expected formats."
       );
-      return moment(dateString, "DD/MM/YYYY HH:mm").format("YYYY-MM-DD HH:mm");
+      return moment
+        .utc(dateString, "DD/MM/YYYY HH:mm")
+        .format("YYYY-MM-DD HH:mm");
     }
 
     // Format the date to the desired output format
-    const formattedDate = date.format("YYYY-MM-DD, HH:mm");
+    const formattedDate = moment.utc(date).format("YYYY-MM-DD, HH:mm");
 
     return formattedDate;
   }
@@ -735,7 +737,7 @@ function AddTaskModal({
         addedDays++;
       }
     }
-    setSelectedDate(moment(date).format("DD/MM/YYYY ,  HH:mm:ss"));
+    setSelectedDate(moment.utc(date).format("DD/MM/YYYY ,  HH:mm:ss"));
     return moment(date).format("YYYY-MM-DD HH:mm");
   };
 
@@ -786,7 +788,7 @@ function AddTaskModal({
       setSelectedDate(
         !data?.due_date_time
           ? "Due Date & Time"
-          : moment.utc(data?.due_date_time).format("DD/MM/yyyy , hh:mm")
+          : moment.utc(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
       );
       setCalculatedDate(
         !data?.due_date_time
