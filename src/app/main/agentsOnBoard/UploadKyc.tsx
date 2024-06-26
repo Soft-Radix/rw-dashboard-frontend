@@ -111,7 +111,7 @@ export default function UploadKyc() {
   };
 
   useEffect(() => {
-    // fetchData();
+    fetchData();
   }, []);
 
   const handleClickCamera = (e) => {
