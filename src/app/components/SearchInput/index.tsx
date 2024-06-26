@@ -58,7 +58,8 @@ function SearchInput({
           "& .MuiInputBase-input::placeholder": {
             color: "#757982",
             opacity: 1,
-            fontSize: "24px",
+            fontSize: "15px",
+            lineHeight: "14px",
           },
         }}
         InputProps={{

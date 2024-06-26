@@ -41,11 +41,9 @@ const EventCustomize: React.FC<EventCustomizeProps> = ({
         className="flex items-center justify-between border-[0.5px] border-[#9DA0A6] p-5  rounded-sm relative "
         onClick={() => navigate(`/${id}/tasks/detail/${event?.status}`)}
       >
-        <div className="text-[#757982] text-[10px] font-semibold flex gap-3 items-center ">
+        <div className="text-[#757982] text-[10px] font-semibold flex gap-3 items-center  max-w-[10%] md:max-w-[40%] xl:max-w-[50%]">
           <EventIcon />
-          <strong className="truncate max-w-[10%] md:max-w-[20%] xl:max-w-[50%]">
-            {event.title}
-          </strong>
+          <strong className="truncate max-w-full">{event.title}</strong>
           <p>{event.description}</p>
         </div>
       </div>
