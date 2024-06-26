@@ -19,7 +19,8 @@ import CommonTable from "../../commonTable";
 import { useTheme } from "@mui/styles";
 import { useAppDispatch } from "app/store/store";
 import { subscriptionList } from "app/store/Client";
-import { array } from "zod";
+// import { array } from "zod";
+import { NoDataFound } from "public/assets/icons/common";
 interface IProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
@@ -69,6 +70,7 @@ function CustomLineModal({
 }: IProps) {
   const [list, setList] = useState<any[]>([]);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const theme: Theme = useTheme();
   const dispatch = useAppDispatch();
   useEffect(() => {
     setList(customList);
@@ -110,23 +112,51 @@ function CustomLineModal({
     >
       <div className="flex flex-col gap-20 mb-20 border-1 border-[#D9D9D9] rounded-[10px] overflow-hidden h-[500px] ">
         <CommonTable headings={["Name", "Description", "Unit Price"]}>
-          {list?.map((row, index) => (
-            <TableRow key={index}>
-              <TableCell scope="row" className="font-500 px-[6px]">
-                <div className="py-2 flex " style={{ alignItems: "center" }}>
-                  <Checkbox onChange={(e) => handleSelect(e, row)} />
-                  <TruncateText text={row.name} maxWidth={200} />
-                  {/* {row.name} */}
+          {list?.length === 0 ? (
+            <TableRow
+              sx={{
+                "& td": {
+                  borderBottom: "1px solid #EDF2F6",
+                  paddingTop: "12px",
+                  paddingBottom: "12px",
+                  color: theme.palette.primary.main,
+                },
+              }}
+            >
+              <TableCell colSpan={7} align="center">
+                <div
+                  className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                  style={{ alignItems: "center" }}
+                >
+                  <NoDataFound />
+                  <Typography className="text-[24px] text-center font-600 leading-normal">
+                    No data found !
+                  </Typography>
                 </div>
               </TableCell>
-              <TableCell align="center" className="font-500">
-                <TruncateText text={row.description} maxWidth={200} />
-              </TableCell>
-              <TableCell align="center" className="whitespace-nowrap font-500">
-                {row.unit_price}
-              </TableCell>
             </TableRow>
-          ))}
+          ) : (
+            list?.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell scope="row" className="font-500 px-[6px]">
+                  <div className="py-2 flex " style={{ alignItems: "center" }}>
+                    <Checkbox onChange={(e) => handleSelect(e, row)} />
+                    <TruncateText text={row.name} maxWidth={200} />
+                    {/* {row.name} */}
+                  </div>
+                </TableCell>
+                <TableCell align="center" className="font-500">
+                  <TruncateText text={row.description} maxWidth={200} />
+                </TableCell>
+                <TableCell
+                  align="center"
+                  className="whitespace-nowrap font-500"
+                >
+                  {row.unit_price}
+                </TableCell>
+              </TableRow>
+            ))
+          )}
         </CommonTable>
       </div>
     </CommonModal>
