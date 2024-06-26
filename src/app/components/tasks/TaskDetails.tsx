@@ -256,17 +256,21 @@ const TaskDetails = () => {
               <div className="w-full">
                 <div className="flex justify-between gap-40 mb-10  ">
                   <div
-                    className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden w-[80%]"
+                    className="text-[20px] text-[#111827] font-600 inline-block overflow-x-hidden w-[80%] "
                     style={{ wordBreak: "break-all" }}
                   >
                     {taskDetailInfo?.title}
                   </div>
-                  <div className="flex items-center  justify-end gap-20 w-[20%] bg-red-20 ">
-                    <Button className="text-[#4F46E5] bg-[#EDEDFC] flex gap-10 py-10 px-20 justify-end items-end">
+                  <div className="flex items-center  justify-end gap-20  bg-red-20 ">
+                    <div className=" bg-[#EDEDFC] flex gap-10 py-10 px-20  items-center rounded-[28px] w-max">
+                      <div className="text-[#4F46E5]">
+                        <ImportantTaskIcon />
+                      </div>
                       {/* {agentDetail?.status || "N/A"} */}
-                      <ImportantTaskIcon />
-                      {taskDetailInfo?.labels}
-                    </Button>
+                      <div className="text-[#4F46E5] text-[16px] font-500 ">
+                        {taskDetailInfo?.labels}
+                      </div>
+                    </div>
                     {/* <div className="flex justify-between gap-10 items-center"> */}
 
                     {userDetails?.role != "agent" && (
