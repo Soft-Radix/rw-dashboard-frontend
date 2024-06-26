@@ -195,7 +195,10 @@ function AddTaskModal({
     validationSchema,
     onSubmit: (values) => {},
   });
-
+  const removeInitialSpace = (value: string) => {
+    const val = value.replace(/^\s+/g, "");
+    formik.setFieldValue("description", val);
+  };
   const dateTimeMenuData = [
     { label: "In 1 business day", days: 1 },
     { label: "In 2 business days", days: 2 },
@@ -278,9 +281,79 @@ function AddTaskModal({
   const videoRef = useRef(null);
   const audioRef = useRef(null);
 
+  // const handleRecordClick = async () => {
+  //   let stream;
+
+  //   try {
+  //     stream = await navigator.mediaDevices.getDisplayMedia({
+  //       video: true,
+  //       audio: false,
+  //     });
+  //     setIsRecording(true);
+  //     const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp8")
+  //       ? "video/webm; codecs=vp8"
+  //       : "video/webm";
+  //     setScreenSharingStream(stream);
+  //     const recorder = new MediaRecorder(stream, {
+  //       mimeType: mime,
+  //     });
+  //     setMediaRecorder(recorder);
+
+  //     const chunks = [];
+  //     recorder.addEventListener("dataavailable", (e) => {
+  //       if (e.data.size > 0) {
+  //         chunks.push(e.data);
+  //       }
+  //     });
+
+  //     recorder.addEventListener("stop", () => {
+  //       const blob = new Blob(chunks, {
+  //         type: chunks[0].type,
+  //       });
+  //       const url = URL.createObjectURL(blob);
+
+  //       const file = new File([blob], "recorded_video.webm", {
+  //         type: chunks[0].type,
+  //       });
+  //       //@ts-ignore
+  //       setScreenRecorder(file);
+
+  //       if (videoRef.current) {
+  //         videoRef.current.src = url;
+  //       }
+  //       setIsRecording(false);
+  //       setShowVideo(true);
+  //       clearInterval(timerId);
+  //       setElapsedTime(0);
+  //     });
+
+  //     recorder.addEventListener("error", (error) => {
+  //       console.error("MediaRecorder Error:", error);
+  //       clearInterval(timerId);
+  //       setElapsedTime(0);
+  //     });
+
+  //     // Listen for the stream's inactive event
+  //     stream.getVideoTracks()[0].oninactive = () => {
+  //       setIsRecording(false);
+  //       console.log("User clicked cancel or ended screen share");
+  //       clearInterval(timerId);
+  //       setElapsedTime(0);
+  //     };
+
+  //     // Start the recorder manually
+  //     recorder.start();
+  //     const id = setInterval(() => {
+  //       setElapsedTime((prevTime) => prevTime + 1);
+  //     }, 1000);
+  //     setTimerId(id);
+  //   } catch (error) {
+  //     console.error("Error accessing screen:", error);
+  //   }
+  // };
+
   const handleRecordClick = async () => {
     let stream;
-
     try {
       stream = await navigator.mediaDevices.getDisplayMedia({
         video: true,
@@ -295,41 +368,46 @@ function AddTaskModal({
         mimeType: mime,
       });
       setMediaRecorder(recorder);
-
       const chunks = [];
       recorder.addEventListener("dataavailable", (e) => {
         if (e.data.size > 0) {
           chunks.push(e.data);
         }
       });
-
       recorder.addEventListener("stop", () => {
         const blob = new Blob(chunks, {
           type: chunks[0].type,
         });
         const url = URL.createObjectURL(blob);
-
         const file = new File([blob], "recorded_video.webm", {
           type: chunks[0].type,
         });
         //@ts-ignore
         setScreenRecorder(file);
-
         if (videoRef.current) {
+          // Reset the video element before setting the new src
+          videoRef.current.pause();
+          videoRef.current.removeAttribute("src"); // Remove the current src
+          videoRef.current.srcObject = null; // Clear the current source object
+          videoRef.current.load(); // Reset the video element
           videoRef.current.src = url;
+          videoRef.current.onloadedmetadata = () => {
+            videoRef.current.currentTime = 0; // Ensure the video starts from the beginning
+          };
+          videoRef.current.oncanplay = () => {
+            videoRef.current.play(); // Optionally start playing the video
+          };
         }
         setIsRecording(false);
         setShowVideo(true);
         clearInterval(timerId);
         setElapsedTime(0);
       });
-
       recorder.addEventListener("error", (error) => {
         console.error("MediaRecorder Error:", error);
         clearInterval(timerId);
         setElapsedTime(0);
       });
-
       // Listen for the stream's inactive event
       stream.getVideoTracks()[0].oninactive = () => {
         setIsRecording(false);
@@ -337,7 +415,6 @@ function AddTaskModal({
         clearInterval(timerId);
         setElapsedTime(0);
       };
-
       // Start the recorder manually
       recorder.start();
       const id = setInterval(() => {
@@ -383,62 +460,6 @@ function AddTaskModal({
       .toString()
       .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
-
-  // const handleAudioRecord = () => {
-  //   if (recordingAudio) {
-  //     setVisible(true);
-  //     console.log("Stopping the recorder...");
-  //     mediaRecorderRef.current.stop();
-  //     mediaStreamRef.current.getTracks().forEach((track) => track.stop()); // Stop all tracks of the stream
-  //     setRecordingAudio(false);
-  //     clearInterval(timerRef.current); // Stop the timer
-  //   } else {
-  //     setVisible(true);
-  //     console.log("Starting the recorder...");
-  //     navigator.mediaDevices
-  //       .getUserMedia({ audio: true })
-  //       .then((stream) => {
-  //         mediaStreamRef.current = stream; // Store the stream
-  //         const mediaRecorder = new MediaRecorder(stream);
-  //         mediaRecorderRef.current = mediaRecorder;
-  //         audioChunksRef.current = [];
-
-  //         mediaRecorder.ondataavailable = (event) => {
-  //           console.log("Data available:", event.data);
-  //           audioChunksRef.current.push(event.data);
-  //         };
-
-  //         mediaRecorder.onstop = () => {
-  //           console.log("Recorder stopped");
-  //           const audioBlob = new Blob(audioChunksRef.current, {
-  //             type: "audio/wav",
-  //           });
-  //           const audioFile = new File([audioBlob], "recorded_audio.wav", {
-  //             type: "audio/wav",
-  //           });
-  //           console.log("=====audioFile===", audioFile);
-  //           setAudioRecorder(audioFile);
-  //           const audioUrls = URL.createObjectURL(audioBlob);
-  //           console.log("=========audioUrl==========", audioUrls);
-  //           setAudioURL(audioUrls);
-
-  //           setBlob(audioBlob);
-  //           // setRecordingTime(0);
-  //         };
-
-  //         mediaRecorder.start();
-  //         console.log("Recorder started");
-  //         setRecordingAudio(true);
-  //         setMediaRecorder1(mediaRecorder);
-  //         timerRef.current = setInterval(() => {
-  //           setRecordingTime((prevTime) => prevTime + 1);
-  //         }, 1000);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error accessing microphone", error);
-  //       });
-  //   }
-  // };
 
   const handleAudioRecord = (save) => {
     let audioUrls = "";
@@ -990,6 +1011,7 @@ function AddTaskModal({
             name="description"
             label="Description"
             placeholder="Enter Description"
+            onChange={(e) => removeInitialSpace(e.target.value)}
             multiline
             rows={4}
           />
@@ -1007,6 +1029,7 @@ function AddTaskModal({
                 <div
                   className={`relative
       `}
+                  onClick={(event) => setAgentMenu(event.currentTarget)}
                 >
                   <CommonChip
                     onClick={(event) => setAgentMenu(event.currentTarget)}
@@ -1247,7 +1270,7 @@ function AddTaskModal({
                           material-outline:add_circle_outline
                         </FuseSvgIcon>
                       }
-                      className="min-w-[224px] mt-10"
+                      className="min-w-[224px] mt-10 "
                       onClick={handleAddLabel}
                     >
                       Create New Label
@@ -1268,7 +1291,7 @@ function AddTaskModal({
                       variant="contained"
                       color="secondary"
                       className="w-[156px] h-[48px] text-[18px]"
-                      disabled={formik?.values?.newLabel == ""}
+                      disabled={formik?.values?.newLabel.trim() == ""}
                       onClick={() => handleLabelSave()}
                     >
                       Save
@@ -1760,9 +1783,9 @@ function AddTaskModal({
                     width="450px"
                     ref={videoRef}
                     controls
+                    autoPlay={false}
                     onPlay={handleVideoPlay}
                   />
-                  {/* <ReactPlayer url="https://www.youtube.com/watch?v=LXb3EKWsInQ" /> */}
 
                   {Edit ? (
                     <div

@@ -161,31 +161,39 @@ function ThemePageTable(props) {
                   </TableCell>
                   <TableCell align="center">
                     <div className="flex mt-10 items-center justify-center">
-                      {row.assigned_task_users?.slice(0, 3).map((item, idx) => {
-                        // console.log(item, "itemmmm");
-                        return (
-                          <img
-                            className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
-                              row.assigned_task_users?.length > 1
-                                ? "ml-[-16px]"
-                                : ""
-                            } z-0`}
-                            src={
-                              item.user_image
-                                ? urlForImage + item?.user_image
-                                : "../assets/images/logo/images.jpeg"
-                            }
-                            alt={`User ${index + 1}`}
-                          />
-                        );
-                      })}
-                      {row.assigned_task_users?.length > 3 && (
-                        <span
-                          className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
+                      {row.assigned_task_users.length ? (
+                        <>
+                          {row.assigned_task_users
+                            ?.slice(0, 3)
+                            .map((item, idx) => {
+                              // console.log(item, "itemmmm");
+                              return (
+                                <img
+                                  className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                                    row.assigned_task_users?.length > 1
+                                      ? "ml-[-16px]"
+                                      : ""
+                                  } z-0`}
+                                  src={
+                                    item.user_image
+                                      ? urlForImage + item?.user_image
+                                      : "../assets/images/logo/images.jpeg"
+                                  }
+                                  alt={`User ${index + 1}`}
+                                />
+                              );
+                            })}
+                          {row.assigned_task_users?.length > 3 && (
+                            <span
+                              className="ml-[-16px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-[#4F46E5] flex 
                         items-center justify-center text-[12px] font-500 text-white"
-                        >
-                          +{row.assigned_task_users?.length - 3}
-                        </span>
+                            >
+                              +{row.assigned_task_users?.length - 3}
+                            </span>
+                          )}
+                        </>
+                      ) : (
+                        "N/A"
                       )}
                     </div>
                   </TableCell>
@@ -205,8 +213,8 @@ function ThemePageTable(props) {
                     row.priority === "Low"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.priority === "Medium"
-                        ? "text-[#FF5F15] bg-[#FF5F152E]"
-                        : "text-[#F44336] bg-[#F443362E]"
+                      ? "text-[#FF5F15] bg-[#FF5F152E]"
+                      : "text-[#F44336] bg-[#F443362E]"
                   }`}
                     >
                       {row.priority}
