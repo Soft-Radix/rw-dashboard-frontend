@@ -218,29 +218,35 @@ export default function Item({
                           loading="lazy"
                         />
                       ))} */}
-                        {visibleAgents?.map((item, idx) => (
-                          <img
-                            className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
-                              agent.length > 1 ? "ml-[-10px]" : ""
-                            } z-0`}
-                            key={idx}
-                            src={
-                              //@ts-ignore
-                              !item?.user_image
-                                ? "../assets/images/logo/images.jpeg"
-                                : `${urlForImage}${
-                                    //@ts-ignore
-                                    item?.user_image
-                                  }`
-                            }
-                            alt={item}
-                            loading="lazy"
-                          />
-                        ))}
-                        {extraAgentsCount > 0 && (
-                          <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-white bg-gray-300 flex items-center justify-center text-xs text-white">
-                            +{extraAgentsCount}
-                          </span>
+                        {agent.length ? (
+                          <>
+                            {visibleAgents?.map((item, idx) => (
+                              <img
+                                className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
+                                  agent.length > 1 ? "ml-[-10px]" : ""
+                                } z-0`}
+                                key={idx}
+                                src={
+                                  //@ts-ignore
+                                  !item?.user_image
+                                    ? "../assets/images/logo/images.jpeg"
+                                    : `${urlForImage}${
+                                        //@ts-ignore
+                                        item?.user_image
+                                      }`
+                                }
+                                alt={item}
+                                loading="lazy"
+                              />
+                            ))}
+                            {extraAgentsCount > 0 && (
+                              <span className="ml-[-10px] z-0 h-[34px] w-[34px] rounded-full border-2 border-[#4f46e5] bg-[#4f46e5] flex items-center justify-center text-xs text-white">
+                                +{extraAgentsCount}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          "N/A"
                         )}
                       </div>
                     </div>

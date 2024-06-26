@@ -29,21 +29,23 @@ const EventCustomize: React.FC<EventCustomizeProps> = ({
   };
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
-    <div className="relative">
+    <div className="relative w-[100%]">
       {userDetails?.role != "agent" && (
-        <div className="absolute right-7 z-999">
+        <div className="absolute right-7 z-999 ">
           <button onClick={handleButtonClick} className="pr-2">
             <ThreeDotHzIcon />
           </button>
         </div>
       )}
       <div
-        className="flex items-center justify-between border-[0.5px] border-[#9DA0A6] p-5  rounded-sm relative"
+        className="flex items-center justify-between border-[0.5px] border-[#9DA0A6] p-5  rounded-sm relative "
         onClick={() => navigate(`/${id}/tasks/detail/${event?.status}`)}
       >
-        <div className="text-[#757982] text-[10px] font-semibold flex gap-3 items-center">
+        <div className="text-[#757982] text-[10px] font-semibold flex gap-3 items-center ">
           <EventIcon />
-          <strong>{event.title}</strong>
+          <strong className="truncate max-w-[10%] md:max-w-[20%] xl:max-w-[50%]">
+            {event.title}
+          </strong>
           <p>{event.description}</p>
         </div>
       </div>

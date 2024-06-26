@@ -247,7 +247,7 @@ export default function Todo({
                         <>
                           <div>
                             <div className="custom-table">
-                              <div className="table-header pr-[5px] mr-[3px] ">
+                              <div className="table-header pr-[5px] mr-[3px] bg-[#F7F9FB] ">
                                 {headings.map((heading, index) => (
                                   <div
                                     key={index}
