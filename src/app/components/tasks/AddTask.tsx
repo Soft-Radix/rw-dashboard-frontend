@@ -462,7 +462,6 @@ function AddTaskModal({
           });
           setAudioRecorder(audioFile);
           audioUrls = URL.createObjectURL(audioBlob);
-          console.log("=======lll==", audioUrls);
           setAudioURL(audioUrls); // Ensure this line sets the audio URL
           setBlob(audioBlob);
           resolve(audioUrls);
@@ -474,10 +473,7 @@ function AddTaskModal({
           }
         };
       } else {
-        console.log("=========else=======");
         if (save) {
-          console.log("=========else=save======");
-
           console.log("Recorder stopped");
           const audioBlob = new Blob(audioChunksRef.current, {
             type: "audio/wav",
@@ -487,7 +483,6 @@ function AddTaskModal({
           });
           setAudioRecorder(audioFile);
           audioUrls = URL.createObjectURL(audioBlob);
-          console.log("=======lll=ww=", audioUrls);
           setAudioURL(audioUrls); // Ensure this line sets the audio URL
           setBlob(audioBlob);
           resolve(audioUrls);
@@ -535,7 +530,6 @@ function AddTaskModal({
       // await handleAudioRecord();
     }
 
-    console.log("=====audiouuuuuuuURL==", audioURL);
     setRecordingTime(0);
     setSavedAudioURL(audioURL);
     setAudioURL("");
@@ -771,12 +765,12 @@ function AddTaskModal({
       setSelectedDate(
         !data?.due_date_time
           ? "Due Date & Time"
-          : moment(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
+          : moment.utc(data?.due_date_time).format("DD/MM/yyyy , hh:mm")
       );
       setCalculatedDate(
         !data?.due_date_time
           ? ""
-          : moment(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
+          : moment.utc(data?.due_date_time).format("DD/MM/yyyy , hh:mm:ss")
       );
       setSelectedlabel(!data?.labels ? "Labels" : data?.labels);
       setSelectedPriority(!data?.priority ? "" : data?.priority);
@@ -801,10 +795,21 @@ function AddTaskModal({
   }, [isOpen]);
 
   const handleDeleteAttachment = async (id: number) => {
-    const filteredFiles = uploadedFilesNew.filter((f) => f.id !== id);
-    setUploadedFilesNew(filteredFiles);
-    setIsOpenDeletedModal(false);
-    setDeleteId([...deleteid, id]);
+    if (type == 2) {
+      videoRef.current.src = "";
+      setShowVideo(false);
+      setScreenRecorder(null);
+      setIsOpenDeletedModal(false);
+    } else if (type == 1) {
+      setSavedAudioURL("");
+      setAudioRecorder(null);
+      setIsOpenDeletedModal(false);
+    } else {
+      const filteredFiles = uploadedFilesNew.filter((f) => f.id !== id);
+      setUploadedFilesNew(filteredFiles);
+      setIsOpenDeletedModal(false);
+      setDeleteId([...deleteid, id]);
+    }
   };
 
   const handleImageClick = (imageUrl) => {
@@ -832,8 +837,14 @@ function AddTaskModal({
     formData.append("labels", formik?.values?.newLabel || selectedlabel);
     formData.append("status", selectedStatusId || "0");
     formData.append("agent_ids", selectedAgents as any);
-    formData.append("voice_record_file", audioRecorder ? audioRecorder : "");
-    formData.append("screen_record_file", screenRecorder);
+    formData.append(
+      "voice_record_file",
+      audioRecorder ? audioRecorder : savedAudioURL
+    );
+    formData.append(
+      "screen_record_file",
+      screenRecorder ? screenRecorder : showVideo ? screenRecordFile : ""
+    );
     formData.append(
       "due_date_time",
       calculatedDate
@@ -958,7 +969,7 @@ function AddTaskModal({
       handleToggle={() => handleReset()}
       modalTitle={Edit ? "Edit Task" : "Add Task"}
       maxWidth="910"
-      btnTitle={Edit ? "Save" : "Save"}
+      btnTitle={Edit ? "Save Edit" : "Save"}
       closeTitle="Close"
       onSubmit={Edit ? onSubmitEdit : onSubmit}
     >
