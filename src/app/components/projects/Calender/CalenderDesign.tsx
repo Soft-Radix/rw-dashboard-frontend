@@ -1,4 +1,5 @@
-import moment from "moment";
+// import moment from "moment";
+import moment from "moment-timezone";
 import React, { useCallback, useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -63,13 +64,18 @@ const CalenderDesign = ({ events }) => {
     });
   }, [dispatch]);
 
+  const convertToDateObject = (dateString, timezone) => {
+    return moment.tz(dateString, "YYYY-MM-DD HH:mm", timezone).toDate();
+  };
+  const systemTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const mapEvents = (events) => {
     return events.map((event) => ({
       title: event.title,
-      start: new Date(event.due_date_time), // Adjust the date fields as needed
-      end: new Date(event.due_date_time),
+      start: convertToDateObject(event.due_date_time, systemTimezone), // Adjust the date fields as needed
+      end: convertToDateObject(event.due_date_time, systemTimezone),
       desc: event.description,
       status: event.id,
+
       // Add other event fields as needed
     }));
   };

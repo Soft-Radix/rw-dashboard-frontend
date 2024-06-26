@@ -274,20 +274,16 @@ const useJwtAuth = <User, SignUpPayload>(
         } else if (response?.payload.data?.user?.is_complete_profile == 1) {
           // window.location.href = response?.payload.data?.user?.docusign_link;
           const docusignLink = response?.payload.data?.user?.docusign_link;
-          setIsLoading(false);
           if (docusignLink) {
             window.location.href = docusignLink;
           } else {
             console.log("Docusign link is not valid.");
           }
         } else if (response?.payload.data?.user?.is_complete_profile == 2) {
-          setIsLoading(false);
           window.location.href = `/kyc-doc/${accessToken}`;
         } else if (response?.payload.data?.user?.is_complete_profile == 3) {
-          setIsLoading(false);
           window.location.href = `/photo-id/${accessToken}`;
         } else if (response?.payload.data?.user?.is_complete_profile == 4) {
-          setIsLoading(false);
           window.location.href = `/upload-doc/${accessToken}`;
         } else {
           setIsLoading(false);
