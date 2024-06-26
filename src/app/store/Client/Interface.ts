@@ -64,6 +64,7 @@ export type initialStateProps = {
   actionStatusDisabled?: boolean;
   actionStatusClient?: boolean;
   is_welcome_email?: number;
+  totalAgent?: number;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed

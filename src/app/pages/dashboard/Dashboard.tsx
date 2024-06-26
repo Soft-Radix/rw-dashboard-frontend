@@ -24,7 +24,7 @@ import DashboardRecentActivity from "../../components/dashboard/DashboardRecentA
 import DashboaredAgenda from "../../components/dashboard/DashboaredAgenda";
 import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { GetAssignAgentsInfo } from "app/store/Client";
+import { GetAssignAgentsInfo, GetRecentActivityData } from "app/store/Client";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { NoDataFound } from "public/assets/icons/common";
@@ -110,10 +110,9 @@ export default function Dashboard() {
     limit: 10,
     search: "",
   });
-  const { assignedAgentDetail, agentTotal_records, status } = useSelector(
-    (store: ClientRootState) => store.client
-  );
-  // console.log(assignedAgentDetail, "fjidjfijfijfi");
+  const { assignedAgentDetail, agentTotal_records, fetchStatus, totalAgent } =
+    useSelector((store: ClientRootState) => store.client);
+  // console.log(agentState, "fjidjfijfijfi");
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -158,12 +157,16 @@ export default function Dashboard() {
       [key]: !prevState[key],
     }));
   };
+
   const fetchAgentList = useCallback(() => {
     dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
   }, [filters]);
   useEffect(() => {
     fetchAgentList();
   }, [filters.limit, filters.client_id, filters.search, filters.start]);
+  useEffect(() => {
+    dispatch(GetRecentActivityData());
+  }, [dispatch]);
   return (
     <div>
       <div className="relative flex items-center justify-between py-10 px-28 ">
@@ -308,7 +311,7 @@ export default function Dashboard() {
                 </Typography>
                 <span className="text-[#4F46E5] p-10 rounded-md bg-[#F6F6F6] font-600">
                   {" "}
-                  34
+                  {totalAgent}
                 </span>
               </div>
             </div>
@@ -316,7 +319,10 @@ export default function Dashboard() {
             <CommonTable
               headings={["Name", "Agent Id", "Start Date", "Last Login"]}
             >
-              {assignedAgentDetail?.length === 0 && status == "loading" ? (
+              {assignedAgentDetail?.length === 0 &&
+              fetchStatus !== "loading" ? (
+                // &&
+                // agentState.status != "loading"
                 <TableRow
                   sx={{
                     "& td": {
@@ -337,6 +343,12 @@ export default function Dashboard() {
                         No data found !
                       </Typography>
                     </div>
+                  </TableCell>
+                </TableRow>
+              ) : fetchStatus === "loading" ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    <ListLoading /> {/* Render your loader component here */}
                   </TableCell>
                 </TableRow>
               ) : (
