@@ -263,7 +263,7 @@ export default function MainCard({
                                     toggleEditModal();
                                   }}
                                 >
-                                  Edit Title
+                                  Edit Column
                                 </MenuItem>
                                 <MenuItem
                                   onClick={() => {

@@ -612,11 +612,11 @@ export default function AgentDetails() {
                               >
                                 <CrossGreyIcon />
                               </div>
-                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-cover  ">
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2   ">
                                 <img
                                   src={expandedImage}
                                   alt="Expanded Image"
-                                  className="w-[800px] h-[500px] "
+                                  className="w-[800px] h-[500px] object-contain"
                                 />
                               </div>
                             </div>
@@ -692,7 +692,7 @@ export default function AgentDetails() {
                         </div>
                       </div>
                       <div
-                        className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                        className="shrink-0 w-[5rem] aspect-square flex  justify-center cursor-pointer rounded-lg border-borderColor"
                         onClick={() => {
                           setIsOpenChangePassModal(true);
                         }}
@@ -720,9 +720,9 @@ export default function AgentDetails() {
                           </p>
                         </div>
                       </div>
-                      <div className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor">
+                      <div className="shrink-0 w-[5rem] aspect-square flex  justify-center cursor-pointer rounded-lg border-borderColor">
                         <div
-                          className="text-[#4F46E5] font-500 text-[14px] underline"
+                          className="text-[#4F46E5] font-500 text-[14px] underline -mt-[8px]"
                           onClick={handleResetPassword}
                         >
                           Reset
@@ -746,7 +746,7 @@ export default function AgentDetails() {
                   <p className="text-[#757982] text-[14px]">
                     <a
                       href="#"
-                      style={{ textDecoration: "none" }}
+                      style={{ textDecoration: "none", cursor: "default" }}
                       onClick={(e) => e.preventDefault()}
                     >
                       {agentDetail?.email || "N/A"}
