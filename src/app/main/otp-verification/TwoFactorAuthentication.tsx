@@ -67,6 +67,9 @@ export default function TwoFactorAuthentication() {
       setIsLoading(false);
     }
   }
+  const handleCancel = () => {
+    navigate("/signin");
+  };
   useEffect(() => {
     startTimer(); // Start the countdown timer
   }, []);
@@ -97,6 +100,7 @@ export default function TwoFactorAuthentication() {
 
           <div className="w-full mt-40 max-w-[417px] flex gap-16 flex-col">
             <OTPInput
+              inputType="tel"
               value={otp}
               onChange={setOtp}
               numInputs={4}
@@ -111,7 +115,7 @@ export default function TwoFactorAuthentication() {
               aria-label="Log In"
               size="large"
               onClick={onSubmit}
-              disabled={!otp || isLoading}
+              disabled={otp.length !== 4 || isLoading}
             >
               Verify
             </Button>
@@ -125,13 +129,14 @@ export default function TwoFactorAuthentication() {
               aria-label="Log In"
               size="large"
               disabled={isLoading}
+              onClick={handleCancel}
             >
               Cancel
             </Button>
 
             <div className="flex items-center justify-center cursor-pointer mt-28">
               <Typography
-                color="text.secondary"
+                color={timer == 0 ? "secondary.main" : "text.secondary"}
                 className="font-medium"
                 onClick={resendOtp}
               >

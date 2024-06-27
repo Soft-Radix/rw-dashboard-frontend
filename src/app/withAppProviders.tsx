@@ -7,6 +7,7 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StyledEngineProvider } from "@mui/material/styles";
 import {
+  accManagerRoutes,
   adminRoutes,
   agentRoutes,
   clientRoutes,
@@ -34,16 +35,18 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
     /**
      * The value to pass to the AppContext provider.
      */
-
-    const val = useMemo(
-      () =>
-        userDetail?.role === "admin"
-          ? { routes: adminRoutes }
-          : userDetail?.role === "agent"
-          ? { routes: agentRoutes }
-          : { routes: clientRoutes },
-      [adminRoutes, clientRoutes, agentRoutes]
-    );
+    console.log(userDetail, "userDetail");
+    const val = useMemo(() => {
+      if (userDetail?.role === "admin") {
+        return { routes: adminRoutes };
+      } else if (userDetail?.role === "agent") {
+        return { routes: agentRoutes };
+      } else if (userDetail?.role === "accmanager") {
+        return { routes: accManagerRoutes };
+      } else {
+        return { routes: clientRoutes };
+      }
+    }, [adminRoutes, clientRoutes, agentRoutes, accManagerRoutes]);
     // const val = useMemo(() => {
     //   if (userDetail.is_signed == 1) {
     //     if (userDetail.role === "admin") {
