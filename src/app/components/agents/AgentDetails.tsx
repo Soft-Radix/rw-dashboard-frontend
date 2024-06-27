@@ -34,6 +34,7 @@ import { AgentRootState } from "app/store/Agent/Interafce";
 import { useAppDispatch } from "app/store/store";
 import {
   ArrowRightCircleIcon,
+  CrossGreyIcon,
   DownGreenIcon,
   EditIcon,
   NoDataFound,
@@ -113,7 +114,7 @@ export default function AgentDetails() {
   const theme: Theme = useTheme();
   const { agent_id } = useParams();
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState(0); //switch button
+  const [status, setStatus] = useState(null); //switch button
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState<boolean>(false);
   const { agentDetail, fetchStatus } = useSelector(
@@ -148,7 +149,17 @@ export default function AgentDetails() {
       dispatch(changeFetchStatus());
     };
   }, []);
+  useEffect(() => {
+    if (expandedImage) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
 
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [expandedImage]);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -172,7 +183,7 @@ export default function AgentDetails() {
   // };
 
   const handleMenuItemClick = async (status) => {
-    console.log(status, "statussdfgdfg");
+    // console.log(status, "statussdfgdfg");
     setPendingStatus(status);
     setIsConfirmOpen(true); // Open confirmation dialog
   };
@@ -232,10 +243,16 @@ export default function AgentDetails() {
   const handleResetPassword = async () => {
     await dispatch(resetPassword({ client_id: agent_id }));
   };
+  useEffect(() => {
+    setSelectedItem(agentDetail?.status);
+    // console.log(agentDetail?.two_factor_authentication, "safdsdgdgdg");
+    setChecked(!!agentDetail?.two_factor_authentication);
+  }, [agentDetail]);
+  console.log(checked, "checked");
 
-  const handleTwoFactor = async () => {
-    const newStatus = status === 0 ? 1 : 0;
-    setStatus(newStatus);
+  const handleTwoFactor = async (check: boolean) => {
+    const newStatus = check ? 1 : 0;
+    // setStatus(newStatus);
     await dispatch(
       twoFactorAuthentication({
         user_id: agent_id,
@@ -245,19 +262,13 @@ export default function AgentDetails() {
   };
   const handleChange = (event) => {
     setChecked(event.target.checked);
+    handleTwoFactor(event.target.checked);
   };
-
-  useEffect(() => {
-    setSelectedItem(agentDetail?.status);
-    if (agentDetail.two_factor_authentication) {
-      setChecked(true);
-    }
-  }, [agentDetail]);
 
   if (fetchStatus === "loading") {
     return <ListLoading />;
   }
-  console.log(agentDetail.assigned_agent_client, "agentdetail");
+  // console.log(agentDetail.assigned_agent_client, "agentdetail");
 
   const renderAddress = (accManagerDetail) => {
     const addressComponents = [
@@ -271,13 +282,14 @@ export default function AgentDetails() {
 
     return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
   };
+
   return (
     <>
       <div className="px-16">
         <TitleBar title="Agent Profile"> </TitleBar>
       </div>
-      <div className="flex items-center pr-20">
-        <div className="px-40 xs:px-10 flex gap-10">
+      <div className="flex items-center pr-20 ">
+        <div className="px-40 xs:px-10 flex gap-10 w-[80%] ">
           <Grid spacing={3} className="sm:px-10 xs:px-10  ">
             <Grid item xs={12} sm={12} md={9} className="flex gap-10">
               {/* <div className="flex flex-col gap-10 p-20 bg-[#FFFFFF] h-auto
@@ -311,7 +323,7 @@ export default function AgentDetails() {
                             {agentDetail?.status == "Pending" ? (
                               <Button
                                 variant="outlined"
-                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none 
+                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none hover:bg-[#ffeebb]
                           
                                     text-[#f0b402] bg-[#ffeebb]
                                 
@@ -368,7 +380,7 @@ export default function AgentDetails() {
                                     Inactive
                                   </MenuItem>
                                 </Menu>
-
+                                onClick={handleTwoFactor}
                                 <Dialog
                                   open={isConfirmOpen}
                                   onClose={() => setIsConfirmOpen(false)}
@@ -452,7 +464,7 @@ export default function AgentDetails() {
                                     src="../assets/icons/ic_outline-email.svg"
                                     className="mr-4"
                                   />
-                                  <span className="text-para_light text-[20px] truncate">
+                                  <span className="text-para_light text-[20px]">
                                     {agentDetail?.email || "N/A"}
                                   </span>
                                 </div>
@@ -520,7 +532,7 @@ export default function AgentDetails() {
                       </div>
                       <div className="flex gap-10 py-5 flex-wrap ">
                         {agentDetail?.attachments?.map((item: any) => (
-                          <div className="relative cursor-pointer ">
+                          <div className="relative ">
                             {item.file.includes(".png") ||
                             item.file.includes(".jpg") ||
                             item.file.includes(".jpeg") ? (
@@ -536,7 +548,7 @@ export default function AgentDetails() {
                                     handleImageClick(urlForImage + item.file)
                                   }
                                 >
-                                  <AttachmentIcon />
+                                  <AttachmentIcon className="cursor-pointer" />
                                 </div>
                                 <div
                                   className="absolute top-7 right-7"
@@ -547,6 +559,7 @@ export default function AgentDetails() {
                                       setIsOpenDeletedModal(true);
                                       setIsDeleteId(item.id);
                                     }}
+                                    className="cursor-pointer"
                                   />
                                 </div>
                               </>
@@ -571,7 +584,7 @@ export default function AgentDetails() {
                                     handleImageClick(urlForImage + item.file)
                                   }
                                 >
-                                  <AttachmentIcon />
+                                  {/* <AttachmentIcon /> */}
                                 </div>
                                 <div
                                   className="absolute top-7 right-7"
@@ -582,6 +595,7 @@ export default function AgentDetails() {
                                       setIsOpenDeletedModal(true);
                                       setIsDeleteId(item.id);
                                     }}
+                                    className="cursor-pointer"
                                   />
                                 </div>
                               </div>
@@ -590,18 +604,23 @@ export default function AgentDetails() {
                         ))}
 
                         {expandedImage && (
-                          <div
-                            className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
-                            onClick={() => setExpandedImage(null)}
-                          >
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              <img
-                                src={expandedImage}
-                                alt="Expanded Image"
-                                className="max-w-full max-h-full"
-                              />
+                          <>
+                            <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80">
+                              <div
+                                className="absolute z-10 right-[25px] top-[100px] cursor-pointer"
+                                onClick={() => setExpandedImage(null)}
+                              >
+                                <CrossGreyIcon />
+                              </div>
+                              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 object-cover  ">
+                                <img
+                                  src={expandedImage}
+                                  alt="Expanded Image"
+                                  className="w-[800px] h-[500px] "
+                                />
+                              </div>
                             </div>
-                          </div>
+                          </>
                         )}
 
                         <label
@@ -696,7 +715,7 @@ export default function AgentDetails() {
                             Reset Password
                           </Typography>
                           <p className="text-para_light">
-                            It will send a link to the client to reset their
+                            It will send a link to the agent to reset their
                             password.
                           </p>
                         </div>
@@ -725,18 +744,24 @@ export default function AgentDetails() {
                     Two-Factors Authentication
                   </Typography>
                   <p className="text-[#757982] text-[14px]">
-                    <a href="#" style={{ textDecoration: "none" }}>
+                    <a
+                      href="#"
+                      style={{ textDecoration: "none" }}
+                      onClick={(e) => e.preventDefault()}
+                    >
                       {agentDetail?.email || "N/A"}
                     </a>{" "}
                     is linked for Two-Factor Authentication.
                   </p>
                 </div>
-                <div onClick={handleTwoFactor}>
+                <div>
                   <div style={{ display: "flex", alignItems: "center" }}>
                     {" "}
                     <FormControlLabel
-                      control={<Android12Switch defaultChecked />}
+                      control={<Android12Switch checked={checked} />}
                       label=""
+                      checked={checked}
+                      onChange={(e) => handleChange(e)}
                     />{" "}
                   </div>
                   {/* <Switch
@@ -784,11 +809,11 @@ export default function AgentDetails() {
         </div>
         <RecentData />
       </div>
-      <div className=" w-[75%] px-20">
+      <div className=" px-20 w-full">
         <Grid
           item
           lg={6}
-          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row bg-[#ffffff]"
+          className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row bg-[#ffffff]  rounded-[8px] "
         >
           <Typography className="text-[#0A0F18] font-600 text-[20px] px-20 py-10">
             Assigned Clients

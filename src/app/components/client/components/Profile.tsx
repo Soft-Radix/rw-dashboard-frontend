@@ -245,13 +245,12 @@ export default function Profile({
                   </div>
                 </div>
 
-                <div className="flex items-baseline justify-between w-full py-20 gap-31 flex-col sm:flex-row">
+                <div className="flex items-baseline justify-between w-full py-20 gap-31 flex-col sm:flex-row gap-20">
                   <div className="flex flex-col pr-10 gap-7 ">
                     <span className="text-[20px] text-title font-500 w-max">
                       Subscription Status
                     </span>
                     <span className=" text-[#757982]  text-[20px] font-400 mb-5 flex ">
-                      <img src="../assets/icons/circle.svg" className="mr-4" />
                       {clientDetail?.subscription_status || "N/A"}
                     </span>
                   </div>
@@ -316,7 +315,7 @@ export default function Profile({
                 </div>
               </div>
               <div
-                className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                className="shrink-0 w-[5rem] aspect-square flex   justify-center cursor-pointer rounded-lg border-borderColor"
                 onClick={() => {
                   setIsOpenChangePassModal(true);
                 }}
@@ -344,7 +343,7 @@ export default function Profile({
                 </div>
               </div>
               <div
-                className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                className="shrink-0 w-[5rem] aspect-square flex  justify-center cursor-pointer rounded-lg border-borderColor"
 
                 // onClick={() => {
                 //   setIsOpenChangePassModal(true);
@@ -384,7 +383,7 @@ export default function Profile({
           {/* </Link> */}
         </Grid>
         <Grid item lg={6} className="basis-full">
-          <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey ">
+          <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-bgGrey mb-[10px] ">
             <div>
               <Typography
                 component="h4"
