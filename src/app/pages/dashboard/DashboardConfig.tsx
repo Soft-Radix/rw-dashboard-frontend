@@ -11,6 +11,7 @@ i18next.addResourceBundle("ar", "dashboardPage", ar);
 const Dashboard = lazy(() => import("./Dashboard"));
 const AdminDashboard = lazy(() => import("./AdminDashboard"));
 const AgentDashboard = lazy(() => import("./AgentDashBoard"));
+const AccManagerDashBoard = lazy(() => import("./AccManagerDashBoard"));
 const commonSetting = {
   settings: {
     layout: {},
@@ -48,6 +49,15 @@ export const AgentDashboardConfig = {
     {
       path: "agent/dashboard",
       element: <AgentDashboard />,
+    },
+  ],
+};
+export const AccMangerConfig = {
+  ...commonSetting,
+  routes: [
+    {
+      path: "accmanger/dashboard",
+      element: <AccManagerDashBoard />,
     },
   ],
 };

@@ -109,75 +109,75 @@ const DashboaredAgenda = () => {
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
       <Grid item xs={12} lg={6}>
-        {userDetails.role == "client" && (
-          <div className="shadow-sm bg-white rounded-lg ">
-            <div className="flex sm:items-center justify-between sm:pr-20 sm:flex-row flex-col items-start gap-11">
-              <div className="flex items-center pb-10 justify-between w-full py-28 sm:py-0 pr-[10px] sm:flex-col sm:items-start ">
-                <Typography className="text-[16px] font-600 sm:pt-28 px-20 sm:pb-10 ">
-                  Agenda
-                </Typography>
-                <div className="flex items-center sm:gap-8 sm:pb-20 ">
+        {/* {userDetails.role == "client" && ( */}
+        <div className="shadow-sm bg-white rounded-lg ">
+          <div className="flex sm:items-center justify-between sm:pr-20 sm:flex-row flex-col items-start gap-11">
+            <div className="flex items-center pb-10 justify-between w-full py-28 sm:py-0 pr-[10px] sm:flex-col sm:items-start ">
+              <Typography className="text-[16px] font-600 sm:pt-28 px-20 sm:pb-10 ">
+                Agenda
+              </Typography>
+              <div className="flex items-center sm:gap-8 sm:pb-20 ">
+                <span>
+                  <DatePicker
+                    sx={{
+                      " & .MuiInputBase-input": {
+                        display: "none",
+                      },
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        display: "none",
+                      },
+                    }}
+                  />
+                  {/* <CalendarLineIcon /> */}
+                </span>
+                <span className="sm:text-[16px] text-[#757982]">
+                  Feb 27, Mon
+                </span>
+                <div className="flex ">
                   <span>
-                    <DatePicker
-                      sx={{
-                        " & .MuiInputBase-input": {
-                          display: "none",
-                        },
-                        "& .MuiOutlinedInput-notchedOutline": {
-                          display: "none",
-                        },
-                      }}
-                    />
-                    {/* <CalendarLineIcon /> */}
+                    <LeftIcon />
                   </span>
-                  <span className="sm:text-[16px] text-[#757982]">
-                    Feb 27, Mon
+                  <span>
+                    <RightIcon />
                   </span>
-                  <div className="flex ">
-                    <span>
-                      <LeftIcon />
-                    </span>
-                    <span>
-                      <RightIcon />
-                    </span>
-                  </div>
                 </div>
               </div>
             </div>
-            <CommonTable headings={["Tasks"]}>
-              <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                        textAlign: "center",
-                        "@media (max-width: 600px)": {
-                          // Adjust screen width as needed for small screens
-                          textAlign: "left",
-                        },
-                      },
-                    }}
-                  >
-                    <TableCell scope="row" className="flex items-center gap-8">
-                      <span>
-                        <Checkbox />
-                      </span>
-                      {row.task}
-                    </TableCell>
-                    <TableCell>
-                      <span></span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
-            </CommonTable>
           </div>
-        )}
+          <CommonTable headings={["Tasks"]}>
+            <>
+              {rows.map((row, index) => (
+                <TableRow
+                  key={index}
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                      textAlign: "center",
+                      "@media (max-width: 600px)": {
+                        // Adjust screen width as needed for small screens
+                        textAlign: "left",
+                      },
+                    },
+                  }}
+                >
+                  <TableCell scope="row" className="flex items-center gap-8">
+                    <span>
+                      <Checkbox />
+                    </span>
+                    {row.task}
+                  </TableCell>
+                  <TableCell>
+                    <span></span>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </>
+          </CommonTable>
+        </div>
+        {/* )} */}
       </Grid>
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
