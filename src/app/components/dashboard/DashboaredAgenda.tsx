@@ -109,7 +109,7 @@ const DashboaredAgenda = () => {
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
       <Grid item xs={12} lg={6}>
-        {userDetails.role == "client" && (
+        {userDetails?.role == "client" && (
           <div className="shadow-sm bg-white rounded-lg ">
             <div className="flex sm:items-center justify-between sm:pr-20 sm:flex-row flex-col items-start gap-11">
               <div className="flex items-center pb-10 justify-between w-full py-28 sm:py-0 pr-[10px] sm:flex-col sm:items-start ">

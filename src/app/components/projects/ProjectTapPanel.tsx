@@ -1,7 +1,7 @@
 import { Button, Tab, Tabs, Theme } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { Box } from "@mui/system";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Kanban from "src/app/components/projects/Kanban";
 import ProjectTaskTabel from "./ProjectTaskTabel";
 import {
@@ -84,9 +84,31 @@ export default function ProjectTabPanel() {
     doc: false,
     chat: false,
   });
-
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
+  const tabsRef = useRef(null);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    const newType = getTypeFromTabIndex(newValue);
+    navigate(`?type=${newType}`);
+    setSelectedTab(newValue);
+
+    // if (newValue >= 4) {
+    //   const tabContainer = document.querySelector(".MuiTabs-flexContainer");
+    //   if (tabContainer) {
+    //     const maxScrollLeft =
+    //       tabContainer.scrollWidth - tabContainer.clientWidth;
+    //     tabContainer.scrollTo({ left: maxScrollLeft, behavior: "smooth" });
+    //   }
+    // }
+    if (newValue >= 4) {
+      const flexContainer = document.querySelector(".MuiTabs-flexContainer");
+      console.log("flexContainer", flexContainer.scrollWidth);
+      if (flexContainer) {
+        flexContainer.scrollLeft = flexContainer.scrollWidth + 200;
+      }
+    }
+  };
 
   const updateBoardList = async (data) => {
     const payload = [];
@@ -99,12 +121,27 @@ export default function ProjectTabPanel() {
     if (data.chat) {
       payload.push(1);
     }
+
     try {
-      await dispatch(projectUpdateMenu({ project_id: id, menu: payload }));
+      const res = await dispatch(
+        projectUpdateMenu({ project_id: id, menu: payload })
+      );
+      setBoardList({ ...data });
+      if (data.whiteBoard) {
+        handleChange(null, 4);
+      }
+      if (data.doc) {
+        handleChange(null, 5);
+      }
+      if (data.chat) {
+        handleChange(null, 6);
+      }
+      if (!data.whiteBoard && !data.doc && !data.chat) {
+        handleChange(null, 3);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-    setBoardList({ ...data });
   };
 
   // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -162,6 +199,17 @@ export default function ProjectTabPanel() {
   };
 
   useEffect(() => {
+    if (selectedTab >= 4) {
+      const tabsContainer = tabsRef.current?.querySelector(
+        ".MuiTabs-flexContainer"
+      );
+      if (tabsContainer) {
+        tabsContainer.scrollLeft = tabsContainer.scrollWidth; // Scroll to the end
+      }
+    }
+  }, [selectedTab]);
+
+  useEffect(() => {
     fetchMenuData();
     const type = params.get("type") || "kanban";
     setSelectedTab(getTabIndexFromType(type));
@@ -186,12 +234,6 @@ export default function ProjectTabPanel() {
     }
   };
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    const newType = getTypeFromTabIndex(newValue);
-    navigate(`?type=${newType}`);
-    setSelectedTab(newValue);
-  };
-
   const showWhiteBoard = () => {
     setShowViewWindow(!showViewWindow);
     // console.log(showViewWindow, "find");
@@ -213,12 +255,14 @@ export default function ProjectTabPanel() {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <div>
       <div className="px-28  flex gap-20 sm:flex-wrap lg:flex-nowrap mb-20  w-full">
         <div className="basis-full lg:basis-auto lg:grow  w-full">
           <div className="shadow-md bg-white rounded-lg flex items-center gap-[30px] w-full">
             <Tabs
+              ref={tabsRef}
               value={selectedTab}
               onChange={handleChange}
               aria-label="basic tabs example"
@@ -231,12 +275,8 @@ export default function ProjectTabPanel() {
                 "& .MuiTabs-flexContainer": {
                   gap: "70px",
                   overflowY: "auto",
-                  // "@media (max-width: 425px)": {
-                  //   gap: "6px", // Change gap to 6px on small screens
-                  //   flexWrap: "wrap",
-                  // },
+                  width: "100%",
                 },
-
                 "& .MuiTab-root.Mui-selected": {
                   color: theme.palette.secondary.main,
                   borderBottomWidth: "2px",
@@ -245,10 +285,8 @@ export default function ProjectTabPanel() {
                 },
                 "& .MuiTabs-indicator": {
                   visibility: "hidden",
+                  display: "none",
                   backgroundColor: theme.palette.secondary.main,
-                  // "@media (max-width: 425px)": {
-                  //   visibility: "hidden",
-                  // },
                 },
               }}
             >
@@ -332,6 +370,7 @@ export default function ProjectTabPanel() {
                 }`}
               />
             </Tabs>
+
             <span
               className={`border-l-1 ${
                 client_id?.role_id !== ROLES.AGENT ? "" : "hidden"

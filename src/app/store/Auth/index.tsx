@@ -254,7 +254,10 @@ export const authSlice = createSlice({
       .addCase(logIn.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         console.log("===payload", payload);
-        if (payload?.status == 1) {
+        if (
+          payload?.status == 1 &&
+          payload?.data?.two_factor_authentication == 0
+        ) {
           toast.success(payload?.message);
         } else {
           console.log("==inside ");

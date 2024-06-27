@@ -542,99 +542,100 @@ export default function AddSubscription() {
   //   }
   // };
 
-  const handleChange =
-    (index: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const formatNumber = (value: string) => {
-        const numberValue = parseFloat(value);
-        if (isNaN(numberValue)) return value;
-        const parts = value.split(".");
-        let integerPart = parts[0].slice(0, 6); // Limit integer part to 6 digits
-        let decimalPart = parts.length > 1 ? parts[1].substring(0, 2) : "";
-        return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
-      };
-
-      var mode = "";
-      var payment = null;
-      const newErrors = list?.map((item, i) => {
-        mode = item["billing_terms"]; // Assign value to mode
-        payment = item["no_of_payments"];
-        if (item.unit_price <= 0) {
-          return "Please add a unit price";
-        }
-        return "";
-      });
-      setUnitPriceError(newErrors);
-      const newQuantityErrors = list?.map((item, i) => {
-        if (item.quantity <= 0) {
-          return "Please add a Quantity"; // Populate the error message if unit price is 0
-        }
-        return ""; // Otherwise, set the error message to an empty string
-      });
-      setQuantityError(newQuantityErrors);
-
-      if (mode != "2" && (payment <= 0 || payment == null)) {
-        setPaymentError("Please Enter Payment greater than 0");
-      } else {
-        setPaymentError("");
-      }
-      const formatQuantity = (value: string) => {
-        // Remove any non-digit characters and limit to 6 digits
-        return value.replace(/\D/g, "").slice(0, 6);
-      };
-      const { value, name } = event.target;
-
-      let formattedValue = value;
-      if (name == "quantity") {
-        formattedValue = formatQuantity(value);
-      } else if (!isNaN(Number(value))) {
-        formattedValue = formatNumber(value);
-      }
-
-      if (
-        name === "billing_frequency" ||
-        name === "billing_terms" ||
-        name === "no_of_payments" ||
-        name === "billing_start_date"
-      ) {
-        if (name === "billing_start_date") {
-          const validation = validateBillingStartDate(value);
-
-          if (validation.isValid) {
-            // Handle valid date, e.g., update state or form data
-            setDateError(""); // Clear any previous error
-          } else {
-            console.error(validation.error);
-            setDateError(validation.error); // Set the error message to be displayed
-          }
-        }
-
-        setList((prevList) => {
-          return prevList?.map((item, i) => {
-            return {
-              ...item,
-              [name]: formattedValue,
-            };
-          });
-        });
-      } else {
-        setList((prevList) => {
-          const updatedList = [...prevList];
-          updatedList[index][name] = formattedValue;
-          // Calculate net price and update the net_price key in the list array
-          const netPrice = handleNetPrice(
-            updatedList[index].unit_discount || 0,
-            updatedList[index].unit_discount_type || 1,
-            updatedList[index].unit_price,
-            index,
-            updatedList[index].quantity
-          );
-          updatedList[index].net_price = netPrice
-            ? netPrice
-            : updatedList[index].unit_price;
-          return updatedList;
-        });
-      }
+  const handleChange = (index: number) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const formatNumber = (value: string) => {
+      const numberValue = parseFloat(value);
+      if (isNaN(numberValue)) return value;
+      const parts = value.split(".");
+      let integerPart = parts[0].slice(0, 6); // Limit integer part to 6 digits
+      let decimalPart = parts.length > 1 ? parts[1].substring(0, 2) : "";
+      return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
     };
+
+    var mode = "";
+    var payment = null;
+    const newErrors = list?.map((item, i) => {
+      mode = item["billing_terms"]; // Assign value to mode
+      payment = item["no_of_payments"];
+      if (item.unit_price <= 0) {
+        return "Please add a unit price";
+      }
+      return "";
+    });
+    setUnitPriceError(newErrors);
+    const newQuantityErrors = list?.map((item, i) => {
+      if (item.quantity <= 0) {
+        return "Please add a Quantity"; // Populate the error message if unit price is 0
+      }
+      return ""; // Otherwise, set the error message to an empty string
+    });
+    setQuantityError(newQuantityErrors);
+
+    if (mode != "2" && (payment <= 0 || payment == null)) {
+      setPaymentError("Please Enter Payment greater than 0");
+    } else {
+      setPaymentError("");
+    }
+    const formatQuantity = (value: string) => {
+      // Remove any non-digit characters and limit to 6 digits
+      return value.replace(/\D/g, "").slice(0, 6);
+    };
+    const { value, name } = event.target;
+
+    let formattedValue = value;
+    if (name == "quantity") {
+      formattedValue = formatQuantity(value);
+    } else if (!isNaN(Number(value))) {
+      formattedValue = formatNumber(value);
+    }
+
+    if (
+      name === "billing_frequency" ||
+      name === "billing_terms" ||
+      name === "no_of_payments" ||
+      name === "billing_start_date"
+    ) {
+      if (name === "billing_start_date") {
+        const validation = validateBillingStartDate(value);
+
+        if (validation.isValid) {
+          // Handle valid date, e.g., update state or form data
+          setDateError(""); // Clear any previous error
+        } else {
+          console.error(validation.error);
+          setDateError(validation.error); // Set the error message to be displayed
+        }
+      }
+
+      setList((prevList) => {
+        return prevList?.map((item, i) => {
+          return {
+            ...item,
+            [name]: formattedValue,
+          };
+        });
+      });
+    } else {
+      setList((prevList) => {
+        const updatedList = [...prevList];
+        updatedList[index][name] = formattedValue;
+        // Calculate net price and update the net_price key in the list array
+        const netPrice = handleNetPrice(
+          updatedList[index].unit_discount || 0,
+          updatedList[index].unit_discount_type || 1,
+          updatedList[index].unit_price,
+          index,
+          updatedList[index].quantity
+        );
+        updatedList[index].net_price = netPrice
+          ? netPrice
+          : updatedList[index].unit_price;
+        return updatedList;
+      });
+    }
+  };
 
   useEffect(() => {
     var mode = "";
@@ -854,8 +855,23 @@ export default function AddSubscription() {
         try {
           const payload = {
             client_id: client_id,
+            // ...details,
+
             ...details,
-            total_price: details.subtotal - details.one_time_discount || 0,
+
+            one_time_discount_type:
+              details.one_time_discount_name != "" &&
+              !details.one_time_discount_type
+                ? 1
+                : details.one_time_discount_type
+                ? details.one_time_discount_type
+                : 0,
+
+            // total_price:
+            //   (details.one_time_discount_type == 2 ?
+            //     details.subtotal - details.one_time_discount: details.subtotal - details.one_time_discount)||
+            //   0,
+            total_price: formattedDiscountedSubtotal,
             subscription_data: Array.from(extractedData),
           };
           //@ts-ignore
@@ -1110,11 +1126,10 @@ export default function AddSubscription() {
                             "&.MuiSelect-selectMenu": {
                               paddingRight: "0px !important", // Adjust padding for the select menu
                             },
-                            "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root":
-                              {
-                                paddingBottom: "0px",
-                                padding: "4px",
-                              },
+                            "& .muiltr-1hy9xe8-MuiModal-root-MuiPopover-root-MuiMenu-root .MuiList-root": {
+                              paddingBottom: "0px",
+                              padding: "4px",
+                            },
                             "& .MuiSelect-select": {
                               minHeight: "0rem !important",
                             },
