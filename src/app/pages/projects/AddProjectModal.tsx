@@ -62,7 +62,7 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
         localStorage.setItem("userDetail", JSON.stringify(localData));
         setDisabled(false);
         // window.location.reload();
-        // window.location.href = `projects/${newProject?.data.id}/${newProject.data.name}/?type=kanban`;
+        window.location.href = `projects/${newProject?.data.id}/${newProject.data.name}/?type=kanban`;
 
         // setIsOpen(false);
       }

@@ -142,6 +142,12 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
   // useEffect(() => {
   //   setItems(userDetails);
   // }, [userDetails.projects.length]);
+  useEffect(() => {
+    if (location.pathname.includes("projects")) {
+      setOpen(true);
+    }
+  }, []);
+
   return useMemo(
     () => (
       <Root
