@@ -24,6 +24,8 @@ import { filterType } from "app/store/Client/Interface";
 import { filter } from "lodash";
 import { useSelector } from "react-redux";
 import { RootState } from "app/store/store";
+import { SubscriptionImage } from "public/assets/icons/SubscriptionImage";
+// import { SubscriptionImage } from "public/assets/icons/SubscriptionImage";
 
 // const rows = [
 //   {
@@ -143,12 +145,12 @@ export default function SubscriptionList() {
           className="flex flex-col justify-center align-items-center gap-40 bg-[#F7F9FB] m-20 mt-0 p-20"
           style={{ alignItems: "center" }}
         >
-          {/* <NoSubscriptionData /> */}
-          <img
+          <SubscriptionImage />
+          {/* <img
             src={svg}
             alt="NoSubscription"
             className="w-[200px] sm:w-[250px]  md:w-[345px] md:h-[264px]"
-          />
+          /> */}
           {/* {svg} */}
           <Typography className="text-[24px] text-center font-700 leading-normal">
             No subscription found !

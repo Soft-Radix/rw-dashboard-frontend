@@ -95,7 +95,6 @@ const ManagerProfile = () => {
   const { accountManager_id } = useParams();
   // console.log(accountManager_id, "opop");
   const dispatch = useAppDispatch();
-  const [status, setStatus] = useState(0); //switch button
   const [checked, setChecked] = useState(false);
   const { accManagerDetail, fetchStatus } = useSelector(
     (store: AccManagerRootState) => store?.accManagerSlice
@@ -157,9 +156,8 @@ const ManagerProfile = () => {
   };
 
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
-  const [isOpenChangePassModal, setIsOpenChangePassModal] = useState<boolean>(
-    false
-  );
+  const [isOpenChangePassModal, setIsOpenChangePassModal] =
+    useState<boolean>(false);
   // const [isEditing, setIsEditing] = useState<boolean>(true);
   const theme: Theme = useTheme();
 
@@ -174,9 +172,7 @@ const ManagerProfile = () => {
   }, []);
   useEffect(() => {
     setSelectedItem(accManagerDetail?.status);
-    if (accManagerDetail.two_factor_authentication) {
-      setChecked(true);
-    }
+    setChecked(!!accManagerDetail?.two_factor_authentication);
   }, [accManagerDetail]);
 
   if (fetchStatus === "loading") {
@@ -190,15 +186,18 @@ const ManagerProfile = () => {
   const handleResetPassword = async () => {
     await dispatch(resetPassword({ client_id: accountManager_id }));
   };
-  const handleTwoFactor = async () => {
-    const newStatus = status === 0 ? 1 : 0;
-    setStatus(newStatus);
+  const handleTwoFactor = async (check: boolean) => {
+    console.log(check, "checked");
+    const newStatus = check ? 1 : 0;
+    console.log("🚀 ~ handleTwoFactor ~ newStatus:", newStatus);
+    // setStatus(newStatus);
     await dispatch(
       twoFactorAuthentication({ user_id: accountManager_id, status: newStatus })
     );
   };
   const handleChange = (event) => {
     setChecked(event.target.checked);
+    handleTwoFactor(event.target.checked);
     console.log(
       event.target.checked ? "Switch is enabled" : "Switch is disabled"
     );
@@ -216,7 +215,6 @@ const ManagerProfile = () => {
 
     return addressComponents.length > 0 ? addressComponents.join(", ") : "N/A";
   };
-
   return (
     <>
       <div className="px-16">
@@ -361,11 +359,11 @@ const ManagerProfile = () => {
                             src="../assets/icons/ic_outline-email.svg"
                             className="mr-4"
                           />
-                          <Tooltip title={accManagerDetail?.email || "N/A"}>
-                            <p className="text-para_light text-[20px] truncate max-w-xs">
-                              {accManagerDetail?.email || "N/A"}
-                            </p>
-                          </Tooltip>
+                          {/* <Tooltip title={accManagerDetail?.email || "N/A"}> */}
+                          <p className="text-para_light text-[20px] truncate max-w-xs">
+                            {accManagerDetail?.email || "N/A"}
+                          </p>
+                          {/* </Tooltip> */}
                         </div>
                       </div>
                       {/* <div className="flex pr-10 gap-32 "> */}
@@ -469,8 +467,8 @@ const ManagerProfile = () => {
                         Reset Password
                       </Typography>
                       <p className="text-para_light">
-                        It will send a link to the client to reset their
-                        password.
+                        It will send a link to the account manager to reset
+                        their password.
                       </p>
                     </div>
                   </div>
@@ -495,7 +493,7 @@ const ManagerProfile = () => {
           <Grid
             item
             lg={12}
-            className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-full"
+            className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row w-full rounded-[8px]"
           >
             <div className="w-full bg-[#FFFFFF] rounded-[8px] px-20 py-20 flex items-center justify-between">
               <div>
@@ -503,18 +501,24 @@ const ManagerProfile = () => {
                   Two-Factors Authentication
                 </Typography>
                 <p className="text-[#757982] text-[14px]">
-                  <a href="#" style={{ textDecoration: "none" }}>
+                  <a
+                    href=""
+                    style={{ textDecoration: "none" }}
+                    onClick={(e) => e.preventDefault()}
+                  >
                     {accManagerDetail?.email || "N/A"}
                   </a>{" "}
                   is linked for Two-Factor Authentication.
                 </p>
               </div>
-              <div onClick={handleTwoFactor}>
+              <div>
                 <div style={{ display: "flex", alignItems: "center" }}>
                   {" "}
                   <FormControlLabel
-                    control={<Android12Switch defaultChecked />}
+                    control={<Android12Switch checked={checked} />}
                     label=""
+                    checked={checked}
+                    onChange={(e) => handleChange(e)}
                   />{" "}
                 </div>
               </div>
@@ -605,12 +609,12 @@ const ManagerProfile = () => {
                           row.subcription_status == "Active"
                             ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                             : row.subcription_status == "Pending"
-                            ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                            : row.subcription_status == "Suspended"
-                            ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                            : row.subcription_status == "Cancelled"
-                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                            : ""
+                              ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                              : row.subcription_status == "Suspended"
+                                ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                                : row.subcription_status == "Cancelled"
+                                  ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                                  : ""
                         }`}
                         >
                           {row.subcription_status || "N/A"}
@@ -627,8 +631,8 @@ const ManagerProfile = () => {
                           row.status == "Active"
                             ? "text-[#4CAF50] bg-[#4CAF502E]"
                             : row.status == "Completed"
-                            ? "Expired"
-                            : "Pending"
+                              ? "Expired"
+                              : "Pending"
                         }`}
                         >
                           {row.status || "Pending"}

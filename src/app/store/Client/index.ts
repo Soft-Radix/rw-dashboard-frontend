@@ -520,15 +520,15 @@ export const defaultAccManagerList = createAsyncThunk(
       method: "post",
       data: payload,
     });
-    dispatch(
-      getAssignAccMangerInfo({
-        client_id: payload.client_id,
-        start: 0,
-        limit: 10,
-        search: "",
-        loading: false,
-      })
-    );
+    // dispatch(
+    //   getAssignAccMangerInfo({
+    //     client_id: payload.client_id,
+    //     start: 0,
+    //     limit: 10,
+    //     search: "",
+    //     loading: false,
+    //   })
+    // );
     // Return only the data you need to keep it serializable
     return {
       data: response.data,
