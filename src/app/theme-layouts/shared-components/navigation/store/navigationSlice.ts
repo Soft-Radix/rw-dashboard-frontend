@@ -166,6 +166,8 @@ export const navigationSlice = createSlice({
             ? payload?.customNavigation
             : payload?.role === "agent"
             ? agentNavigationConfig
+            : payload?.role === "account manager"
+            ? managerNavigationConfig
             : navigationConfig
         )
       );

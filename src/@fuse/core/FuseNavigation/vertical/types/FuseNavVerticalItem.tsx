@@ -163,7 +163,10 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
               {item.icon}
             </FuseSvgIcon> */}
             <span
-              className={clsx("shrink-0 inline-block mr-16", item.iconClass)}
+              className={clsx(
+                "shrink-0 inline-block mr-16 mt-[8px]",
+                item.iconClass
+              )}
             >
               {item.customIcon}
             </span>
@@ -225,13 +228,14 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
                   alignItems: "center",
                   cursor: "pointer",
                 }}
+                className="text-[16px] font-500"
                 onClick={(e) => {
                   // alert("hello");
                   setIsOpenEditModal(true);
                   handleClose();
                 }}
               >
-                Edit <EditIcon />
+                Edit <EditIcon fill={"#757982"} />
               </Typography>
 
               <div
@@ -252,6 +256,7 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
                     alignItems: "center",
                     cursor: "pointer",
                   }}
+                  className="text-[16px] font-500"
                 >
                   Delete <DeleteIcon />
                 </Typography>

@@ -270,7 +270,7 @@ const Kanban = (props: IProps): JSX.Element => {
                   <Button
                     variant="contained"
                     color="secondary"
-                    className="w-[95px] text-[12px]"
+                    className="w-[100px] h-[16px] text-[12px] font-500"
                     onClick={handleSave}
                     disabled={disabled}
                   >
@@ -279,7 +279,7 @@ const Kanban = (props: IProps): JSX.Element => {
                   <Button
                     variant="outlined"
                     color="secondary"
-                    className="w-[95px] text-[12px] ml-5"
+                    className="w-[95px] text-[12px] font-500 ml-5"
                     onClick={() => {
                       setAddCard(!addCard);
                       formik.setFieldValue("name", "");
