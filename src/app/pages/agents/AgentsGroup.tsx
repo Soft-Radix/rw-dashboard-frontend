@@ -111,7 +111,7 @@ export default function AgentsGroup() {
     // debouncedSearch(value);
   };
   const fetchAgentGroupList = () => {
-    // dispatch(getAgentGroupList(filters));
+    dispatch(getAgentGroupList(filters));
   };
 
   useEffect(() => {

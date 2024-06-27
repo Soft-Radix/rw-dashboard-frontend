@@ -444,7 +444,7 @@ const ManagerProfile = () => {
                     </div>
                   </div>
                   <div
-                    className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                    className="shrink-0 w-[5rem] aspect-square flex justify-center cursor-pointer rounded-lg border-borderColor"
                     onClick={() => {
                       setIsOpenChangePassModal(true);
                     }}
@@ -473,7 +473,7 @@ const ManagerProfile = () => {
                     </div>
                   </div>
                   <div
-                    className="shrink-0 w-[5rem] aspect-square flex items-center  justify-center cursor-pointer rounded-lg border-borderColor"
+                    className="shrink-0 w-[5rem] aspect-square flex   justify-center cursor-pointer rounded-lg border-borderColor"
 
                     // onClick={() => {
                     //   setIsOpenChangePassModal(true);
@@ -503,7 +503,7 @@ const ManagerProfile = () => {
                 <p className="text-[#757982] text-[14px]">
                   <a
                     href=""
-                    style={{ textDecoration: "none" }}
+                    style={{ textDecoration: "none", cursor: "default" }}
                     onClick={(e) => e.preventDefault()}
                   >
                     {accManagerDetail?.email || "N/A"}
@@ -527,7 +527,7 @@ const ManagerProfile = () => {
           <Grid
             item
             lg={12}
-            className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row w-full  bg-[#ffffff]"
+            className="basis-full mt-[30px]   gap-28 flex-col sm:flex-row w-full  bg-[#ffffff] rounded-[8px]"
           >
             <Typography className="text-[#0A0F18] font-600 text-[20px] px-20 py-10">
               Assigned Clients
