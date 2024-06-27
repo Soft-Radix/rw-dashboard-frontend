@@ -14,6 +14,7 @@ import {
 import navigationConfig, {
   adminNavigationConfig,
   agentNavigationConfig,
+  managerNavigationConfig,
 } from "app/configs/navigationConfig";
 import { selectCurrentLanguageId } from "app/store/i18nSlice";
 import { AppThunk, RootStateType } from "app/store/types";
@@ -143,6 +144,8 @@ const initialState = navigationAdapter.upsertMany(
       ? adminNavigationConfig
       : userDetail?.role === "agent"
       ? agentNavigationConfig
+      : userDetail?.role === "account manager"
+      ? managerNavigationConfig
       : navigationConfig
   )
 );
@@ -163,6 +166,8 @@ export const navigationSlice = createSlice({
             ? payload?.customNavigation
             : payload?.role === "agent"
             ? agentNavigationConfig
+            : payload?.role === "account manager"
+            ? managerNavigationConfig
             : navigationConfig
         )
       );

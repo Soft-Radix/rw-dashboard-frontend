@@ -1,4 +1,5 @@
 import navigationConfig from "app/configs/navigationConfig";
+import { RefreshToken } from "app/store/Auth";
 import { projectAdd } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import { useFormik } from "formik";
@@ -18,7 +19,20 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
   const [disable, setDisabled] = useState(false);
   const dispatch = useAppDispatch();
   const userData = getLocalStorage("userDetail");
+  const token = localStorage.getItem("jwt_access_token");
 
+  const RefreshTokenApi = async () => {
+    const payload = {
+      token,
+    };
+    try {
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   const fetchData = async (payload: any) => {
     setDisabled(true);
     try {
@@ -35,7 +49,6 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
           end: true,
           isProject: true,
         };
-
         const projectData = [...navigationConfig, layout];
 
         let localData = getLocalStorage("userDetail");
@@ -48,7 +61,9 @@ function AddProjectModal({ isOpen, setIsOpen }: IProps) {
 
         localStorage.setItem("userDetail", JSON.stringify(localData));
         setDisabled(false);
-        window.location.reload();
+        // window.location.reload();
+        // window.location.href = `projects/${newProject?.data.id}/${newProject.data.name}/?type=kanban`;
+
         // setIsOpen(false);
       }
     } catch (error) {

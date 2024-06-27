@@ -1,4 +1,5 @@
 import navigationConfig from "app/configs/navigationConfig";
+import { RefreshToken } from "app/store/Auth";
 import { projectAdd, projectUpdate } from "app/store/Projects";
 import { ProjectUpdate } from "app/store/Projects/Interface";
 import { useAppDispatch } from "app/store/store";
@@ -25,6 +26,21 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
   const dispatch = useAppDispatch();
   const userData = getLocalStorage("userDetail");
   const navigate = useNavigate();
+  const token = localStorage.getItem("jwt_access_token");
+
+  const RefreshTokenApi = async () => {
+    const payload = {
+      token,
+    };
+    try {
+      //@ts-ignore
+      const res = await dispatch(RefreshToken(payload));
+      // toast.success(res?.payload?.data?.message);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const fetchData = async (data: ProjectUpdate) => {
     setDisable(true);
     try {
@@ -33,6 +49,7 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
       if (res?.payload?.data.status == 1) {
         const newProject = res?.payload?.data;
         let localData = getLocalStorage("userDetail");
+        RefreshTokenApi();
         navigate(`projects/${data?.project_id}/${data?.data?.name}`);
         const updateProject = localData?.projects?.findIndex(
           (item) => item.id === projectData?.id
@@ -40,8 +57,9 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
         localData.projects[updateProject] = newProject?.data;
 
         localStorage.setItem("userDetail", JSON.stringify(localData));
+
         formik.resetForm();
-        window.location.reload();
+        // window.location.reload();
         setIsOpen(false);
       }
     } catch (error) {
@@ -74,6 +92,10 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
   useEffect(() => {
     formik.setFieldValue("name", projectData?.name);
   }, []);
+  useEffect(() => {
+    RefreshTokenApi();
+  }, []);
+
   return (
     <CommonModal
       open={isOpen}
@@ -90,7 +112,6 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
       titleColor="black"
       onSubmit={handleSave}
       disabled={disable}
-      
     >
       <InputField
         formik={formik}
