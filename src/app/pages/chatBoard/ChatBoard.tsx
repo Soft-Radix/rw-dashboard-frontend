@@ -46,23 +46,22 @@ function ChatBoard() {
   useEffect(() => {
     const newGroupDetails = groupDetails;
     const newChatDetails = chatDetails;
-    const ccConvDelete =
-      CometChatConversationEvents.ccConversationDeleted.subscribe(
-        (conversation) => {
-          if (
-            conversation.getConversationId() === newChatDetails.conversationId
-          ) {
-            setChatDetails({});
-          }
-
-          if (
-            conversation.getConversationId() ===
-            conversationDetails.conversationId
-          ) {
-            setConversationDetails({});
-          }
+    const ccConvDelete = CometChatConversationEvents.ccConversationDeleted.subscribe(
+      (conversation) => {
+        if (
+          conversation.getConversationId() === newChatDetails.conversationId
+        ) {
+          setChatDetails({});
         }
-      );
+
+        if (
+          conversation.getConversationId() ===
+          conversationDetails.conversationId
+        ) {
+          setConversationDetails({});
+        }
+      }
+    );
 
     const ccGroupDelete = CometChatGroupEvents.ccGroupDeleted.subscribe(
       (group) => {
@@ -121,7 +120,7 @@ function ChatBoard() {
         <div className="w-[279px]">
           <CometChatConversations
             onItemClick={(group) => setChatDetails(group)}
-            avatarStyle={{ borderRadius: "50%" }}
+            avatarStyle={{ borderRadius: "50%", width: "28px", height: "28px" }}
           />
         </div>
 
@@ -144,10 +143,9 @@ function ChatBoard() {
                     addMembersConfiguration: new AddMembersConfiguration(
                       client_id.role_id !== ROLES.ADMIN
                         ? {
-                            usersRequestBuilder:
-                              new CometChat.UsersRequestBuilder()
-                                .setLimit(100)
-                                .setUIDs([...users]),
+                            usersRequestBuilder: new CometChat.UsersRequestBuilder()
+                              .setLimit(100)
+                              .setUIDs([...users]),
                           }
                         : {}
                     ),
@@ -247,7 +245,7 @@ function ChatBoard() {
               .joinedOnly(true)
               .setLimit(100)}
             onItemClick={(group) => setGroupDetails(group)}
-            avatarStyle={{borderRadius: "50%"}}
+            avatarStyle={{ borderRadius: "50%" }}
           />
         </div>
 
@@ -260,10 +258,9 @@ function ChatBoard() {
                   addMembersConfiguration: new AddMembersConfiguration(
                     client_id.role_id !== ROLES.ADMIN
                       ? {
-                          usersRequestBuilder:
-                            new CometChat.UsersRequestBuilder()
-                              .setLimit(100)
-                              .setUIDs([...users]),
+                          usersRequestBuilder: new CometChat.UsersRequestBuilder()
+                            .setLimit(100)
+                            .setUIDs([...users]),
                         }
                       : {}
                   ),
