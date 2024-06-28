@@ -323,7 +323,7 @@ export default function AgentDetails() {
                             {agentDetail?.status == "Pending" ? (
                               <Button
                                 variant="outlined"
-                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none hover:bg-[#ffeebb]
+                                className={`h-20 rounded-3xl border-none sm:min-h-24 leading-none cursor-default hover:bg-[#ffeebb]
                           
                                     text-[#f0b402] bg-[#ffeebb]
                                 

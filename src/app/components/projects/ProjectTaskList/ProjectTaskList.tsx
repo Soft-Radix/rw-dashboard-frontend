@@ -1,50 +1,21 @@
-import React, { useEffect, useState } from "react";
-import FilterPage from "../FilterPage";
-import ProjectMenuItems from "../ProjectMenuItems";
+import ListLoading from "@fuse/core/ListLoading";
+import { Theme, Typography } from "@mui/material";
+import { useTheme } from "@mui/styles";
+import { projectColumnList } from "app/store/Projects";
+import { ProjectRootState } from "app/store/Projects/Interface";
+import { useAppDispatch } from "app/store/store";
+import { NoDataFound } from "public/assets/icons/common";
 import {
-  DownArrowBlack,
-  DownArrowright,
   GroupIcon,
-  ProjectPlusIcon,
   ShowIcon,
-  SortIcon,
   SubTaskIcon,
 } from "public/assets/icons/projectsIcon";
-import DueDate from "../DueDate";
-import {
-  Button,
-  Checkbox,
-  TableCell,
-  TableRow,
-  Theme,
-  Typography,
-} from "@mui/material";
-import { PlusIcon } from "public/assets/icons/dashboardIcons";
-import { useTheme } from "@mui/styles";
-import ThemePageTable from "../../tasks/TaskPageTable";
-import ImagesOverlap from "../../ImagesOverlap";
-import {
-  ArrowRightCircleIcon,
-  DeleteIcon,
-  EditIcon,
-  NoDataFound,
-} from "public/assets/icons/common";
-import CommonTable from "../../commonTable";
-import Review from "./Review";
-import InProgress from "./InProgress";
-import Completed from "./Completed";
-import TaskListDueData from "./TaskListDueData";
-import Assignee from "./Assignee";
-import Priority from "./Priority";
-import Label from "./Label";
-import Todo from "./Todo";
-import { useParams } from "react-router";
-import { useAppDispatch } from "app/store/store";
-import { projectColumnList } from "app/store/Projects";
-import DragLayout from "./DragLayout";
-import ListLoading from "@fuse/core/ListLoading";
-import { ProjectRootState } from "app/store/Projects/Interface";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useParams } from "react-router";
+import FilterPage from "../FilterPage";
+import ProjectMenuItems from "../ProjectMenuItems";
+import DragLayout from "./DragLayout";
 const rows = [
   {
     title: "Brand logo design",

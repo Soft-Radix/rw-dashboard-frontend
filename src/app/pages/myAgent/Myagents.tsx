@@ -37,6 +37,7 @@ import { ClientRootState } from "app/store/Client/Interface";
 
 export default function Myagents() {
   const agentState = useSelector((store: ClientRootState) => store.client);
+  const { fetchStatus } = useSelector((store: ClientRootState) => store.client);
   // console.log(agentState, "as");
   // console.log("======agentState==,", agentState?.assignedAgentDetail);
   const dispatch = useAppDispatch();
@@ -64,13 +65,13 @@ export default function Myagents() {
     });
   };
   // Debounce function to delay executing the search
-  // const debouncedSearch = debounce((searchValue) => {
-  //   setfilters((prevFilters) => ({
-  //     ...prevFilters,
-  //     start: 0,
-  //     search: searchValue,
-  //   }));
-  // }, 300);
+  const debouncedSearch = debounce((searchValue) => {
+    setfilters((prevFilters) => ({
+      ...prevFilters,
+      start: 0,
+      search: searchValue,
+    }));
+  }, 300);
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -104,9 +105,9 @@ export default function Myagents() {
     }));
   };
 
-  if (agentState?.fetchStatus == "loading") {
-    return <ListLoading />;
-  }
+  // if (agentState?.fetchStatus == "loading") {
+  //   return <ListLoading />;
+  // }
 
   return (
     <>
@@ -160,7 +161,7 @@ export default function Myagents() {
                   </div>
                 </TableCell>
               </TableRow>
-            ) : agentState.status === "loading" ? (
+            ) : fetchStatus === "loading" ? (
               <TableRow>
                 <TableCell colSpan={7} align="center">
                   <ListLoading /> {/* Render loader component */}
@@ -220,12 +221,12 @@ export default function Myagents() {
                     row?.status == "Active"
                       ? "text-[#4CAF50] bg-[#DFF1E0]" // Red for Active
                       : row.status == "Pending"
-                      ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
-                      : row.status == "Inactive"
-                      ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
-                      : row.status == "Cancelled"
-                      ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
-                      : ""
+                        ? "text-[#FFC107] bg-[#FFEEBB]" // Yellow for Pending
+                        : row.status == "Inactive"
+                          ? "text-[#FF0000] bg-[#FFD1D1]" // Green for Suspended
+                          : row.status == "Cancelled"
+                            ? "text-[#FF5C00] bg-[#FFE2D5]" // Brown for Cancelled
+                            : ""
                   }`}
                     >
                       {row.status || "Active"}
