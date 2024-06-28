@@ -9,7 +9,7 @@ import {
   DialogContent,
   DialogContentText,
 } from "@mui/material";
-import { UpdateStatus, resetPassword } from "app/store/Client";
+import { UpdateStatus, getClientInfo, resetPassword } from "app/store/Client";
 import { ClientType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
 import {
@@ -38,6 +38,9 @@ export default function Profile({
   const [disable, setIsDisable] = useState(false);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false); // State to manage confirmation dialog visibility
   const [pendingStatus, setPendingStatus] = useState(null);
+
+  const params = new URLSearchParams(location.search);
+  const type = params.get("type");
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget); // Set anchor element to the clicked button
   };
@@ -76,6 +79,7 @@ export default function Profile({
           status: pendingStatus === "Inactive" ? 2 : 1,
         })
       );
+      await dispatch(getClientInfo({ client_id }));
       setIsDisable(false);
       toast.success(res?.payload?.data?.message);
     }
@@ -89,7 +93,6 @@ export default function Profile({
     await dispatch(resetPassword({ client_id: client_id }));
   };
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
-
   useEffect(() => {
     setSelectedItem(clientDetail?.status);
   }, [clientDetail]);

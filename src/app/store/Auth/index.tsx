@@ -73,6 +73,23 @@ export const forgotPassword = createAsyncThunk(
     };
   }
 );
+
+export const ResendPassword = createAsyncThunk(
+  "/resend-otp",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: "/resend-otp",
+      method: "post",
+      data: payload,
+    });
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const restPassword = createAsyncThunk(
   "auth/reset-password",
   async (payload: ForgotPassPayload) => {
@@ -276,6 +293,17 @@ export const authSlice = createSlice({
           toast.error(payload?.data?.message);
         }
       })
+      .addCase(ResendPassword.fulfilled, (state, action) => {
+        const payload = action.payload as ApiResponse; // Assert type
+
+        if (payload?.data?.status) {
+          state.email = action?.meta?.arg?.email;
+          toast.success(payload?.data?.message);
+        } else {
+          toast.error(payload?.data?.message);
+        }
+      })
+
       .addCase(verifyOtp.fulfilled, (state, action) => {
         const payload = action.payload as ApiResponse; // Assert type
         const { data } = action.payload as ApiResponse;

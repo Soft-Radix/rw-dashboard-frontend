@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import {
   RefreshToken,
+  ResendPassword,
   forgotPassword,
   verify2faOtp,
   verifyOtp,
@@ -27,7 +28,7 @@ export default function TwoFactorAuthentication() {
   const store = useSelector((store: AuthRootState) => store);
   const navigate: NavigateFunction = useNavigate();
   const email = JSON.parse(localStorage.getItem("email"));
-  const initialTime = 60; // Initial countdown time in seconds
+  const initialTime = 300; // Initial countdown time in seconds
   const { timer, startTimer, resetTimer } = useCountdownTimer(initialTime);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { token } = useParams();
@@ -76,10 +77,11 @@ export default function TwoFactorAuthentication() {
 
   const resendOtp = async () => {
     if (timer !== 0) return null;
-    await dispatch(forgotPassword({ email: store.auth.email }));
-    resetTimer(); // Reset the countdown timer
-    startTimer(); // Start the countdown timer
+    await dispatch(ResendPassword({ email: email, type: 1 }));
+    // resetTimer(); // Reset the countdown timer
+    // startTimer(); // Start the countdown timer
   };
+
   return (
     <div className="flex flex-col items-center flex-1 min-w-0 sm:flex-row sm:justify-center md:items-start md:justify-start">
       <Paper className="flex justify-center w-full h-full px-16 py-8 ltr:border-r-1 rtl:border-l-1 sm:h-auto sm:w-auto sm:rounded-2xl sm:p-48 sm:shadow md:flex md:h-full md:w-1/2 md:items-center md:rounded-none md:p-64 md:shadow-none">
