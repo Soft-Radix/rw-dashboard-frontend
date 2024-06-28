@@ -670,10 +670,10 @@ export default function AgentDetails() {
                 <Grid
                   item
                   lg={12}
-                  className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row"
+                  className="basis-full mt-[30px] flex  gap-28 flex-col sm:flex-row "
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
+                  <div className="flex-1 ">
+                    <div className="flex justify-between gap-10 p-24 rounded-lg bg-secondary_bg">
                       <div className="flex gap-[20px]  justify-center">
                         <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
                           <img src="../assets/icons/lock.svg" />
@@ -692,7 +692,7 @@ export default function AgentDetails() {
                         </div>
                       </div>
                       <div
-                        className="shrink-0 w-[5rem] aspect-square flex  justify-center cursor-pointer rounded-lg border-borderColor"
+                        className="shrink-0 w-[5rem] aspect-square  cursor-pointer rounded-lg border-borderColor mt-[5px]"
                         onClick={() => {
                           setIsOpenChangePassModal(true);
                         }}
@@ -702,7 +702,7 @@ export default function AgentDetails() {
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="flex items-center justify-between gap-10 p-24 rounded-lg bg-secondary_bg h-full">
+                    <div className="flex  justify-between gap-10 p-24 rounded-lg bg-secondary_bg h-full">
                       <div className="flex gap-[20px] justify-center">
                         <div className="bg-secondary h-[54px] w-[54px] min-w-[54px] rounded-8 flex items-center justify-center">
                           <img src="../assets/icons/lock.svg" />
@@ -720,9 +720,9 @@ export default function AgentDetails() {
                           </p>
                         </div>
                       </div>
-                      <div className="shrink-0 w-[5rem] aspect-square flex  justify-center cursor-pointer rounded-lg border-borderColor">
+                      <div className="shrink-0 w-[5rem] aspect-square  cursor-pointer rounded-lg border-borderColor">
                         <div
-                          className="text-[#4F46E5] font-500 text-[14px] underline -mt-[8px]"
+                          className="text-[#4F46E5] font-500 text-[14px] underline mt-[3px]"
                           onClick={handleResetPassword}
                         >
                           Reset

@@ -78,3 +78,42 @@ export const ChatEditIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
     />
   </svg>
 );
+export const WhiteBoardIconNew: React.FC<SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M10 2C5.5816 2 2 5.5816 2 10C2 14.4184 5.5816 18 10 18C14.4184 18 18 14.4184 18 10C18 5.5816 14.4184 2 10 2Z"
+      stroke="#757982"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.80078 17.335V13.3461L10.0008 7.74609L13.2008 13.3461V17.335"
+      stroke="#757982"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M6.80078 13.3457C6.80078 13.3457 7.70238 14.1457 8.40078 14.1457C9.09918 14.1457 10.0008 13.3457 10.0008 13.3457C10.0008 13.3457 10.9024 14.1457 11.6008 14.1457C12.2992 14.1457 13.2008 13.3457 13.2008 13.3457"
+      stroke="#757982"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <path
+      d="M9.02734 4.7627C9.02734 4.7627 8.48795 5.84063 8.66871 6.51523C8.84947 7.18983 9.85556 7.85366 9.85556 7.85366"
+      stroke="#757982"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+  </svg>
+);

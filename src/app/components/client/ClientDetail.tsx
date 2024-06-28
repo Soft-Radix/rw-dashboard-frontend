@@ -440,6 +440,7 @@ export default function ClientDetail() {
         />
       ),
       actionBtn: () => null,
+      tabHeight: false,
     },
     {
       id: "assigned-agents",
@@ -451,6 +452,7 @@ export default function ClientDetail() {
         />
       ),
       actionBtn: CustomDropDown,
+      tabHeight: true,
     },
     {
       id: "assigned-account",
@@ -462,12 +464,14 @@ export default function ClientDetail() {
         />
       ),
       actionBtn: AssignedAccManagerDropDown,
+      tabHeight: true,
     },
     {
       id: "subscription",
       label: "Subscriptions",
       content: <SubscriptionList />,
       actionBtn: () => null,
+      tabHeight: false,
     },
   ];
 
@@ -502,7 +506,7 @@ export default function ClientDetail() {
         )}
       </TitleBar>
       <div className="px-28 mb-[3rem]">
-        <div className="bg-white rounded-lg shadow-sm h-71">
+        <div className="bg-white rounded-lg shadow-sm ">
           <CommonTab tabs={tabs} />
           {/* <div className="h-24" /> */}
         </div>
