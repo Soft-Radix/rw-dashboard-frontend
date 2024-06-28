@@ -181,7 +181,10 @@ export default function Item({
                 isDragging={snapshot.isDragging}
               >
                 <div className="table-body  ">
-                  <div key={index} className="flex  border-[green-200] ">
+                  <div
+                    key={index}
+                    className="flex  border-[green-200] mr-[8px]"
+                  >
                     {/* <div className="table-cell">
                       <span className="flex items-center gap-10">
                         <Checkbox
@@ -262,14 +265,14 @@ export default function Item({
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                            ? "bg-red/[.18]"
-                            : "bg-green/[.18]"
+                              ? "bg-red/[.18]"
+                              : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center  font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                            ? "text-red"
-                            : "text-green"
+                              ? "text-red"
+                              : "text-green"
                         }`}
                       >
                         {priority}
