@@ -45,6 +45,7 @@ const CalenderDesign = ({ events }) => {
   const [disable, setDisabled] = useState(false);
   const [disabled, setDisable] = useState(false);
   const [columnId, setColumnId] = useState(null);
+  const [views, setViews] = useState("month");
   const [calendarState, setCalendarState] = useState({
     events: events,
     title: "",
@@ -115,10 +116,11 @@ const CalenderDesign = ({ events }) => {
     setAnchorEl(null);
   };
 
-  const handleViewChange = (view: string) => {
+  const handleViewChange = (view) => {
     console.log(`Switching to ${view} view`);
+    localStorage.setItem("calendarView", view); // Store selected view
+    setViews(view);
   };
-
   const formats = {
     weekdayFormat: (date: Date, culture: string, localizer: any) =>
       localizer.format(date, "dddd", culture),
@@ -127,14 +129,25 @@ const CalenderDesign = ({ events }) => {
   const [today] = React.useState(new Date());
 
   const customDayPropGetter = (date) => {
-    const isToday = moment(date).isSame(today, "day");
-    const isSlotOpen =
-      calendarState.openSlot && moment(date).isSame(calendarState.start, "day");
-
-    return {
-      className: isToday ? "today-cell" : isSlotOpen ? "active-slot" : "",
-    };
+    if (views == "month") {
+      const isToday = moment(date).isSame(today, "day");
+      const isSlotOpen =
+        calendarState.openSlot &&
+        moment(date).isSame(calendarState.start, "day");
+      return {
+        className: isToday ? "today-cell" : isSlotOpen ? "active-slot" : "",
+      };
+    } else if (views == "week") {
+      const isToday = moment(date).isSame(today, "day");
+      const isSlotOpen =
+        calendarState.openSlot &&
+        moment(date).isSame(calendarState.start, "day");
+      return {
+        className: isToday ? "today-cell" : isSlotOpen ? "" : "",
+      };
+    }
   };
+
   const eventComponent = ({ event }) => {
     return (
       <EventCustomize
@@ -339,6 +352,12 @@ const CalenderDesign = ({ events }) => {
   const handleSave = () => {
     formik.handleSubmit();
   };
+  useEffect(() => {
+    const storedView = localStorage.getItem("calendarView");
+    if (storedView) {
+      setViews(storedView);
+    }
+  }, []);
 
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
@@ -349,19 +368,23 @@ const CalenderDesign = ({ events }) => {
           events={calendarState.events}
           startAccessor="start"
           endAccessor="end"
-          defaultView="month"
-          popup={true}
+          style={{ height: 700 }}
+          selectable
+          onSelectEvent={handleSelectEvent}
+          onSelectSlot={handleSelectSlot}
+          onView={handleViewChange}
+          defaultView={views}
+          dayPropGetter={customDayPropGetter}
+          showMultiDayTimes
+          dayLayoutAlgorithm={"no-overlap"}
           components={{
-            toolbar: (props) => (
-              <CustomToolbar {...props} onViewChange={handleViewChange} />
-            ),
             event: eventComponent,
+            toolbar: CustomToolbar,
           }}
           formats={formats}
-          dayPropGetter={customDayPropGetter}
-          onSelectEvent={(event, e) => handleSelectEvent(event, e)}
-          onSelectSlot={userDetails?.role != "agent" && handleSelectSlot}
-          selectable={true}
+          popup
+          step={60}
+          timeslots={1}
         />
 
         <Dialog

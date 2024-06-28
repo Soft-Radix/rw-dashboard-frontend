@@ -56,7 +56,7 @@ export const AccMangerConfig = {
   ...commonSetting,
   routes: [
     {
-      path: "accmanger/dashboard",
+      path: "accountManager/dashboard",
       element: <AccManagerDashBoard />,
     },
   ],

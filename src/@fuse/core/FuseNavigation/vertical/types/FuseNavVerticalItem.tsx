@@ -97,7 +97,6 @@ function FuseNavVerticalItem(props: FuseNavItemComponentProps) {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
-  const userDetail = getLocalStorage("userDetail");
   const { item, nestedLevel = 0, onItemClick, checkPermission } = props;
 
   const itempadding = nestedLevel > 0 ? 38 + nestedLevel * 16 : 16;
