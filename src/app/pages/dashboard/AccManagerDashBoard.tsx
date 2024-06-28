@@ -306,8 +306,8 @@ export default function AccManagerDashboard() {
                             row.status === "Completed"
                               ? "text-[#4CAF50] bg-[#4CAF502E]"
                               : row.status === "In Progress"
-                                ? "text-[#F44336] bg-[#F443362E]"
-                                : "text-[#F0B402] bg-[#FFEEBB]"
+                              ? "text-[#F44336] bg-[#F443362E]"
+                              : "text-[#F0B402] bg-[#FFEEBB]"
                           }`}
                       >
                         {row.status}

@@ -110,8 +110,12 @@ export default function Dashboard() {
     limit: 10,
     search: "",
   });
-  const { assignedAgentDetail, agentTotal_records, fetchStatus, totalAgent } =
-    useSelector((store: ClientRootState) => store.client);
+  const {
+    assignedAgentDetail,
+    agentTotal_records,
+    fetchStatus,
+    totalAgent,
+  } = useSelector((store: ClientRootState) => store.client);
   // console.log(agentState, "fjidjfijfijfi");
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);

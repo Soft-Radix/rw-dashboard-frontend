@@ -139,6 +139,15 @@ function FuseNavVerticalCollapse(props: FuseNavItemComponentProps) {
     setItems({ ...items, children: newItems });
   };
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
+  // useEffect(() => {
+  //   setItems(userDetails);
+  // }, [userDetails.projects.length]);
+  useEffect(() => {
+    if (location.pathname.includes("projects")) {
+      setOpen(true);
+    }
+  }, []);
+
   return useMemo(
     () => (
       <Root

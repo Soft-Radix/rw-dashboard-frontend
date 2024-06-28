@@ -63,6 +63,7 @@ import { useSelector } from "react-redux";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import React, { lazy } from "react";
+import MicrophonePopup from "../client/MicrophonePopup";
 
 interface IProps {
   isOpen: boolean;
@@ -157,6 +158,7 @@ function AddTaskModal({
   const [audioRecorder, setAudioRecorder] = useState<File | null>(null);
   const [screenRecorder, setScreenRecorder] = useState("");
   const [isOpenDeletedModal, setIsOpenDeletedModal] = useState(false);
+  const [isMicrophoneModal, setIsMicrophoneModal] = useState(false);
   const timerRef = useRef(null);
   const [deleteId, setIsDeleteId] = useState<number>(null);
   const dispatch = useAppDispatch();
@@ -660,8 +662,8 @@ function AddTaskModal({
       calculatedDate
         ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-          ? ""
-          : formatDate(selectedDate)
+        ? ""
+        : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append(
@@ -873,8 +875,8 @@ function AddTaskModal({
       calculatedDate
         ? formatDate(calculatedDate)
         : selectedDate == "Due Date & Time"
-          ? ""
-          : formatDate(selectedDate)
+        ? ""
+        : formatDate(selectedDate)
     );
     formData.append("business_due_date", selectedDate);
     formData.append("delete_agent_ids", "");
@@ -982,6 +984,65 @@ function AddTaskModal({
     if (audioRef.current) {
       audioRef.current.currentTime = 0; // Reset audio to start from beginning
       audioRef.current.play(); // Play the audio
+    }
+  };
+
+  const handleMicroAccess = async () => {
+    try {
+      const permission = await navigator.permissions.query({
+        //@ts-ignore
+        name: "microphone",
+      });
+      console.log("=======Permission State======", permission.state);
+
+      if (permission.state === "denied") {
+        setIsMicrophoneModal(true);
+        handleCancel();
+        setVisible(false);
+      } else if (permission.state === "granted") {
+        handleAudioRecord(false);
+        setIsMicrophoneModal(false);
+      } else if (permission.state === "prompt") {
+        // Try to access the microphone to trigger the prompt
+        try {
+          await navigator.mediaDevices.getUserMedia({ audio: true });
+          // If access is granted
+          handleAudioRecord(false);
+          setIsMicrophoneModal(false);
+        } catch (error) {
+          // If access is denied or the prompt is closed without granting access
+          setIsMicrophoneModal(true);
+          setVisible(false);
+          handleCancel();
+        }
+      }
+
+      permission.onchange = () => {
+        if (permission.state === "denied") {
+          setIsMicrophoneModal(true);
+          setVisible(false);
+          handleCancel();
+        } else if (permission.state === "granted") {
+          handleAudioRecord(false);
+          setIsMicrophoneModal(false);
+        } else if (permission.state === "prompt") {
+          // Try to access the microphone to trigger the prompt
+          navigator.mediaDevices.getUserMedia({ audio: true }).then(
+            () => {
+              // If access is granted
+              handleAudioRecord(false);
+              setIsMicrophoneModal(false);
+            },
+            () => {
+              setIsMicrophoneModal(true);
+              setVisible(false);
+              handleCancel();
+            }
+          );
+        }
+      };
+    } catch (error) {
+      console.error("Error checking microphone permission:", error);
     }
   };
 
@@ -1444,7 +1505,8 @@ function AddTaskModal({
                     // className="w-full"
                     label="Record voice memo"
                     icon={<MicIcon />}
-                    onClick={() => handleAudioRecord(false)}
+                    // onClick={() => handleAudioRecord(false)}
+                    onClick={() => handleMicroAccess()}
                     // variant="outlined"
                     style={{ border: "0.5px solid #4F46E5" }}
                   />
@@ -1851,6 +1913,13 @@ function AddTaskModal({
         description={`Are you sure you want to delete this ${
           type == 3 ? "Attachment" : "File"
         }? `}
+      />
+      <MicrophonePopup
+        isOpen={isMicrophoneModal}
+        setIsOpen={setIsMicrophoneModal}
+        onDelete={() => handleDeleteAttachment(deleteId)}
+        heading={`Whoops! Looks like you denied access`}
+        media="micro"
       />
     </CommonModal>
   );

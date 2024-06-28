@@ -41,7 +41,7 @@ function withAppProviders(Component: React.ComponentType<ComponentProps>) {
         return { routes: adminRoutes };
       } else if (userDetail?.role === "agent") {
         return { routes: agentRoutes };
-      } else if (userDetail?.role === "accmanager") {
+      } else if (userDetail?.role === "account manager") {
         return { routes: accManagerRoutes };
       } else {
         return { routes: clientRoutes };

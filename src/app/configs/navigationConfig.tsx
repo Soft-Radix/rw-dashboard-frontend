@@ -325,4 +325,16 @@ export const adminNavigationConfig: FuseNavItemType[] = [
   },
 ];
 
+export const managerNavigationConfig: FuseNavItemType[] = [
+  {
+    id: "dashboard",
+    title: "Dashboard",
+    translate: "DASHBOARD",
+    type: "item",
+    icon: "dashboard",
+    customIcon: <DashBoardIcon />,
+    url: "accmanger/dashboard",
+  },
+];
+
 export default navigationConfig;

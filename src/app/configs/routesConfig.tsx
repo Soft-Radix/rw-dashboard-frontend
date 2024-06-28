@@ -145,7 +145,36 @@ const agentRouteConfigs: FuseRouteConfigsType = [
 /**
  * The routes of the Admin application.
  */
-const accManagerRouteConfigs: FuseRouteConfigsType = [AccMangerConfig];
+
+const accManagerRouteConfigs: FuseRouteConfigsType = [
+  AccMangerConfig,
+  ProjectsConfig,
+  TasksConfig,
+  TwoFactorAuthenticationConfig,
+  MyAgentsConfig,
+  SignOutConfig,
+  SignInConfig,
+  SignUpConfig,
+  ForgotPasswordConfig,
+  ResetPasswordConfig,
+  SetPasswordConfig,
+  OtpVerificationConfig,
+  ClientConfig,
+  AdminAgentsConfig,
+  UsersConfig,
+  SettingConfig,
+  ClientOnBoardConfig,
+  PasswordManagerConfig,
+  SharedFilesConfig,
+  clientSettingConfig,
+  BillingConfig,
+  SupportConfig,
+  VerificationConfig,
+  SucessConfig,
+  CancelConfig,
+  AgentOnBoardConfig,
+  ChatBoardConfig,
+];
 export const adminRoutes: FuseRoutesType = [
   ...FuseUtils.generateRoutesFromConfigs(
     adminRouteConfigs,
@@ -197,7 +226,7 @@ export const accManagerRoutes: FuseRoutesType = [
   {
     path: "/",
     element: <Navigate to={"/accmanager/dashboard"} />,
-    // auth: settingsConfig.defaultAuth,
+    auth: settingsConfig.defaultAuth,
   },
   ...commonRoutes,
 ];

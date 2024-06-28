@@ -16,6 +16,7 @@ import { Camera } from "public/assets/icons/common";
 import { RefreshToken } from "app/store/Auth";
 import { useAuth } from "src/app/auth/AuthRouteProvider";
 import { Box } from "@mui/material";
+import MicrophonePopup from "src/app/components/client/MicrophonePopup";
 
 export default function PhotoId() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -27,18 +28,19 @@ export default function PhotoId() {
   const [disable, setDisabled] = useState(false);
   const { token } = useParams();
   const dispatch = useAppDispatch();
+  const [isMediaModal, setIsMediaModal] = useState(false);
   const navigate = useNavigate();
   const webcamRef = useRef<Webcam | null>(null);
+  const [permissions, setPermissions] = useState("");
   const store = useSelector((store: any) => store.auth);
 
   const handleWebcamFrontCapture = useCallback(() => {
+    console.log("===calling handleWebcamFrontCapture", webcamRef.current);
     if (webcamRef.current) {
-      // setFrontFile(webcamRef.current);
       const imageSrc = webcamRef.current.getScreenshot();
       setWebcamCapture(imageSrc);
       setFrontID(imageSrc);
       if (imageSrc) {
-        // Convert base64 to Blob
         const byteString = atob(imageSrc.split(",")[1]);
         const mimeString = imageSrc.split(",")[0].split(":")[1].split(";")[0];
         const ab = new ArrayBuffer(byteString.length);
@@ -52,22 +54,18 @@ export default function PhotoId() {
       }
       setShowWebcam(false); // Hide webcam after capturing the photo
     }
-  }, [webcamRef]);
+  }, [webcamRef, permissions]);
 
   const redirect = async () => {
-    console.log("calling");
+    console.log("calling redirect");
     await jwtService.agentSignIn();
   };
 
   const fetchData = async () => {
     try {
-      const payload = {
-        token,
-      };
-      //@ts-ignore
+      const payload = { token };
       const res = await dispatch(RefreshToken(payload));
       redirect();
-      // toast.success(res?.payload?.data?.message);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -82,7 +80,7 @@ export default function PhotoId() {
 
     try {
       const res = await dispatch(UploadImage({ payload, token }));
-      if (res?.payload?.data?.status == 1) {
+      if (res?.payload?.data?.status === 1) {
         navigate(`/upload-doc/${token}`);
         setDisabled(false);
         toast.success(res?.payload?.data?.message);
@@ -90,12 +88,60 @@ export default function PhotoId() {
     } catch (error) {
       toast.error(error?.message);
       setDisabled(false);
-      console.error("Error fetching data:", error);
+      console.error("Error uploading image:", error);
     }
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
+  }, []);
+
+  const handleMediaAccess = async () => {
+    try {
+      const permission = await navigator.permissions.query({
+        //@ts-ignore
+        name: "camera",
+      });
+      console.log("Permission State:", permission.state);
+
+      if (permission.state === "denied") {
+        setIsMediaModal(true);
+      } else if (permission.state === "granted") {
+        handleWebcamFrontCapture();
+        setIsMediaModal(false);
+      } else if (permission.state === "prompt") {
+        try {
+          await navigator.mediaDevices.getUserMedia({ video: true });
+          handleWebcamFrontCapture();
+          setIsMediaModal(false);
+        } catch (error) {
+          setIsMediaModal(true);
+        }
+      }
+
+      permission.onchange = async () => {
+        console.log("Permission Changed:", permission.state);
+        if (permission.state === "denied") {
+          setIsMediaModal(true);
+        } else if (permission.state === "granted") {
+          handleWebcamFrontCapture();
+          setIsMediaModal(false);
+        } else if (permission.state === "prompt") {
+          try {
+            await navigator.mediaDevices.getUserMedia({ video: true });
+            handleWebcamFrontCapture();
+            setIsMediaModal(false);
+          } catch (error) {
+            setIsMediaModal(true);
+          }
+        }
+      };
+    } catch (error) {
+      console.error("Error checking media permissions:", error);
+    }
+  };
+  useEffect(() => {
+    handleMediaAccess();
   }, []);
 
   return (
@@ -115,37 +161,26 @@ export default function PhotoId() {
             </p>
           </Typography>
           <div className="flex justify-center">
-            {/* {!showWebcam ? (
-              <button
-                onClick={() => setShowWebcam(true)}
-                className="text-white px-4 py-2"
-              >
-                <Camera />
-              </button>
-            ) : null} */}
             {showWebcam ? (
               <div
-                className="flex flex-col gap-[20px] "
+                className="flex flex-col gap-[20px]"
                 style={{ alignItems: "center" }}
               >
                 <Webcam
                   audio={false}
                   ref={webcamRef}
                   screenshotFormat="image/jpeg"
-                  className="w-full "
+                  className="w-full"
                 />
                 <div className="border-spacing-5 border-3 border-[#4f46e5] rounded-full">
                   <button
-                    onClick={handleWebcamFrontCapture}
-                    className="bg-[#4f46e5] border-2 h-[54px] w-[54px] rounded-full p-2 m-2 "
-                    style={{}}
+                    onClick={handleMediaAccess}
+                    className="bg-[#4f46e5] border-2 h-[54px] w-[54px] rounded-full p-2 m-2"
                   ></button>
                 </div>
               </div>
             ) : null}
-            {frontID && (
-              <img src={frontID} alt="Front ID" className="w-full " />
-            )}
+            {frontID && <img src={frontID} alt="Front ID" className="w-full" />}
           </div>
         </div>
       </div>
@@ -173,6 +208,12 @@ export default function PhotoId() {
       >
         Next
       </Button>
+      <MicrophonePopup
+        isOpen={isMediaModal}
+        setIsOpen={setIsMediaModal}
+        heading={`Whoops! Looks like you denied access`}
+        media="media"
+      />
     </div>
   );
 }
