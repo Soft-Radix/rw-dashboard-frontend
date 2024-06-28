@@ -32,6 +32,8 @@ export interface filterType {
   limit: number;
   search: string;
   client_id?: number[] | string[];
+  date?: string;
+  currentDate?: any;
 }
 
 export interface deleteClientType {
@@ -66,6 +68,9 @@ export type initialStateProps = {
   is_welcome_email?: number;
   totalAgent?: number;
   agentListFetch?: boolean;
+  resetActivity?: any[];
+  dashBoardAgenda?: any[];
+  fetchAgendaData?: boolean;
 };
 export interface ClientRootState {
   client: initialStateProps; // Add other slices if needed

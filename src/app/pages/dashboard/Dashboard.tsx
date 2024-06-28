@@ -24,7 +24,11 @@ import DashboardRecentActivity from "../../components/dashboard/DashboardRecentA
 import DashboaredAgenda from "../../components/dashboard/DashboaredAgenda";
 import { ClientRootState, filterType } from "app/store/Client/Interface";
 import { useAppDispatch } from "app/store/store";
-import { GetAssignAgentsInfo, GetRecentActivityData } from "app/store/Client";
+import {
+  GetAgendaData,
+  GetAssignAgentsInfo,
+  GetRecentActivityData,
+} from "app/store/Client";
 import { useSelector } from "react-redux";
 import moment from "moment";
 import { NoDataFound } from "public/assets/icons/common";
@@ -115,8 +119,9 @@ export default function Dashboard() {
     agentTotal_records,
     fetchStatus,
     totalAgent,
+    resetActivity,
   } = useSelector((store: ClientRootState) => store.client);
-  // console.log(agentState, "fjidjfijfijfi");
+  // console.log(resetActivity, "fjidjfijfijfi");
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -170,6 +175,7 @@ export default function Dashboard() {
   }, [filters.limit, filters.client_id, filters.search, filters.start]);
   useEffect(() => {
     dispatch(GetRecentActivityData());
+    dispatch(GetAgendaData());
   }, [dispatch]);
   return (
     <div>
