@@ -107,12 +107,10 @@ export default function PhotoId() {
       if (permission.state === "denied") {
         setIsMediaModal(true);
       } else if (permission.state === "granted") {
-        handleWebcamFrontCapture();
         setIsMediaModal(false);
       } else if (permission.state === "prompt") {
         try {
           await navigator.mediaDevices.getUserMedia({ video: true });
-          handleWebcamFrontCapture();
           setIsMediaModal(false);
         } catch (error) {
           setIsMediaModal(true);
@@ -124,12 +122,10 @@ export default function PhotoId() {
         if (permission.state === "denied") {
           setIsMediaModal(true);
         } else if (permission.state === "granted") {
-          handleWebcamFrontCapture();
           setIsMediaModal(false);
         } else if (permission.state === "prompt") {
           try {
             await navigator.mediaDevices.getUserMedia({ video: true });
-            handleWebcamFrontCapture();
             setIsMediaModal(false);
           } catch (error) {
             setIsMediaModal(true);
@@ -140,9 +136,16 @@ export default function PhotoId() {
       console.error("Error checking media permissions:", error);
     }
   };
+
   useEffect(() => {
     handleMediaAccess();
   }, []);
+
+  useEffect(() => {
+    if (!isMediaModal) {
+      handleWebcamFrontCapture();
+    }
+  }, [isMediaModal]);
 
   return (
     <div className="flex items-center flex-col gap-32 px-28 py-32">
@@ -161,7 +164,7 @@ export default function PhotoId() {
             </p>
           </Typography>
           <div className="flex justify-center">
-            {showWebcam ? (
+            {!isMediaModal ? (
               <div
                 className="flex flex-col gap-[20px]"
                 style={{ alignItems: "center" }}

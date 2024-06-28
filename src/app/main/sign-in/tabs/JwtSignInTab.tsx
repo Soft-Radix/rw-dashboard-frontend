@@ -157,9 +157,12 @@ function jwtSignInTab() {
   // if (jwtService?.isLoading == true) {
   //   return <FuseLoading />;
   // }
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
-      <span className=" text-red pt-[1px]  block ">{ErrorMsg}</span>
+      {ErrorMsg && ErrorMsg.includes("inactive") && (
+        <span className=" text-red pt-[1px]  block ">{ErrorMsg}</span>
+      )}
       <form onSubmit={handleSubmit}>
         <InputField
           formik={formik}
