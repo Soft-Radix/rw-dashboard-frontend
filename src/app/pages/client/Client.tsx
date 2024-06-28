@@ -361,7 +361,7 @@ export default function Clients() {
 
       <div className="gap-20 px-28 lg:flex-nowrap">
         <div className="basis-full lg:basis-auto lg:grow">
-          <div className="bg-white rounded-lg shadow-sm pt-[2rem]  w-[1506px]   ">
+          <div className="bg-white rounded-lg shadow-sm pt-[2rem]    ">
             <CommonTab tabs={tabs} setActive={setActive} />
             <div className="h-24" />
           </div>
