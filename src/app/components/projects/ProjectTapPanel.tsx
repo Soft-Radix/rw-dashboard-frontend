@@ -38,6 +38,7 @@ import {
 } from "app/store/Projects";
 import { useAppDispatch } from "app/store/store";
 import { RefreshToken } from "app/store/Auth";
+import { WhiteBoardIconNew } from "public/assets/icons/clienIcon";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -336,7 +337,7 @@ export default function ProjectTabPanel() {
                   selectedTab == 4 ? (
                     <WhiteBoardIconActive />
                   ) : (
-                    <WhiteBoardIcon />
+                    <WhiteBoardIconNew />
                   )
                 }
                 className={`${

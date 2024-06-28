@@ -265,21 +265,22 @@ const Kanban = (props: IProps): JSX.Element => {
                     setError("");
                   }}
                 />
-                <span className=" text-red   block ">{error}</span>
-                <div className="mt-20">
+                <div className=" text-red block ">{error}</div>
+                <div className="mt-20  ">
                   <Button
                     variant="contained"
                     color="secondary"
-                    className="w-[100px] h-[16px] text-[12px] font-500"
+                    className="w-[110px] h-[48px] text-[16px] font-500"
                     onClick={handleSave}
                     disabled={disabled}
+                    style={{ height: "20px" }}
                   >
                     Save
                   </Button>
                   <Button
                     variant="outlined"
                     color="secondary"
-                    className="w-[95px] text-[12px] font-500 ml-5"
+                    className="w-[110px] text-[16px] font-500 ml-12"
                     onClick={() => {
                       setAddCard(!addCard);
                       formik.setFieldValue("name", "");
