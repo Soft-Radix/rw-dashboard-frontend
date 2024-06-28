@@ -64,6 +64,7 @@ import { ProjectRootState } from "app/store/Projects/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import React, { lazy } from "react";
 import MicrophonePopup from "../client/MicrophonePopup";
+import ScreenRecordingComponent from "./ScreenRecording";
 
 interface IProps {
   isOpen: boolean;
@@ -384,7 +385,7 @@ function AddTaskModal({
         const file = new File([blob], "recorded_video.webm", {
           type: chunks[0].type,
         });
-        //@ts-ignore
+        // @ts-ignore
         setScreenRecorder(file);
         if (videoRef.current) {
           // Reset the video element before setting the new src
@@ -395,8 +396,6 @@ function AddTaskModal({
           videoRef.current.src = url;
           videoRef.current.onloadedmetadata = () => {
             videoRef.current.currentTime = 0; // Ensure the video starts from the beginning
-          };
-          videoRef.current.oncanplay = () => {
             videoRef.current.play(); // Optionally start playing the video
           };
         }
