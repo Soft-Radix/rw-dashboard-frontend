@@ -390,6 +390,8 @@ export const initialState: initialStateProps = {
   managertotal_records: 0,
   actionStatusDisabled: false,
   actionStatusClient: false,
+  resetActivity: [],
+  fetchAgendaData: false,
 };
 
 export const addAssignAgents = createAsyncThunk(
@@ -550,7 +552,22 @@ export const GetRecentActivityData = createAsyncThunk(
     };
   }
 );
+export const GetAgendaData = createAsyncThunk(
+  "client/task-list",
+  async (payload: filterType) => {
+    console.log(payload, "paylofghsdfhf");
+    const response = await ApiHelperFunction({
+      url: `client/task-list?start=${payload.start || 0}&limit=${payload.limit || 20}`,
+      method: "get",
+      data: payload,
+    });
 
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
 /**
  * The auth slice.
  */
@@ -911,21 +928,36 @@ export const clientSlice = createSlice({
       .addCase(deleteAccManagerList.rejected, (state, { error }) => {
         toast.error(error?.message);
         state.actionStatusDisabled = false;
+      })
+      .addCase(GetRecentActivityData.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
+      .addCase(GetRecentActivityData.fulfilled, (state, action) => {
+        // console.log(action.payload?.data, "find");
+        const { data } = action.payload?.data;
+        // const { message } = action.payload?.data;
+        // console.log(message, "checkrrr");
+        state.fetchStatus = "idle";
+        state.resetActivity = data;
+      })
+      .addCase(GetRecentActivityData.rejected, (state) => {
+        state.fetchStatus = "idle";
+      })
+      .addCase(GetAgendaData.pending, (state) => {
+        state.fetchStatus = "loading";
+        state.fetchAgendaData = true;
+      })
+      .addCase(GetAgendaData.fulfilled, (state, action) => {
+        const { data } = action.payload?.data;
+        // console.log(data, "dashBoardAgendsdsdsda");
+        state.fetchStatus = "idle";
+        state.dashBoardAgenda = data.list;
+        state.fetchAgendaData = false;
+      })
+      .addCase(GetAgendaData.rejected, (state) => {
+        state.fetchStatus = "idle";
+        state.fetchAgendaData = false;
       });
-    // .addCase(GetRecentActivityData.pending, (state) => {
-    //   state.fetchStatus = "loading";
-    // })
-    // .addCase(GetRecentActivityData.fulfilled, (state, action) => {
-    //   // console.log(action.payload?.data, "find");
-    //   const { data } = action.payload?.data;
-    //   // const { message } = action.payload?.data;
-    //   // console.log(message, "checkrrr");
-    //   state.fetchStatus = "idle";
-    //   // state.agentGroupDetail = data;
-    // })
-    // .addCase(GetRecentActivityData.rejected, (state) => {
-    //   state.fetchStatus = "idle";
-    // });
   },
 });
 

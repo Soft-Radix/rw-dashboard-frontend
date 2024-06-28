@@ -1,10 +1,20 @@
 // import { Button, Tab, Tabs, Theme } from "@mui/material";
-import { Grid, TableCell, TableRow, Theme, Typography } from "@mui/material";
+import {
+  Grid,
+  ListItemIcon,
+  TableCell,
+  TableRow,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useTheme } from "@mui/styles";
 import { useState } from "react";
 import CommonTable from "src/app/components/commonTable";
 import ActivityChart from "./ActivityChart";
 import RecentTaskUpdateTable from "./RecentTaskUpdateTable";
+import { useSelector } from "react-redux";
+import { ClientRootState } from "app/store/Client/Interface";
+import moment from "moment";
 
 const rows = [
   {
@@ -45,10 +55,15 @@ const rows = [
 export default function DashboardRecentActivity() {
   const theme: Theme = useTheme();
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
+  const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [showUpdateTable, setShowUpdateTable] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [updateTableIndex, setUpdateTableIndex] = useState<number>();
+  const { resetActivity } = useSelector(
+    (store: ClientRootState) => store.client
+  );
+  // console.log(resetActivity, "resetActivity");
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
@@ -68,28 +83,33 @@ export default function DashboardRecentActivity() {
           <Typography className="text-[16px] font-600 py-28 px-20">
             Recent Activity
           </Typography>
-          {rows.map((item) => {
+          {resetActivity?.map((item) => {
             return (
               <>
                 <div className="flex items-center justify-between gap-20 px-20 border-y-1 py-10 ">
                   <div>
                     <img
-                      src="../assets/images/logo/images.jpeg"
-                      alt="images"
-                      className="h-[40px] w-[40px] rounded-full"
-                    />
+                      className="h-40 w-40 rounded-full"
+                      src={
+                        item.user_image
+                          ? urlForImage + item.user_image
+                          : "../assets/images/logo/images.jpeg"
+                      }
+                    ></img>
                   </div>
                   <div className="flex w-full gap-10 justify-between sm:flex-row flex-col">
                     <div>
                       <p className="font-500 text-[16px] text-[#151D48]">
-                        {item.name}
+                        {item.userName}
                       </p>
                       <p className="text-[14px] text-[#737791]">
-                        {item.description}
+                        {item.message}
                       </p>
                     </div>
                     <Typography className="text-[14px] text-[#757982]  ">
-                      Feb 12,2024
+                      {item.createdAt
+                        ? moment(item.createdAt).format("MMMM Do, YYYY")
+                        : "N/A"}
                     </Typography>
                   </div>
                 </div>

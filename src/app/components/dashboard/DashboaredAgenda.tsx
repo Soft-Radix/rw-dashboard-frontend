@@ -19,10 +19,17 @@ import {
   PlusIcon,
   RightIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import CommonTable from "src/app/components/commonTable";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { useSelector } from "react-redux";
+import { ClientRootState, filterType } from "app/store/Client/Interface";
+import { format, addDays, subDays } from "date-fns";
+import { NoDataFound } from "public/assets/icons/common";
+import ListLoading from "@fuse/core/ListLoading";
+import { useAppDispatch } from "app/store/store";
+import { GetAgendaData } from "app/store/Client";
 
 const rows = [
   {
@@ -89,9 +96,19 @@ const DashboaredAgenda = () => {
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
+  const [filters, setfilters] = useState<filterType>({
+    start: 0,
+    limit: 20,
+    search: "",
+  });
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
   };
+  const dispatch = useAppDispatch();
+  const { dashBoardAgenda, fetchAgendaData } = useSelector(
+    (store: ClientRootState) => store.client
+  );
+  // console.log(dashBoardAgenda, "dashBoardAgenda");
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -105,6 +122,19 @@ const DashboaredAgenda = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const handleNextDay = () => {
+    setCurrentDate(addDays(currentDate, 1));
+  };
+
+  const handlePreviousDay = () => {
+    setCurrentDate(subDays(currentDate, 1));
+  };
+  const minDate = new Date();
+  useEffect(() => {
+    dispatch(GetAgendaData(filters));
+  }, [currentDate, filters]);
   // console.log(userDetails, "userDetails");
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
@@ -127,17 +157,24 @@ const DashboaredAgenda = () => {
                           display: "none",
                         },
                       }}
+                      minDate={minDate}
                     />
-                    {/* <CalendarLineIcon /> */}
                   </span>
                   <span className="sm:text-[16px] text-[#757982]">
-                    Feb 27, Mon
+                    {format(currentDate, "MMM d yyyy")}
                   </span>
                   <div className="flex ">
-                    <span>
+                    <span
+                      onClick={handlePreviousDay}
+                      style={{
+                        cursor:
+                          currentDate <= minDate ? "not-allowed" : "pointer",
+                        color: currentDate <= minDate ? "grey" : "inherit",
+                      }}
+                    >
                       <LeftIcon />
                     </span>
-                    <span>
+                    <span onClick={handleNextDay} style={{ cursor: "pointer" }}>
                       <RightIcon />
                     </span>
                   </div>
@@ -145,36 +182,72 @@ const DashboaredAgenda = () => {
               </div>
             </div>
             <CommonTable headings={["Tasks"]}>
-              <>
-                {rows.map((row, index) => (
-                  <TableRow
-                    key={index}
-                    sx={{
-                      "& td": {
-                        borderBottom: "1px solid #EDF2F6",
-                        paddingTop: "12px",
-                        paddingBottom: "12px",
-                        color: theme.palette.primary.main,
-                        textAlign: "center",
-                        "@media (max-width: 600px)": {
-                          // Adjust screen width as needed for small screens
-                          textAlign: "left",
+              {dashBoardAgenda?.length === 0 && fetchAgendaData == false ? (
+                // &&
+                // agentState.status != "loading"
+                <TableRow
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell colSpan={7} align="center">
+                    <div
+                      className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                      style={{ alignItems: "center" }}
+                    >
+                      <NoDataFound />
+                      <Typography className="text-[24px] text-center font-600 leading-normal">
+                        No data found !
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ) : fetchAgendaData === true ? (
+                <TableRow>
+                  <TableCell colSpan={7} align="center">
+                    <ListLoading /> {/* Render your loader component here */}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                <>
+                  {dashBoardAgenda?.map((row, index) => (
+                    <TableRow
+                      key={index}
+                      sx={{
+                        "& td": {
+                          borderBottom: "1px solid #EDF2F6",
+                          paddingTop: "12px",
+                          paddingBottom: "12px",
+                          color: theme.palette.primary.main,
+                          textAlign: "center",
+                          "@media (max-width: 600px)": {
+                            // Adjust screen width as needed for small screens
+                            textAlign: "left",
+                          },
                         },
-                      },
-                    }}
-                  >
-                    <TableCell scope="row" className="flex items-center gap-8">
-                      <span>
-                        <Checkbox />
-                      </span>
-                      {row.task}
-                    </TableCell>
-                    <TableCell>
-                      <span></span>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </>
+                      }}
+                    >
+                      <TableCell
+                        scope="row"
+                        className="flex items-center gap-8"
+                      >
+                        <span>
+                          <Checkbox />
+                        </span>
+                        {row.title}
+                      </TableCell>
+                      <TableCell>
+                        <span></span>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </>
+              )}
             </CommonTable>
           </div>
         )}

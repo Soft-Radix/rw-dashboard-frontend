@@ -380,7 +380,7 @@ export default function AgentDetails() {
                                     Inactive
                                   </MenuItem>
                                 </Menu>
-                                onClick={handleTwoFactor}
+
                                 <Dialog
                                   open={isConfirmOpen}
                                   onClose={() => setIsConfirmOpen(false)}
