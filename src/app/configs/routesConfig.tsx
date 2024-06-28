@@ -225,7 +225,7 @@ export const accManagerRoutes: FuseRoutesType = [
   ),
   {
     path: "/",
-    element: <Navigate to={"/accmanager/dashboard"} />,
+    element: <Navigate to={"/accmanger/dashboard"} />,
     auth: settingsConfig.defaultAuth,
   },
   ...commonRoutes,

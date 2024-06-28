@@ -560,7 +560,7 @@ export default function AddSubscription() {
       mode = item["billing_terms"]; // Assign value to mode
       payment = item["no_of_payments"];
       if (item.unit_price <= 0) {
-        return "Please add a unit price";
+        return "Please add a Unit Price";
       }
       return "";
     });
@@ -644,7 +644,7 @@ export default function AddSubscription() {
       mode = item["billing_terms"]; // Assign value to mode
       payment = item["no_of_payments"];
       if (item.unit_price <= 0) {
-        return "Please add a unit price";
+        return "Please add a Unit Price";
       }
       return "";
     });
@@ -807,7 +807,7 @@ export default function AddSubscription() {
       payment = item["no_of_payments"];
       if (item.unit_price <= 0) {
         (mode = item[0].billing_terms), (payment = item[0].no_of_payments);
-        return "Please add a unit price"; // Populate the error message if unit price is 0
+        return "Please add a Unit Price"; // Populate the error message if unit price is 0
       }
       return ""; // Otherwise, set the error message to an empty string
     });
@@ -1640,7 +1640,7 @@ export default function AddSubscription() {
             Summary
           </h5>
           <ul className="flex flex-col text-14 gap-[3rem]">
-            <li className="border-b pt-[1.5rem] pb-[2rem]  bg-[#F7F9FB] flex flex-col gap-10 px-[3rem]">
+            <li className="border-b pt-[1.5rem] pb-[3rem]  bg-[#F7F9FB] flex flex-col gap-10 px-[3rem]">
               <div className="mb-10 flex justify-between">
                 <span className="text-para_light font-500">Subtotal</span>
                 <span className="inline-block ml-20 font-600">

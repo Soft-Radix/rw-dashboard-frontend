@@ -611,9 +611,13 @@ export const clientSlice = createSlice({
         return indexA - indexB;
       });
     },
+
     updateResetColumn: (state, { payload }) => {
       state.selectedColumn = payload;
     },
+    // updateSelectedStatus: (state, { payload }) => {
+    //   state?.clientDetail?.status = payload;
+    // },
   },
   extraReducers(builder) {
     builder

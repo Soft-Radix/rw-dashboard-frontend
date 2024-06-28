@@ -2,7 +2,7 @@ import Button from "@mui/material/Button";
 import CardContent from "@mui/material/CardContent";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
-import { forgotPassword, verifyOtp } from "app/store/Auth";
+import { ResendPassword, forgotPassword, verifyOtp } from "app/store/Auth";
 import { AuthRootState } from "app/store/Auth/Interface";
 import { useAppDispatch } from "app/store/store";
 import { useEffect, useState } from "react";
@@ -22,7 +22,7 @@ export default function OtpVerification() {
   const store = useSelector((store: AuthRootState) => store);
   const navigate: NavigateFunction = useNavigate();
 
-  const initialTime = 60; // Initial countdown time in seconds
+  const initialTime = 300; // Initial countdown time in seconds
   const { timer, startTimer, resetTimer } = useCountdownTimer(initialTime);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -47,7 +47,7 @@ export default function OtpVerification() {
 
   const resendOtp = async () => {
     if (timer !== 0) return null;
-    await dispatch(forgotPassword({ email: store.auth.email }));
+    await dispatch(ResendPassword({ email: store.auth?.email, type: 0 }));
     resetTimer(); // Reset the countdown timer
     startTimer(); // Start the countdown timer
   };
