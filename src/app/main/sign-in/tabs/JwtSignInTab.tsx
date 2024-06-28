@@ -157,7 +157,6 @@ function jwtSignInTab() {
   // if (jwtService?.isLoading == true) {
   //   return <FuseLoading />;
   // }
-  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <div className="w-full mt-32 max-w-[417px] flex gap-16 flex-col">
       {ErrorMsg && ErrorMsg.includes("inactive") && (

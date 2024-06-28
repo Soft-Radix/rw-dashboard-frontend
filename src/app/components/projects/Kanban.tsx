@@ -233,7 +233,7 @@ const Kanban = (props: IProps): JSX.Element => {
       <div
         className={`flex ${
           columnList?.length > 0 ? "gap-20" : ""
-        } overflow-x-auto px-28 pb-28 items-start`}
+        } overflow-x-auto px-20 pb-28 items-start`}
       >
         <DragLayout columnList={columnList} callListApi={listData} id={id} />
 

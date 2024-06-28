@@ -78,8 +78,8 @@ export default function TwoFactorAuthentication() {
   const resendOtp = async () => {
     if (timer !== 0) return null;
     await dispatch(ResendPassword({ email: email, type: 1 }));
-    // resetTimer(); // Reset the countdown timer
-    // startTimer(); // Start the countdown timer
+    resetTimer(); // Reset the countdown timer
+    startTimer(); // Start the countdown timer
   };
 
   return (

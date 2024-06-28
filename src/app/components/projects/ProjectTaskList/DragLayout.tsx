@@ -156,10 +156,8 @@ const DragLayout = ({ columnList, callListApi, id }) => {
         [end.id]: endTaskColumn,
       },
     });
-    console.log("new starter", starter);
-
-    console.log(destination, source, draggableId);
   };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Droppable droppableId="all-column" type="column" direction="vertical">

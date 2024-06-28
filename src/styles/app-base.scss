@@ -724,9 +724,10 @@ span.rdrStartEdge {
   display: none !important;
 }
 .rbc-day-slot .rbc-event {
-  width: auto !important;
+  min-width: 100px !important;
   border: none !important;
   min-height: 30px !important;
+
   // min-height: 30px !important;
 }
 // .rbc-event {

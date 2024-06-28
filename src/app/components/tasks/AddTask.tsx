@@ -64,6 +64,7 @@ import { ProjectRootState } from "app/store/Projects/Interface";
 import ListLoading from "@fuse/core/ListLoading";
 import React, { lazy } from "react";
 import MicrophonePopup from "../client/MicrophonePopup";
+import ScreenRecordingComponent from "./ScreenRecording";
 
 interface IProps {
   isOpen: boolean;
@@ -354,6 +355,7 @@ function AddTaskModal({
   //   }
   // };
 
+  // Assuming videoRef refers to your video element reference
   const handleRecordClick = async () => {
     let stream;
     try {
@@ -384,21 +386,26 @@ function AddTaskModal({
         const file = new File([blob], "recorded_video.webm", {
           type: chunks[0].type,
         });
-        //@ts-ignore
-        setScreenRecorder(file);
+        setScreenRecorder(file as any);
         if (videoRef.current) {
-          // Reset the video element before setting the new src
           videoRef.current.pause();
-          videoRef.current.removeAttribute("src"); // Remove the current src
-          videoRef.current.srcObject = null; // Clear the current source object
-          videoRef.current.load(); // Reset the video element
+          videoRef.current.removeAttribute("src");
+          videoRef.current.srcObject = null;
+          videoRef.current.load();
           videoRef.current.src = url;
           videoRef.current.onloadedmetadata = () => {
-            videoRef.current.currentTime = 0; // Ensure the video starts from the beginning
+            videoRef.current.currentTime = 0;
           };
           videoRef.current.oncanplay = () => {
-            videoRef.current.play(); // Optionally start playing the video
+            videoRef.current.play();
           };
+          videoRef.current.addEventListener("timeupdate", () => {
+            setElapsedTime(videoRef.current.currentTime);
+          });
+          videoRef.current.addEventListener("ended", () => {
+            clearInterval(timerId);
+            setElapsedTime(0);
+          });
         }
         setIsRecording(false);
         setShowVideo(true);
@@ -410,14 +417,12 @@ function AddTaskModal({
         clearInterval(timerId);
         setElapsedTime(0);
       });
-      // Listen for the stream's inactive event
       stream.getVideoTracks()[0].oninactive = () => {
         setIsRecording(false);
         console.log("User clicked cancel or ended screen share");
         clearInterval(timerId);
         setElapsedTime(0);
       };
-      // Start the recorder manually
       recorder.start();
       const id = setInterval(() => {
         setElapsedTime((prevTime) => prevTime + 1);
@@ -993,7 +998,6 @@ function AddTaskModal({
         //@ts-ignore
         name: "microphone",
       });
-      console.log("=======Permission State======", permission.state);
 
       if (permission.state === "denied") {
         setIsMicrophoneModal(true);
@@ -1043,6 +1047,13 @@ function AddTaskModal({
       };
     } catch (error) {
       console.error("Error checking microphone permission:", error);
+    }
+  };
+
+  const handleMetadataLoad = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
     }
   };
 
@@ -1253,6 +1264,7 @@ function AddTaskModal({
                     }}
                     closeOnSelect={false}
                     value={customDate}
+                    minDate={new Date()}
                     onChange={handleDateChange}
                   />
                 </Popover>
@@ -1415,6 +1427,7 @@ function AddTaskModal({
                   label="Date"
                   placeholder="Enter Date"
                   type="date"
+                  min={new Date()}
                 />
 
                 <InputField
@@ -1849,6 +1862,7 @@ function AddTaskModal({
                     controls
                     autoPlay={false}
                     onPlay={handleVideoPlay}
+                    onLoadedMetadata={handleMetadataLoad}
                   />
 
                   {Edit ? (

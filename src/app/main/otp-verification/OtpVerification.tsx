@@ -44,7 +44,6 @@ export default function OtpVerification() {
   useEffect(() => {
     startTimer(); // Start the countdown timer
   }, []);
-
   const resendOtp = async () => {
     if (timer !== 0) return null;
     await dispatch(ResendPassword({ email: store.auth?.email, type: 0 }));
