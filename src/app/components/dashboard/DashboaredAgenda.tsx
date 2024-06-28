@@ -131,7 +131,7 @@ const DashboaredAgenda = () => {
   const handlePreviousDay = () => {
     setCurrentDate(subDays(currentDate, 1));
   };
-
+  const minDate = new Date();
   useEffect(() => {
     dispatch(GetAgendaData(filters));
   }, [currentDate, filters]);
@@ -157,6 +157,7 @@ const DashboaredAgenda = () => {
                           display: "none",
                         },
                       }}
+                      minDate={minDate}
                     />
                   </span>
                   <span className="sm:text-[16px] text-[#757982]">
@@ -165,7 +166,11 @@ const DashboaredAgenda = () => {
                   <div className="flex ">
                     <span
                       onClick={handlePreviousDay}
-                      style={{ cursor: "pointer" }}
+                      style={{
+                        cursor:
+                          currentDate <= minDate ? "not-allowed" : "pointer",
+                        color: currentDate <= minDate ? "grey" : "inherit",
+                      }}
                     >
                       <LeftIcon />
                     </span>
