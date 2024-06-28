@@ -11,6 +11,7 @@ interface CustomButtonProps {
   type?: string;
   inputClass?: string;
   hideTopPadding?: boolean;
+  min?: any;
 
   // props: TextFieldProps;
 }
@@ -24,6 +25,7 @@ function InputField({
   type = "text",
   inputClass,
   hideTopPadding,
+  min = 0,
 
   ...rest
 }: CustomButtonProps & TextFieldProps) {
@@ -64,6 +66,12 @@ function InputField({
     }
   };
 
+  function formatDate(date) {
+    const year = date.getFullYear();
+    let month = (1 + date.getMonth()).toString().padStart(2, "0");
+    let day = date.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
   return (
     <div className={`${rest.className} common-inputField w-full relative`}>
       {label && (
@@ -91,7 +99,12 @@ function InputField({
             type={isType}
             disabled={disabled}
             inputProps={{
-              min: type === "number" ? 0 : undefined,
+              min:
+                type === "number"
+                  ? 0
+                  : type === "date"
+                  ? formatDate(new Date())
+                  : undefined,
             }}
             onChange={(e) => handleChange(e)}
             value={formik?.values[name ?? ""]}

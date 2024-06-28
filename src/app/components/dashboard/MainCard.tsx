@@ -213,7 +213,7 @@ export default function MainCard({
                   ref={provided.innerRef}
                   {...provided.droppableProps}
                 >
-                  <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px] mx-10">
+                  <div className="min-w-[322px] bg-white p-14 rounded-lg shadow-md w-[322px] ml-5 mr-10">
                     <div>
                       <div className="flex justify-between">
                         <Typography

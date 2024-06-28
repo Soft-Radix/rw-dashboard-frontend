@@ -197,7 +197,7 @@ export default function AccManagerDashboard() {
     <div>
       <div className="relative flex items-center justify-between py-10 px-28 ">
         <Typography className="text-[18px] py-28 font-bold sm:text-[30px]  ">
-          Welcome Onsdsss Dashboard !
+          Welcome On Dashboard !
         </Typography>
       </div>
       {/* {isChecked.agents && ( */}

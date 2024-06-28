@@ -267,7 +267,6 @@ const DragLayout = ({ columnList, callListApi, id }) => {
     }
   };
 
-  console.log("new starter", starter);
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

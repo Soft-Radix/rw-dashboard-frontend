@@ -333,7 +333,7 @@ export const managerNavigationConfig: FuseNavItemType[] = [
     type: "item",
     icon: "dashboard",
     customIcon: <DashBoardIcon />,
-    url: "accmanger/dashboard",
+    url: "accountManager/dashboard",
   },
 ];
 
