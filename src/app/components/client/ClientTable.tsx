@@ -105,7 +105,7 @@ function ClientTable({
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-sm">
+      <div className="bg-white rounded-lg shadow-sm ">
         <CommonTable
           headings={
             clientState?.selectedColumn?.length > 0

@@ -73,6 +73,7 @@ export default function ManageProducts() {
     search: "",
   });
   const accManagerState = useSelector((state: RootState) => state.client);
+  // console.log(accManagerState, "asfagdadjgasfdasd");
 
   const fetchData = async () => {
     try {
@@ -117,12 +118,18 @@ export default function ManageProducts() {
       };
       //@ts-ignore
       const res = await dispatch(productDelete(payload));
-
+      // console.log(res, "sdhfusdhfsfh");
+      if (res?.payload?.data?.status) {
+        setfilters((prevFilters) => ({
+          ...prevFilters,
+          start: accManagerState.list.length - 1 == 0 ? 0 : prevFilters.start,
+        }));
+      }
       fetchData();
       setIsOpenDeletedModal(false);
-
       // setList(res?.payload?.data?.data?.list);
       toast.success(res?.payload?.data?.message);
+
       // toast.dismiss();
       setIsDeleteId(null);
       setTimeout(() => {
@@ -148,15 +155,8 @@ export default function ManageProducts() {
     }
   };
 
-  const totalPageCount = Math.ceil(list?.length / itemsPerPage);
-
-  const currentRows = list?.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   const checkPageNum = (e: any, pageNumber: number) => {
-    // console.log(pageNumber, "rr");
+    // console.log(pageNumber, "pageNumber");
     setfilters((prevFilters) => {
       if (pageNumber !== prevFilters.start + 1) {
         return {
@@ -167,6 +167,7 @@ export default function ManageProducts() {
       return prevFilters; // Return the unchanged filters if the condition is not met
     });
   };
+
   // if (loading == true) {
   //   return <ListLoading />;
   // }
@@ -191,7 +192,7 @@ export default function ManageProducts() {
           <CommonTable
             headings={["Name", "Description", "Unit Price", "Action"]}
           >
-            {currentRows?.length === 0 && !loading ? (
+            {accManagerState?.list?.length === 0 && !loading ? (
               <TableRow
                 sx={{
                   "& td": {
@@ -222,7 +223,7 @@ export default function ManageProducts() {
               </TableRow>
             ) : (
               <>
-                {currentRows?.map((item, index) => {
+                {accManagerState?.list?.map((item, index) => {
                   return (
                     <>
                       <TableRow
@@ -285,15 +286,13 @@ export default function ManageProducts() {
             )}
           </CommonTable>
           <div className="flex justify-end py-14 px-[3rem]">
-            {accManagerState?.total_records.length > 10 && (
-              <CommonPagination
-                count={accManagerState?.total_records}
-                onChange={(e, PageNumber: number) =>
-                  checkPageNum(e, PageNumber)
-                }
-                page={filters.start + 1}
-              />
-            )}
+            {/* {accManagerState?.total_records.length > 10 && ( */}
+            <CommonPagination
+              count={accManagerState?.total_records}
+              onChange={(e, PageNumber: number) => checkPageNum(e, PageNumber)}
+              page={filters.start + 1}
+            />
+            {/* )} */}
           </div>
         </div>
       </div>

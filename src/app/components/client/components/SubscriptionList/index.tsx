@@ -229,6 +229,7 @@ export default function SubscriptionList() {
               ))}
             </>
           </CommonTable>
+
           <div className="flex justify-end py-14 px-[3rem]">
             {currentRows?.length > 0 && (
               <CommonPagination
