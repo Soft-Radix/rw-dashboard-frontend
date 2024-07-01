@@ -11,6 +11,7 @@ import {
   projectTaskMove,
   projectTaskMoveCol,
 } from "app/store/Projects";
+import toast from "react-hot-toast";
 
 const Container = styled("div")`
   display: flex;
@@ -246,27 +247,30 @@ const DragLayout = ({ columnList, callListApi, id }) => {
       taskIds: endTaskIds,
     };
 
-    setStarter((prevStarter) => ({
-      ...prevStarter,
-      columns: {
-        ...prevStarter.columns,
-        [newStartColumn.id]: newStartColumn,
-        [newEndColumn.id]: newEndColumn,
-      },
-    }));
-
     const payload = {
       project_column_id: Number(newEndColumn.id),
       task_id: draggableId,
     };
 
     try {
-      await moveinColumn(payload);
+      const res = await dispatch(projectTaskMoveCol(payload));
+      //@ts-ignore
+      if (res?.payload?.data?.status == 0) {
+        toast.error(res?.payload?.data?.message);
+      } else {
+        setStarter((prevStarter) => ({
+          ...prevStarter,
+          columns: {
+            ...prevStarter.columns,
+            [newStartColumn.id]: newStartColumn,
+            [newEndColumn.id]: newEndColumn,
+          },
+        }));
+      }
     } catch (error) {
       console.error("Error moving task:", error);
     }
   };
-
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

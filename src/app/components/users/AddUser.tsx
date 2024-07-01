@@ -107,6 +107,11 @@ function AddUserModal({ isOpen, setIsOpen }: IProps) {
               name="password"
               label="Password"
               placeholder="Enter Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
           </Grid>
           <Grid item md={6}>
@@ -116,6 +121,11 @@ function AddUserModal({ isOpen, setIsOpen }: IProps) {
               name="confirm_password"
               label="Confirm Password"
               placeholder="Enter Confirm Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
           </Grid>
         </Grid>

@@ -181,6 +181,11 @@ function jwtSignInTab() {
           type="password"
           onChange={handleChange}
           placeholder="Enter Password"
+          sx={{
+            ".MuiInputBase-input": {
+              paddingRight: "34px",
+            },
+          }}
         />
         <div>
           <span className=" text-red pt-[1px]  block ">{passErrorMsg}</span>

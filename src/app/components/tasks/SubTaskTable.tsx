@@ -140,7 +140,7 @@ function SubTaskTable(props) {
               </TableCell>
               <TableCell align="center">
                 {/* <ImagesOverlap images={row?.assigned_task_users?.user_image} /> */}
-                <div className="flex">
+                <div className="flex justify-center">
                   {row?.assigned_task_users.slice(0, 3)?.map((item, idx) => (
                     <img
                       className={`h-[34px] w-[34px] rounded-full border-2 border-white ${
