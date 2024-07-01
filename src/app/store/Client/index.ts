@@ -139,7 +139,7 @@ export const getAllState = createAsyncThunk(
 
 export const changePassword = createAsyncThunk(
   "auth/change-password",
-  async (payload: ChangePassword) => {
+  async (payload: any) => {
     const response = await ApiHelperFunction({
       url: `auth/change-password`,
       method: "post",
@@ -557,7 +557,9 @@ export const GetAgendaData = createAsyncThunk(
   async (payload: filterType) => {
     console.log(payload, "paylofghsdfhf");
     const response = await ApiHelperFunction({
-      url: `client/task-list?start=${payload.start || 0}&limit=${payload.limit || 20}`,
+      url: `client/task-list?start=${payload.start || 0}&limit=${
+        payload.limit || 20
+      }`,
       method: "get",
       data: payload,
     });
