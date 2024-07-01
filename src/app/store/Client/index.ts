@@ -555,7 +555,7 @@ export const GetRecentActivityData = createAsyncThunk(
 export const GetAgendaData = createAsyncThunk(
   "client/task-list",
   async (payload: filterType) => {
-    console.log(payload, "paylofghsdfhf");
+    // console.log(payload, "paylofghsdfhf");
     const response = await ApiHelperFunction({
       url: `client/task-list?start=${payload.start || 0}&limit=${payload.limit || 20}`,
       method: "get",

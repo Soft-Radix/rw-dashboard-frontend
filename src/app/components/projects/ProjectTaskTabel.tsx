@@ -83,6 +83,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const [isDefault, setIsDefault] = useState();
   // const [selectedTab, setSelectedTab] = useState(0);
   const [columnId, setcolumnId] = useState();
+
   const [showLoader, setShowLoader] = useState<boolean>(false);
   // console.log(columnId, "columnId");
   const [columnList, setColumnList] = useState<any[]>([]);
