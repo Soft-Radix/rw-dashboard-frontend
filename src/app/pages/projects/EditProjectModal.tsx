@@ -46,7 +46,7 @@ function EditProjectModal({ isOpen, setIsOpen, projectData }: IProps) {
         localStorage.setItem("userDetail", JSON.stringify(localData));
 
         formik.resetForm();
-        // window.location.reload();
+        window.location.reload();
         setIsOpen(false);
       }
     } catch (error) {

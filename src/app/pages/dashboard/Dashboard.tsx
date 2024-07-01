@@ -175,7 +175,7 @@ export default function Dashboard() {
   }, [filters.limit, filters.client_id, filters.search, filters.start]);
   useEffect(() => {
     dispatch(GetRecentActivityData());
-    dispatch(GetAgendaData());
+    dispatch(GetAgendaData(filters));
   }, [dispatch]);
   return (
     <div>
