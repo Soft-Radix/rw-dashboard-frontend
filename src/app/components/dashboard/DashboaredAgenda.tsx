@@ -388,7 +388,7 @@ const DashboaredAgenda = ({ columnList }) => {
                   anchorEl={anchorEl}
                   handleClose={handleClose}
                 >
-                  {columnList.map((item) => {
+                  {columnList?.map((item) => {
                     // console.log(item, "itemssadkadf");
                     return (
                       <div>
@@ -407,7 +407,7 @@ const DashboaredAgenda = ({ columnList }) => {
               </div>
             </div>
           </div>
-          <CommonTable headings={[]}>
+          <CommonTable headings={[" Task 3"]}>
             <>
               {taskData?.map((row, id) => {
                 const isDueDatePassed = moment(row.due_date_time).isBefore(
