@@ -203,7 +203,14 @@ export default function Todo({
       }
     };
   }, [handleScroll, showData]);
-  const headings = ["Title", "Assigned", "Due Date", "Priority", "Action"];
+  const headings = [
+    "Title",
+    "Assigned  ",
+    "Subtask",
+    "Due Date",
+    "Priority",
+    "Action",
+  ];
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   return (
     <>
@@ -247,7 +254,7 @@ export default function Todo({
                         <>
                           <div>
                             <div className="custom-table">
-                              <div className="table-header pr-[5px] mr-[3px] bg-[#F7F9FB] ">
+                              <div className="table-header  mr-[8px] bg-[#F7F9FB] ">
                                 {headings.map((heading, index) => (
                                   <div
                                     key={index}
@@ -275,6 +282,7 @@ export default function Todo({
                                     key={item.id}
                                     project_id={project_id}
                                     agent={item.assigned_task_users}
+                                    total_sub_tasks={item?.total_sub_tasks}
                                   />
                                 ))}
                               </div>

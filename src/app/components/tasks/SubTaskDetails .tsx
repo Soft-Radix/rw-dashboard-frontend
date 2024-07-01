@@ -13,7 +13,7 @@ import { useEffect, useState } from "react";
 import TitleBar from "src/app/components/TitleBar";
 import AddTaskModal from "src/app/components/tasks/AddTask";
 import ThemePageTable from "src/app/components/tasks/TaskPageTable";
-import RecentData from "../../components/client/clientAgent/RecentData";
+import RecentData from "../client/clientAgent/RecentData";
 import {
   Clock,
   DeleteGrey,
@@ -69,7 +69,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   padding: "8px 20px",
   minWidth: "250px",
 }));
-const TaskDetails = () => {
+const SubTaskDetails = () => {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const { taskId } = useParams();
   const { projectId } = useParams();
@@ -503,165 +503,9 @@ const TaskDetails = () => {
                     </div>
                   </div>
 
-                  <div className="flex gap-20 my-20 w-full">
-                    <div className="relative w-1/2">
-                      <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
-                        Files
-                      </Typography>
-                      <div className="flex gap-10  flex-wrap">
-                        {taskDetailInfo?.task_files?.map((item) => {
-                          // console.log(item, "itemmmm");
-                          return (
-                            <div className="relative cursor-pointer ">
-                              {item.file.includes(".png") ||
-                              item.file.includes(".jpg") ||
-                              item.file.includes(".jpeg") ? (
-                                <>
-                                  <img
-                                    src={urlForImage + item.file}
-                                    alt="Black Attachment"
-                                    className="w-[200px] rounded-md sm:h-[130px]"
-                                  />
-                                  <div
-                                    className="absolute top-7 left-7"
-                                    onClick={() =>
-                                      handleImageClick(urlForImage + item.file)
-                                    }
-                                  >
-                                    <AttachmentIcon />
-                                  </div>
-                                  <div
-                                    className="absolute top-7 right-7"
-                                    // onClick={() => handleDeleteAttachment(item.id)}
-                                  >
-                                    <AttachmentDeleteIcon
-                                      onClick={() => {
-                                        setIsOpenDeletedModal(true);
-                                        setType(3);
-                                        setIsDeleteId(item.id);
-                                      }}
-                                    />
-                                  </div>
-                                </>
-                              ) : (
-                                <div className="w-[200px] rounded-md sm:h-[130px] flex items-center justify-center border-1 border-[#4F46E5]">
-                                  <a
-                                    href={urlForImage + item.file}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                  >
-                                    <img
-                                      src="../assets/images/logo/pdfIcon.png"
-                                      alt="Black Attachment"
-                                      className="h-[50px] w-[50px]"
-                                    />
-                                  </a>
-
-                                  {/* <a href="/">check</a> */}
-                                  <div
-                                    className="absolute top-7 left-7"
-                                    onClick={() =>
-                                      handleImageClick(urlForImage + item.file)
-                                    }
-                                  >
-                                    <AttachmentIcon />
-                                  </div>
-                                  <div
-                                    className="absolute top-7 right-7"
-                                    // onClick={() => handleDeleteAttachment(item.id)}
-                                  >
-                                    <AttachmentDeleteIcon
-                                      onClick={() => {
-                                        setIsOpenDeletedModal(true);
-                                        setType(3);
-                                        setIsDeleteId(item.id);
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          );
-                        })}
-                        {expandedImage && (
-                          <div
-                            className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-80"
-                            onClick={() => setExpandedImage(null)}
-                          >
-                            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                              <img
-                                src={expandedImage}
-                                alt="Expanded Image"
-                                className="max-w-full max-h-full"
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="w-1/2">
-                      <div className="relative">
-                        <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
-                          Screen Recording
-                        </Typography>
-                        {taskDetailInfo?.screen_record_file && (
-                          <>
-                            <video
-                              src={
-                                urlForImage + taskDetailInfo?.screen_record_file
-                              }
-                              controls
-                              className="block w-full h-[200px]"
-                            />
-                            <div className="absolute top-[28px] right-0 mt-4 mr-4">
-                              <AttachmentDeleteIcon
-                                onClick={() => {
-                                  setIsOpenDeletedModal(true);
-                                  setType(2);
-                                  setIsDeleteId(taskId);
-                                }}
-                              />
-                            </div>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <Typography className="mb-10 font-500 text-[14px] text-[#000000]">
-                      Voice Memo
-                    </Typography>
-                  </div>
-
-                  {taskDetailInfo?.voice_record_file && (
-                    <audio controls className="mb-10">
-                      <source
-                        src={urlForImage + taskDetailInfo?.voice_record_file}
-                        type="audio/mp3"
-                      />
-                    </audio>
-                  )}
-
-                  <div className="flex justify-between items-center">
-                    <div className="text-[20px] font-600">Subtasks</div>
-                    {userDetails?.role != "agent" && (
-                      <Button
-                        className="text-[16px] font-500 text-[#4F46E5] gap-10 "
-                        onClick={() => setIsOpenAddSubTaskModal(true)}
-                      >
-                        <PlusIcon color={theme.palette.secondary.main} />
-                        Add Subtask
-                      </Button>
-                    )}
-                  </div>
                   {/* <div className="flex items-baseline justify-between w-full pt-0 pb-20 gap-31 my-10"></div> */}
                 </div>
               </div>
-              <SubTaskTable
-                fetchSubTaskList={fetchSubTaskList}
-                List={subtaskList}
-              />
             </div>
           )}
         </div>
@@ -707,4 +551,4 @@ const TaskDetails = () => {
   );
 };
 
-export default TaskDetails;
+export default SubTaskDetails;
