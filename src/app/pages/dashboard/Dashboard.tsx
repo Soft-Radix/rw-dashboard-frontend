@@ -399,7 +399,7 @@ export default function Dashboard() {
                 </TableRow>
               ) : (
                 <>
-                  {assignedAgentDetail.map((row, index) => (
+                  {assignedAgentDetail?.map((row, index) => (
                     <TableRow
                       key={index}
                       sx={{
