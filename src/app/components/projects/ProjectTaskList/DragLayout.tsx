@@ -13,6 +13,7 @@ import {
 import transformData from "../../dashboard/dataTransform";
 import Todo from "./Todo";
 import InProgress from "./InProgress";
+import toast from "react-hot-toast";
 
 const Container = styled("div")``;
 
@@ -144,18 +145,23 @@ const DragLayout = ({ columnList, callListApi, id }) => {
     };
 
     try {
-      await moveinColumn(payload); // Call the moveColumns function with the correct payload
+      const res = await dispatch(projectTaskMoveCol(payload));
+      //@ts-ignore
+      if (res?.payload?.data?.status == 0) {
+        toast.error(res?.payload?.data?.message);
+      } else {
+        setStarter({
+          ...starter,
+          columns: {
+            ...starter.columns,
+            [start.id]: newStartColumn,
+            [end.id]: endTaskColumn,
+          },
+        });
+      }
     } catch (error) {
       console.error("Error moving column:", error);
     }
-    setStarter({
-      ...starter,
-      columns: {
-        ...starter.columns,
-        [start.id]: newStartColumn,
-        [end.id]: endTaskColumn,
-      },
-    });
   };
 
   return (

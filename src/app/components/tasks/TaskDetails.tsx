@@ -6,6 +6,7 @@ import {
   TableCell,
   Theme,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { styled, useTheme } from "@mui/styles";
 import { PlusIcon, ThreeDotsIcon } from "public/assets/icons/dashboardIcons";
@@ -251,6 +252,10 @@ const TaskDetails = () => {
     fetchSubTaskList();
   }, []);
 
+  const isDateBeforeToday = taskDetailInfo?.due_date_time
+    ? moment(taskDetailInfo?.due_date_time).isBefore(moment(), "day")
+    : false;
+
   return (
     <div>
       <TitleBar title="Task Details"></TitleBar>
@@ -351,13 +356,43 @@ const TaskDetails = () => {
                     <div className="flex">
                       {/* <span>{agentDetail?.id || "N/A"}</span> */}
                       Due Date :&nbsp;
-                      <span className="font-500 text-[#111827] text-[14px]">
-                        {taskDetailInfo?.due_date_time
-                          ? moment
-                              .utc(taskDetailInfo?.due_date_time)
-                              .format("MMMM Do, YYYY , h:mm A")
-                          : "N/A"}
-                      </span>{" "}
+                      {isDateBeforeToday ? (
+                        <Tooltip
+                          title={"This task is overdue "}
+                          enterDelay={500}
+                          componentsProps={{
+                            tooltip: {
+                              sx: {
+                                bgcolor: "common.white",
+                                color: "common.black",
+                                padding: 1,
+                                borderRadius: 10,
+                                boxShadow: 3,
+
+                                "& .MuiTooltip-arrow": {
+                                  color: "common.white",
+                                },
+                              },
+                            },
+                          }}
+                        >
+                          <span className="font-500 text-[red] text-[14px]">
+                            {taskDetailInfo?.due_date_time
+                              ? moment
+                                  .utc(taskDetailInfo?.due_date_time)
+                                  .format("MMMM Do, YYYY , h:mm A")
+                              : "N/A"}
+                          </span>
+                        </Tooltip>
+                      ) : (
+                        <span className="font-500 text-[#111827] text-[14px]">
+                          {taskDetailInfo?.due_date_time
+                            ? moment
+                                .utc(taskDetailInfo?.due_date_time)
+                                .format("MMMM Do, YYYY , h:mm A")
+                            : "N/A"}
+                        </span>
+                      )}
                     </div>
                   </div>
 

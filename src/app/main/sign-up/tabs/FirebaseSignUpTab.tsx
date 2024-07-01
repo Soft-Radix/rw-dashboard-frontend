@@ -152,6 +152,11 @@ function FirebaseSignUpTab() {
 						variant="outlined"
 						required
 						fullWidth
+						sx={{
+							".MuiInputBase-input": {
+							  paddingRight: "34px",
+							},
+						  }}
 					/>
 				)}
 			/>
@@ -170,6 +175,11 @@ function FirebaseSignUpTab() {
 						variant="outlined"
 						required
 						fullWidth
+						sx={{
+							".MuiInputBase-input": {
+							  paddingRight: "34px",
+							},
+						  }}
 					/>
 				)}
 			/>

@@ -74,6 +74,11 @@ export default function SetPassword() {
               label="New Password"
               type="password"
               placeholder="Enter New Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
             <InputField
               formik={formik}
@@ -81,6 +86,11 @@ export default function SetPassword() {
               label="Confirm Password"
               type="password"
               placeholder="Enter Confirm Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
             <Button
               variant="contained"

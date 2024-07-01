@@ -19,6 +19,7 @@ import { Clock, ClockTask } from "public/assets/icons/common";
 import { debounce } from "lodash";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Draggable } from "react-beautiful-dnd";
+import CompleteModal from "../CompleteModal";
 // import { CalendarIcon } from "public/assets/icons/dashboardIcons";
 type CardType = {
   title: string;
@@ -101,8 +102,9 @@ export default function ItemCard({
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [isOpenAddModal, setIsOpenAddModal] = useState<boolean>(false);
   const [originalTitle, setOriginalTitle] = useState(title);
+  const [complete, setComplete] = useState(false);
   const toggleDeleteModal = () => setOpenDeleteModal(!openDeleteModal);
-
+  const toggleCompleteModal = () => setComplete(!complete);
   const toggleEditModal = () => {
     setIsOpenAddModal(true);
     if (openEditModal) {
@@ -133,6 +135,7 @@ export default function ItemCard({
 
   const handleCompleteTask = () => {
     if (id) {
+      setDisabled(true);
       dispatch(CheckedTask(id))
         .unwrap()
         .then((res) => {
@@ -143,6 +146,9 @@ export default function ItemCard({
             });
           }
         });
+
+      setDisabled(false);
+      setComplete(false);
     }
   };
 
@@ -228,6 +234,15 @@ export default function ItemCard({
                 onDelete={handleDelete}
                 disabled={disable}
               />
+              <CompleteModal
+                modalTitle="Move Task"
+                modalSubTitle="Are you sure you want to move this task in complete as well as subTasks?"
+                open={complete}
+                handleToggle={toggleCompleteModal}
+                type="Yes"
+                onDelete={handleCompleteTask}
+                disabled={disable}
+              />
               {isOpenAddModal && (
                 <AddTaskModal
                   isOpen={isOpenAddModal}
@@ -299,8 +314,10 @@ export default function ItemCard({
                       <Checkbox
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleCompleteTask();
+                          setComplete(true);
+                          // handleCompleteTask();
                         }}
+                        checked={complete}
                       />
                     )}
                   </div>

@@ -95,6 +95,11 @@ function AddPassword({ isOpen, setIsOpen }: IProps) {
           name="password"
           label="Password"
           placeholder="Enter Password"
+          sx={{
+            ".MuiInputBase-input": {
+              paddingRight: "34px",
+            },
+          }}
         />
         <SelectField
           name="assigned_to"
@@ -110,7 +115,9 @@ function AddPassword({ isOpen, setIsOpen }: IProps) {
                     <div className="relative flex items-center bg-white px-6 py-5 pe-16 rounded-full gap-8">
                       <img
                         className="w-[28px] aspect-square rounded-full object-cover"
-                        src={`/assets/images/avatars/${AssignedName.find((item) => item.name === value).image}`}
+                        src={`/assets/images/avatars/${
+                          AssignedName.find((item) => item.name === value).image
+                        }`}
                         alt=""
                       />
                       <span className=" ">{value}</span>
