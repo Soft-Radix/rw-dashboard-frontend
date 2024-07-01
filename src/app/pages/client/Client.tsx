@@ -370,7 +370,7 @@ export default function Clients() {
       <AddClient
         isOpen={isOpenAddModal}
         setIsOpen={setIsOpenAddModal}
-        fetchList={fetchList}
+        fetchList={fetchList} 
       />
 
       <DeleteClient

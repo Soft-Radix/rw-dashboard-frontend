@@ -435,7 +435,7 @@ export const initialState: initialStateProps = {
   status: "idle",
   fetchStatus: "loading",
   fetchStatusTask: "loading",
-  fetchSubTask:"loading",
+  fetchSubTask: "loading",
   actionStatus: false,
   successMsg: "",
   errorMsg: "",
@@ -469,7 +469,7 @@ export const projectSlice = createSlice({
         state.fetchStatusTask = "loading";
       })
       .addCase(TaskDetails.fulfilled, (state, action) => {
-        console.log(state, "statet");
+        // console.log(state, "statet");
         const { data } = action.payload?.data;
         state.fetchStatus = "idle";
         state.fetchStatusTask = "idle";
@@ -481,15 +481,11 @@ export const projectSlice = createSlice({
       })
       .addCase(SubTaskDetails.pending, (state) => {
         state.fetchSubTask = "loading";
-     
       })
       .addCase(SubTaskDetails.fulfilled, (state, action) => {
-   
         state.fetchSubTask = "idle";
-    
       })
       .addCase(SubTaskDetails.rejected, (state) => {
-      
         state.fetchSubTask = "idle";
       })
 
@@ -508,6 +504,22 @@ export const projectSlice = createSlice({
       .addCase(projectColumnList.rejected, (state) => {
         state.fetchStatusNew = "idle";
       });
+    // .addCase(projectTaskTableList.pending, (state, action) => {
+    //   const { project_column_id } = action.meta.arg;
+    //   state.fetchStatusNew = !project_column_id ? "loading" : "idle";
+    //   // state.fetchStatusNew = "loading";
+    // })
+    // .addCase(projectTaskTableList.fulfilled, (state, action) => {
+    //   // console.log(state, "statet");
+    //   const { data } = action.payload?.data;
+    //   // console.log(data.list, "datadgikfh");
+    //   state.fetchStatusNew = "idle";
+    //   state.projectInfoTask = data.list;
+    //   // console.log(state.projectInfoTask, "state.projectInfo");
+    // })
+    // .addCase(projectTaskTableList.rejected, (state) => {
+    //   state.fetchStatusNew = "idle";
+    // });
   },
 });
 export const { restAll } = projectSlice.actions;

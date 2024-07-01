@@ -108,12 +108,22 @@ export default function Dashboard() {
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
   const [selectedTab, setSelectedTab] = useState(0);
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
+  const userDetails = JSON.parse(localStorage.getItem("userDetail"));
+  // console.log(userDetails, "fffffffffffffffffffff");
   // console.log(client_id.id, "clientididid");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
     search: "",
   });
+  const [columnList, setColumnList] = useState(() => {
+    const savedColumnList = localStorage.getItem("columnList");
+    return savedColumnList ? JSON.parse(savedColumnList) : [];
+  });
+  console.log(
+    "🚀 ~ const[columnList,setColumnList]=useState ~ columnList:",
+    columnList
+  );
   const {
     assignedAgentDetail,
     agentTotal_records,
@@ -143,9 +153,11 @@ export default function Dashboard() {
     setAnchorEl1(event.currentTarget);
   };
 
+  const handleCloseProject = () => {
+    setAnchorEl1(null);
+  };
   const handleClose = () => {
     setAnchorEl(null);
-    setAnchorEl1(null);
   };
   const checkPageNum = (e: any, pageNumber: number) => {
     // console.log(pageNumber, "rr");
@@ -167,6 +179,37 @@ export default function Dashboard() {
     }));
   };
 
+  const handleSelectProject = (event, item) => {
+    const isChecked = event.target.checked;
+    const projectIndex = columnList.findIndex(
+      (project) => project.id === item.id
+    );
+
+    let updatedProjects;
+
+    if (projectIndex !== -1) {
+      updatedProjects = [...columnList];
+      updatedProjects[projectIndex] = {
+        ...updatedProjects[projectIndex],
+        checked: isChecked,
+      };
+    } else {
+      updatedProjects = [
+        ...columnList,
+        { id: item.id, name: item.name, checked: isChecked },
+      ];
+    }
+
+    setColumnList(updatedProjects);
+    localStorage.setItem("columnList", JSON.stringify(updatedProjects));
+  };
+  useEffect(() => {
+    const columnData = localStorage.getItem("columnList");
+    const result = JSON.parse(columnData);
+    setColumnList(result);
+    console.log("🚀 ~ useEffect ~ result:", result);
+  }, []);
+  // console.log(columnList, "columnList");
   const fetchAgentList = useCallback(() => {
     dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
   }, [filters]);
@@ -267,39 +310,32 @@ export default function Dashboard() {
                 {anchorEl1 ? (
                   <UpArrowBlank className="cursor-pointer fill-none" />
                 ) : (
-                  <DownArrowBlank className="cursor-pointer fill-none" />
+                  <DownArrowBlank
+                    className="cursor-pointer fill-none"
+                    onClick={handleCloseProject}
+                  />
                 )}
                 Project Summary
               </Button>
               {anchorEl1 && (
                 <div className="w-[375px]  rounded-none shadow-none">
-                  <MenuItem className="px-36">
-                    <label
-                      htmlFor="project1"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Checkbox id="project1" />
-                      Project 1
-                    </label>
-                  </MenuItem>
-                  <MenuItem className="px-36">
-                    <label
-                      htmlFor="project2"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Checkbox id="project2" />
-                      Project 2
-                    </label>
-                  </MenuItem>
-                  <MenuItem className="px-36">
-                    <label
-                      htmlFor="project3"
-                      style={{ display: "flex", alignItems: "center" }}
-                    >
-                      <Checkbox id="project3" />
-                      Project 3
-                    </label>
-                  </MenuItem>
+                  {userDetails?.projects.map((item, index) => {
+                    return (
+                      <MenuItem className="px-36">
+                        <label
+                          htmlFor={`project-${item.id}`}
+                          style={{ display: "flex", alignItems: "center" }}
+                        >
+                          <Checkbox
+                            id={`project-${item.id}`}
+                            onChange={(e) => handleSelectProject(e, item)}
+                            checked={columnList[index]?.checked}
+                          />
+                          {item.name}
+                        </label>
+                      </MenuItem>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -426,7 +462,7 @@ export default function Dashboard() {
         </div>
       )}
       {isChecked.activity && <DashboardRecentActivity />}
-      {isChecked.logged && <DashboaredAgenda />}
+      {isChecked.logged && <DashboaredAgenda columnList={columnList} />}
     </div>
   );
 }
