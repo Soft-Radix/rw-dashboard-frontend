@@ -10,6 +10,9 @@ i18next.addResourceBundle("ar", "tasksPage", ar);
 
 const Tasks = lazy(() => import("./Tasks"));
 const TaskDetails = lazy(() => import("../../components/tasks/TaskDetails"));
+const SubTaskDetails = lazy(() =>
+  import("../../components/tasks/SubTaskDetails ")
+);
 
 /**
  * The Tasks page config.
@@ -26,6 +29,10 @@ const TasksConfig = {
     {
       path: "/:projectId/tasks/detail/:taskId",
       element: <TaskDetails />,
+    },
+    {
+      path: "/:projectId/subTask/detail/:taskId",
+      element: <SubTaskDetails />,
     },
   ],
 };

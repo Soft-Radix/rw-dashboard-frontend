@@ -33,6 +33,7 @@ type CardType = {
   project_id?: any;
   agent?: [];
   is_defalut?: any;
+  total_sub_tasks?: any;
 };
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -74,6 +75,7 @@ export default function ItemCard({
   project_id,
   agent,
   is_defalut,
+  total_sub_tasks,
 }: CardType) {
   const maxVisibleImages = 3;
   const visibleAgents = agent.slice(0, maxVisibleImages);
@@ -145,7 +147,9 @@ export default function ItemCard({
   };
 
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
-
+  const isDateBeforeToday = date
+    ? moment(date).isBefore(moment(), "day")
+    : false;
   return (
     <>
       <Draggable
@@ -300,34 +304,57 @@ export default function ItemCard({
                       />
                     )}
                   </div>
+                  <Typography color="primary.main" className="font-400">
+                    Subtasks :{" "}
+                    {total_sub_tasks
+                      ? total_sub_tasks.toString().padStart(2, "0")
+                      : "N/A"}
+                  </Typography>
                   <div className="mt-10 flex justify-between">
-                    <div className="flex items-center">
-                      <ClockTask color={"#4F46E5"} />
-                      <Typography
-                        color="primary.light"
-                        className="text-[12px] ml-10 "
+                    {isDateBeforeToday ? (
+                      <Tooltip
+                        title={"This task is overdue "}
+                        enterDelay={500}
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              bgcolor: "common.white",
+                              color: "common.black",
+                              padding: 1,
+                              borderRadius: 10,
+                              boxShadow: 3,
+
+                              "& .MuiTooltip-arrow": {
+                                color: "common.white",
+                              },
+                            },
+                          },
+                        }}
                       >
-                        {/* {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")} */}
-                        {date ? moment(date).format("ll") : "N/A"}
-                      </Typography>
-                    </div>
+                        <div className="flex items-center">
+                          <ClockTask color={"#4F46E5"} />
+                          <Typography
+                            color="#F44336"
+                            className="text-[12px] ml-10 "
+                          >
+                            {/* {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")} */}
+                            {date ? moment(date).format("ll") : "N/A"}
+                          </Typography>
+                        </div>
+                      </Tooltip>
+                    ) : (
+                      <div className="flex items-center">
+                        <ClockTask color={"#4F46E5"} />
+                        <Typography
+                          color="primary.light"
+                          className="text-[12px] ml-10 "
+                        >
+                          {/* {moment(Date[0], "DD/MM/YYYY").format("MMM DD, YYYY")} */}
+                          {date ? moment(date).format("ll") : "N/A"}
+                        </Typography>
+                      </div>
+                    )}
                     <div className="flex ">
-                      {/* {agent?.map((item) => (
-                        <img
-                          className={`h-[34px] w-[34px] rounded-full border-2 border-white
-                  ml-[-10px]
-                          z-0`}
-                          key={item}
-                          src={
-                            //@ts-ignore
-                            !item?.user_image
-                              ? "../assets/images/logo/images.jpeg"
-                              : `/assets/images/avatars/${item}`
-                          }
-                          alt={item}
-                          loading="lazy"
-                        />
-                      ))} */}
                       {visibleAgents?.map((item, idx) => (
                         <img
                           className={`h-[34px] w-[34px] rounded-full border-2 border-white ${

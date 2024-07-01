@@ -85,6 +85,23 @@ export const getLabelList = createAsyncThunk(
   }
 );
 
+export const getSubTaskList = createAsyncThunk(
+  "/project/sub-task/list",
+  async (payload: any) => {
+    const response = await ApiHelperFunction({
+      url: `/project/sub-task/list`,
+      method: "post",
+      data: payload,
+    });
+    // console.log(response.data, "response.data");
+
+    // Return only the data you need to keep it serializable
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const AddLabellList = createAsyncThunk(
   "/project//task-label/add",
   async (payload: any) => {

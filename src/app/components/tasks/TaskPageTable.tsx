@@ -4,6 +4,7 @@ import {
   TableRow,
   Theme,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import { useTheme } from "@mui/styles";
 import {
@@ -69,13 +70,26 @@ function ThemePageTable(props) {
     // ListData();
     setIsOpenDeletedModal(false);
   };
+  const CheckDate = (date) => {
+    const isDateBeforeToday = date
+      ? moment(date).isBefore(moment(), "day")
+      : false;
+    return isDateBeforeToday;
+  };
 
   return (
     <>
       {tableSelectedItemDesign == "Due Date" ? (
         <>
           <CommonTable
-            headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
+            headings={[
+              "Title",
+              "Subtask",
+              "Assigned",
+              "Due Date",
+              "Priority",
+              "Action",
+            ]}
           >
             <div></div>
           </CommonTable>
@@ -94,7 +108,14 @@ function ThemePageTable(props) {
         </>
       ) : (
         <CommonTable
-          headings={["Title", "Assigned", "Due Date", "Priority", "Action"]}
+          headings={[
+            "Title",
+            "Subtask",
+            "Assigned",
+            "Due Date",
+            "Priority",
+            "Action",
+          ]}
         >
           {!showLoader && columnList?.length == 0 ? (
             <TableRow>
@@ -160,6 +181,11 @@ function ThemePageTable(props) {
                     </span>
                   </TableCell>
                   <TableCell align="center">
+                    <span>
+                      {row?.total_sub_tasks ? row?.total_sub_tasks : "N/A"}
+                    </span>
+                  </TableCell>
+                  <TableCell align="center">
                     <div className="flex mt-10 items-center justify-center">
                       {row.assigned_task_users.length ? (
                         <>
@@ -198,13 +224,46 @@ function ThemePageTable(props) {
                     </div>
                   </TableCell>
                   <TableCell align="center">
-                    <span>
+                    {CheckDate(row?.due_date_time) ? (
+                      <Tooltip
+                        title={"This task is overdue "}
+                        enterDelay={500}
+                        componentsProps={{
+                          tooltip: {
+                            sx: {
+                              bgcolor: "common.white",
+                              color: "common.black",
+                              padding: 1,
+                              borderRadius: 10,
+                              boxShadow: 3,
+
+                              "& .MuiTooltip-arrow": {
+                                color: "common.white",
+                              },
+                            },
+                          },
+                        }}
+                      >
+                        <span className="text-[red]">
+                          {row?.due_date_time
+                            ? moment
+                                .utc(row?.due_date_time)
+                                .format(" MMMM Do, YYYY ")
+                            : "N/A"}
+                        </span>
+                      </Tooltip>
+                    ) : row?.due_date_time ? (
+                      moment.utc(row?.due_date_time).format(" MMMM Do, YYYY ")
+                    ) : (
+                      "N/A"
+                    )}
+                    {/* <span>
                       {row?.due_date_time
                         ? moment
                             .utc(row?.due_date_time)
                             .format(" MMMM Do, YYYY ")
                         : "N/A"}
-                    </span>
+                    </span> */}
                   </TableCell>
                   <TableCell align="center">
                     <span
@@ -213,8 +272,8 @@ function ThemePageTable(props) {
                     row.priority === "Low"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.priority === "Medium"
-                        ? "text-[#FF5F15] bg-[#FF5F152E]"
-                        : "text-[#F44336] bg-[#F443362E]"
+                      ? "text-[#FF5F15] bg-[#FF5F152E]"
+                      : "text-[#F44336] bg-[#F443362E]"
                   }`}
                     >
                       {row.priority}
@@ -255,6 +314,7 @@ function ThemePageTable(props) {
           )}
         </CommonTable>
       )}
+
       <DeleteClient
         isOpen={isOpenDeletedModal}
         setIsOpen={setIsOpenDeletedModal}
@@ -262,6 +322,7 @@ function ThemePageTable(props) {
         heading={"Delete Task"}
         description={"Are you sure you want to delete this Task? "}
       />
+
       {isOpenAddModal && (
         <AddTaskModal
           isOpen={isOpenAddModal}

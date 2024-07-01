@@ -59,7 +59,11 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Whiteboard"
           icon={<WhiteBoardIcon />}
-          className={`cursor-pointer ${boardDetails?.whiteBoard ? " border-1 border-solid border-[#393F4C]" : ""}`}
+          className={`cursor-pointer ${
+            boardDetails?.whiteBoard
+              ? " border-1 border-solid border-[#393F4C]"
+              : ""
+          }`}
           onClick={() => {
             handleChipClick("whiteboard");
 
@@ -75,7 +79,9 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Doc"
           icon={<DocIcon />}
-          className={`cursor-pointer ${boardDetails?.doc ? "border-1 border-solid border-[#393F4C]" : ""}`}
+          className={`cursor-pointer ${
+            boardDetails?.doc ? "border-1 border-solid border-[#393F4C]" : ""
+          }`}
           onClick={() => {
             handleChipClick("doc");
             setBoardDetails((values) => {
@@ -89,7 +95,9 @@ function WhiteBoard({ isOpen, setIsOpen, boardList, setBoardList }: IProps) {
         <CommonChip
           label="Chat"
           icon={<ChatIcon />}
-          className={`cursor-pointer ${boardDetails?.chat ? " border-1 border-solid border-[#393F4C]" : ""}`}
+          className={`cursor-pointer ${
+            boardDetails?.chat ? " border-1 border-solid border-[#393F4C]" : ""
+          }`}
           onClick={() => {
             handleChipClick("chat");
 

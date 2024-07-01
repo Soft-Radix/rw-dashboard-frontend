@@ -189,6 +189,22 @@ export const TaskDetails: any = createAsyncThunk(
   }
 );
 
+export const SubTaskDetails: any = createAsyncThunk(
+  "/project/sub-task-detail/",
+  async (payload: any) => {
+    // console.log("🚀 ~ payload:", payload);
+
+    const response = await ApiHelperFunction({
+      url: `project/sub-task-detail/${payload}`,
+      method: "get",
+      data: payload,
+    });
+    return {
+      data: response.data,
+    };
+  }
+);
+
 export const TaskDeleteAttachment: any = createAsyncThunk(
   "/project/task/delete-files",
   async (payload: any) => {
@@ -419,6 +435,7 @@ export const initialState: initialStateProps = {
   status: "idle",
   fetchStatus: "loading",
   fetchStatusTask: "loading",
+  fetchSubTask:"loading",
   actionStatus: false,
   successMsg: "",
   errorMsg: "",
@@ -462,6 +479,20 @@ export const projectSlice = createSlice({
         state.fetchStatus = "idle";
         state.fetchStatusTask = "idle";
       })
+      .addCase(SubTaskDetails.pending, (state) => {
+        state.fetchSubTask = "loading";
+     
+      })
+      .addCase(SubTaskDetails.fulfilled, (state, action) => {
+   
+        state.fetchSubTask = "idle";
+    
+      })
+      .addCase(SubTaskDetails.rejected, (state) => {
+      
+        state.fetchSubTask = "idle";
+      })
+
       .addCase(projectColumnList.pending, (state, action) => {
         const { project_column_id } = action.meta.arg;
         state.fetchStatusNew = !project_column_id ? "loading" : "idle";

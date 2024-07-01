@@ -332,6 +332,7 @@ export default function MainCard({
                               project_id={project_id}
                               agent={item.assigned_task_users}
                               is_defalut={is_defalut}
+                              total_sub_tasks={item?.total_sub_tasks}
                             />
                             // <Task key={task.id} task={task} index={index} />
                           ))
