@@ -110,7 +110,7 @@ const DashboaredAgenda = ({ columnList }) => {
     limit: 20,
     search: "",
   });
-  const { projectInfo, projectInfoTask } = useSelector(
+  const { projectInfo } = useSelector(
     (store: ProjectRootState) => store?.project
   );
   // console.log(projectInfoTask, "projectInfo");
