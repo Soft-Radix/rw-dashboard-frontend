@@ -457,28 +457,28 @@ export const WhiteBoardIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => (
   >
     <path
       d="M11.0007 1.83398C5.9379 1.83398 1.83398 5.9379 1.83398 11.0007C1.83398 16.0634 5.9379 20.1673 11.0007 20.1673C16.0634 20.1673 20.1673 16.0634 20.1673 11.0007C20.1673 5.9379 16.0634 1.83398 11.0007 1.83398Z"
-      stroke="#393F4C"
+      stroke="#757982"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M7.33398 19.4053V14.8346L11.0007 8.41797L14.6673 14.8346V19.4053"
-      stroke="#393F4C"
+      stroke="#757982"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M7.33398 14.834C7.33398 14.834 8.36707 15.7507 9.16732 15.7507C9.96757 15.7507 11.0007 14.834 11.0007 14.834C11.0007 14.834 12.0337 15.7507 12.834 15.7507C13.6342 15.7507 14.6673 14.834 14.6673 14.834"
-      stroke="#393F4C"
+      stroke="#757982"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"
     />
     <path
       d="M9.88672 5C9.88672 5 9.26867 6.23513 9.47579 7.00811C9.68291 7.7811 10.8357 8.54173 10.8357 8.54173"
-      stroke="#393F4C"
+      stroke="#757982"
       stroke-width="1.5"
       stroke-linecap="round"
       stroke-linejoin="round"

@@ -119,6 +119,11 @@ function JwtSignUpTab() {
         label="Password"
         type="password"
         placeholder="Enter password"
+        sx={{
+          ".MuiInputBase-input": {
+            paddingRight: "34px",
+          },
+        }}
       />
       <InputField
         formik={formik}
@@ -126,6 +131,11 @@ function JwtSignUpTab() {
         label="Confirm Password"
         type="password"
         placeholder="Enter confirm password"
+        sx={{
+          ".MuiInputBase-input": {
+            paddingRight: "34px",
+          },
+        }}
       />
       <Button
         variant="contained"

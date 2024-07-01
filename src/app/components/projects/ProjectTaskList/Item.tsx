@@ -40,6 +40,7 @@ type CardType = {
   index?: any;
   project_id?: any;
   agent?: [];
+  total_sub_tasks?: any;
 };
 export const TruncateText = ({ text, maxWidth }) => {
   const [isTruncated, setIsTruncated] = useState(false);
@@ -80,6 +81,7 @@ export default function Item({
   index,
   project_id,
   agent,
+  total_sub_tasks,
 }: CardType) {
   const maxVisibleImages = 3;
   const visibleAgents = agent.slice(0, maxVisibleImages);
@@ -134,6 +136,10 @@ export default function Item({
 
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
   const urlForImage = import.meta.env.VITE_API_BASE_IMAGE_URL;
+  const isDateBeforeToday = date
+    ? moment(date).isBefore(moment(), "day")
+    : false;
+
   return (
     <>
       <div style={{ position: "relative" }}>
@@ -181,29 +187,14 @@ export default function Item({
                 isDragging={snapshot.isDragging}
               >
                 <div className="table-body  ">
-                  <div
-                    key={index}
-                    className="flex  border-[green-200] mr-[8px]"
-                  >
-                    {/* <div className="table-cell">
-                      <span className="flex items-center gap-10">
-                        <Checkbox
-                          sx={{ padding: "4px" }}
-                          color="primary"
-                          // defaultChecked={row.defaultChecked}
-                          inputProps={{
-                            "aria-labelledby": `table-checkbox-${index}`,
-                          }}
-                        />
-                      </span>
-                    </div> */}
-                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
-                      <span className="flex items-center gap-10 text-[14px] font-500 text-[#111827] w-[163px]">
+                  <div key={index} className="flex  border-[green-200] ">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[156px]">
+                      <span className="flex items-center gap-10 text-[14px] font-500 text-[#111827] w-[156px]">
                         <TruncateText text={title} maxWidth={123} />
                       </span>
                     </div>
 
-                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[156px]">
                       <div className="flex ">
                         {/* {agent?.map((item) => (
                         <img
@@ -253,33 +244,70 @@ export default function Item({
                         )}
                       </div>
                     </div>
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[156px]">
+                      <Typography color="primary.main" className="font-400">
+                        {total_sub_tasks
+                          ? total_sub_tasks.toString().padStart(2, "0")
+                          : "N/A"}
+                      </Typography>
+                    </div>
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[156px]">
+                      {isDateBeforeToday ? (
+                        <Tooltip
+                          title={"This task is overdue "}
+                          enterDelay={500}
+                          componentsProps={{
+                            tooltip: {
+                              sx: {
+                                bgcolor: "common.white",
+                                color: "common.black",
+                                padding: 1,
+                                borderRadius: 10,
+                                boxShadow: 3,
 
-                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
-                      {!date ? "N/A" : moment(date).format("ll")}
+                                "& .MuiTooltip-arrow": {
+                                  color: "common.white",
+                                },
+                              },
+                            },
+                          }}
+                        >
+                          <Typography
+                            color="#F44336"
+                            className="text-[12px] ml-10 "
+                          >
+                            {!date ? "N/A" : moment(date).format("ll")}
+                          </Typography>
+                        </Tooltip>
+                      ) : (
+                        <Typography className="text-[12px] ml-10 ">
+                          {!date ? "N/A" : moment(date).format("ll")}
+                        </Typography>
+                      )}
                     </div>
 
-                    <div className="table-cell border-1 border-[#D1D7DB] w-[163px]">
+                    <div className="table-cell border-1 border-[#D1D7DB] w-[156px]">
                       <span
                         style={{ width: "fit-content" }}
                         className={`${
                           priority === "Medium"
                             ? "bg-priorityMedium/[.18]"
                             : priority === "High"
-                              ? "bg-red/[.18]"
-                              : "bg-green/[.18]"
+                            ? "bg-red/[.18]"
+                            : "bg-green/[.18]"
                         } py-5 px-10 rounded-[27px] min-w-[69px] text-[12px] flex justify-center items-center  font-medium ${
                           priority === "Medium"
                             ? "text-priorityMedium"
                             : priority === "High"
-                              ? "text-red"
-                              : "text-green"
+                            ? "text-red"
+                            : "text-green"
                         }`}
                       >
                         {priority}
                       </span>
                     </div>
 
-                    <div className="table-cell action-cell border-1 border-[#D1D7DB] w-[163px]">
+                    <div className="table-cell action-cell border-1 border-[#D1D7DB] w-[156px]">
                       <div className="flex gap-20 px-10">
                         {userDetails?.role != "agent" && (
                           <span

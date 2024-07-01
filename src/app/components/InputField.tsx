@@ -117,7 +117,7 @@ function InputField({
         )}
         {type === "password" && (
           <span
-            className="password_icon"
+            className="password_icon bg-[#f6f6f6]"
             onClick={handleEyeToggle}
             aria-hidden="true"
           >

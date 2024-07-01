@@ -21,31 +21,33 @@ export default function ResetPassword() {
   // State to track loading
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const store = useSelector((store: AuthRootState) => store)
+  const store = useSelector((store: AuthRootState) => store);
 
   //* initialise useformik hook
   const formik = useFormik({
     initialValues: {
       cnfPassword: "",
-      password: ""
+      password: "",
     },
     validationSchema: resetPassSchema,
-    onSubmit: (values) => { onSubmit(values) },
+    onSubmit: (values) => {
+      onSubmit(values);
+    },
   });
 
   async function onSubmit(formData: FormType) {
     let data = {
       password: formData.password,
       email: store.auth?.email,
-    }
-    setIsLoading(true)
-    let { payload } = await dispatch(restPassword(data))
-    setIsLoading(false)
+    };
+    setIsLoading(true);
+    let { payload } = await dispatch(restPassword(data));
+    setIsLoading(false);
     if (payload?.data?.status) {
-      navigate('/sign-in')
+      navigate("/sign-in");
     }
   }
 
@@ -74,6 +76,11 @@ export default function ResetPassword() {
               label="New Password"
               type="password"
               placeholder="Enter New Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
             <InputField
               formik={formik}
@@ -81,6 +88,11 @@ export default function ResetPassword() {
               label="Confirm Password"
               type="password"
               placeholder="Enter Confirm Password"
+              sx={{
+                ".MuiInputBase-input": {
+                  paddingRight: "34px",
+                },
+              }}
             />
             <Button
               variant="contained"

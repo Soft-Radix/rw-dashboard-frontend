@@ -32,6 +32,11 @@ export default function ChangePassword() {
                 name="old_password"
                 formik={formik}
                 placeholder="Enter Old Password"
+                sx={{
+                  ".MuiInputBase-input": {
+                    paddingRight: "34px",
+                  },
+                }}
               />
               <InputField
                 type="password"
@@ -39,6 +44,11 @@ export default function ChangePassword() {
                 name="new_password"
                 formik={formik}
                 placeholder="Enter New Password"
+                sx={{
+                  ".MuiInputBase-input": {
+                    paddingRight: "34px",
+                  },
+                }}
               />
               <InputField
                 type="password"
@@ -46,6 +56,11 @@ export default function ChangePassword() {
                 formik={formik}
                 placeholder="Confirm New Password"
                 label="Confirm New Password"
+                sx={{
+                  ".MuiInputBase-input": {
+                    paddingRight: "34px",
+                  },
+                }}
               />
               <Button
                 variant="contained"
