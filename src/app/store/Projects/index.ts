@@ -448,6 +448,7 @@ export const initialState: initialStateProps = {
   taskDetailInfo: {},
   projectInfo: {},
   fetchStatusNew: "loading",
+  projectDataInfo: [],
 };
 /**
  * The auth slice.
@@ -502,6 +503,20 @@ export const projectSlice = createSlice({
         // console.log(state.projectInfo, "state.projectInfo");
       })
       .addCase(projectColumnList.rejected, (state) => {
+        state.fetchStatusNew = "idle";
+      })
+      .addCase(projectList.pending, (state, action) => {
+        state.fetchStatusNew = "loading";
+      })
+      .addCase(projectList.fulfilled, (state, action) => {
+        // console.log(state, "statet");
+        const { data } = action.payload?.data;
+        console.log(data, "daddadaddadda");
+        state.fetchStatusNew = "idle";
+        state.projectDataInfo = data.list;
+        // console.log(state.projectInfo, "state.projectInfo");
+      })
+      .addCase(projectList.rejected, (state) => {
         state.fetchStatusNew = "idle";
       });
     // .addCase(projectTaskTableList.pending, (state, action) => {

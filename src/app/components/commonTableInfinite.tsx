@@ -23,10 +23,9 @@ interface IProps {
   sortOrder?: string;
   onSort?: (column: string) => void;
   handleSelectAll?: () => void;
-  isCustomHeight?: boolean;
-  ref?: any;
+  // customHeight?: boolean;
 }
-function CommonTable({
+function CommonTableInfinit({
   children,
   headings,
   headingRowProps,
@@ -35,15 +34,18 @@ function CommonTable({
   onSort,
   handleSelectAll,
   isAllSelected,
-  isCustomHeight,
-  ref,
+  // customHeight,
 }: IProps) {
-  // console.log("🚀 ~ isCustomHeight:", isCustomHeight);
   // console.log("headings", headings);
   return (
     <TableContainer
-      style={{ maxHeight: isCustomHeight ? 200 : "100%" }}
-      ref={ref}
+      style={{ maxHeight: 200, overflowY: "scroll" }}
+      sx={{
+        ".MuiTableContainer-root": {
+          maxHeight: 600,
+        },
+      }}
+      className="custom"
     >
       <Table
         size="small"
@@ -111,4 +113,4 @@ function CommonTable({
   );
 }
 
-export default CommonTable;
+export default CommonTableInfinit;

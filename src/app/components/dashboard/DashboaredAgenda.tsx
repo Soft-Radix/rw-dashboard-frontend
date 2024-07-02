@@ -19,7 +19,7 @@ import {
   PlusIcon,
   RightIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import CommonTable from "src/app/components/commonTable";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -30,10 +30,18 @@ import { NoDataFound } from "public/assets/icons/common";
 import ListLoading from "@fuse/core/ListLoading";
 import { useAppDispatch } from "app/store/store";
 import { GetAgendaData } from "app/store/Client";
-import { projectColumnList, projectTaskTableList } from "app/store/Projects";
+import {
+  CheckedTask,
+  projectColumnList,
+  projectTaskTableList,
+} from "app/store/Projects";
 import { useParams } from "react-router";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import moment from "moment";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+import { debounce } from "lodash";
+import CommonTableInfinit from "../commonTableInfinite";
 
 const rows = [
   {
@@ -73,15 +81,17 @@ function a11yProps(index: number) {
     "aria-controls": `simple-tabpanel-${index}`,
   };
 }
+
 interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
   columnList: object[];
+  scrollRef: any;
 }
 
 function CustomTabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, scrollRef, ...other } = props;
   return (
     <div
       role="tabpanel"
@@ -101,7 +111,11 @@ const DashboaredAgenda = ({ columnList }) => {
   // console.log(userDetails, "userDetaildjdj");
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
+  const [columnId, setcolumnId] = useState();
   const dispatch = useAppDispatch();
+  const [projectId, setProjectId] = useState(
+    userDetails?.projects[0]?.id || ""
+  );
   const [selectedValue, setSelectedValue] = useState<string | null>(
     userDetails?.projects[0]?.name || ""
   );
@@ -117,29 +131,21 @@ const DashboaredAgenda = ({ columnList }) => {
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setSelectedTab(newValue);
     const selectedProjectColumn = projectInfo?.list[newValue];
-    // if (selectedProjectColumn) {
-    //   listData(selectedProjectColumn.id, selectedProjectColumn.columnid);
-    // }
+    if (selectedProjectColumn) {
+      // console.log(selectedProjectColumn, "selectedProjectColumn");
+      setProjectId(selectedProjectColumn.project_id); // Update project ID state
+      listData(selectedProjectColumn.project_id, selectedProjectColumn.id);
+    }
   };
 
-  // const fetchTabData = (ids) => {
-  //   const payload: any = {
-  //     start: 0,
-  //     limit: -1,
-  //     search: "",
-  //     project_id: userDetails.project_id,
-  //     task_start: 0,
-  //     task_limit: 20,
-  //     project_column_id: ids,
-  //   };
-
-  //   // if (!columnId) return "";
-  //   dispatch(projectColumnList(payload));
-  // };
   const [isChecked, setIscheked] = useState<boolean>(true);
+  const scrollRef = useRef(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [showLoader, setShowLoader] = useState<boolean>(false);
   const [taskData, setTaskData] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isDefault, setIsDefault] = useState();
+
   const { dashBoardAgenda, fetchAgendaData } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -150,6 +156,7 @@ const DashboaredAgenda = ({ columnList }) => {
     // console.log(event.currentTarget, "currentTarget");
     setAnchorEl(event.currentTarget);
   };
+
   const handleMenuItemClick = (id: number, name: string) => {
     const payload: any = {
       start: 0,
@@ -166,13 +173,18 @@ const DashboaredAgenda = ({ columnList }) => {
     setSelectedValue(name);
     setAnchorEl(null);
   };
-  const listData = async (id, columnid) => {
+  const listData = async (projectId, columnid) => {
+    if (!projectId || !columnId) {
+      console.error("Project ID and Column ID are required.");
+      return;
+    }
+
     // console.log(id, columnid, "listdata api call");
     const payload: any = {
       start: 0,
       limit: -1,
       search: "",
-      project_id: id as string,
+      project_id: projectId,
       task_start: 0,
       task_limit: 20,
       project_column_id: columnid,
@@ -183,9 +195,10 @@ const DashboaredAgenda = ({ columnList }) => {
 
     if (res.payload?.data?.data?.list?.length > 0) {
       setTaskData(res.payload.data.data?.list[0]?.tasks || []); // Assuming res.payload contains the data you need
+      setIsDefault(res?.payload?.data?.data?.list[0]?.is_defalut);
     }
   };
-  // console.log(taskData, "taskDatahhffff");
+  // console.log(isDefault, "taskDatahhffff");
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -193,7 +206,36 @@ const DashboaredAgenda = ({ columnList }) => {
   const handleNextDay = () => {
     setCurrentDate(addDays(currentDate, 1));
   };
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (scrollRef.current) {
+        console.log(scrollRef.current, "scrollRef.current");
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
+          // Increased threshold
+          setIsFetching(true);
+          listData(projectId, columnId).finally(() => {
+            setIsFetching(false);
+          });
+        }
+      }
+    }, 300), // Adjust debounce delay as needed
+    [isFetching]
+  );
+  // console.log(columnList, "listData");
 
+  // Effect to attach scroll event listener when component mounts
+  useEffect(() => {
+    const scrolledElement = scrollRef.current;
+    if (scrolledElement) {
+      scrolledElement.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (scrolledElement) {
+        scrolledElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [handleScroll]);
   const handlePreviousDay = () => {
     setCurrentDate(subDays(currentDate, 1));
   };
@@ -201,8 +243,43 @@ const DashboaredAgenda = ({ columnList }) => {
   useEffect(() => {
     dispatch(GetAgendaData(filters));
   }, [currentDate, filters]);
+  const handleCompleteTask = (id) => {
+    if (id) {
+      // setDisabled(true);
+      dispatch(CheckedTask(id))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            listData(projectId, columnId);
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+          }
+        });
 
-  // console.log(taskData, "ssssssss");
+      // setDisabled(false);
+      // setComplete(false);
+    }
+  };
+  const handleCheckedItem = (id) => {
+    if (id) {
+      // setDisabled(true);
+      dispatch(CheckedTask(id))
+        .unwrap()
+        .then((res) => {
+          if (res?.data?.status == 1) {
+            listData(projectId, columnId);
+            toast.success(res?.data?.message, {
+              duration: 4000,
+            });
+          }
+        });
+
+      // setDisabled(false);
+      // setComplete(false);
+    }
+  };
+  // console.log(dashBoardAgenda, "ssssssss");
 
   return (
     <Grid container spacing={3} className="px-28 mb-[3rem]">
@@ -255,7 +332,7 @@ const DashboaredAgenda = ({ columnList }) => {
                 </div>
               </div>
             </div>
-            <CommonTable headings={["Tasks"]}>
+            <CommonTable headings={["Tasks"]} isCustomHeight={true}>
               {dashBoardAgenda?.length === 0 && fetchAgendaData == false ? (
                 // &&
                 // agentState.status != "loading"
@@ -311,7 +388,7 @@ const DashboaredAgenda = ({ columnList }) => {
                         className="flex items-center gap-8"
                       >
                         <span>
-                          <Checkbox />
+                          <Checkbox onClick={() => handleCheckedItem(row.id)} />
                         </span>
                         {row.title}
                       </TableCell>
@@ -329,7 +406,7 @@ const DashboaredAgenda = ({ columnList }) => {
       <Grid item xs={12} lg={6} sm={12}>
         <div className="shadow-sm bg-white rounded-lg">
           <div className="basis-full lg:basis-auto lg:grow">
-            <div className="shadow-md flex  sm:items-center justify-between px-20 border-0 border-none flex-col  sm:flex-row ">
+            <div className=" flex  sm:items-center justify-between px-20 border-0 border-none flex-col  sm:flex-row ">
               <Tabs
                 value={selectedTab}
                 onChange={handleChange}
@@ -365,7 +442,7 @@ const DashboaredAgenda = ({ columnList }) => {
                       onClick={() => {
                         // console.log("click lisrt...", row);
                         listData(row.project_id, row.id);
-                        // setcolumnId(item.id);
+                        setcolumnId(row.id);
                       }}
                     />
                   );
@@ -391,7 +468,7 @@ const DashboaredAgenda = ({ columnList }) => {
                   {columnList
                     ?.filter((item) => item.checked)
                     .map((item) => {
-                      // console.log(item, "itemssadkadf");
+                      // console.log(item, "jjjjjjjjjj");
                       return (
                         <div>
                           <MenuItem
@@ -409,7 +486,7 @@ const DashboaredAgenda = ({ columnList }) => {
               </div>
             </div>
           </div>
-          <CommonTable headings={[" Task 3"]}>
+          <CommonTable headings={[]} isCustomHeight={true} ref={scrollRef}>
             <>
               {taskData.length === 0 && (
                 <TableRow
@@ -462,11 +539,28 @@ const DashboaredAgenda = ({ columnList }) => {
                       className="flex items-center w-full  justify-between gap-8"
                     >
                       <div>
-                        <span>
-                          <Checkbox />
-                        </span>
-
-                        <span>{row.title}</span>
+                        {isDefault == 1 ? (
+                          <>
+                            <Checkbox
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              checked={true}
+                            />
+                            <Link to="/${project_id}/tasks/detail/${id}">
+                              <span>{row.title}</span>
+                            </Link>
+                          </>
+                        ) : (
+                          <>
+                            <span onClick={() => handleCompleteTask(row.id)}>
+                              <Checkbox />
+                            </span>
+                            <Link to="/${project_id}/tasks/detail/${id}">
+                              <span>{row.title}</span>
+                            </Link>
+                          </>
+                        )}
                       </div>
                       <Typography
                         className={
@@ -474,7 +568,7 @@ const DashboaredAgenda = ({ columnList }) => {
                         }
                       >
                         {row.due_date_time
-                          ? moment(row.due_date_time).format("YYYY-MM-DD")
+                          ? moment(row.due_date_time).format("MMM-DD")
                           : "N/A"}
                       </Typography>
                     </TableCell>

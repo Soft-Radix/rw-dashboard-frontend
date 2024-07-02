@@ -272,8 +272,8 @@ function ThemePageTable(props) {
                     row.priority === "Low"
                       ? "text-[#4CAF50] bg-[#4CAF502E]"
                       : row.priority === "Medium"
-                      ? "text-[#FF5F15] bg-[#FF5F152E]"
-                      : "text-[#F44336] bg-[#F443362E]"
+                        ? "text-[#FF5F15] bg-[#FF5F152E]"
+                        : "text-[#F44336] bg-[#F443362E]"
                   }`}
                     >
                       {row.priority}
