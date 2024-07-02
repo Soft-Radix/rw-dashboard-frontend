@@ -109,7 +109,11 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
-  console.log(userDetails.projects, "fffffffffffffffffffff");
+  // const updatedProjects = userDetails?.projects?.map((project) => ({
+  //   ...project,
+  //   checked: true, // Set default value to false or true as per your requirement
+  // }));
+  // console.log(userDetails.projects, "fffffffffffffffffffff");
   // console.log(client_id.id, "clientididid");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
@@ -208,7 +212,7 @@ export default function Dashboard() {
   //   setColumnList(result);
   //   console.log("🚀 ~ useEffect ~ result:", result);
   // }, []);
-  console.log(columnList, "columnList");
+  // console.log(columnList, "columnList");
   const fetchAgentList = useCallback(() => {
     dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
   }, [filters]);
