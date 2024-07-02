@@ -23,6 +23,7 @@ interface IProps {
   sortOrder?: string;
   onSort?: (column: string) => void;
   handleSelectAll?: () => void;
+  // customHeight?: boolean;
 }
 function CommonTable({
   children,
@@ -33,6 +34,7 @@ function CommonTable({
   onSort,
   handleSelectAll,
   isAllSelected,
+  // customHeight,
 }: IProps) {
   // console.log("headings", headings);
   return (

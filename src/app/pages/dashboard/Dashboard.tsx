@@ -202,6 +202,7 @@ export default function Dashboard() {
 
     setColumnList(updatedProjects);
     localStorage.setItem("columnList", JSON.stringify(updatedProjects));
+    console.log("🚀 ~ handleSelectProject ~ updatedProjects:", updatedProjects);
   };
   useEffect(() => {
     const columnData = localStorage.getItem("columnList");
@@ -209,7 +210,7 @@ export default function Dashboard() {
     setColumnList(result);
     console.log("🚀 ~ useEffect ~ result:", result);
   }, []);
-  // console.log(columnList, "columnList");
+  console.log(columnList, "columnList");
   const fetchAgentList = useCallback(() => {
     dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
   }, [filters]);
