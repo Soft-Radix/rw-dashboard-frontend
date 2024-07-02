@@ -33,6 +33,8 @@ import { useSelector } from "react-redux";
 import moment from "moment";
 import { NoDataFound } from "public/assets/icons/common";
 import ListLoading from "@fuse/core/ListLoading";
+import { projectList } from "app/store/Projects";
+import { ProjectRootState } from "app/store/Projects/Interface";
 
 const rows = [
   {
@@ -109,22 +111,28 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
-  // const updatedProjects = userDetails?.projects?.map((project) => ({
-  //   ...project,
-  //   checked: true, // Set default value to false or true as per your requirement
-  // }));
-  // console.log(userDetails.projects, "fffffffffffffffffffff");
+  const [showProject, setShowProject] = useState<boolean>(false);
+  const { projectDataInfo } = useSelector(
+    (store: ProjectRootState) => store?.project
+  );
+  useEffect(() => {
+    const updatedProjects = userDetails?.projects?.map((project) => ({
+      ...project,
+      checked: true, // Set default value to false or true as per your requirement
+    }));
+    setColumnList(updatedProjects);
+  }, []);
   // console.log(client_id.id, "clientididid");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
     search: "",
   });
-  const [columnList, setColumnList] = useState([]);
-  console.log(
-    "🚀 ~ const[columnList,setColumnList]=useState ~ columnList:",
-    columnList
-  );
+  const [columnList, setColumnList] = useState(projectDataInfo);
+  // console.log(
+  //   "🚀 ~ const[columnList,setColumnList]=useState ~ columnList:",
+  //   columnList
+  // );
   const {
     assignedAgentDetail,
     agentTotal_records,
@@ -132,7 +140,8 @@ export default function Dashboard() {
     totalAgent,
     resetActivity,
   } = useSelector((store: ClientRootState) => store.client);
-  // console.log(resetActivity, "fjidjfijfijfi");
+
+  // console.log(projectDataInfo, "projectDataInfo");
 
   const [selectedValue, setSelectedValue] = useState<string | null>(null);
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -152,6 +161,8 @@ export default function Dashboard() {
   const handleProjectList = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setAnchorEl1(event.currentTarget);
+    // setAnchorEl1(null);
+    setShowProject(!showProject);
   };
 
   const handleCloseProject = () => {
@@ -222,6 +233,7 @@ export default function Dashboard() {
   useEffect(() => {
     dispatch(GetRecentActivityData());
     dispatch(GetAgendaData(filters));
+    dispatch(projectList(filters));
   }, [dispatch]);
   return (
     <div>
@@ -315,12 +327,12 @@ export default function Dashboard() {
                 ) : (
                   <DownArrowBlank
                     className="cursor-pointer fill-none"
-                    onClick={handleCloseProject}
+                    // onClick={() => setShowProject(false)}
                   />
                 )}
                 Project Summary
               </Button>
-              {anchorEl1 && (
+              {showProject && (
                 <div className="w-[375px]  rounded-none shadow-none">
                   {userDetails?.projects?.map((item, index) => {
                     console.log(item, "itemsss");
@@ -332,7 +344,7 @@ export default function Dashboard() {
                         >
                           <Checkbox
                             id={`project-${item.id}`}
-                            defaultChecked
+                            // defaultChecked
                             onChange={(e) => handleSelectProject(e, item)}
                             checked={columnList[index]?.checked}
                           />
@@ -467,7 +479,12 @@ export default function Dashboard() {
         </div>
       )}
       {isChecked.activity && <DashboardRecentActivity />}
-      {isChecked.logged && <DashboaredAgenda columnList={columnList} />}
+      {isChecked.logged && (
+        <DashboaredAgenda
+          columnList={columnList}
+          // setColumnList={setColumnList}
+        />
+      )}
     </div>
   );
 }

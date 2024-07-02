@@ -85,7 +85,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   const [columnId, setcolumnId] = useState();
 
   const [showLoader, setShowLoader] = useState<boolean>(false);
-  // console.log(columnId, "columnId");
+  // console.log(columnId, "projectRowprojectRow");
   const [columnList, setColumnList] = useState<any[]>([]);
   // const [tableSelectedItemDesign, setTableSelectedItemDesign] =
   //   useState<object>();
@@ -145,7 +145,9 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
       setShowLoader(true);
       const res = await dispatch(projectTaskTableList(payload));
       const updatedList = res?.payload?.data?.data?.list;
+      console.log(updatedList, "updatedListupdatedList");
       const columnObject = updatedList?.find((item) => item.id == columnid);
+      console.log(columnObject, "columnObjectcolumnObject");
       setIsDefault(res?.payload?.data?.data?.list[0]?.is_defalut);
       if (!!columnObject) {
         // Update the columnList state with the updated column
@@ -154,6 +156,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
           const taskMap = new Map(
             prevColumnList?.map((task) => [task.id, task])
           );
+          console.log(taskMap, "taskMaptaskMap");
           // Add new tasks to the map
           columnObject?.tasks.forEach((task) => {
             taskMap.set(task.id, task);
@@ -258,6 +261,7 @@ export default function ProjectTaskTabel(props: ProjectTaskTableProps) {
   // console.log(columnList, "updatedList");
 
   const handleCompleteTask = async (id, ColumnId) => {
+    // console.log(id, ColumnId, "ColumnIdColumnId");
     if (id) {
       await dispatch(CheckedTask(id))
         .unwrap()
