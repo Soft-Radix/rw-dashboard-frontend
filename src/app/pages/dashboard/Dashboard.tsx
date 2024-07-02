@@ -109,17 +109,14 @@ export default function Dashboard() {
   const [selectedTab, setSelectedTab] = useState(0);
   const client_id = JSON.parse(localStorage.getItem("userDetail"));
   const userDetails = JSON.parse(localStorage.getItem("userDetail"));
-  // console.log(userDetails, "fffffffffffffffffffff");
+  console.log(userDetails.projects, "fffffffffffffffffffff");
   // console.log(client_id.id, "clientididid");
   const [filters, setfilters] = useState<filterType>({
     start: 0,
     limit: 10,
     search: "",
   });
-  const [columnList, setColumnList] = useState(() => {
-    const savedColumnList = localStorage.getItem("columnList");
-    return savedColumnList ? JSON.parse(savedColumnList) : [];
-  });
+  const [columnList, setColumnList] = useState([]);
   console.log(
     "🚀 ~ const[columnList,setColumnList]=useState ~ columnList:",
     columnList
@@ -184,6 +181,7 @@ export default function Dashboard() {
     const projectIndex = columnList.findIndex(
       (project) => project.id === item.id
     );
+    // console.log(projectIndex, "gfjgjh");
 
     let updatedProjects;
 
@@ -204,12 +202,12 @@ export default function Dashboard() {
     localStorage.setItem("columnList", JSON.stringify(updatedProjects));
     console.log("🚀 ~ handleSelectProject ~ updatedProjects:", updatedProjects);
   };
-  useEffect(() => {
-    const columnData = localStorage.getItem("columnList");
-    const result = JSON.parse(columnData);
-    setColumnList(result);
-    console.log("🚀 ~ useEffect ~ result:", result);
-  }, []);
+  // useEffect(() => {
+  //   const columnData = localStorage.getItem("columnList");
+  //   const result = JSON.parse(columnData);
+  //   setColumnList(result);
+  //   console.log("🚀 ~ useEffect ~ result:", result);
+  // }, []);
   console.log(columnList, "columnList");
   const fetchAgentList = useCallback(() => {
     dispatch(GetAssignAgentsInfo({ ...filters, client_id: client_id?.id }));
@@ -320,7 +318,8 @@ export default function Dashboard() {
               </Button>
               {anchorEl1 && (
                 <div className="w-[375px]  rounded-none shadow-none">
-                  {userDetails?.projects.map((item, index) => {
+                  {userDetails?.projects?.map((item, index) => {
+                    console.log(item, "itemsss");
                     return (
                       <MenuItem className="px-36">
                         <label
@@ -329,6 +328,7 @@ export default function Dashboard() {
                         >
                           <Checkbox
                             id={`project-${item.id}`}
+                            defaultChecked
                             onChange={(e) => handleSelectProject(e, item)}
                             checked={columnList[index]?.checked}
                           />

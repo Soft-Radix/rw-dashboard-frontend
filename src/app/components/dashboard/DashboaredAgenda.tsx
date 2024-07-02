@@ -19,7 +19,7 @@ import {
   PlusIcon,
   RightIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import CommonTable from "src/app/components/commonTable";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -34,7 +34,6 @@ import { projectColumnList, projectTaskTableList } from "app/store/Projects";
 import { useParams } from "react-router";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import moment from "moment";
-import { debounce } from "lodash";
 
 const rows = [
   {
@@ -104,7 +103,7 @@ const DashboaredAgenda = ({ columnList }) => {
   const [selectedTab, setSelectedTab] = useState(0);
   const dispatch = useAppDispatch();
   const [selectedValue, setSelectedValue] = useState<string | null>(
-    userDetails.projects[0]?.name || ""
+    userDetails?.projects[0]?.name || ""
   );
   const [filters, setfilters] = useState<filterType>({
     start: 0,
@@ -139,12 +138,8 @@ const DashboaredAgenda = ({ columnList }) => {
   // };
   const [isChecked, setIscheked] = useState<boolean>(true);
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [isDefault, setIsDefault] = useState();
   const [showLoader, setShowLoader] = useState<boolean>(false);
-  const [isFetching, setIsFetching] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
   const [taskData, setTaskData] = useState([]);
-  const scrollRef = useRef(null);
   const { dashBoardAgenda, fetchAgendaData } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -171,82 +166,25 @@ const DashboaredAgenda = ({ columnList }) => {
     setSelectedValue(name);
     setAnchorEl(null);
   };
-  const listData = async (id, columnid, page = 0) => {
-    const payload = {
-      start: page * 20,
-      limit: 20,
+  const listData = async (id, columnid) => {
+    // console.log(id, columnid, "listdata api call");
+    const payload: any = {
+      start: 0,
+      limit: -1,
       search: "",
-      project_id: id,
-      task_start: page * 20,
+      project_id: id as string,
+      task_start: 0,
       task_limit: 20,
       project_column_id: columnid,
     };
 
-    try {
-      setShowLoader(true);
-      const res = await dispatch(projectTaskTableList(payload));
-      const updatedList = res?.payload?.data?.data?.list;
-      const columnObject = updatedList?.find((item) => item.id == columnid);
+    const res = await dispatch(projectTaskTableList(payload));
+    // console.log(res.payload.data.data?.list[0].tasks, "res.payload.");
 
-      setIsDefault(res?.payload?.data?.data?.list[0]?.is_defalut);
-
-      if (!!columnObject) {
-        setTaskData((prevTaskData) => {
-          const taskMap = new Map(prevTaskData?.map((task) => [task.id, task]));
-          columnObject?.tasks.forEach((task) => {
-            taskMap.set(task.id, task);
-          });
-          return Array.from(taskMap.values());
-        });
-      }
-      setShowLoader(false);
-    } catch (error) {
-      setShowLoader(false);
-      console.error("Error fetching data:", error);
+    if (res.payload?.data?.data?.list?.length > 0) {
+      setTaskData(res.payload.data.data?.list[0]?.tasks || []); // Assuming res.payload contains the data you need
     }
   };
-
-  const handleScroll = useCallback(
-    debounce(() => {
-      if (scrollRef.current && projectInfo?.list) {
-        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-        if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
-          setIsFetching(true);
-          console.log("projectInfo.....333", projectInfo);
-          listData(
-            userDetails.project_id,
-            projectInfo?.list[selectedTab]?.id,
-            currentPage + 1
-          ).finally(() => {
-            setIsFetching(false);
-            setCurrentPage((prevPage) => prevPage + 1);
-          });
-        }
-      }
-    }, 300),
-    [isFetching, currentPage, selectedTab, projectInfo, userDetails.project_id]
-  );
-
-  useEffect(() => {
-    const scrolledElement = scrollRef.current;
-    if (scrolledElement) {
-      scrolledElement.addEventListener("scroll", handleScroll);
-    }
-    return () => {
-      if (scrolledElement) {
-        scrolledElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [handleScroll]);
-
-  useEffect(() => {
-    if (projectInfo?.list)
-      listData(
-        userDetails.project_id,
-        projectInfo?.list[selectedTab]?.id,
-        currentPage
-      );
-  }, [selectedTab, currentPage, userDetails.project_id, projectInfo]);
   // console.log(taskData, "taskDatahhffff");
   const handleClose = () => {
     setAnchorEl(null);
@@ -442,7 +380,7 @@ const DashboaredAgenda = ({ columnList }) => {
                       onClick={handleButtonClick}
                     >
                       <Button>
-                        {selectedValue || "Project"}
+                        {selectedValue || ""}
                         <DownArrowIcon className="cursor-pointer" />
                       </Button>
                     </div>
@@ -471,8 +409,32 @@ const DashboaredAgenda = ({ columnList }) => {
               </div>
             </div>
           </div>
-          <CommonTable headings={[" "]}>
+          <CommonTable headings={[" Task 3"]}>
             <>
+              {taskData.length === 0 && (
+                <TableRow
+                  sx={{
+                    "& td": {
+                      borderBottom: "1px solid #EDF2F6",
+                      paddingTop: "12px",
+                      paddingBottom: "12px",
+                      color: theme.palette.primary.main,
+                    },
+                  }}
+                >
+                  <TableCell colSpan={7} align="center">
+                    <div
+                      className="flex flex-col justify-center align-items-center gap-20 bg-[#F7F9FB] min-h-[400px] py-40"
+                      style={{ alignItems: "center" }}
+                    >
+                      <NoDataFound />
+                      <Typography className="text-[24px] text-center font-600 leading-normal">
+                        No data found !
+                      </Typography>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
               {taskData?.map((row, id) => {
                 const isDueDatePassed = moment(row.due_date_time).isBefore(
                   currentDate
