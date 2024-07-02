@@ -19,7 +19,7 @@ import {
   PlusIcon,
   RightIcon,
 } from "public/assets/icons/dashboardIcons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import DropdownMenu from "src/app/components/Dropdown";
 import CommonTable from "src/app/components/commonTable";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -34,6 +34,7 @@ import { projectColumnList, projectTaskTableList } from "app/store/Projects";
 import { useParams } from "react-router";
 import { ProjectRootState } from "app/store/Projects/Interface";
 import moment from "moment";
+import { debounce } from "lodash";
 
 const rows = [
   {
@@ -138,8 +139,12 @@ const DashboaredAgenda = ({ columnList }) => {
   // };
   const [isChecked, setIscheked] = useState<boolean>(true);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isDefault, setIsDefault] = useState();
   const [showLoader, setShowLoader] = useState<boolean>(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
   const [taskData, setTaskData] = useState([]);
+  const scrollRef = useRef(null);
   const { dashBoardAgenda, fetchAgendaData } = useSelector(
     (store: ClientRootState) => store.client
   );
@@ -166,25 +171,82 @@ const DashboaredAgenda = ({ columnList }) => {
     setSelectedValue(name);
     setAnchorEl(null);
   };
-  const listData = async (id, columnid) => {
-    // console.log(id, columnid, "listdata api call");
-    const payload: any = {
-      start: 0,
-      limit: -1,
+  const listData = async (id, columnid, page = 0) => {
+    const payload = {
+      start: page * 20,
+      limit: 20,
       search: "",
-      project_id: id as string,
-      task_start: 0,
+      project_id: id,
+      task_start: page * 20,
       task_limit: 20,
       project_column_id: columnid,
     };
 
-    const res = await dispatch(projectTaskTableList(payload));
-    // console.log(res.payload.data.data?.list[0].tasks, "res.payload.");
+    try {
+      setShowLoader(true);
+      const res = await dispatch(projectTaskTableList(payload));
+      const updatedList = res?.payload?.data?.data?.list;
+      const columnObject = updatedList?.find((item) => item.id == columnid);
 
-    if (res.payload.data.data.list.length > 0) {
-      setTaskData(res.payload.data.data?.list[0]?.tasks || []); // Assuming res.payload contains the data you need
+      setIsDefault(res?.payload?.data?.data?.list[0]?.is_defalut);
+
+      if (!!columnObject) {
+        setTaskData((prevTaskData) => {
+          const taskMap = new Map(prevTaskData?.map((task) => [task.id, task]));
+          columnObject?.tasks.forEach((task) => {
+            taskMap.set(task.id, task);
+          });
+          return Array.from(taskMap.values());
+        });
+      }
+      setShowLoader(false);
+    } catch (error) {
+      setShowLoader(false);
+      console.error("Error fetching data:", error);
     }
   };
+
+  const handleScroll = useCallback(
+    debounce(() => {
+      if (scrollRef.current && projectInfo?.list) {
+        const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
+        if (scrollTop + clientHeight >= scrollHeight - 50 && !isFetching) {
+          setIsFetching(true);
+          console.log("projectInfo.....333", projectInfo);
+          listData(
+            userDetails.project_id,
+            projectInfo?.list[selectedTab]?.id,
+            currentPage + 1
+          ).finally(() => {
+            setIsFetching(false);
+            setCurrentPage((prevPage) => prevPage + 1);
+          });
+        }
+      }
+    }, 300),
+    [isFetching, currentPage, selectedTab, projectInfo, userDetails.project_id]
+  );
+
+  useEffect(() => {
+    const scrolledElement = scrollRef.current;
+    if (scrolledElement) {
+      scrolledElement.addEventListener("scroll", handleScroll);
+    }
+    return () => {
+      if (scrolledElement) {
+        scrolledElement.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [handleScroll]);
+
+  useEffect(() => {
+    if (projectInfo?.list)
+      listData(
+        userDetails.project_id,
+        projectInfo?.list[selectedTab]?.id,
+        currentPage
+      );
+  }, [selectedTab, currentPage, userDetails.project_id, projectInfo]);
   // console.log(taskData, "taskDatahhffff");
   const handleClose = () => {
     setAnchorEl(null);
@@ -388,26 +450,28 @@ const DashboaredAgenda = ({ columnList }) => {
                   anchorEl={anchorEl}
                   handleClose={handleClose}
                 >
-                  {columnList?.map((item) => {
-                    // console.log(item, "itemssadkadf");
-                    return (
-                      <div>
-                        <MenuItem
-                          onClick={() =>
-                            handleMenuItemClick(item.id, item.name)
-                          }
-                          className="w-[200px] px-20 py-10"
-                        >
-                          {item.name}
-                        </MenuItem>
-                      </div>
-                    );
-                  })}
+                  {columnList
+                    ?.filter((item) => item.checked)
+                    .map((item) => {
+                      // console.log(item, "itemssadkadf");
+                      return (
+                        <div>
+                          <MenuItem
+                            onClick={() =>
+                              handleMenuItemClick(item.id, item.name)
+                            }
+                            className="w-[200px] px-20 py-10"
+                          >
+                            {item.name}
+                          </MenuItem>
+                        </div>
+                      );
+                    })}
                 </DropdownMenu>
               </div>
             </div>
           </div>
-          <CommonTable headings={[" Task 3"]}>
+          <CommonTable headings={[" "]}>
             <>
               {taskData?.map((row, id) => {
                 const isDueDatePassed = moment(row.due_date_time).isBefore(
